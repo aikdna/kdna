@@ -9,6 +9,17 @@ const {deliverResult}=require('./delivery.js');
 const {sameInstallation}=require('./installation.js');
 const pendingHandles=new WeakMap(),preparedOmissions=new WeakMap();
 let receiptSequence=0;
+// The admitted view is immutable. Build per-request indices only when a deferred
+// descriptor needs a handle; preserve Array.find's first match for duplicate keys.
+function indexDeferredTargets(view,anchor){
+  const anchorKey=jcs(anchor),expansions=new Map(),nodes=new Map();
+  for(const target of view.expansion_targets){
+    if(jcs(target.anchor)!==anchorKey)continue;
+    const key=jcs(target.target);if(!expansions.has(key))expansions.set(key,target);
+  }
+  for(const node of view.ir.nodes){const key=jcs(node.target);if(!nodes.has(key))nodes.set(key,node);}
+  return {expansions,nodes};
+}
 async function prepareRead(admit,input,candidate,controlProvider,host,protection=null){
   const admission=protection?.admission??admitReadRequest(candidate,controlProvider);
   if(admission.channel!=='admitted_request'){
@@ -52,14 +63,15 @@ async function prepareRead(admit,input,candidate,controlProvider,host,protection
     let authorizedOmissions=null;
     const context=fresh.value,hostState=fresh.state;
     state.read_permission='allowed';state.confirmation=body.content.provenance.confirmation;
-    const handles=[],anchor=anchorFor(request);
+    const handles=[],anchor=anchorFor(request);let deferredIndex=null;
     for(const descriptor of body.content.asset_index){
       if(descriptor.body_delivery==='inline')continue;
-      const target=view.expansion_targets.find(x=>jcs(x.anchor)===jcs(anchor)&&jcs(x.target)===jcs(descriptor.target));
+      if(!deferredIndex)deferredIndex=indexDeferredTargets(view,anchor);
+      const targetKey=jcs(descriptor.target),target=deferredIndex.expansions.get(targetKey);
       if(!target||target.scope.some(x=>!context.scope.includes(x)))return freeze(failure('READ_SCOPE_DENIED'));
       const handle={handle_id:'handle:'+view.snapshot_id+':'+(++receiptSequence),asset_id:view.asset.asset_id,asset_version:view.asset.asset_version,A:view.digests.A.observed,C:view.digests.C.observed,snapshot_id:view.snapshot_id,core_version:tuple.core,ir_version:tuple.ir,read_version:tuple.read,anchor,target:target.target,scope:target.scope,issued_at:context.current_ms,expires_at:Math.min(context.expires_at,context.current_ms+3600000),host_id:context.host_id,host_epoch:context.host_epoch};
       handles.push(handle);descriptor.handle_id=handle.handle_id;
-      const targetNode=view.ir.nodes.find(x=>jcs(x.target)===jcs(descriptor.target));
+      const targetNode=deferredIndex.nodes.get(targetKey);
       for(const omission of body.omissions)if(omission.target===targetNode?.id){omission.expandable=true;omission.handle_id=handle.handle_id;omission.reason='not_requested';}
     }
     body.content.expansion_handles=handles;

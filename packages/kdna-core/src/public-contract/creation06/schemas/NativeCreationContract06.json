@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationContract06",
+  "title": "NativeCreationContract06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationContract06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "NativeCreationContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.creation-sections/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

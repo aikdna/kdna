@@ -51,7 +51,7 @@ async function admitProtectedNode(input, inputOptions, inputProvider) {
     if(!retained && copied)for(const name of ['password','grantBytes','deviceAgreementPrivateKeyPkcs8'])copied.credential[name]?.fill(0);
   }
 }
-// B3 additive seam: the SAME admission, retaining the authenticated plaintext and the
+// Protected-source seam: the same admission, retaining authenticated plaintext and the
 // original member table for the one caller that is allowed to see them.
 //
 // This is deliberately a separate function rather than a flag on `admitProtectedNode`:

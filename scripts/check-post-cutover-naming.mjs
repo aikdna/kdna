@@ -33,6 +33,23 @@ const ARCHIVE_LIMITS = Object.freeze({
   totalBytes: 32 * 1024 * 1024,
   ratio: 200,
 });
+// Bounded capacity envelope for npm-tarball (tar) readers — capacity-envelope
+// adjustment, declared honestly: not a semantic change. The packed-archive cap
+// (ARCHIVE_LIMITS.archiveBytes, 25 MiB), the compression-ratio guard (200) and a
+// maxOutputLength hard limit are all retained; out-of-envelope inputs fail closed.
+// This slightly relaxes every tar reader in this script, recorded here by name.
+// Measured stream lengths ("gzip -dc | wc -c", 2026-10-05): kdna-core@0.36.0-rc.r2.7
+// = 100,576,768 B / 427 entries / largest member 40,317,102 B; kdna-read@0.11.0-rc.r2.7
+// = 44,861,952 B / 90 entries / largest member 40,317,102 B. Headroom: total ≈ 33 %,
+// member ≈ 25 %, entries ≈ 20 %. tar stream lengths are always multiples of 512, so
+// an over-total stream is normally stopped by the maxOutputLength guard first.
+// Any further package growth requires re-measuring and re-justifying these bounds.
+const NPM_TAR_LIMITS = Object.freeze({
+  entries: 512,
+  entryBytes: 48 * 1024 * 1024,
+  totalBytes: 128 * 1024 * 1024,
+  ratio: 200,
+});
 const VERSION_PREFIX = String.fromCharCode(118);
 const VERSION_PREFIX_UPPER = VERSION_PREFIX.toUpperCase();
 const UTF8 = new TextDecoder('utf-8', { fatal: true });
@@ -412,13 +429,13 @@ function safeNpmTarballEntries(bytes, label = 'npm package') {
   assertArchiveSize(bytes, label);
   let tar;
   try {
-    tar = gunzipSync(bytes, { maxOutputLength: ARCHIVE_LIMITS.totalBytes + 1 });
+    tar = gunzipSync(bytes, { maxOutputLength: NPM_TAR_LIMITS.totalBytes + 1 });
   } catch (error) {
     throw new Error(`${label}: tarball cannot be decompressed: ${error.message}`);
   }
   if (
-    tar.length > ARCHIVE_LIMITS.totalBytes ||
-    (bytes.length > 0 && tar.length / bytes.length > ARCHIVE_LIMITS.ratio)
+    tar.length > NPM_TAR_LIMITS.totalBytes ||
+    (bytes.length > 0 && tar.length / bytes.length > NPM_TAR_LIMITS.ratio)
   ) {
     throw new Error(`${label}: tarball exceeds expanded-size or compression-ratio limits`);
   }
@@ -438,8 +455,8 @@ function safeNpmTarballEntries(bytes, label = 'npm package') {
     }
     zeroBlocks = 0;
     headerCount += 1;
-    if (headerCount > ARCHIVE_LIMITS.entries) {
-      throw new Error(`${label}: tar entry count exceeds ${ARCHIVE_LIMITS.entries}`);
+    if (headerCount > NPM_TAR_LIMITS.entries) {
+      throw new Error(`${label}: tar entry count exceeds ${NPM_TAR_LIMITS.entries}`);
     }
     const storedChecksum = parseTarOctal(header.subarray(148, 156), label);
     const checksumHeader = Buffer.from(header);
@@ -458,7 +475,7 @@ function safeNpmTarballEntries(bytes, label = 'npm package') {
     const dataStart = offset + 512;
     const dataEnd = dataStart + size;
     const next = dataStart + Math.ceil(size / 512) * 512;
-    if (size > ARCHIVE_LIMITS.entryBytes || dataEnd > tar.length || next > tar.length) {
+    if (size > NPM_TAR_LIMITS.entryBytes || dataEnd > tar.length || next > tar.length) {
       throw new Error(`${label}: tar entry is truncated or too large: ${name}`);
     }
     if (type === 53) {
@@ -471,8 +488,8 @@ function safeNpmTarballEntries(bytes, label = 'npm package') {
       if (names.has(name)) throw new Error(`${label}: duplicate tar entry: ${name}`);
       names.add(name);
       totalBytes += size;
-      if (totalBytes > ARCHIVE_LIMITS.totalBytes) {
-        throw new Error(`${label}: tar expanded size exceeds ${ARCHIVE_LIMITS.totalBytes}`);
+      if (totalBytes > NPM_TAR_LIMITS.totalBytes) {
+        throw new Error(`${label}: tar expanded size exceeds ${NPM_TAR_LIMITS.totalBytes}`);
       }
       entries.push({ name, bytes: Buffer.from(tar.subarray(dataStart, dataEnd)) });
     }

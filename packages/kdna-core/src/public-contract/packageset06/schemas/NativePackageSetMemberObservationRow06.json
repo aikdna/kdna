@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetMemberObservationRow06",
+  "title": "NativePackageSetMemberObservationRow06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetMemberObservationRow06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativePackageSetMemberObservationRow06": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "decision_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "current_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "member_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "decision",
+        "decision_id",
+        "host_id",
+        "host_epoch",
+        "issued_at",
+        "expires_at",
+        "current_ms"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

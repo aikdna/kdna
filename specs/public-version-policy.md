@@ -78,11 +78,10 @@ No legacy target ID is guessed or automatically migrated.
 
 Runtime/plan/host/trace now use 0.3.1 artifacts because their exact embedded tuple
 changed. The framing and static execution algorithms are unchanged. All previous
-schemas, including the accepted RC6 execution schemas and fixed wrappers, keep their original
-bytes and IDs. The RC6 complete tuple is unsupported in this new consumer, while
-its historical Stage1 acceptance remains recorded. This repair record is neither
-phase acceptance nor publication. Current source-map and target_lines navigation
-must identify this full RC7 combination and its sole public semantic source.
+schemas, including the historical RC6 execution schemas and fixed wrappers, keep their original
+bytes and IDs. The complete RC6 tuple is unsupported by the current consumer.
+Current source-map and target_lines navigation identify the full RC7 combination
+and its sole public semantic source. These coordinates do not establish publication.
 
 ## Candidate history (not current)
 
@@ -109,7 +108,7 @@ Read treats an unavailable Node environment as absence of its optional measureme
 
 ### R2 RC5 current-navigation candidate (S12-D013)
 
-The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. Its failed full-page navigation review and all original bytes remain unchanged. D015 corrected six package-external documents in a separate candidate; its conditional same-tar route stopped when the actual packed Read README required correction. D016 retains those navigation edits under the new RC6 identity; neither candidate has independent stage acceptance from this record.
+The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. These fixed historical schema and package coordinates are superseded; their original bytes and identifiers remain unchanged. A complete RC5 tuple is unsupported by the current combination.
 
 ## Current packed-documentation and installation combination (S12-D016)
 

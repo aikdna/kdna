@@ -1,5 +1,5 @@
 'use strict';
-// B3 protected source opening.
+// Protected source opening.
 //
 // This is the only route that discloses original protected bytes and the authenticated
 // decrypted CBOR, and it discloses them to exactly one recipient: a Host created by

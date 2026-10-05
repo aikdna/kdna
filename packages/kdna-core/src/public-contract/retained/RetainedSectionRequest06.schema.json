@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedSectionRequest06",
+  "title": "RetainedSectionRequest06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedSectionRequest06",
+  "$defs": {
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedRequest06_catalog": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "catalog"
+        },
+        "selection": {
+          "type": "null",
+          "const": null
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedRequest06_exact_selection": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "exact_selection"
+        },
+        "selection": {
+          "$ref": "#/$defs/SelectionSet06"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedRequest06_expand": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "expand"
+        },
+        "selection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SelectionSet06"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "handle": {
+          "$ref": "#/$defs/RetainedSectionHandle06"
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedRequest06_whole_asset": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "whole_asset"
+        },
+        "selection": {
+          "type": "null",
+          "const": null
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionHandle06": {
+      "type": "object",
+      "properties": {
+        "binding_kind": {
+          "type": "string",
+          "const": "retained_section_snapshot"
+        },
+        "handle_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "origin": {
+          "$ref": "#/$defs/RetainedSectionOrigin06"
+        },
+        "issuing_operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "issuing_request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "anchor": {
+          "$ref": "#/$defs/SectionExpansionAnchor06"
+        },
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "binding_kind",
+        "handle_id",
+        "asset",
+        "tuple",
+        "origin",
+        "issuing_operation_id",
+        "issuing_request_digest",
+        "anchor",
+        "target",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "host_id",
+        "host_epoch"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionOrigin06": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "whole",
+            "catalog"
+          ]
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "admission_request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "verification_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_sections_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "capture_id",
+        "admission_request_digest",
+        "verification_digest",
+        "checked_sections_digest"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionRequest06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/RetainedRequest06_whole_asset"
+        },
+        {
+          "$ref": "#/$defs/RetainedRequest06_catalog"
+        },
+        {
+          "$ref": "#/$defs/RetainedRequest06_exact_selection"
+        },
+        {
+          "$ref": "#/$defs/RetainedRequest06_expand"
+        }
+      ]
+    },
+    "SectionExpansionAnchor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "asset"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "selection_set"
+            },
+            "selection": {
+              "$ref": "#/$defs/SelectionSet06"
+            }
+          },
+          "required": [
+            "kind",
+            "selection"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SelectionSet06": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_ids"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

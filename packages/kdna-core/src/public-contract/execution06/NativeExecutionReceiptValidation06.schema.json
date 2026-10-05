@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionReceiptValidation06",
+  "title": "NativeExecutionReceiptValidation06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionReceiptValidation06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeAgentHostReceipt06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "receipt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capsule_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authorization": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionAuthorization"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionDelivery"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/PublicExecutionStatus"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionFailure"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output": {
+          "$ref": "#/$defs/PublicExecutionOutput"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "not_confirmed"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "receipt_id",
+        "request_id",
+        "run_id",
+        "host_id",
+        "host_epoch",
+        "request_digest",
+        "plan_digest",
+        "capsule_digest",
+        "authorization",
+        "delivery",
+        "status",
+        "failure",
+        "output",
+        "issued_at",
+        "output_delivery",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionFailure06": {
+      "type": "string",
+      "enum": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED",
+        "EXECUTION_SOURCE_UNSUPPORTED",
+        "EXECUTION_CAPABILITY_UNAVAILABLE"
+      ]
+    },
+    "NativeExecutionReceiptValidation06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "valid"
+            },
+            "value": {
+              "$ref": "#/$defs/NativeAgentHostReceipt06"
+            },
+            "proof": {
+              "type": "string",
+              "const": "claims_not_authenticated"
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "proof"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/NativeExecutionRejection06"
+        }
+      ]
+    },
+    "NativeExecutionRejection06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "code": {
+          "$ref": "#/$defs/NativeExecutionFailure06"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "code",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "payload_profile": {
+          "type": "string",
+          "const": "kdna.payload.judgment"
+        },
+        "payload_version": {
+          "type": "string",
+          "const": "0.5.1"
+        },
+        "core": {
+          "type": "string",
+          "const": "kdna.core/0.8.2"
+        },
+        "ir": {
+          "type": "string",
+          "const": "kdna.canonical-ir/0.6.1"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "kdna.runtime-capsule/0.4.0-candidate"
+        },
+        "plan": {
+          "type": "string",
+          "const": "kdna.consumption-plan/0.4.0-candidate"
+        },
+        "host": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "trace": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "read": {
+          "type": "string",
+          "const": "kdna.read/0.7.0-candidate"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionAuthorization": {
+      "type": "object",
+      "properties": {
+        "authorization_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "verified_at": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "authorization_id",
+        "expires_at",
+        "verified_at"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionDelivery": {
+      "type": "object",
+      "properties": {
+        "delivery_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "producer_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "delivery_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observed_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "producer_digest",
+        "delivery_digest",
+        "observed_digest"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionFailure": {
+      "type": "string",
+      "enum": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED"
+      ]
+    },
+    "PublicExecutionOutput": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "bytes",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionStatus": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "denied",
+        "failed"
+      ]
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  }
+}

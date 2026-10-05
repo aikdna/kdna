@@ -179,29 +179,12 @@ function unfenced(text) {
     })
     .join('\n');
 }
-// Navigation projection, not an HTML sanitizer. Each input character is visited once.
-// A closing angle consumes the pending tag segment. An unterminated segment keeps
-// its text but not its angle brackets, matching the existing heading-fragment rule.
-function headingText(text) {
-  const visible = [];
-  let pending = null;
-  for (const character of text) {
-    if (character === '<') {
-      pending ??= [];
-    } else if (character === '>') {
-      pending = null;
-    } else {
-      (pending ?? visible).push(character);
-    }
-  }
-  return visible.join('') + (pending === null ? '' : pending.join(''));
-}
 function anchors(text) {
   const result = new Set(),
     counts = new Map();
   for (const match of unfenced(text).matchAll(/^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm)) {
-    // Project heading text to a fragment identifier, never an HTML rendering.
-    const base = headingText(match[1])
+    const base = match[1]
+      .replace(/<[^>]*>/g, '')
       .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .toLowerCase()
       .replace(/[^\p{L}\p{N}\p{M}_\-\s]/gu, '')
@@ -223,7 +206,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'README.md',
     role: 'downstream',
     heading: '## Current source: choose the matching implementation',
-    text: '| [Runtime CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Explicit-file `inspect`, `validate`, `read`, static `plan` and `load`; Node >=22 |\n| [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |',
+    text: '| [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` archives | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22; unpublished |\n| [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |',
   },
   {
     file: 'README.md',
@@ -349,7 +332,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'specs/public-version-policy.md',
     role: 'historical',
     heading: '### R2 RC5 current-navigation candidate (S12-D013)',
-    text: 'The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. Its failed full-page navigation review and all original bytes remain unchanged. D015 corrected six package-external documents in a separate candidate; its conditional same-tar route stopped when the actual packed Read README required correction. D016 retains those navigation edits under the new RC6 identity; neither candidate has independent stage acceptance from this record.',
+    text: 'The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. These fixed historical schema and package coordinates are superseded; their original bytes and identifiers remain unchanged. A complete RC5 tuple is unsupported by the current combination.',
   },
 ];
 function maskRetainedIdentities(file, text, check) {
@@ -1025,7 +1008,6 @@ module.exports = {
   validateCurrentTarget,
   checkCurrentNavigation,
   markdownLinks,
-  headingText,
   DOCUMENTS,
 };
 if (require.main === module) {

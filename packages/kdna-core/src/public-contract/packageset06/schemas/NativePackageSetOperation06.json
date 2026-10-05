@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetOperation06",
+  "title": "NativePackageSetOperation06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetOperation06",
+  "$defs": {
+    "NativePackageSetOperation06": {
+      "type": "string",
+      "enum": [
+        "isolated_read",
+        "semantic_merge",
+        "cross_asset_reference"
+      ]
+    }
+  }
+}

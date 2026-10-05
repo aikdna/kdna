@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetHandoff06",
+  "title": "NativePackageSetHandoff06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetHandoff06",
+  "$defs": {
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "HandoffMember": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "member_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "C",
+        "snapshot_id"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeExecutionVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "payload_profile": {
+          "type": "string",
+          "const": "kdna.payload.judgment"
+        },
+        "payload_version": {
+          "type": "string",
+          "const": "0.5.1"
+        },
+        "core": {
+          "type": "string",
+          "const": "kdna.core/0.8.2"
+        },
+        "ir": {
+          "type": "string",
+          "const": "kdna.canonical-ir/0.6.1"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "kdna.runtime-capsule/0.4.0-candidate"
+        },
+        "plan": {
+          "type": "string",
+          "const": "kdna.consumption-plan/0.4.0-candidate"
+        },
+        "host": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "trace": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "read": {
+          "type": "string",
+          "const": "kdna.read/0.7.0-candidate"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "NativePackageSetHandoff06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.package-set-handoff/0.3.0-candidate"
+        },
+        "origin_tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "execution_tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "set_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HandoffMember"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "selection": {
+          "$ref": "#/$defs/Selection"
+        },
+        "closure_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "read_receipt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "origin_tuple",
+        "execution_tuple",
+        "set_id",
+        "members",
+        "selection",
+        "closure_digest",
+        "read_receipt_id",
+        "plan_digest",
+        "host_id",
+        "host_epoch",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "Selection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

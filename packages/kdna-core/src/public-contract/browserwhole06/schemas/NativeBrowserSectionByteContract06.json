@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteContract06",
+  "title": "NativeBrowserSectionByteContract06",
+  "description": "Source-bound browser whole data, ingress and whole-admission implementation candidate; runtime acceptance and retained Read are separate.",
+  "$ref": "#/$defs/NativeBrowserSectionByteContract06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "NativeBrowserSectionByteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "kdna.section-bytes-browser",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0-candidate",
+          "type": "string"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

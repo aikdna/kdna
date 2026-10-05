@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:AdmittedNativeConsumptionPlan06",
+  "title": "AdmittedNativeConsumptionPlan06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/AdmittedNativeConsumptionPlan06",
+  "$defs": {
+    "AdmittedNativeConsumptionPlan06": false
+  }
+}

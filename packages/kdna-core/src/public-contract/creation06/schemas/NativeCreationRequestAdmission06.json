@@ -1,0 +1,954 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationRequestAdmission06",
+  "title": "NativeCreationRequestAdmission06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationRequestAdmission06",
+  "$defs": {
+    "AdmittedNativeCreationRequest06": false,
+    "CoreAdmissionRejected": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "reason": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "states": {
+          "$ref": "#/$defs/CoreStaticStates"
+        },
+        "component_failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoreComponentFailure"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "diagnostics",
+        "states",
+        "component_failure"
+      ],
+      "additionalProperties": false
+    },
+    "CoreComponentFailure": {
+      "type": "object",
+      "properties": {
+        "judgment_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "component_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "invalid"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "READ_COMPONENT_DECLARATION_INVALID",
+            "READ_COMPONENT_CONTENT_INVALID",
+            "READ_COMPONENT_REFERENCE_INVALID",
+            "READ_COMPONENT_GRAPH_CYCLE",
+            "READ_COMPONENT_LIMIT_EXCEEDED",
+            "READ_COMPONENT_BINDING_INVALID",
+            "READ_COMPONENT_ADOPTION_INVALID",
+            "READ_METHOD_PRESENCE_INVALID"
+          ]
+        }
+      },
+      "required": [
+        "judgment_ref",
+        "component_ref",
+        "status",
+        "body",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "CoreStaticStates": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "InterpretationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    "NativeCreationRequestAdmission06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "admitted_request"
+            },
+            "request": {
+              "$ref": "#/$defs/AdmittedNativeCreationRequest06"
+            }
+          },
+          "required": [
+            "status",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/SourceRouteFailure06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteCoreRejected06"
+        }
+      ]
+    },
+    "OriginalProtectionDiagnosticFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_INPUT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROFILE_UNSUPPORTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration",
+                "envelope",
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_ENVELOPE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "envelope"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_KDF_UNAVAILABLE"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "kdf"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CREDENTIAL_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "credential"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHENTICATION_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authentication"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CHECKSUMS_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_PIN_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_BINDING_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_EXPIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_REVOKED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_REFRESH_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_STATE_ROLLBACK"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROVIDER_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_CONFLICT"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_UNTRUSTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_DISPOSED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input",
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionDisclosureFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "none"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "trusted_host"
+            },
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitConfirmedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "confirmed"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitFor06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitUnknownFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitConfirmedFor06"
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitNotInvokedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "not_invoked"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitUnknownFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "outcome_unknown"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ]
+    },
+    "ReadStage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    "SourceRouteCoreRejected06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "core_rejected"
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "capture",
+            "admission",
+            "output"
+          ]
+        },
+        "core": {
+          "$ref": "#/$defs/CoreAdmissionRejected"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "stage",
+        "core",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDiagnostic06": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "SOURCE_INPUT_INVALID",
+            "SOURCE_HOST_UNTRUSTED",
+            "SOURCE_EXPECTED_ASSET_MISMATCH",
+            "SOURCE_HOST_DENIED",
+            "SOURCE_PERMISSION_REJECTED",
+            "SOURCE_CONTEXT_UNTRUSTED",
+            "SOURCE_CONTEXT_CLOSED",
+            "SOURCE_DEADLINE_EXCEEDED",
+            "SOURCE_PROVIDER_FAILED",
+            "SOURCE_HANDOFF_UNKNOWN",
+            "SOURCE_CAPABILITY_UNAVAILABLE",
+            "SOURCE_DRAFT_INVALID",
+            "SOURCE_INTERPRETATION_INCOMPLETE",
+            "SOURCE_POLICY_INVALID",
+            "SOURCE_OUTPUT_INVALID"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "admission",
+            "authorization",
+            "semantic",
+            "return",
+            "output"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteFailure06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "source_failed"
+        },
+        "diagnostic": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SourceRouteDiagnostic06"
+            },
+            {
+              "$ref": "#/$defs/OriginalProtectionDiagnosticFor06"
+            }
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "TechnicalState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  }
+}

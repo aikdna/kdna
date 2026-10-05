@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:AdmittedNativeAgentHostRequest06",
+  "title": "AdmittedNativeAgentHostRequest06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/AdmittedNativeAgentHostRequest06",
+  "$defs": {
+    "AdmittedNativeAgentHostRequest06": false
+  }
+}

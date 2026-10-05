@@ -1619,7 +1619,7 @@ function baseLoadPlan(inputPath, layout, validation, opts = {}) {
   return plan;
 }
 
-// ─── B1: Unified container model → legacy layout layout ─────────────────────
+// ─── Unified container model → legacy layout ───────────────────────────
 
 function canonicalToContainerLayout(asset) {
   const map = {};

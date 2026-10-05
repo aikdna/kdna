@@ -1,5 +1,5 @@
 'use strict';
-// B3 protected source transport.
+// Protected source transport.
 //
 // One prepared token belongs to one source opening. The token is created before the
 // trusted Host is called, handed to the Host inside that call, and consumed at most

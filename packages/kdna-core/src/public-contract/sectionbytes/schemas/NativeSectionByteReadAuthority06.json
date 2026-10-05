@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteReadAuthority06",
+  "title": "NativeSectionByteReadAuthority06",
+  "description": "Native owned-byte admission structural data only; opaque requests and byte-read authority require actual native brands.",
+  "$ref": "#/$defs/NativeSectionByteReadAuthority06",
+  "$defs": {
+    "NativeSectionByteReadAuthority06": false
+  }
+}

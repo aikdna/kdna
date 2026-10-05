@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationInputObservation06",
+  "title": "NativeCreationInputObservation06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationInputObservation06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "NativeCreationInputObservation06": {
+      "type": "object",
+      "properties": {
+        "manifest_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "member_bytes": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "manifest_digest",
+        "payload_digest",
+        "members",
+        "member_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteMemberInventory06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "type": {
+          "type": "string",
+          "const": "file"
+        },
+        "mode": {
+          "$ref": "#/$defs/UInt"
+        },
+        "size": {
+          "$ref": "#/$defs/UInt"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "mode",
+        "size",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  }
+}

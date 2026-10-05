@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionRequestOptions06",
+  "title": "NativeExecutionRequestOptions06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionRequestOptions06",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeExecutionRequestOptions06": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "request_id",
+        "run_id",
+        "host_id",
+        "host_epoch"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetDescriptor06",
+  "title": "NativePackageSetDescriptor06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetDescriptor06",
+  "$defs": {
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "NativeExecutionVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "payload_profile": {
+          "type": "string",
+          "const": "kdna.payload.judgment"
+        },
+        "payload_version": {
+          "type": "string",
+          "const": "0.5.1"
+        },
+        "core": {
+          "type": "string",
+          "const": "kdna.core/0.8.2"
+        },
+        "ir": {
+          "type": "string",
+          "const": "kdna.canonical-ir/0.6.1"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "kdna.runtime-capsule/0.4.0-candidate"
+        },
+        "plan": {
+          "type": "string",
+          "const": "kdna.consumption-plan/0.4.0-candidate"
+        },
+        "host": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "trace": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "read": {
+          "type": "string",
+          "const": "kdna.read/0.7.0-candidate"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "NativePackageSetContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.package-set-sections-node"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativePackageSetDescriptor06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativePackageSetContract06"
+        },
+        "origin_tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "execution_tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "max_members": {
+          "type": "integer",
+          "const": 10000
+        },
+        "max_total_source_bytes": {
+          "type": "integer",
+          "const": 104857600
+        },
+        "core_callables": {
+          "type": "array",
+          "items": false,
+          "minItems": 7,
+          "maxItems": 7,
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "getNativePackageSetContract"
+            },
+            {
+              "type": "string",
+              "const": "validateNativePackageSetStructure"
+            },
+            {
+              "type": "string",
+              "const": "createTrustedNativePackageSetMemberProvider"
+            },
+            {
+              "type": "string",
+              "const": "admitNativePackageSetNode"
+            },
+            {
+              "type": "string",
+              "const": "recheckNativePackageSet"
+            },
+            {
+              "type": "string",
+              "const": "inspectAdmittedNativePackageSet"
+            },
+            {
+              "type": "string",
+              "const": "verifyNativePackageSetHandoff"
+            }
+          ]
+        },
+        "read_callables": {
+          "type": "array",
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5,
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "getNativePackageReadContract"
+            },
+            {
+              "type": "string",
+              "const": "createTrustedNativePackageReadProvider"
+            },
+            {
+              "type": "string",
+              "const": "readNativePackageSet"
+            },
+            {
+              "type": "string",
+              "const": "sealNativePackageSetHandoff"
+            },
+            {
+              "type": "string",
+              "const": "admitNativePackageSetHandoff"
+            }
+          ]
+        },
+        "claims": {
+          "type": "string",
+          "const": "claims_not_authenticated"
+        }
+      },
+      "required": [
+        "contract",
+        "origin_tuple",
+        "execution_tuple",
+        "max_members",
+        "max_total_source_bytes",
+        "core_callables",
+        "read_callables",
+        "claims"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

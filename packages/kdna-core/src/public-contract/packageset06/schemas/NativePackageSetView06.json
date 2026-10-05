@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetView06",
+  "title": "NativePackageSetView06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetView06",
+  "$defs": {
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativePackageSetMemberSnapshot06": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/WholeSectionSnapshot06"
+        }
+      },
+      "required": [
+        "member_id",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "NativePackageSetOperation06": {
+      "type": "string",
+      "enum": [
+        "isolated_read",
+        "semantic_merge",
+        "cross_asset_reference"
+      ]
+    },
+    "NativePackageSetView06": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "$ref": "#/$defs/PackageSet"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "operation": {
+          "$ref": "#/$defs/NativePackageSetOperation06"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NativePackageSetMemberSnapshot06"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "selected_member": {
+          "$ref": "#/$defs/NativePackageSetMemberSnapshot06"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "set",
+        "tuple",
+        "operation",
+        "members",
+        "selected_member",
+        "host_id",
+        "host_epoch"
+      ],
+      "additionalProperties": false
+    },
+    "PackageMember": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "member_id",
+        "asset_id",
+        "asset_version",
+        "A"
+      ],
+      "additionalProperties": false
+    },
+    "PackageSet": {
+      "type": "object",
+      "properties": {
+        "set_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PackageMember"
+          },
+          "minItems": 1
+        },
+        "selection": {
+          "$ref": "#/$defs/Selection"
+        }
+      },
+      "required": [
+        "set_id",
+        "members",
+        "selection"
+      ],
+      "additionalProperties": false
+    },
+    "Selection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    },
+    "WholeSectionSnapshot06": false
+  }
+}

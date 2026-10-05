@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:AdmittedNativeRuntimeCapsule06",
+  "title": "AdmittedNativeRuntimeCapsule06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/AdmittedNativeRuntimeCapsule06",
+  "$defs": {
+    "AdmittedNativeRuntimeCapsule06": false
+  }
+}

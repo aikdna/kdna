@@ -3,7 +3,7 @@
   "status": "UNPUBLISHED_CANDIDATE",
   "implementation": "REFERENCE_IMPLEMENTATION",
   "epoch": "OPEN-W1-ADMISSION-REJECTION-01",
-  "owner": "Open-A single normative writer under Open commander",
+  "owner": "Public contract maintainers",
   "acceptance": "SEPARATE_BYTE_BOUND_RECEIPT",
   "version_policy": {
     "status": "UNPUBLISHED_CANDIDATE",
@@ -454,9 +454,9 @@
       ],
       "basis": [
         "window-check.mjs classification of the marker rename as REQUIRES_NEW_COORDINATE",
-        "L1 rounds 1-2 per-rule reconciliation: 18 generator-unchecked rules, each with runtime enforcement evidence",
+        "18 generator-unchecked rules, each with declared runtime enforcement evidence",
         "specs/public-version-policy.md restricted additive window: adding a data registry under engineering is in-window",
-        "L1 round-4/5 registry review: subject naming, three-valued coverage, split implementation/proof citations, and derivation from a declarative coverage table"
+        "Coverage distinguishes subject naming, three-valued coverage, implementation and proof citations, and derivation from a declarative coverage table."
       ],
       "downstream": [
         "specs/public-diagnostics.json and packages/kdna-core/schema/public-diagnostics.json carry the derived generator_machine_check, generator_machine_check_gap, runtime_enforcement, runtime_enforcement_gap, implementation_sites and structured proof per rule",
@@ -553,18 +553,9 @@
   ],
   "source_of_future_machine_semantics": "specs/public-semantic-source.json (PRESENT: 768992 bytes, sha256 24b3c4e75648c3f56908831c84015558125d58d0fc1b640453f88e380573b249)",
   "evidence_policy": {
-    "W0_machine": {
-      "path": "docs/audits/OPEN-WAVE0-PUBLIC-BASELINE.json",
-      "sha256": "c2e66804c534075d87df471ab2f40a551895b94d72bf1f7d954c5ddee72454f7"
-    },
-    "W0_independent": {
-      "path": "docs/audits/2026-09-06-open-wave0-public-baseline-independent-acceptance.md",
-      "sha256": "145207a4f22491dd09a7574f728aa0dda6af3f5d8d271ef33220fa7d9b13e2d0"
-    },
-    "receipt_sha256": "8bd497c48e5448df4228bb3c0bb7f1d2c21866ea3c2b7f1e97fd2fefc84c4561",
-    "private_inputs": "Only accepted technical propositions inherited through W0; no private research/session/asset body copied"
+    "private_inputs": "Technical propositions only; no private research, session or asset body is an input."
   },
-  "aggregate_policy": "Return SHA256 of sorted six-file rows {path,bytes,sha256}, compact UTF-8 JSON, row keys in that order, no LF. Full exact bytes of each of six artifacts, including SPEC-INDEX new bytes. Aggregate stored only in formal return/temp receipt, never in one of the six files; not full normative/generated closure.",
+  "aggregate_policy": "SHA256 of sorted six-file rows {path,bytes,sha256}, compact UTF-8 JSON, row keys in that order, no LF. Include exact participating file bytes. Keep the aggregate outside those files to avoid self-reference; this is not the complete normative/generated closure.",
   "vector_contract": "conformance/public-contract-decision-vectors.json; executable expectations. Observed results and proof limits live in byte-bound acceptance receipts.",
   "not_proved": [
     "Core/Read implementation",
@@ -603,7 +594,6 @@
       "read-contract.md#r04",
       "read-contract.md#r06"
     ],
-    "old_report": "docs/audits/2026-09-06-open-wave1-public-contract-independent-acceptance.md remains immutable; no backfill",
     "aggregate": "Three repair-file and current six-file exact maps/aggregates returned outside these files; no normative/generated closure claim"
   },
   "diagnostic_signal_scopes": {
@@ -738,7 +728,7 @@
   },
   "r2_version_decision": {
     "id": "S12-D001",
-    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
+    "status": "UNPUBLISHED_TECHNICAL_DEFINITION",
     "manifest_schema": {
       "id": "urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1",
       "path": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
@@ -778,10 +768,6 @@
   },
   "r2_dependent_binding_decision": {
     "id": "S12-D003",
-    "at": "2026-09-23T15:33:54.749283+00:00",
-    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
-    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
-    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
     "protection": {
       "id": "kdna.protection-admission/1",
       "version": "1.0.0",
@@ -821,19 +807,10 @@
         "@aikdna/kdna-read": "0.11.0-rc.r2.2"
       }
     },
-    "protected_source": "Retain /1 and existing schema coordinate only if generated reachable schema meaning/bytes unchanged; runtime integration still requires evidence.",
-    "live_writes_authorized": false,
-    "stage1_accepted": false,
-    "stage2_accepted": false,
-    "details": "DECISION.md",
-    "inputs": "INPUTS.json"
+    "protected_source": "Retain /1 and existing schema coordinate only if generated reachable schema meaning/bytes unchanged; runtime integration still requires evidence."
   },
   "r2_additional_decision_D004": {
     "id": "S12-D004",
-    "at": "2026-09-23T15:43:59.975301+00:00",
-    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
-    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
-    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
     "supersedes": "S12-D003 conditional retention of protected-source schema coordinate; rest unchanged",
     "protected_source": {
       "id": "kdna.protected-source/1",
@@ -859,19 +836,10 @@
         "@aikdna/kdna-core": "0.36.0-rc.r2.2",
         "@aikdna/kdna-read": "0.11.0-rc.r2.2"
       }
-    },
-    "live_writes_authorized": false,
-    "stage1_accepted": false,
-    "stage2_accepted": false,
-    "details": "DECISION.md",
-    "inputs": "INPUTS.json"
+    }
   },
   "r2_additional_decision_D005": {
     "id": "S12-D005",
-    "at": "2026-09-23T15:47:24.246797+00:00",
-    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
-    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
-    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
     "definition": {
       "id": "kdna.static-policy/2",
       "version": "2.0.0",
@@ -882,12 +850,7 @@
     "projection": "IRNode_judgment.static_policy_interpretation; typed IR-owned field, not new authored Judgment field and not a new Ref kind",
     "formation_requirements": "owning judgment form=rule; formation_rule.condition_refs explicit []; native formation_rule.policy absent; actual matching result contract",
     "legacy_id": "kdna.static-policy/1",
-    "legacy_digest": "sha256:a28980e46f5f24a9a5190fcd380b813f996db307603620d3f2ab1a14ffb679bb",
-    "live_writes_authorized": false,
-    "stage1_accepted": false,
-    "stage2_accepted": false,
-    "details": "DECISION.md",
-    "inputs": "INPUTS.json"
+    "legacy_digest": "sha256:a28980e46f5f24a9a5190fcd380b813f996db307603620d3f2ab1a14ffb679bb"
   },
   "r2_candidate_corrections": {
     "D006": "Distinct Core0.36.0-rc.r2.2/Read0.11.0-rc.r2.2 and fixed wrapper binding2; unchanged target Tuple; retain unaccepted rc1 artifacts.",
@@ -1042,6 +1005,7 @@
       "proof_limit": "Installation mismatch guard, not authentication of arbitrarily replaced package code; historical old-old combinations remain unchanged."
     },
     "meaning": "Identity and accurate current packed documentation only. Catalog reading mode remains supported; catalog_only envelope status rejected at current schema before binding comparisons. No algorithm or callable change.",
-    "history": "RC1-RC5 frozen unaccepted; Read0.6/0.6.1/0.6.2 and bindings1-5 retain original bytes; complete RC5 tuple unsupported. D015 navigation fixes retained; conditional same-tar route stopped."
-  }
+    "history": "RC1-RC5 package and schema coordinates are superseded compatibility history. Read0.6/0.6.1/0.6.2 and bindings1-5 retain their original bytes; the complete RC5 tuple is unsupported."
+  },
+  "machine_source_identity_note": "source_of_future_machine_semantics records a historical source observation. The current source bytes and SHA256 are recorded by generation; a source that pins this design does not embed a self-referential current digest here."
 }

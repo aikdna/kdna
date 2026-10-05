@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:AdmittedRetainedSectionRequest06",
+  "title": "AdmittedRetainedSectionRequest06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/AdmittedRetainedSectionRequest06",
+  "$defs": {
+    "AdmittedRetainedSectionRequest06": false
+  }
+}

@@ -1,0 +1,810 @@
+{
+  "candidate_only": true,
+  "source": {
+    "path": "specs/public-semantic-source.json",
+    "bytes": 1435436,
+    "sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec"
+  },
+  "historical_original_source": {
+    "scope": "historical_original_contract_source_identity_not_current_generator_input",
+    "bytes": 1429178,
+    "sha256": "1665951d36e80b3cea2d499de3d7fdb4ec9b0ec58926fa6809569066c3231e2c",
+    "coordinate": "urn:kdna:source:sha256:1665951d36e80b3cea2d499de3d7fdb4ec9b0ec58926fa6809569066c3231e2c"
+  },
+  "module": {
+    "id": "kdna.section-bytes-browser",
+    "version": "0.1.0-candidate",
+    "candidate_only": true,
+    "output_tuple": {
+      "container": "0.6.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.1",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.7.0-candidate"
+    },
+    "definition_identity": "Existing digestCanonical of this entire a20_browser_whole module. Independent types are bound by the full source hash and exact generated transitive closures, not by the module digest.",
+    "baseline": "The unchanged a19_owned_byte_whole source defines native public whole container semantics, metadata-before-grant restrictions, full semantic/integrity observations, snapshot brand, origin restrictions and retained Read separation. This module applies those requirements to actual owned browser bytes without importing Node APIs. No Node contract or generation coordinate is relabelled.",
+    "domains": {
+      "bytes": "Only a genuine standard Uint8Array in the current realm; intrinsic tag before reflection, intrinsic slice, no shared/resizable/detached backing, subclass/Buffer/foreign realm/proxy/symbol/enumerable-extra rejected. Nonenumerable string decorations ignored. Synchronous Core-exclusive copy of the exact view before any callback or await, physical 25 MiB cap. Caller view is not frozen or changed.",
+      "json": "Browser request and signature policy ingress accepts only a primitive string. Check typeof before parsing or reflection; do not coerce, stringify, structuredClone or inspect caller objects. Existing strict.parseJson preserves rejection of duplicate and escaped-duplicate keys, scalar/UTF8/depth/array/byte bounds. Only its newly parsed private graph enters exact source-generated validation. Identifier additionally uses the existing UTF8 byte/control/surrogate predicate. No aliases, defaults or tuple conversion for requests.",
+      "opaque": "Request tokens reuse the single existing section-native-state.requests WeakMap. The parsed frozen request and its existing digestCanonical are held there. A fresh object, JSON copy, forwarding Proxy or foreign instance cannot acquire a brand. Browser authorities have one new private same-instance registry; no parallel snapshot/request brand.",
+      "callback": "The embedding supplies a trusted callback. Registration checks typeof function and stores it privately without reading properties or invoking it. A callable Proxy is within this trusted embedding domain; the registration zero-hook promise does not promise a future callback invocation has no user effects.",
+      "failure": "New trusted failures are classified only through a private WeakMap. Unknown thrown objects, Error.code/reason aliases, getters, proxies and wrapped genuine errors are never inspected or converted into trusted reasons. Parsing errors from the trusted parser are normalized at that internal parser boundary to a newly branded READ_INPUT_INVALID. Unknown future pipeline failures remain capability unavailable with null diagnostics."
+    },
+    "request_ingress": {
+      "schema": "Request06_whole_asset",
+      "representation": "primitive JSON string",
+      "tuple": "exact CandidateVersionTuple06, ten keys",
+      "brand": "AdmittedSectionReadRequest06 from the existing sections owner",
+      "scope": "Only whole_asset; exact_selection/catalog/expand and any alias fail this exact schema. Such failure is an input representation rejection, not a judgment on asset validity.",
+      "identity": "digestCanonical of the complete frozen parsed request, independent of whitespace/key order in input text. No raw-text digest. Freezing only the private parsed graph."
+    },
+    "policy_ingress": {
+      "schema": "SectionSignaturePolicy06",
+      "representation": "primitive JSON string or omitted undefined",
+      "default": {
+        "requireSignature": false,
+        "expectedPublicKeyHex": null
+      },
+      "closed": "Exactly requireSignature:boolean and expectedPublicKeyHex:null or 64 lowercase hex. Null, object inputs, aliases, missing and extra fields reject. A pin keeps its original later verification semantics; embedded keys do not create trust.",
+      "storage": "Freeze the parsed policy and bind its existing digestCanonical in the browser private authority registry. Never keep caller data objects."
+    },
+    "whole_pipeline": {
+      "status": "LOCAL_IMPLEMENTATION_CANDIDATE_REQUIRES_ACTUAL_WHOLE_VALIDATION",
+      "order": [
+        "Resolve genuine same-instance request and browser authority without invoking callback",
+        "Own all input bytes synchronously before any await or callback",
+        "Observe bounded directory/mimetype/raw Manifest metadata without body decoding or A/C/E/IR before grant",
+        "Bind actual capture, copy/access ledger, complete request digest, policy digest and signature read intent in readonly browser context",
+        "Await literal true from the separately trusted callback",
+        "Run source-identical native06 full container/frame/schema/component/static policy/checksums/signature/IR/A-C-E validation on owned bytes",
+        "Mint the existing WholeSectionSnapshot06 in the single native snapshots WeakMap only on complete success",
+        "Retained Read separately enforces current authority, Host, scope, complete-envelope budget and delivery"
+      ],
+      "platform": "No Node crypto, zlib, fs, Buffer or fabricated path/FD. Mature portable hash/inflate/signature implementations must be bound to original semantics before composition. No file/network/temp-asset roundtrip.",
+      "observation": "Use new NativeBrowserSectionByteObservation06 and actual absolute ZIP byte offsets. filesystem_reads=0 means asset-source I/O only; browser/module loading is independently reported. Copy is explicit pregrant observation, not permission or metadata-only claim.",
+      "bounds": "Keep original physical25MiB/member8MiB/decoded12MiB/member128 and original JSON/graph limits; no new decoded logical8MiB aggregate or memory/performance claim.",
+      "failures": "Preserve source-defined failure stage/code/field/subject for trusted actual checks; unknown exceptions capability/null. Null snapshot on rejection, no forged witness.",
+      "brands": "Original single snapshot WeakMap and byteOrigins brand. Existing Node request factory/Node Buffer handling/Node authority and retained Read semantics are unchanged.",
+      "trusted_failure_producers": "The isolated portable semantic graph registers immutable code/diagnostic metadata at its existing controlled strict.reject, section.need, component.failure and cross-entry producers in one private WeakMap. Mapping checks that registry without reading arbitrary exceptions or mutable Error fields. Authorization callback exceptions always become capability unavailable with null diagnostics, including an obtained genuinely registered error. Pure source semantic logic is otherwise preserved. WebCrypto Ed25519 verifies the exact original signing payload after signature-domain, profile, policy pin and read-intent checks; false is signature invalid, unexpected platform exceptions remain capability unavailable/null."
+    },
+    "roots": [
+      "NativeBrowserSectionByteContract06",
+      "NativeBrowserSectionByteObservation06",
+      "NativeBrowserSectionByteAuthorityContext06",
+      "NativeBrowserSectionByteReadAuthority06",
+      "NativeBrowserSectionByteAccepted06",
+      "NativeBrowserSectionByteRejected06",
+      "NativeBrowserSectionByteAdmissionResult06",
+      "Request06_whole_asset",
+      "SectionSignaturePolicy06"
+    ],
+    "api": {
+      "core_subpath": "@aikdna/kdna-core/sections-bytes-browser",
+      "callables": [
+        "getNativeBrowserSectionContract",
+        "admitBrowserSectionRequestJson",
+        "inspectBrowserSectionRequest",
+        "createNativeBrowserSectionReadAuthority",
+        "admitSectionBytesBrowser"
+      ],
+      "implemented_this_unit": "Request/policy ingress and authority registration plus source-governed whole byte admission, complete semantic/integrity validation and genuine native snapshot issuance. Retained Read remains a separate source contract.",
+      "core_declaration": "import type { AdmittedSectionReadRequest06, Request06_whole_asset } from '../sections/types.js';\nimport type { NativeBrowserSectionByteContract06, NativeBrowserSectionByteReadAuthority06, NativeBrowserSectionByteAuthorityContext06, NativeBrowserSectionByteAdmissionResult06 } from './types.js';\nexport type * from './types.js';\nexport type { AdmittedSectionReadRequest06 } from '../sections/types.js';\nexport declare function getNativeBrowserSectionContract(): Readonly<NativeBrowserSectionByteContract06>;\nexport declare function admitBrowserSectionRequestJson(text:string):AdmittedSectionReadRequest06;\nexport declare function inspectBrowserSectionRequest(token:AdmittedSectionReadRequest06):Readonly<Request06_whole_asset>|null;\nexport declare function createNativeBrowserSectionReadAuthority(callback:(context:Readonly<NativeBrowserSectionByteAuthorityContext06>)=>boolean|Promise<boolean>,policyJson?:string):NativeBrowserSectionByteReadAuthority06;\nexport declare function admitSectionBytesBrowser(input:Uint8Array,request:AdmittedSectionReadRequest06,authority:NativeBrowserSectionByteReadAuthority06):Promise<NativeBrowserSectionByteAdmissionResult06>;\n",
+      "planned_whole_declaration": "import type { AdmittedSectionReadRequest06 } from '../sections/types.js';\nimport type { NativeBrowserSectionByteReadAuthority06, NativeBrowserSectionByteAdmissionResult06 } from './types.js';\nexport declare function admitSectionBytesBrowser(input:Uint8Array,request:AdmittedSectionReadRequest06,authority:NativeBrowserSectionByteReadAuthority06):Promise<NativeBrowserSectionByteAdmissionResult06>;\n",
+      "type_roots": [
+        "AdmittedSectionReadRequest06",
+        "WholeSectionSnapshot06"
+      ],
+      "read_exports": "None in this ingress unit. Full retained browser Read requires a later explicit source/module implementation and actual validation."
+    },
+    "acceptance": {
+      "source_candidate": true,
+      "claims_not_established": [
+        "native06 browser whole implementation acceptance",
+        "native retained browser Read/Host/budget/delivery",
+        "new archive/export/install/cold",
+        "consumer migration",
+        "formal assets or product acceptance"
+      ],
+      "controls_this_unit": [
+        "Node and actual browser primitive JSON ingress",
+        "exact request/policy schema and original scalar constraints",
+        "same-instance original Node request inspector and canonical request digest",
+        "malicious caller objects and unknown thrown objects do not invoke hooks",
+        "registration does not invoke callback; no authority grant or snapshot",
+        "full source/type/value closure and mature generated standalone validator binding",
+        "Actual source-defined whole byte capture and literal grant before full validation",
+        "Complete native IR/A/C/E, checksums and original kdsig signature observations",
+        "Original single-instance snapshots and byteOrigins issuance only on complete success"
+      ]
+    }
+  },
+  "types": {
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "CapturedInput06": {
+      "type": "object",
+      "properties": {
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "input_byte_length": {
+          "$ref": "#/$defs/UInt"
+        },
+        "manifest_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "zip_directory_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "table_frames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CheckedSection06"
+          },
+          "minItems": 0
+        },
+        "identity_scope": {
+          "type": "string",
+          "const": "observed_metadata_and_loaded_sections_only"
+        }
+      },
+      "required": [
+        "capture_id",
+        "input_byte_length",
+        "manifest_bytes_digest",
+        "zip_directory_bytes_digest",
+        "table_frames",
+        "identity_scope"
+      ],
+      "additionalProperties": false
+    },
+    "CheckedSection06": {
+      "type": "object",
+      "properties": {
+        "section_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "member": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "offset_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "length_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "section_id",
+        "member",
+        "offset_bytes",
+        "length_bytes",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeBrowserSectionByteAccepted06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "accepted"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/WholeSectionSnapshot06"
+        },
+        "input_observation": {
+          "$ref": "#/$defs/NativeBrowserSectionByteObservation06"
+        }
+      },
+      "required": [
+        "status",
+        "snapshot",
+        "input_observation"
+      ],
+      "additionalProperties": false
+    },
+    "NativeBrowserSectionByteAdmissionResult06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/NativeBrowserSectionByteAccepted06"
+        },
+        {
+          "$ref": "#/$defs/NativeBrowserSectionByteRejected06"
+        }
+      ]
+    },
+    "NativeBrowserSectionByteAuthorityContext06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeBrowserSectionByteContract06"
+        },
+        "operation": {
+          "type": "string",
+          "const": "admit_owned_whole"
+        },
+        "request": {
+          "$ref": "#/$defs/Request06_whole_asset"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input_observation": {
+          "$ref": "#/$defs/NativeBrowserSectionByteObservation06"
+        },
+        "manifest_identity": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "signature_policy": {
+          "$ref": "#/$defs/SectionSignaturePolicy06"
+        },
+        "signature_policy_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "signature_read_intent": {
+          "$ref": "#/$defs/SectionSignatureReadIntent06"
+        },
+        "signature_read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "operation",
+        "request",
+        "request_digest",
+        "input_observation",
+        "manifest_identity",
+        "signature_policy",
+        "signature_policy_digest",
+        "signature_read_intent",
+        "signature_read_intent_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeBrowserSectionByteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "kdna.section-bytes-browser",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0-candidate",
+          "type": "string"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeBrowserSectionByteObservation06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeBrowserSectionByteContract06"
+        },
+        "input_kind": {
+          "type": "string",
+          "const": "owned_uint8array"
+        },
+        "input_byte_length": {
+          "$ref": "#/$defs/UInt"
+        },
+        "ownership_copy": {
+          "type": "object",
+          "properties": {
+            "offset_bytes": {
+              "type": "integer",
+              "const": 0
+            },
+            "length_bytes": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "offset_bytes",
+            "length_bytes"
+          ],
+          "additionalProperties": false
+        },
+        "capture": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CapturedInput06"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "access_ranges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SectionIORange06"
+          }
+        },
+        "filesystem_reads": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "contract",
+        "input_kind",
+        "input_byte_length",
+        "ownership_copy",
+        "capture",
+        "access_ranges",
+        "filesystem_reads"
+      ],
+      "additionalProperties": false
+    },
+    "NativeBrowserSectionByteReadAuthority06": false,
+    "NativeBrowserSectionByteRejected06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeBrowserSectionByteContract06"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "rejected",
+            "unsupported"
+          ]
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "metadata",
+            "authorization",
+            "content",
+            "semantic",
+            "integrity"
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "diagnostic": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SectionFailureDiagnostic06"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "input_observation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NativeBrowserSectionByteObservation06"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "snapshot": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "contract",
+        "status",
+        "request_id",
+        "stage",
+        "reason",
+        "diagnostic",
+        "input_observation",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "NonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "Request06_whole_asset": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "whole_asset",
+          "type": "string"
+        },
+        "selection": {
+          "const": null,
+          "type": "null"
+        },
+        "handle": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "SectionFailureDiagnostic06": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "subject"
+      ],
+      "additionalProperties": false
+    },
+    "SectionIORange06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/SectionIOSingleRange06"
+        },
+        {
+          "$ref": "#/$defs/SectionIOStructureBatch06"
+        }
+      ]
+    },
+    "SectionIOSingleRange06": {
+      "type": "object",
+      "properties": {
+        "offset_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "length_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "zip_end",
+            "zip_directory",
+            "zip_local_header",
+            "zip_local_name",
+            "mimetype",
+            "manifest",
+            "whole_after_authorization",
+            "zip_directory_header",
+            "zip_directory_name",
+            "section_table_after_authorization",
+            "section_content_after_authorization",
+            "resource_after_authorization",
+            "section_structure_after_authorization",
+            "zip_locator_local_signature",
+            "zip_locator_local_header",
+            "zip_locator_directory_signature",
+            "zip_locator_directory_header",
+            "zip_locator_directory_name",
+            "zip_locator_local_name",
+            "zip_locator_eocd",
+            "zip_comment",
+            "checksum_document_after_authorization",
+            "checksum_member_after_authorization",
+            "signature_document_after_authorization",
+            "signature_member_after_authorization"
+          ]
+        }
+      },
+      "required": [
+        "offset_bytes",
+        "length_bytes",
+        "purpose"
+      ],
+      "additionalProperties": false
+    },
+    "SectionIOStructureBatch06": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "section_structure_after_authorization",
+            "section_interpretation_after_authorization"
+          ]
+        },
+        "ranges": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "properties": {
+              "offset_bytes": {
+                "$ref": "#/$defs/UInt"
+              },
+              "length_bytes": {
+                "$ref": "#/$defs/UInt"
+              }
+            },
+            "required": [
+              "offset_bytes",
+              "length_bytes"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "purpose",
+        "ranges"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignatureReadIntent06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string",
+              "const": "none"
+            }
+          },
+          "required": [
+            "operation"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string",
+              "const": "verify_complete_original_kdsig_domain"
+            },
+            "signature_member": {
+              "$ref": "#/$defs/SectionSignatureReadMember06"
+            },
+            "covered_members": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SectionSignatureReadMember06"
+              },
+              "minItems": 2,
+              "maxItems": 128
+            },
+            "excluded_members": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "minItems": 0,
+              "maxItems": 128
+            },
+            "profile": {
+              "type": "string",
+              "const": "kdsig.ed25519"
+            },
+            "profile_version": {
+              "type": "string",
+              "const": "0.1.0"
+            }
+          },
+          "required": [
+            "operation",
+            "signature_member",
+            "covered_members",
+            "excluded_members",
+            "profile",
+            "profile_version"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SectionSignatureReadMember06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8388608
+        }
+      },
+      "required": [
+        "name",
+        "bytes"
+      ],
+      "additionalProperties": false
+    },
+    "Text": {
+      "type": "string"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    },
+    "WholeSectionSnapshot06": false
+  }
+}

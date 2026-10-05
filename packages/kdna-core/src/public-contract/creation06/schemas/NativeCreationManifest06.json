@@ -1,0 +1,662 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationManifest06",
+  "title": "NativeCreationManifest06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationManifest06",
+  "$defs": {
+    "AccessMode": {
+      "type": "string",
+      "enum": [
+        "public",
+        "licensed",
+        "remote"
+      ]
+    },
+    "ActorKind": {
+      "type": "string",
+      "enum": [
+        "person",
+        "organization",
+        "collective",
+        "anonymous",
+        "asset_native",
+        "agent"
+      ]
+    },
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "AssetType": {
+      "type": "string",
+      "enum": [
+        "domain",
+        "cluster",
+        "tool",
+        "sample",
+        "fixture",
+        "bundle"
+      ]
+    },
+    "Boolean": {
+      "type": "boolean"
+    },
+    "Compatibility": {
+      "type": "object",
+      "properties": {
+        "min_loader_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.5.1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "min_loader_version",
+        "profile",
+        "profile_version"
+      ],
+      "additionalProperties": false
+    },
+    "Creator": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "kind": {
+          "$ref": "#/$defs/ActorKind"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "Extension": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "critical": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "definition": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "id",
+        "critical",
+        "definition",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "FiniteNumber": {
+      "type": "number"
+    },
+    "HistoryDeclaration": {
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial"
+          ]
+        },
+        "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RevisionEntry"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "coverage",
+        "statement",
+        "entries"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "License": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "uri": {
+          "$ref": "#/$defs/NonEmptyText"
+        }
+      },
+      "required": [
+        "identifier"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestAuthoring": {
+      "type": "object",
+      "properties": {
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "content_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestLineage": {
+      "type": "object",
+      "properties": {
+        "source_asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "relationship": {
+          "$ref": "#/$defs/TermRef"
+        }
+      },
+      "required": [
+        "source_asset_id",
+        "source_version",
+        "relationship"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestRuntime": {
+      "type": "object",
+      "properties": {
+        "mandatory_entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeMandatoryEntryName"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mandatory_entries"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationManifest06": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_uid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "runtime": {
+          "$ref": "#/$defs/ManifestRuntime"
+        },
+        "creator": {
+          "$ref": "#/$defs/Creator"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authoring": {
+          "$ref": "#/$defs/ManifestAuthoring"
+        },
+        "access": {
+          "$ref": "#/$defs/AccessMode"
+        },
+        "license": {
+          "$ref": "#/$defs/License"
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "description": {
+          "$ref": "#/$defs/Text"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "minItems": 0
+        },
+        "lineage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ManifestLineage"
+          },
+          "minItems": 0
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "history": {
+          "$ref": "#/$defs/HistoryDeclaration"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_uid",
+        "asset_type",
+        "title",
+        "version",
+        "judgment_version",
+        "created_at",
+        "updated_at",
+        "compatibility",
+        "runtime",
+        "summary",
+        "languages",
+        "history"
+      ],
+      "additionalProperties": false
+    },
+    "NonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RevisionEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "affected_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "previous": {
+          "$ref": "#/$defs/RevisionRef"
+        },
+        "actor_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "judgment_version",
+        "at",
+        "summary",
+        "affected_refs",
+        "actor_refs"
+      ],
+      "additionalProperties": false
+    },
+    "RevisionRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "revision"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeMandatoryEntryName": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntryName"
+        },
+        {
+          "not": {
+            "enum": [
+              "checksums.json",
+              "signature.kdsig",
+              "mimetype"
+            ]
+          }
+        },
+        {
+          "pattern": "^(?!build-receipt\\.json$)(?!reports/)(?!authoring/)"
+        }
+      ]
+    },
+    "SemanticValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValueText"
+        },
+        {
+          "$ref": "#/$defs/ValueNumber"
+        },
+        {
+          "$ref": "#/$defs/ValueBoolean"
+        },
+        {
+          "$ref": "#/$defs/ValueNull"
+        },
+        {
+          "$ref": "#/$defs/ValueList"
+        },
+        {
+          "$ref": "#/$defs/ValueRecord"
+        }
+      ]
+    },
+    "TermRef": {
+      "type": "object",
+      "properties": {
+        "term": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "extension": {
+          "$ref": "#/$defs/Extension"
+        },
+        "vocabulary": {
+          "$ref": "#/$defs/TermVocabulary"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "additionalProperties": false
+    },
+    "TermVocabulary": {
+      "type": "string",
+      "enum": [
+        "core",
+        "author"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "Timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "ValueBoolean": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "boolean",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueList": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "list",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SemanticValue"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "kind",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "ValueNull": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "null",
+          "type": "string"
+        },
+        "value": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueNumber": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "number",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/FiniteNumber"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueRecord": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "record",
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ValueField"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "kind",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "ValueText": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "text",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Text"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

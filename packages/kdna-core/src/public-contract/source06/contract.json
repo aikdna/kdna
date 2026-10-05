@@ -1,0 +1,2207 @@
+{
+  "candidate_only": true,
+  "source": {
+    "path": "specs/public-semantic-source.json",
+    "bytes": 1435436,
+    "sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec"
+  },
+  "historical_original_source": {
+    "scope": "historical_original_contract_source_identity_not_current_generator_input",
+    "bytes": 1186782,
+    "sha256": "01fbb94b5507aa920e297b89730256d383f699aac6f15a8964be985748f0db5c",
+    "coordinate": "urn:kdna:source:sha256:01fbb94b5507aa920e297b89730256d383f699aac6f15a8964be985748f0db5c"
+  },
+  "module": {
+    "versions": {
+      "source_route": "kdna.source-sections/0.1.0-candidate",
+      "protected_source_route": "kdna.protected-source-sections/0.1.0-candidate",
+      "tuple": {
+        "container": "0.6.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.1",
+        "core": "kdna.core/0.8.2",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.7.0-candidate"
+      },
+      "unchanged": [
+        "authoring_workflow/2",
+        "protected_source/1 original path",
+        "all original05 source/producer bytes and API behavior",
+        "AAD/envelope/kdsig/protection grant algorithms and meanings",
+        "Read/projection/public06 and protected06 domain tuple coordinates"
+      ]
+    },
+    "native_exports": {
+      "@aikdna/kdna-core/source-sections-node": [
+        "admitSourceOperationRequest",
+        "inspectSourceOperationRequest",
+        "createNativeSourceOperationAuthority",
+        "openSectionSourceNode",
+        "packSectionSourceNode",
+        "protectSectionSourceNode",
+        "createTrustedProtectedSectionSourceHost",
+        "withProtectedSectionSourceNode",
+        "commitProtectedSectionSourceTransport",
+        "previewProtectedSectionSourceRevision",
+        "produceProtectedSectionSourceRevision"
+      ]
+    },
+    "api_typescript": "import type { Manifest06Candidate, ProtectedManifest06Candidate, CandidateVersionTuple06 } from './sections/types.js';\nimport type { Payload } from './types.js';\nimport type { ProtectedAdmissionOptions, TrustedProtectionProvider, ProtectedExportOptions, ProtectedProducerSecrets } from './protection-node.js';\nimport type { ProtectedSourcePolicy, ProtectedSourceEdits, ProtectedSourceProviderRequest, ProtectedSourceOutputSecrets } from './protected-source-node.js';\nexport type NativeSourceMember06 = Readonly<{ name: string; type: 'file'; mode: number; bytes: Uint8Array }>;\nexport type NativeSourceBundle06 = Readonly<{ observation: SourceRouteObservation06; manifest: Manifest06Candidate | ProtectedManifest06Candidate; payload: Payload; original_members: ReadonlyArray<NativeSourceMember06>; logical_payload: Readonly<{ entry: 'payload.kdnab'; bytes: Uint8Array; encoding: 'derived_deterministic_cbor' | 'original_decrypted_cbor' }> }>;\nexport type NativePublicSourceResult06 = Readonly<{ status: 'source_opened'; source: NativeSourceBundle06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;\nexport type NativeSourceProduced06 = Readonly<{ status: 'produced'; bytes: Uint8Array; evidence: SourceRouteProductionEvidence06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;\nexport type NativeSourceSecretRequest06 = Readonly<{ source_A: string; output_policy_digest: string; kind: 'password' | 'external-grant' | 'integrity'; signature: 'none' | 'ed25519' }>;\nexport declare function admitSourceOperationRequest(candidate: unknown): SourceOperationRequestAdmission06;\nexport declare function inspectSourceOperationRequest(request: AdmittedSourceOperationRequest06): Readonly<SourceOperationRequest06> | null;\nexport declare function createNativeSourceOperationAuthority(callback: (context: Readonly<SourceOperationAuthorityContext06>) => boolean | Promise<boolean>): NativeSourceOperationAuthority06;\nexport declare function openSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06): Promise<NativePublicSourceResult06>;\nexport declare function packSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, edits: ProtectedSourceEdits): Promise<NativeSourceProduced06>;\nexport declare function protectSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, options: ProtectedExportOptions, outputSecretProvider: (request: NativeSourceSecretRequest06) => ProtectedProducerSecrets | Promise<ProtectedProducerSecrets>): Promise<NativeSourceProduced06>;\nexport type ProtectedNativeSourceBundle06 = Readonly<{ identity: SourceRouteDigests06; manifest: ProtectedManifest06Candidate; payload: Payload; original_members: ReadonlyArray<NativeSourceMember06>; original_inventory: ReadonlyArray<SourceRouteMemberInventory06>; plaintext_payload: Readonly<{ entry: 'payload.kdnab'; bytes: Uint8Array; sha256: string }>; prior_snapshot: import('./sections/types.js').ProtectedPayloadSnapshot06; host_observation: ProtectedSectionSourceHostObservation06; proof_limits: ReadonlyArray<string>; observation: SourceRouteObservation06 }>;\nexport type ProtectedSectionSourceHostCallbacks06 = Readonly<{ observe: (context: Readonly<ProtectedSectionSourceHostContext06>) => ProtectedSectionSourceHostObservation06 | Promise<ProtectedSectionSourceHostObservation06>; deliver: (bundle: ProtectedNativeSourceBundle06, prepared: ProtectedSectionSourceDeliveryToken06, revision: ProtectedSectionSourceRevisionContext06) => boolean | Promise<boolean> }>;\nexport type ProtectedSectionSourceTransport06 = Readonly<{ observeScope: () => ProtectedSectionSourceHostObservation06 | Promise<ProtectedSectionSourceHostObservation06>; commit: (bundle: ProtectedNativeSourceBundle06 | null) => boolean }>;\nexport type ProtectedSectionSourceRevisionResult06 = Readonly<{ status: 'revision_produced'; bytes: Uint8Array; evidence: SourceRouteProductionEvidence06; body_bytes: number }> | Readonly<{ status: 'revision_rejected'; diagnostic: SourceRouteDiagnostic06; body: null; body_bytes: 0 }>;\nexport declare function createTrustedProtectedSectionSourceHost(callbacks: ProtectedSectionSourceHostCallbacks06): TrustedProtectedSectionSourceHost06;\nexport declare function withProtectedSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, options: ProtectedAdmissionOptions, provider: TrustedProtectionProvider, host: TrustedProtectedSectionSourceHost06): Promise<ProtectedSectionSourceObservation06>;\nexport declare function commitProtectedSectionSourceTransport(prepared: ProtectedSectionSourceDeliveryToken06, transport: ProtectedSectionSourceTransport06): Promise<ProtectedSectionSourceCommit06>;\nexport declare function previewProtectedSectionSourceRevision(context: ProtectedSectionSourceRevisionContext06, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy): Promise<ProtectedSectionSourcePreview06>;\nexport declare function produceProtectedSectionSourceRevision(context: ProtectedSectionSourceRevisionContext06, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy, outputSecretProvider: (request: ProtectedSourceProviderRequest) => ProtectedSourceOutputSecrets | Promise<ProtectedSourceOutputSecrets>): Promise<ProtectedSectionSourceRevisionResult06>;\n",
+    "generation_roots": {
+      "AdmittedSourceOperationRequest06": "candidate/source06/AdmittedSourceOperationRequest06.schema.json",
+      "NativeSourceOperationAuthority06": "candidate/source06/NativeSourceOperationAuthority06.schema.json",
+      "ProtectedSectionSourceCommit06": "candidate/source06/ProtectedSectionSourceCommit06.schema.json",
+      "ProtectedSectionSourceDelivered06": "candidate/source06/ProtectedSectionSourceDelivered06.schema.json",
+      "ProtectedSectionSourceDeliveryToken06": "candidate/source06/ProtectedSectionSourceDeliveryToken06.schema.json",
+      "ProtectedSectionSourceHostContext06": "candidate/source06/ProtectedSectionSourceHostContext06.schema.json",
+      "ProtectedSectionSourceHostObservation06": "candidate/source06/ProtectedSectionSourceHostObservation06.schema.json",
+      "ProtectedSectionSourceObservation06": "candidate/source06/ProtectedSectionSourceObservation06.schema.json",
+      "ProtectedSectionSourcePreview06": "candidate/source06/ProtectedSectionSourcePreview06.schema.json",
+      "ProtectedSectionSourceRevisionContext06": "candidate/source06/ProtectedSectionSourceRevisionContext06.schema.json",
+      "ProtectedSourceRouteContract06": "candidate/source06/ProtectedSourceRouteContract06.schema.json",
+      "SourceInputProfile06": "candidate/source06/SourceInputProfile06.schema.json",
+      "SourceOperationAuthorityContext06": "candidate/source06/SourceOperationAuthorityContext06.schema.json",
+      "SourceOperationIntent06": "candidate/source06/SourceOperationIntent06.schema.json",
+      "SourceOperationKind06": "candidate/source06/SourceOperationKind06.schema.json",
+      "SourceOperationRequest06": "candidate/source06/SourceOperationRequest06.schema.json",
+      "SourceOperationRequestAdmission06": "candidate/source06/SourceOperationRequestAdmission06.schema.json",
+      "SourceOuterCapture06": "candidate/source06/SourceOuterCapture06.schema.json",
+      "SourceRouteContract06": "candidate/source06/SourceRouteContract06.schema.json",
+      "SourceRouteCoreRejected06": "candidate/source06/SourceRouteCoreRejected06.schema.json",
+      "SourceRouteDiagnostic06": "candidate/source06/SourceRouteDiagnostic06.schema.json",
+      "SourceRouteDigests06": "candidate/source06/SourceRouteDigests06.schema.json",
+      "SourceRouteFailure06": "candidate/source06/SourceRouteFailure06.schema.json",
+      "SourceRouteMemberInventory06": "candidate/source06/SourceRouteMemberInventory06.schema.json",
+      "SourceRouteObservation06": "candidate/source06/SourceRouteObservation06.schema.json",
+      "SourceRouteProductionEvidence06": "candidate/source06/SourceRouteProductionEvidence06.schema.json",
+      "TrustedProtectedSectionSourceHost06": "candidate/source06/TrustedProtectedSectionSourceHost06.schema.json"
+    },
+    "binary_runtime_carriers": {
+      "validation": "NativeSourceBundle06, ProtectedNativeSourceBundle06 and produced results have exactly the declared TypeScript own data fields. Uint8Array bytes are runtime values, not JSON, not opaque authority brands. Copy original binary input rules; no schema-valid JSON mints source permission. JSON observations are separately validated by the named closed schemas. No generated schema falsely claims to validate a byte-vector carrier.",
+      "ownership": "Byte arrays delivered/returned are owned copies. The same-instance private owner retains independent original bytes/values; caller mutation of a delivered bundle cannot change revision authority or captured source. All binary inputs obey original accessor/prototype/ownership checks; private temporary output credentials zeroed in finally."
+    },
+    "request_and_authority": {
+      "admission": "Closed native request has exact candidate tuple; malformed request maps original input/source rejection, unsupported/mixed tuple maps original Core rejection arm. expected_A may be null only for public source operations; protected complete_source requires an explicit Digest. Request.operation must equal the called API. No projection Read token/authority or old source Host can mint this new operation authority.",
+      "capture": "Reuse approved same-FD bounded ZIP metadata probes and bounded ZIP malformed-layout overlap caveat. Before grant observe outer Manifest/directory only, no full A, no materialized payload, no credentials/provider/secret callback. Unsupported compression stays capability rejection before intent schema; capture has no A field. Caller path content changes and byte-input ownership retain original protected-source checks.",
+      "intent": "Exact full member inventory, input profile, complete-source scope, request/capture/edits/output-policy digests and input signature policy enter one closed callback. This explicitly authorizes complete source observation, including optional attachments beyond projection or E membership; protected output remains confined to the separately trusted complete_source Host.",
+      "caller_and_host_separation": "The new explicit source authority represents the trusted native Core caller consent to this captured source operation; it is not a new asset entitlement or a projection Read grant. Original05 source admission already authenticates/decrypts before its complete_source Host.observe. Preserve that ordering: after native caller consent and protected credential admission, complete_source Host may still deny plaintext disclosure. Such Host denial is NOT evidence that no decryption occurred; original credential/provider and retained plaintext ownership/disposal rules continue.",
+      "grant": "Only explicit true authorizes this capture and operation. false/throw/unknown internal errors preserve capability/source rejection and no credential/secret provider call. Input signature policy pins source verification only; output seed is obtained independently after grant/source validation, never inferred from pin or source bundle public key.",
+      "publication": "Unprotected open returns complete source bytes to its authorized caller. protected source opening never returns the plaintext bundle outside trusted Host.deliver; body-free failure retains actual handoff/transport history.",
+      "input_signature_policy_binding": "For withProtectedSectionSourceNode, request.signature_policy is the exact policy declared in the capture intent; options.signaturePolicy retains its original ProtectedAdmissionOptions meaning and must be closed, strictly copied and all-value equal to that declaration. Neither overrides the other. If unequal or malformed, return SourceRouteFailure06 with SOURCE_INPUT_INVALID at input, none disclosure/body0, before capture, authority callback, any credential-value evaluation or provider calls. Read only options.signaturePolicy as an own data property; do not invoke accessors or evaluate credential while comparing. Input source pin/requireSignature never authorizes or selects output signing seed.",
+      "timeout": {
+        "scope": "request.timeout_ms applies to all four new operations. It is a per-invocation wall-clock deadline, not provider time, Host current_ms, a content timestamp, performance target, or a persisted cross-call capability. Original05 APIs are unchanged.",
+        "start": "After confirming the native request/authority and closed nonsecret call arguments, at the entry to that API invocation before capture or any await, capture started_at=Date.now() once and deadline=started_at+request.timeout_ms. Reusing a valid request in a distinct permitted call starts a new invocation deadline, not a renewed protected source context.",
+        "boundary": "Keep the original source comparison Date.now() > deadline. Check before further work and immediately after each awaited capture/grant/provider/Host operation, before obtaining/copying credential or output secret values, and before returning source/output bytes. No abort or extra promise is invented; a late callback may finish but its result cannot authorize subsequent work.",
+        "failure": "Return the existing SourceRouteFailure06 SOURCE_DEADLINE_EXCEEDED. During capture/admission use stage admission; after authority grant use authorization; after an output-secret provider in production/revision use semantic; before final source/output return use return. Do not continue materialization/encryption/revision/output publication on a known expired invocation. Dispose retained native operations and release/wipe private owned plaintext/output secret/output buffers under original cleanup rules; never mutate caller-owned bytes.",
+        "late_provider": "If outputSecretProvider resolves after deadline, do not read returned secret property values or invoke getters and do not produce output. Already observed source Host plaintext or an already confirmed/unknown transport effect remains truthfully recorded. No body-free failure erases earlier disclosure.",
+        "protected_relation": "withProtectedSectionSourceNode additionally retains the same originating source deadline throughout its Host/revision/commit owner scope, originalExpiresAt and source Host nonrollback checks. A later context call cannot reset the originating deadline. The 8MiB/20MiB bounds remain protected-source-only; the 1..60000 timeout range applies to all new SourceOperationRequest06 calls."
+      }
+    },
+    "public_source": {
+      "admission": "Perform actual native whole public06 capture, integrity, domain/resource/interpretation and full reconstructed IR verification on the captured bytes. Do not create a fake05 ZIP or change format_version to get old admit acceptance. Same-capture internal adapters may reuse original algorithms, never manufacture old brands.",
+      "payload": "Recover the original authored Payload values, optional absence, order and history/Manifest relationship through the already accepted inverse IR mapping after complete native verification. Logical CBOR is freshly deterministic-encoded with the original approved codec and explicitly labelled derived_deterministic_cbor; it is not the old authored wire CBOR or a new independent logical aggregate8 guard.",
+      "source_view": "manifest is the actual current Manifest06Candidate including representation metadata/provenance; original_members include every real physical member and its original mode/bytes. observation A/C/E are actual source observations; provenance claims never substitute for current identity.",
+      "pack": "No-edit pack preserves all physical member bytes/names/modes and may change only ZIP representation. Actual current native output re-admission required. Explicit manifest/payload edits preserve original payload domain meanings and use a current06 representation writer to regenerate frame/table/directory/derived metadata with original order/partition rules. Authored fields are not silently dropped; transport-controlled derived fields are rederived and disclosed in member_actions. Current C claims are refreshed only with original optional-presence rules. Signed outputs must satisfy the original signature policy; do not silently strip or forge a signature when changed content invalidates it."
+    },
+    "production_mapping": {
+      "integrity_only": "For options.kind=integrity, keep the admitted public06 representation and use actual public06 doc2/E0.3 and unchanged kdsig domain; no protected payload conversion. New output fully reparsed, limits checked, signature/checksum verified. Producer status remains observation, not consumer witness.",
+      "encryption": "password/external-grant output is the already accepted ProtectedManifest06Candidate/logical-payload branch. Preserve original authored Payload values exactly. Deterministic derived CBOR becomes original logical payload.kdnab plaintext for existing single-AEAD encryption; original AAD logical entry/asset bindings remain. No pack-only encryption or new crypto profile.",
+      "manifest": "Copy every authored/current declaration field and its optional presence except explicit requested protection policy and named representation mapping: payload becomes {path:payload.kdnab,encoding:cbor,encrypted:true}; set representation_profile/access/encryption/entitlement according to existing protection policy. Remove only public representation_metadata/representation_origin and replaced physical section descriptor. Do not copy private graph/focus/index into a public outer field. Original Manifest history stays exact.",
+      "runtime": "Map the input current runtime mandatory representation-pack names to the one logical payload.kdnab physical member, with stable de-duplication; preserve every non-representation mandatory attachment name and order. Do not promote untrusted representation_origin into authored authority. Record exact before/after mapping. Output E0.2 includes actual kdna.json/payload.kdnab plus current mandatory entries, not public E0.3.",
+      "members": "mimetype and all ordinary attachments preserve actual original bytes/names/modes. Remove replaced public sections only after an actual full semantic source and explicit output mapping. Rebuild checksums/signature by explicit policy using original document1/E0.2 and kdsig for protected output. Retained integrity members may not be duplicated, silently stale or unconditionally stripped.",
+      "nonrepresentable_content": "A content Resource.entry/digest is not a transport declaration. If it targets a physical representation member that the protected layout removes, the implementation must first show exact semantic/member preservation is possible. Otherwise fail this conversion as SOURCE_CAPABILITY_UNAVAILABLE at output, preserving the accepted input and providing a precise bound diagnostic; never rewrite resource knowledge, leave confidential clear packs, or call the original asset invalid. This is a capability boundary requiring an actual fixture before claimed coverage.",
+      "output": "Validate real ProtectedManifest06Candidate then original authored Payload/domain/resources/interpretation using the controlled06 tuple adaptation. Compute output C/E from actual output entries, actual A from final ZIP; enforce all four physical limits after checksum/signature insertion. Every test-produced protected output must be separately re-admitted by public native Core and Read; external outputs require a freshly bound actual-output-A grant. No claim producer automatically grants downstream access."
+    },
+    "protected_source_and_revision": {
+      "admission": "Use the accepted protected06 native password/external admission/real verified context and original operation. Complete payload authentication and full semantics are required. Current R2 has accepted or rejection, no invented future catalog_only arm. Active catalog is not complete_source permission.",
+      "bundle": "Only a same-instance newly branded complete_source Host receives actual full Manifest, complete authored Payload, all original encrypted members/inventory and exact original decrypted payload.kdnab CBOR. No fake checked_sections/ranges. SourceRouteObservation06 records E0.2 and original_decrypted_cbor. A projection Host cannot substitute.",
+      "lifecycle": "Retain original source Host epoch/context_id/asset A/complete_source binding, current_ms>=expires rejection, current_ms<lastMs rejection and original deadline; provider monotonic clock is independently unchanged. Original operation must remain current before handoff, after every relevant await, before return and transport commit. Preserve actual handoff and confirmed/outcome_unknown external-effect history on failures. The initial Host originalExpiresAt is captured once and never extended by later expires_at_ms. Each source revision/return authorization must retain both current_ms < current observed expires_at_ms and current_ms < originalExpiresAt, in addition to nonrollback current_ms >= lastMs and the original deadline. No source Host renewal widens the original handoff window.",
+      "revision": "Same-instance private context available->reserved synchronously BEFORE reading edits/policy/provider. Preview OR production consumes it once; preview is not reusable as a production token. Context closes when originating deliver scope ends. No forgery, cross-Core instance, replay, owner replacement or mutable-bundle authority. Edits and policy retain original closed structure and semantic rules.",
+      "secrets": "Output secret provider is invoked only after the original captured source/Host/operation checks permit it, with finite source_A/edits_digest/policy_digest metadata. Preserve original before/after-await and publish checks. No real account/broker access; test output seeds/passwords are labelled local synthetic.",
+      "output": "Unedited logical payload retains exact original decrypted CBOR. Explicit payload edits use original codec and retain semantics. Original protected06 member bytes/modes survive except explicit edits and protection/integrity replacement. Revalidate ProtectedManifest06Candidate and original domain without fake05 manifest, refresh current C/E0.2 and original integrity policy, enforce exact output limits. Returned revision bytes are not published; publication/consumer admission are distinct proofs.",
+      "transport": "Original token consumes before effect; synchronous true confirms, false/throw/thenable preserves outcome_unknown, duplicate/reentrant commit cannot repeat effect. Outer failures never erase already observed trusted Host plaintext. Original source commit/receipt semantics unchanged."
+    },
+    "limits": {
+      "physical": {
+        "member": 8388608,
+        "total_decoded": 12582912,
+        "container": 26214400,
+        "entries": 128
+      },
+      "protected_source_only": {
+        "delivered_plaintext_bytes": 8388608,
+        "documented_raw_byte_bound": 20971520,
+        "timeout_ms_max": 60000
+      },
+      "scope": "The 20MiB documented bound is original members<=12MiB plus delivered logical plaintext<=8MiB; it is not a JavaScript object/all duplicate allocations peak memory cap. These are source-route constraints, not new Read limits or public06 logical aggregate8. Single protected envelope actual member8 naturally constrains plaintext more tightly. No threshold changes."
+    },
+    "field_and_version_precedence": "Scoped source APIs retain existing route meanings. The protected consumer API, tuple and proof, protected_source/1 and authoring_workflow/2 remain authoritative for their existing routes. Matching a version label never replaces an actual definition or runtime proof.",
+    "contract_observation": {
+      "value": "SourceRouteContract06 is {id:versions.source_route,version:\"0.1.0-candidate\",definition_digest:computed}; ProtectedSourceRouteContract06 uses versions.protected_source_route and the same definition digest.",
+      "definition_digest_preimage": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value. This field states the rule and does not embed a self-referential digest. The original full source identity and the projected product identity are bound separately; matching this module digest does not bind external types, resolved values, schema/API closure or installed package bytes.",
+      "basis": "Reuse original authoring-node.getAuthoringWorkflowContract and protected-source contract definition-digest convention: hash the complete definition value, not its source-file identity. This rule makes the new route explicit and does not change original05 contract hashes.",
+      "meaning": "Identifies the exact route definition represented by this receipt. It is an observation, not native authority, editing permission, source admission, a release or acceptance decision."
+    }
+  },
+  "types": {
+    "AdmittedSourceOperationRequest06": false,
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "CoreAdmissionRejected": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "reason": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "states": {
+          "$ref": "#/$defs/CoreStaticStates"
+        },
+        "component_failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoreComponentFailure"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "diagnostics",
+        "states",
+        "component_failure"
+      ],
+      "additionalProperties": false
+    },
+    "CoreComponentFailure": {
+      "type": "object",
+      "properties": {
+        "judgment_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "component_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "invalid"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "READ_COMPONENT_DECLARATION_INVALID",
+            "READ_COMPONENT_CONTENT_INVALID",
+            "READ_COMPONENT_REFERENCE_INVALID",
+            "READ_COMPONENT_GRAPH_CYCLE",
+            "READ_COMPONENT_LIMIT_EXCEEDED",
+            "READ_COMPONENT_BINDING_INVALID",
+            "READ_COMPONENT_ADOPTION_INVALID",
+            "READ_METHOD_PRESENCE_INVALID"
+          ]
+        }
+      },
+      "required": [
+        "judgment_ref",
+        "component_ref",
+        "status",
+        "body",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "CoreStaticStates": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "InterpretationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    "NativeSourceOperationAuthority06": false,
+    "OriginalProtectionContractIdentityFor06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.protection-admission/1"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionDiagnosticFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_INPUT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROFILE_UNSUPPORTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration",
+                "envelope",
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_ENVELOPE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "envelope"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_KDF_UNAVAILABLE"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "kdf"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CREDENTIAL_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "credential"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHENTICATION_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authentication"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CHECKSUMS_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_PIN_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_BINDING_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_EXPIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_REVOKED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_REFRESH_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_STATE_ROLLBACK"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROVIDER_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_CONFLICT"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_UNTRUSTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_DISPOSED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input",
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionDisclosureFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "none"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "trusted_host"
+            },
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitConfirmedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "confirmed"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitFor06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitUnknownFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitConfirmedFor06"
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitNotInvokedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "not_invoked"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitUnknownFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "outcome_unknown"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionIntegrityFor06": {
+      "type": "object",
+      "properties": {
+        "checksums": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "verified_document_1"
+          ]
+        },
+        "signature": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "verified_self_key",
+            "verified_pinned_key"
+          ]
+        },
+        "signature_content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "checksums",
+        "signature",
+        "signature_content_digest"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionProfileFor06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "kdna.envelope.aead",
+            "kdna.envelope.external-grant"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedPayloadMemberIntent06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "decoded_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "compressed_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "local_header_offset": {
+          "$ref": "#/$defs/UInt"
+        },
+        "data_offset": {
+          "$ref": "#/$defs/UInt"
+        },
+        "compression_method": {
+          "type": "integer",
+          "enum": [
+            0,
+            8
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "decoded_bytes",
+        "compressed_bytes",
+        "local_header_offset",
+        "data_offset",
+        "compression_method"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedPayloadReceipt06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/OriginalProtectionContractIdentityFor06"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "entry": {
+          "type": "string",
+          "const": "payload.kdnab"
+        },
+        "encryption": {
+          "$ref": "#/$defs/OriginalProtectionProfileFor06"
+        },
+        "plaintext_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "integrity": {
+          "$ref": "#/$defs/OriginalProtectionIntegrityFor06"
+        },
+        "authorization": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "password_possession"
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "external_grant"
+                },
+                "account_id": {
+                  "$ref": "#/$defs/Identifier"
+                },
+                "entitlement_profile": {
+                  "type": "string",
+                  "enum": [
+                    "account",
+                    "org"
+                  ]
+                },
+                "device_id": {
+                  "$ref": "#/$defs/Identifier"
+                },
+                "status_version": {
+                  "$ref": "#/$defs/UInt"
+                },
+                "refresh_after_ms": {
+                  "$ref": "#/$defs/UInt"
+                },
+                "expires_at_ms": {
+                  "$ref": "#/$defs/UInt"
+                },
+                "offline_grace_until_ms": {
+                  "$ref": "#/$defs/UInt"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "online",
+                    "offline"
+                  ]
+                },
+                "issuer": {
+                  "$ref": "#/$defs/Identifier"
+                },
+                "entitlement_id": {
+                  "$ref": "#/$defs/Identifier"
+                },
+                "signing_key_id": {
+                  "$ref": "#/$defs/Identifier"
+                }
+              },
+              "required": [
+                "kind",
+                "account_id",
+                "entitlement_profile",
+                "device_id",
+                "status_version",
+                "refresh_after_ms",
+                "expires_at_ms",
+                "offline_grace_until_ms",
+                "mode",
+                "issuer",
+                "entitlement_id",
+                "signing_key_id"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "checked_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "proof": {
+          "type": "string",
+          "const": "observation_not_authority"
+        }
+      },
+      "required": [
+        "contract",
+        "operation_id",
+        "A",
+        "C",
+        "E",
+        "entry",
+        "encryption",
+        "plaintext_digest",
+        "integrity",
+        "authorization",
+        "checked_at_ms",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedSectionSourceCommit06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "source_committed"
+            },
+            "disclosure": {
+              "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+            },
+            "body": {
+              "type": "null"
+            },
+            "body_bytes": {
+              "type": "integer",
+              "const": 0
+            }
+          },
+          "required": [
+            "status",
+            "disclosure",
+            "body",
+            "body_bytes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/SourceRouteFailure06"
+        }
+      ]
+    },
+    "ProtectedSectionSourceDelivered06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "source_delivered"
+        },
+        "contract": {
+          "$ref": "#/$defs/ProtectedSourceRouteContract06"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ProtectedPayloadReceipt06"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "source_identity": {
+          "$ref": "#/$defs/SourceRouteDigests06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "contract",
+        "receipt",
+        "disclosure",
+        "source_identity",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedSectionSourceDeliveryToken06": false,
+    "ProtectedSectionSourceHostContext06": {
+      "type": "object",
+      "properties": {
+        "context_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "epoch": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "asset_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scope": {
+          "type": "string",
+          "const": "complete_source"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "source_opening",
+            "preview",
+            "produce",
+            "publish"
+          ]
+        },
+        "requested_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "context_id",
+        "epoch",
+        "asset_digest",
+        "scope",
+        "purpose",
+        "requested_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedSectionSourceHostObservation06": {
+      "type": "object",
+      "properties": {
+        "context_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "permission": {
+          "type": "string",
+          "enum": [
+            "allowed",
+            "denied"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "const": "complete_source"
+        },
+        "current_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "revoked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "context_id",
+        "epoch",
+        "asset_digest",
+        "permission",
+        "scope",
+        "current_ms",
+        "expires_at_ms",
+        "revoked"
+      ],
+      "additionalProperties": false
+    },
+    "ProtectedSectionSourceObservation06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectedSectionSourceDelivered06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteFailure06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteCoreRejected06"
+        }
+      ]
+    },
+    "ProtectedSectionSourcePreview06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "preview_valid"
+            },
+            "contract": {
+              "$ref": "#/$defs/ProtectedSourceRouteContract06"
+            },
+            "source_A": {
+              "$ref": "#/$defs/Digest"
+            },
+            "original_payload_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "edits_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "policy_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "semantic_status": {
+              "type": "string",
+              "const": "valid"
+            },
+            "proof": {
+              "type": "string",
+              "const": "semantic_validation_not_ciphertext_admission"
+            },
+            "body": {
+              "type": "null"
+            },
+            "body_bytes": {
+              "type": "integer",
+              "const": 0
+            }
+          },
+          "required": [
+            "status",
+            "contract",
+            "source_A",
+            "original_payload_digest",
+            "edits_digest",
+            "policy_digest",
+            "semantic_status",
+            "proof",
+            "body",
+            "body_bytes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "preview_rejected"
+            },
+            "diagnostic": {
+              "$ref": "#/$defs/SourceRouteDiagnostic06"
+            },
+            "body": {
+              "type": "null"
+            },
+            "body_bytes": {
+              "type": "integer",
+              "const": 0
+            }
+          },
+          "required": [
+            "status",
+            "diagnostic",
+            "body",
+            "body_bytes"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ProtectedSectionSourceRevisionContext06": false,
+    "ProtectedSourceRouteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.protected-source-sections/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ]
+    },
+    "ReadStage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    },
+    "SourceInputProfile06": {
+      "type": "string",
+      "enum": [
+        "public_sections06",
+        "protected_logical_payload06"
+      ]
+    },
+    "SourceOperationAuthorityContext06": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/SourceOperationRequest06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capture": {
+          "$ref": "#/$defs/SourceOuterCapture06"
+        },
+        "intent": {
+          "$ref": "#/$defs/SourceOperationIntent06"
+        },
+        "intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "manifest_identity": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "request",
+        "request_digest",
+        "capture",
+        "intent",
+        "intent_digest",
+        "manifest_identity"
+      ],
+      "additionalProperties": false
+    },
+    "SourceOperationIntent06": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/SourceOperationKind06"
+        },
+        "scope": {
+          "type": "string",
+          "const": "complete_source"
+        },
+        "input_profile": {
+          "$ref": "#/$defs/SourceInputProfile06"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "member_inventory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProtectedPayloadMemberIntent06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "authentication_scope": {
+          "type": "string",
+          "enum": [
+            "full_public_sections_and_resources",
+            "full_original_protected_payload_and_resources"
+          ]
+        },
+        "source_bytes_delivery": {
+          "type": "string",
+          "enum": [
+            "public_caller",
+            "trusted_complete_source_host"
+          ]
+        },
+        "signature_policy": {
+          "$ref": "#/$defs/SectionSignaturePolicy06"
+        },
+        "edits_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_policy_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation",
+        "scope",
+        "input_profile",
+        "capture_id",
+        "request_digest",
+        "member_inventory",
+        "authentication_scope",
+        "source_bytes_delivery",
+        "signature_policy",
+        "edits_digest",
+        "output_policy_digest"
+      ],
+      "additionalProperties": false
+    },
+    "SourceOperationKind06": {
+      "type": "string",
+      "enum": [
+        "open_source",
+        "pack_source",
+        "protect_source",
+        "open_protected_source"
+      ]
+    },
+    "SourceOperationRequest06": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "operation": {
+          "$ref": "#/$defs/SourceOperationKind06"
+        },
+        "expected_A": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "signature_policy": {
+          "$ref": "#/$defs/SectionSignaturePolicy06"
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "operation",
+        "expected_A",
+        "timeout_ms",
+        "signature_policy"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "open_protected_source"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "expected_A": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourceOperationRequestAdmission06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "admitted_request"
+            },
+            "request": {
+              "$ref": "#/$defs/AdmittedSourceOperationRequest06"
+            }
+          },
+          "required": [
+            "status",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/SourceRouteFailure06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteCoreRejected06"
+        }
+      ]
+    },
+    "SourceOuterCapture06": {
+      "type": "object",
+      "properties": {
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "input_byte_length": {
+          "$ref": "#/$defs/UInt"
+        },
+        "manifest_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "zip_directory_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input_profile": {
+          "$ref": "#/$defs/SourceInputProfile06"
+        },
+        "identity_scope": {
+          "type": "string",
+          "const": "observed_outer_metadata_before_source_materialization"
+        }
+      },
+      "required": [
+        "capture_id",
+        "input_byte_length",
+        "manifest_bytes_digest",
+        "zip_directory_bytes_digest",
+        "input_profile",
+        "identity_scope"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.source-sections/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteCoreRejected06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "core_rejected"
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "capture",
+            "admission",
+            "output"
+          ]
+        },
+        "core": {
+          "$ref": "#/$defs/CoreAdmissionRejected"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "stage",
+        "core",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDiagnostic06": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "SOURCE_INPUT_INVALID",
+            "SOURCE_HOST_UNTRUSTED",
+            "SOURCE_EXPECTED_ASSET_MISMATCH",
+            "SOURCE_HOST_DENIED",
+            "SOURCE_PERMISSION_REJECTED",
+            "SOURCE_CONTEXT_UNTRUSTED",
+            "SOURCE_CONTEXT_CLOSED",
+            "SOURCE_DEADLINE_EXCEEDED",
+            "SOURCE_PROVIDER_FAILED",
+            "SOURCE_HANDOFF_UNKNOWN",
+            "SOURCE_CAPABILITY_UNAVAILABLE",
+            "SOURCE_DRAFT_INVALID",
+            "SOURCE_INTERPRETATION_INCOMPLETE",
+            "SOURCE_POLICY_INVALID",
+            "SOURCE_OUTPUT_INVALID"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "admission",
+            "authorization",
+            "semantic",
+            "return",
+            "output"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDigests06": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteFailure06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "source_failed"
+        },
+        "diagnostic": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SourceRouteDiagnostic06"
+            },
+            {
+              "$ref": "#/$defs/OriginalProtectionDiagnosticFor06"
+            }
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteMemberInventory06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "type": {
+          "type": "string",
+          "const": "file"
+        },
+        "mode": {
+          "$ref": "#/$defs/UInt"
+        },
+        "size": {
+          "$ref": "#/$defs/UInt"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "mode",
+        "size",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteObservation06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/SourceRouteContract06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "input_profile": {
+          "$ref": "#/$defs/SourceInputProfile06"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "digests": {
+          "$ref": "#/$defs/SourceRouteDigests06"
+        },
+        "E_profile": {
+          "type": "string",
+          "enum": [
+            "kdna.digest-basis.runtime-entry-set/0.2.0",
+            "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+          ]
+        },
+        "logical_payload_encoding": {
+          "type": "string",
+          "enum": [
+            "derived_deterministic_cbor",
+            "original_decrypted_cbor"
+          ]
+        },
+        "logical_payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "logical_payload_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "inventory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "proof": {
+          "type": "string",
+          "const": "complete_native_admission_and_source_observation_not_editing_authority"
+        }
+      },
+      "required": [
+        "contract",
+        "request_digest",
+        "capture_id",
+        "input_profile",
+        "tuple",
+        "digests",
+        "E_profile",
+        "logical_payload_encoding",
+        "logical_payload_digest",
+        "logical_payload_bytes",
+        "inventory",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteProductionEvidence06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/SourceRouteContract06"
+        },
+        "source_A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "source_profile": {
+          "$ref": "#/$defs/SourceInputProfile06"
+        },
+        "output_profile": {
+          "$ref": "#/$defs/SourceInputProfile06"
+        },
+        "output": {
+          "$ref": "#/$defs/SourceRouteDigests06"
+        },
+        "E_profile": {
+          "type": "string",
+          "enum": [
+            "kdna.digest-basis.runtime-entry-set/0.2.0",
+            "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+          ]
+        },
+        "payload_source": {
+          "type": "string",
+          "enum": [
+            "derived_deterministic_cbor",
+            "original_decrypted_cbor",
+            "explicit_edit"
+          ]
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "member_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "preserved",
+                  "added",
+                  "replaced",
+                  "removed"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 256
+        },
+        "proof": {
+          "type": "string",
+          "const": "producer_observation_not_consumer_admission"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "not_published"
+        }
+      },
+      "required": [
+        "contract",
+        "source_A",
+        "source_profile",
+        "output_profile",
+        "output",
+        "E_profile",
+        "payload_source",
+        "payload_digest",
+        "member_actions",
+        "proof",
+        "output_delivery"
+      ],
+      "additionalProperties": false
+    },
+    "TechnicalState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "TrustedProtectedSectionSourceHost06": false,
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

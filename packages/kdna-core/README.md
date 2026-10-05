@@ -39,6 +39,8 @@ if (result.status === 'accepted') {
 }
 ```
 
+Node path inputs use nonblocking opens and accept only bounded regular opened files. Symbolic links to regular files remain supported; replacing a pathname after open does not retarget its descriptor. The caller manages the path and process lifetime.
+
 Accepted and rejected results are closed objects. Rejections contain sanitized fixed diagnostics. A serialized or copied snapshot cannot recreate its witness. Snapshot identity belongs to one installed Core instance; a duplicate installation rejects foreign witnesses. Each new admission has a new snapshot ID. A retained snapshot remains immutable even if the original input bytes change.
 
 Official rejections retain their existing codes and state boundaries; available `subject` and `field` coordinates identify the rejected source location, including schema and dependency producer/contract errors. They do not echo arbitrary rejected values, add a second validation authority or downgrade a failure. Consumers may present these coordinates but must not interpret the presence or absence of a particular diagnostic field as content acceptance.

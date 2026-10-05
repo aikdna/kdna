@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationEvidence06",
+  "title": "NativeCreationEvidence06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationEvidence06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "NativeCreationContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.creation-sections/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationEvidence06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeCreationContract06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input": {
+          "$ref": "#/$defs/NativeCreationInputObservation06"
+        },
+        "output": {
+          "$ref": "#/$defs/SourceRouteDigests06"
+        },
+        "E_profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+        },
+        "output_ir_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "manifest_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NativeCreationManifestAction06"
+          },
+          "minItems": 3,
+          "maxItems": 5
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "payload_preservation": {
+          "type": "string",
+          "const": "complete_value_absence_array_order"
+        },
+        "proof": {
+          "type": "string",
+          "const": "producer_observation_not_consumer_admission"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "not_published"
+        },
+        "adoption": {
+          "type": "string",
+          "const": "not_observed"
+        }
+      },
+      "required": [
+        "contract",
+        "request_digest",
+        "input_digest",
+        "input",
+        "output",
+        "E_profile",
+        "output_ir_digest",
+        "manifest_actions",
+        "members",
+        "payload_preservation",
+        "proof",
+        "output_delivery",
+        "adoption"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationInputObservation06": {
+      "type": "object",
+      "properties": {
+        "manifest_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "member_bytes": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "manifest_digest",
+        "payload_digest",
+        "members",
+        "member_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationManifestAction06": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "enum": [
+            "/format_version",
+            "/payload",
+            "/representation_metadata",
+            "/content_digest",
+            "/authoring/content_digest"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "added",
+            "refreshed"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDigests06": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteMemberInventory06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "type": {
+          "type": "string",
+          "const": "file"
+        },
+        "mode": {
+          "$ref": "#/$defs/UInt"
+        },
+        "size": {
+          "$ref": "#/$defs/UInt"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "mode",
+        "size",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  }
+}

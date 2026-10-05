@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionRequestObservation06",
+  "title": "NativeExecutionRequestObservation06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionRequestObservation06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeAgentHostRequest06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "operation": {
+          "const": "consume_judgment",
+          "type": "string"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capsule_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "request_id",
+        "run_id",
+        "host_id",
+        "host_epoch",
+        "operation",
+        "plan_digest",
+        "capsule_digest",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionRequestObservation06": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/NativeAgentHostRequest06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "request",
+        "request_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "payload_profile": {
+          "type": "string",
+          "const": "kdna.payload.judgment"
+        },
+        "payload_version": {
+          "type": "string",
+          "const": "0.5.1"
+        },
+        "core": {
+          "type": "string",
+          "const": "kdna.core/0.8.2"
+        },
+        "ir": {
+          "type": "string",
+          "const": "kdna.canonical-ir/0.6.1"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "kdna.runtime-capsule/0.4.0-candidate"
+        },
+        "plan": {
+          "type": "string",
+          "const": "kdna.consumption-plan/0.4.0-candidate"
+        },
+        "host": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "trace": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "read": {
+          "type": "string",
+          "const": "kdna.read/0.7.0-candidate"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

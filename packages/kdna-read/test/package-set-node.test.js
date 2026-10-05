@@ -594,9 +594,9 @@ test('N1-A1-L43 a revocation first seen in the final synchronous section keeps t
   assert.equal(outcome.readResult.envelope.status, 'ready');
 });
 
-// N1-A1-L44: the explicit precondition the commander fixed for the former
-// L02/L20 wording. Both branches are asserted together so the clarification is
-// executable as well as documented.
+// N1-A1-L44: member observations must belong to declared identities.
+// A provider observation for an undeclared identity is invalid; a declared
+// identity without a matching observation is unauthorized.
 test('N1-A1-L44 an undeclared observation row is a provider failure; a declared identity without one is unauthorized', async () => {
   reset();
   const { nine, seventeen, set } = twoMembers();

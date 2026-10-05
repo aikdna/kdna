@@ -50,6 +50,31 @@
       "types": "./src/package-set-node.d.ts",
       "import": "./src/package-set-node.mjs",
       "require": "./src/package-set-node.js"
+    },
+    "./sections-node": {
+      "types": "./src/sections-node.d.ts",
+      "import": "./src/sections-node.mjs",
+      "require": "./src/sections-node.js"
+    },
+    "./protected-sections-node": {
+      "types": "./src/protected-sections-node.d.ts",
+      "import": "./src/protected-sections-node.mjs",
+      "require": "./src/protected-sections-node.js"
+    },
+    "./retained-sections-node": {
+      "types": "./src/retained-sections-node.d.ts",
+      "require": "./src/retained-sections-node.js",
+      "import": "./src/retained-sections-node.mjs"
+    },
+    "./package-set-sections-node": {
+      "types": "./src/package-set-sections-node.d.ts",
+      "import": "./src/package-set-sections-node.mjs",
+      "require": "./src/package-set-sections-node.js"
+    },
+    "./retained-sections-browser": {
+      "types": "./src/retained-sections-browser.d.ts",
+      "import": "./src/retained-sections-browser.mjs",
+      "require": "./src/retained-sections-browser.js"
     }
   },
   "files": [
@@ -75,7 +100,8 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "release:check:prerelease": "node ../../scripts/check-release-prerelease-readiness.mjs --package=packages/kdna-read --label=read"
   },
   "dependencies": {
     "ajv": "8.20.0"

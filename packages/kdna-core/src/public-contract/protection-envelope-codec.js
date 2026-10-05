@@ -1,5 +1,5 @@
 'use strict';
-const { fail } = require('./protection-declaration.js');
+const fail = (code, stage) => require('./protection-declaration.js').fail(code, stage);
 const LIMIT = 8 * 1024 * 1024;
 function invalid() { fail('ENVELOPE_INVALID','envelope'); }
 function head(major, n) {

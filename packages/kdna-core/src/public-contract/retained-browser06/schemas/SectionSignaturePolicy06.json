@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained-browser06:SectionSignaturePolicy06",
+  "title": "SectionSignaturePolicy06",
+  "description": "Exact original retained and signature-policy types for the source-defined browser adapter. Original wire identities and opaque owners remain unchanged.",
+  "$ref": "#/$defs/SectionSignaturePolicy06",
+  "$defs": {
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import {createRequire} from 'node:module';
-const require=createRequire(import.meta.url);
-const ts=require('typescript');
+import path from 'node:path';
 // This is a declaration inventory, never an execution receipt. Only syntactic
 // call expressions register literal case ids; comments/strings/templates cannot.
-export function registeredCaseIds(text,callee,file='gate.cjs') {
+export function registeredCaseIds(text,callee,file='gate.cjs',dependencyRoot) {
+ const require=createRequire(dependencyRoot?path.join(dependencyRoot,'package.json'):import.meta.url);
+ const ts=require('typescript');
  const source=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);
  if(source.parseDiagnostics.length)throw Object.assign(new Error('Invalid proof gate syntax: '+file),{code:'PROOF_INVENTORY'});
  const ids=[];

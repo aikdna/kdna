@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteContract06",
+  "title": "NativeSectionByteContract06",
+  "description": "Native owned-byte admission structural data only; opaque requests and byte-read authority require actual native brands.",
+  "$ref": "#/$defs/NativeSectionByteContract06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "NativeSectionByteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "kdna.section-bytes-node",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.1-candidate",
+          "type": "string"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

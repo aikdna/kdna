@@ -29,7 +29,6 @@ const { inflateRawSync } = require('node:zlib');
 const F = require('../../conformance/public-contract/test/bytes-fixtures.cjs');
 
 const repo = path.resolve(__dirname, '../..');
-const DEFAULT_OUT = '/Users/aikdna/private/kdna-protocol-research-20260919/impl/agents/w14_d5';
 const MIB = 1024 * 1024;
 const TRANSPORT_RESPONSE_BYTES = 8 * MIB; // generated resource_limits.entry_bytes / read transport limits.response_bytes
 
@@ -339,7 +338,8 @@ async function main() {
   const argv = process.argv.slice(2);
   const outDir = (() => {
     const at = argv.indexOf('--out-dir');
-    return at >= 0 ? path.resolve(argv[at + 1]) : DEFAULT_OUT;
+    if (at < 0) throw new Error('KDNA_E2E_OUT_DIR_REQUIRED: pass --out-dir <directory>');
+    return path.resolve(argv[at + 1]);
   })();
   const quiet = argv.includes('--quiet');
   fs.mkdirSync(outDir, { recursive: true });

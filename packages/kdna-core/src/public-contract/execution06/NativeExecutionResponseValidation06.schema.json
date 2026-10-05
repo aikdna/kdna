@@ -1,0 +1,857 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionResponseValidation06",
+  "title": "NativeExecutionResponseValidation06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionResponseValidation06",
+  "$defs": {
+    "AssetDigests06": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/DigestA"
+        },
+        "C": {
+          "$ref": "#/$defs/DigestC"
+        },
+        "E": {
+          "$ref": "#/$defs/DigestE06"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Compared": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/ComparedState"
+        },
+        "expected": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expected_source": {
+          "$ref": "#/$defs/ExpectedSource"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "ComparedState": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "mismatched"
+      ]
+    },
+    "Comparison": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/NoComparison"
+        },
+        {
+          "$ref": "#/$defs/Compared"
+        }
+      ]
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "DigestA": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "container_bytes",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.container-bytes",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestC": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "content_tree",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.content-tree",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestE06": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "runtime_entry_set",
+          "type": "string"
+        },
+        "profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set"
+        },
+        "profile_version": {
+          "type": "string",
+          "const": "0.3.0-candidate"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSource": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ExpectedSourceKind"
+        },
+        "source_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "kind",
+        "source_id"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSourceKind": {
+      "type": "string",
+      "enum": [
+        "caller",
+        "manifest_declaration",
+        "checksums_declaration",
+        "trusted_receipt",
+        "host_observation"
+      ]
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeAgentHostReceipt06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "receipt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capsule_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authorization": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionAuthorization"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionDelivery"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/PublicExecutionStatus"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublicExecutionFailure"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output": {
+          "$ref": "#/$defs/PublicExecutionOutput"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "not_confirmed"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "receipt_id",
+        "request_id",
+        "run_id",
+        "host_id",
+        "host_epoch",
+        "request_digest",
+        "plan_digest",
+        "capsule_digest",
+        "authorization",
+        "delivery",
+        "status",
+        "failure",
+        "output",
+        "issued_at",
+        "output_delivery",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionFailure06": {
+      "type": "string",
+      "enum": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED",
+        "EXECUTION_SOURCE_UNSUPPORTED",
+        "EXECUTION_CAPABILITY_UNAVAILABLE"
+      ]
+    },
+    "NativeExecutionRejection06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "code": {
+          "$ref": "#/$defs/NativeExecutionFailure06"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "code",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionResponseBody06": {
+      "type": "object",
+      "properties": {
+        "receipt": {
+          "$ref": "#/$defs/NativeAgentHostReceipt06"
+        },
+        "trace": {
+          "$ref": "#/$defs/NativeJudgmentTrace06"
+        },
+        "output": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "receipt",
+        "trace",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionResponseValidation06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "valid"
+            },
+            "value": {
+              "$ref": "#/$defs/NativeExecutionResponseBody06"
+            },
+            "proof": {
+              "type": "string",
+              "const": "claims_not_authenticated"
+            },
+            "body_bytes": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "proof",
+            "body_bytes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/NativeExecutionRejection06"
+        }
+      ]
+    },
+    "NativeExecutionSource06": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "origin_tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests06"
+        },
+        "ir_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "asset",
+        "origin_tuple",
+        "digests",
+        "ir_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeExecutionVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "payload_profile": {
+          "type": "string",
+          "const": "kdna.payload.judgment"
+        },
+        "payload_version": {
+          "type": "string",
+          "const": "0.5.1"
+        },
+        "core": {
+          "type": "string",
+          "const": "kdna.core/0.8.2"
+        },
+        "ir": {
+          "type": "string",
+          "const": "kdna.canonical-ir/0.6.1"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "kdna.runtime-capsule/0.4.0-candidate"
+        },
+        "plan": {
+          "type": "string",
+          "const": "kdna.consumption-plan/0.4.0-candidate"
+        },
+        "host": {
+          "type": "string",
+          "const": "kdna.agent-host/0.4.0-candidate"
+        },
+        "trace": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "read": {
+          "type": "string",
+          "const": "kdna.read/0.7.0-candidate"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "NativeJudgmentTrace06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.judgment-trace/0.4.0-candidate"
+        },
+        "tuple": {
+          "$ref": "#/$defs/NativeExecutionVersionTuple06"
+        },
+        "trace_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capsule_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "receipt_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source": {
+          "$ref": "#/$defs/NativeExecutionSource06"
+        },
+        "selection": {
+          "$ref": "#/$defs/SelectionSet06"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PublicExecutionEvent"
+          },
+          "minItems": 2
+        },
+        "status": {
+          "$ref": "#/$defs/PublicExecutionStatus"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "trace_id",
+        "request_digest",
+        "plan_digest",
+        "capsule_digest",
+        "receipt_digest",
+        "run_id",
+        "host_id",
+        "host_epoch",
+        "source",
+        "selection",
+        "events",
+        "status",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NoComparison": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "not_compared",
+          "type": "string"
+        },
+        "expected": {
+          "const": null,
+          "type": "null"
+        },
+        "expected_source": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionAuthorization": {
+      "type": "object",
+      "properties": {
+        "authorization_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "verified_at": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "authorization_id",
+        "expires_at",
+        "verified_at"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionDelivery": {
+      "type": "object",
+      "properties": {
+        "delivery_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "producer_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "delivery_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observed_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "producer_digest",
+        "delivery_digest",
+        "observed_digest"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionEvent": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "$ref": "#/$defs/UInt"
+        },
+        "at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "request_admitted",
+            "delivery_verified",
+            "execution_authorized",
+            "outcome_observed",
+            "output_authorized",
+            "completed",
+            "denied",
+            "failed"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "reference_host",
+            "authorization_provider",
+            "delivery_provider",
+            "outcome_provider"
+          ]
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "sequence",
+        "at",
+        "kind",
+        "source",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionFailure": {
+      "type": "string",
+      "enum": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED"
+      ]
+    },
+    "PublicExecutionOutput": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "bytes",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "PublicExecutionStatus": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "denied",
+        "failed"
+      ]
+    },
+    "SelectionSet06": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_ids"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

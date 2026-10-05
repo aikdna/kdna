@@ -1,6 +1,6 @@
 # Public component semantics 2.0.0
 
-Definition digest: `sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98ddd02051c28`. Generated from the unique public semantic source. The public registry is not caller configurable.
+Definition digest: `sha256:37e857cc4e43f7283a51ee6abe1f6e8401803902e8dc47f6d14d712aa7d7b089`. Generated from the unique public semantic source. The public registry is not caller configurable.
 
 1. H(value) is SHA-256 of existing canonicalJson UTF-8 bytes, with sha256: prefix; object keys sort by UTF-16 code units, arrays preserve original order; finite strict Unicode JSON only. D_public=H(this entire definition record). It is distinct from the frozen reference D. No caller may replace profiles, grammar, rules or D_public.
 
@@ -24,7 +24,7 @@ Definition digest: `sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98
 
 11. Discriminator content is candidateSetRef plus items. The ref names an actual same-judgment opt-in candidate-set component. Each item has key/title/prompt and at least2 distinct candidateKey/criterion contrasts resolving to that target. Omitted candidates are not excluded. Total contrasts count as relation edges. No candidate conditions are conjoined across candidates, evaluated or converted to outcomes. Normalized body includes kind discriminator-set, unchanged candidateSetRef, all target key/title pairs as sorted candidateIndex, sorted items and contrasts sorted by candidateKey.
 
-12. At most256 native components in a Payload; at most128 items and1024 edges per component; canonical content <=65536 bytes each and all opt-in content <=196608 bytes. Existing parser/resource limits apply first. Limits reject without truncation or omission. Index all declarations and simple profiles before resolving discriminators; declaration input order cannot change resolution.
+12. At most1024 native components in a Payload; at most128 items and1024 edges per component; canonical content <=65536 bytes each and all opt-in content <=524288 bytes. Existing parser/resource limits apply first. Limits reject without truncation or omission. Index all declarations and simple profiles before resolving discriminators; declaration input order cannot change resolution.
 
 13. R2 formal judgments explicitly supply method/components/bindings and all necessary role content. Legacy presence carriers cannot mark a required field or role undeclared. There is no presence/2 carrier and no automatic migration of CS1 presence claims.
 

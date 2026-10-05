@@ -321,8 +321,8 @@
   "normative_aggregate": "BOUND_BY_specs/public-generation-manifest.json_NOT_ACCEPTANCE",
   "decision_artifact_aggregate": "Definition and implementation inputs are bound by explicit manifests; no old six-file aggregate represents R2 closure.",
   "role_sequence": [
-    "Stage 1: R2 public source and generated contracts, Core and Read; actual pack independent review and commander acceptance",
-    "Stage 2 after Stage 1 acceptance: real 2A-2D language, CLI, SDK, Agent and service consumers, bound to accepted artifacts"
+    "Generate contracts and package implementation from the maintained public semantic source.",
+    "Bind consumers to exact package artifacts and verify their actual runtime behavior."
   ],
   "current_authority": "Single public semantic source implements the full accepted R2 definition and S12-D001/D002/D003 bindings. Public normative artifacts are distinct from historical proof and stage acceptance. No consumer may redefine R2.",
   "ir_retention": {

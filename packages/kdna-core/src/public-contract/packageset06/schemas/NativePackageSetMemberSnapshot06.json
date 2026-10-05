@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetMemberSnapshot06",
+  "title": "NativePackageSetMemberSnapshot06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetMemberSnapshot06",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativePackageSetMemberSnapshot06": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/WholeSectionSnapshot06"
+        }
+      },
+      "required": [
+        "member_id",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "WholeSectionSnapshot06": false
+  }
+}

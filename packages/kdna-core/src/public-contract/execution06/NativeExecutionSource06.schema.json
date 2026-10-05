@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionSource06",
+  "title": "NativeExecutionSource06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionSource06",
+  "$defs": {
+    "AssetDigests06": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/DigestA"
+        },
+        "C": {
+          "$ref": "#/$defs/DigestC"
+        },
+        "E": {
+          "$ref": "#/$defs/DigestE06"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Compared": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/ComparedState"
+        },
+        "expected": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expected_source": {
+          "$ref": "#/$defs/ExpectedSource"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "ComparedState": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "mismatched"
+      ]
+    },
+    "Comparison": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/NoComparison"
+        },
+        {
+          "$ref": "#/$defs/Compared"
+        }
+      ]
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "DigestA": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "container_bytes",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.container-bytes",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestC": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "content_tree",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.content-tree",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestE06": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "runtime_entry_set",
+          "type": "string"
+        },
+        "profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set"
+        },
+        "profile_version": {
+          "type": "string",
+          "const": "0.3.0-candidate"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSource": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ExpectedSourceKind"
+        },
+        "source_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "kind",
+        "source_id"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSourceKind": {
+      "type": "string",
+      "enum": [
+        "caller",
+        "manifest_declaration",
+        "checksums_declaration",
+        "trusted_receipt",
+        "host_observation"
+      ]
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeExecutionSource06": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "origin_tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests06"
+        },
+        "ir_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "asset",
+        "origin_tuple",
+        "digests",
+        "ir_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NoComparison": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "not_compared",
+          "type": "string"
+        },
+        "expected": {
+          "const": null,
+          "type": "null"
+        },
+        "expected_source": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

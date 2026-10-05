@@ -1,0 +1,23 @@
+import type { WholeSectionSnapshot06, CatalogSectionSnapshot06, ScopedSectionSnapshot06 } from './sections/types.js';
+import type { Digest, Identifier, NativeConsumptionPlan06, NativeRuntimeCapsule06, NativeAgentHostRequest06, NativeAgentHostReceipt06, NativeJudgmentTrace06, NativeExecutionRejection06, NativeConsumptionPlanAdmission06, NativeRuntimeCapsuleAdmission06, NativeAgentHostRequestAdmission06, AdmittedNativeConsumptionPlan06, AdmittedNativeRuntimeCapsule06, AdmittedNativeAgentHostRequest06, NativeExecutionPlanOptions06, NativeExecutionRequestOptions06, NativeExecutionReceiptValidation06, NativeExecutionTraceValidation06, NativeExecutionResponseValidation06, NativeExecutionRequestObservation06, NativeExecutionAuthorizationObservation06, NativeExecutionDeliveryObservation06, NativeExecutionOutcomeObservation06, NativeExecutionHostResult06 } from './execution06/types.js';
+export type * from './execution06/types.js';
+export type { WholeSectionSnapshot06, CatalogSectionSnapshot06, ScopedSectionSnapshot06 } from './sections/types.js';
+export type NativeExecutionWireType06 = 'NativeRuntimeCapsule06' | 'NativeConsumptionPlan06' | 'NativeAgentHostRequest06' | 'NativeAgentHostReceipt06' | 'NativeJudgmentTrace06';
+export type NativeExecutionValidation06<T> = { readonly status:'valid'; readonly value:T; readonly proof:'claims_not_authenticated' } | NativeExecutionRejection06;
+export declare function parseExecutionJson(input:string | Uint8Array):NativeExecutionValidation06<unknown>;
+export declare function validateExecutionStructure(type:NativeExecutionWireType06,input:unknown):NativeExecutionValidation06<unknown>;
+export declare function executionDigest(input:unknown): { readonly status:'valid'; readonly digest:Digest; readonly proof:'claims_not_authenticated' } | NativeExecutionRejection06;
+// Catalog/scoped are recognized diagnostic inputs only; both always refuse this initial execution route.
+export declare function createConsumptionPlan(snapshot:WholeSectionSnapshot06 | CatalogSectionSnapshot06 | ScopedSectionSnapshot06, options:NativeExecutionPlanOptions06):NativeConsumptionPlanAdmission06;
+export declare function admitConsumptionPlan(input:unknown,snapshot:WholeSectionSnapshot06 | CatalogSectionSnapshot06 | ScopedSectionSnapshot06):NativeConsumptionPlanAdmission06;
+export declare function inspectAdmittedPlan(plan:unknown):Readonly<NativeConsumptionPlan06> | null;
+export declare function createRuntimeCapsule(snapshot:WholeSectionSnapshot06,plan:AdmittedNativeConsumptionPlan06):NativeRuntimeCapsuleAdmission06;
+export declare function admitRuntimeCapsule(input:unknown,snapshot:WholeSectionSnapshot06,plan:AdmittedNativeConsumptionPlan06):NativeRuntimeCapsuleAdmission06;
+export declare function inspectRuntimeCapsule(capsule:unknown):Readonly<NativeRuntimeCapsule06> | null;
+export declare function createAgentHostRequest(plan:AdmittedNativeConsumptionPlan06,capsule:AdmittedNativeRuntimeCapsule06,options:NativeExecutionRequestOptions06):NativeAgentHostRequestAdmission06;
+export declare function admitAgentHostRequest(input:unknown,plan:AdmittedNativeConsumptionPlan06,capsule:AdmittedNativeRuntimeCapsule06):NativeAgentHostRequestAdmission06;
+export declare function inspectAgentHostRequest(request:unknown):Readonly<NativeAgentHostRequest06> | null;
+export declare function validateAgentHostReceipt(input:unknown,request:AdmittedNativeAgentHostRequest06):NativeExecutionReceiptValidation06;
+export declare function validateJudgmentTrace(input:unknown,request:AdmittedNativeAgentHostRequest06,receipt:NativeAgentHostReceipt06):NativeExecutionTraceValidation06;
+export declare function validateExecutionResponse(input:unknown,request:AdmittedNativeAgentHostRequest06):NativeExecutionResponseValidation06;
+export declare function createExecutionHost(configuration:{ readonly host_id:Identifier; readonly host_epoch:Identifier; readonly clock:()=>number; readonly authorize:(observation:NativeExecutionRequestObservation06 & {readonly phase:'execution'|'output'})=>NativeExecutionAuthorizationObservation06; readonly observeDelivery:(observation:NativeExecutionRequestObservation06)=>NativeExecutionDeliveryObservation06; readonly observeOutcome:(observation:{readonly request:NativeAgentHostRequest06;readonly plan:NativeConsumptionPlan06;readonly capsule:NativeRuntimeCapsule06})=>NativeExecutionOutcomeObservation06 }): {readonly status:'ready';readonly host:{readonly consume:(request:AdmittedNativeAgentHostRequest06)=>NativeExecutionHostResult06}} | NativeExecutionRejection06;

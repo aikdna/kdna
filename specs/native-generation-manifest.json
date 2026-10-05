@@ -1,0 +1,1427 @@
+{
+  "format": "kdna.native-generation-manifest/1",
+  "candidate_only": true,
+  "source": {
+    "path": "specs/public-semantic-source.json",
+    "bytes": 1435436,
+    "sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec"
+  },
+  "producer": {
+    "recipe": {
+      "path": "scripts/public-contract/native-output-recipe.json",
+      "bytes": 155707,
+      "sha256": "0dbcd0c924e4365dd5375233967907519bd87308e577eb05c065d301096e3dfd"
+    },
+    "scripts": [
+      {
+        "path": "scripts/public-contract/generate-native.mjs",
+        "bytes": 6966,
+        "sha256": "2385330076357ac83182d77e0a1f7bf683003aaae276103919862811db36da3d"
+      },
+      {
+        "path": "scripts/public-contract/native-renderer.mjs",
+        "bytes": 19534,
+        "sha256": "05a359837c3c61d18ecc3fe109387ade921daf25eb12a8530e7a5b7550dfe1c7"
+      },
+      {
+        "path": "scripts/public-contract/generation-writer.mjs",
+        "bytes": 5909,
+        "sha256": "5f2b95585cfb99084af9ad03a2e95926d7a445c12f25ed29ede05aa6d17bac98"
+      },
+      {
+        "path": "scripts/public-contract/generate.mjs",
+        "bytes": 72318,
+        "sha256": "cd1914a7fd684fc033f635bd331bb5491446222352097fec72dc05982e0e4661"
+      }
+    ]
+  },
+  "base_types": 431,
+  "canonical_types": 723,
+  "owners": [
+    {
+      "owner": "sections",
+      "roots": 120,
+      "types": 483,
+      "module_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f"
+    },
+    {
+      "owner": "source",
+      "roots": 27,
+      "types": 55,
+      "module_digest": "sha256:c64a8fa0c317fb630078cebe04bac174d485a6490f199822cb5fe08d90504b2c"
+    },
+    {
+      "owner": "retained",
+      "roots": 33,
+      "types": 365,
+      "module_digest": "sha256:017807a18e4a3bd671e1098a2ec0b63268577396a5f0b88b85bad662b10e0d83"
+    },
+    {
+      "owner": "execution",
+      "roots": 26,
+      "types": 307,
+      "module_digest": "sha256:cd08928b40dd39d92f515ef358922a62b3c4a3a80f2a9e0eca566f4e4a0e1a28"
+    },
+    {
+      "owner": "creation",
+      "roots": 10,
+      "types": 66,
+      "module_digest": "sha256:4bbe953d5c103024a70a1f8ad6d5f9512d7a362f5af7a3be66fff3cbe770620d"
+    },
+    {
+      "owner": "sectionbytes",
+      "roots": 7,
+      "types": 27,
+      "module_digest": "sha256:8358dfe622117bb88866d7f72ca15e21961a87b37e108978ed05015b102277ef"
+    },
+    {
+      "owner": "packageset",
+      "roots": 24,
+      "types": 387,
+      "module_digest": "sha256:1fe24efdd2de7f2a73b8e8ad07ed8eb6f80d762c586451d43c37334ca6ef90f1"
+    },
+    {
+      "owner": "browserwhole",
+      "roots": 9,
+      "types": 27,
+      "module_digest": "sha256:47dab8d724862202983dd4f41058eac46b5fa81e551a463e937be3941a9c5444"
+    },
+    {
+      "owner": "retained-browser",
+      "roots": 7,
+      "types": 360,
+      "module_digest": "sha256:a6f932f9c7dcc4e1a826ba71205703bceb84572f7218b292faf1bb4ec75a9b96"
+    }
+  ],
+  "dispatch_roots": [
+    "Manifest06Candidate",
+    "StoredRepresentationMetadata06",
+    "RepresentationMetadata06",
+    "Representation06TableDirectoryRow",
+    "Representation06DataSectionRow",
+    "Representation06TopicRow",
+    "Representation06NodeSectionRow",
+    "ExperimentalStoredXrefFrame06",
+    "ExpansionTarget",
+    "IRReadNode",
+    "CanonicalIR06Candidate",
+    "WholeSectionSnapshotData06",
+    "ChecksumsDocument06",
+    "SectionSignaturePolicy06",
+    "SectionSignatureReadIntent06",
+    "SectionSignatureVerification06"
+  ],
+  "artifacts": [
+    {
+      "path": "conformance/public-contract/adapter-contract.json",
+      "bytes": 736,
+      "sha256": "7d67a6eaa3d4de51ac4c51eff375067ea8171f890d2a84bdf4f796a03190f2ee"
+    },
+    {
+      "path": "conformance/public-contract/ir-retention-vectors.generated.json",
+      "bytes": 3033,
+      "sha256": "233f1fcd7965ed7d9ddbfcd8c17ad5aaf774ea036a5a9ffd7345d6030aac4346"
+    },
+    {
+      "path": "conformance/public-contract/vectors.generated.json",
+      "bytes": 198940,
+      "sha256": "24fba003f9b5caf82172a8106a8bca0a4869b7b53ef0b1dba3fafa979d2a3317"
+    },
+    {
+      "path": "packages/kdna-core/schema/agent-host-receipt-0.3.1.schema.json",
+      "bytes": 6542,
+      "sha256": "d6a5888402af549f69c30171f510677197ff5d414719865f15dc97541fb2aa0e"
+    },
+    {
+      "path": "packages/kdna-core/schema/agent-host-request-0.3.1.schema.json",
+      "bytes": 3024,
+      "sha256": "d06c0cad6e04ddaefbfd48b9790ad7cf3c4f2ff988ed73f0dbf31fd67d32d8df"
+    },
+    {
+      "path": "packages/kdna-core/schema/canonical-ir-0.6.1.schema.json",
+      "bytes": 180519,
+      "sha256": "e51a80cfafc51754174e15bc718341f7748d95a9f3cf0a918954983bb9d8d051"
+    },
+    {
+      "path": "packages/kdna-core/schema/checksums-document-1.schema.json",
+      "bytes": 2485,
+      "sha256": "b0fe8251e9247b5aab4330beab76ace10aa7d427872580f7cb2bdf45912def0e"
+    },
+    {
+      "path": "packages/kdna-core/schema/consumption-plan-0.3.1.schema.json",
+      "bytes": 9929,
+      "sha256": "2052439e9c0d4dd19c842b17b4c1c3ff7afd82606ede5c8e778485347ea86109"
+    },
+    {
+      "path": "packages/kdna-core/schema/envelope-aead.schema.json",
+      "bytes": 7713,
+      "sha256": "a95f89c4902f8ddad4f7a406fd3f3af36e2d8adeab15ea655e96c38e9c4dde44"
+    },
+    {
+      "path": "packages/kdna-core/schema/judgment-trace-0.3.1.schema.json",
+      "bytes": 10845,
+      "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
+    },
+    {
+      "path": "packages/kdna-core/schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "bytes": 16760,
+      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+    },
+    {
+      "path": "packages/kdna-core/schema/payload-profile-0.5.1.schema.json",
+      "bytes": 107892,
+      "sha256": "771f92035b761592e6424cfbf956342a1b0dc03751e3b7a9ca5bc7d1a1240a17"
+    },
+    {
+      "path": "packages/kdna-core/schema/public-diagnostics.json",
+      "bytes": 44065,
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
+    },
+    {
+      "path": "packages/kdna-core/schema/public-vocabulary.json",
+      "bytes": 93744,
+      "sha256": "ba84ab16cf0501bbd7c7241cd945fb616775bf748021df4a4234e8d141c480ff"
+    },
+    {
+      "path": "packages/kdna-core/schema/runtime-capsule-0.3.1.schema.json",
+      "bytes": 174587,
+      "sha256": "6e8c2df290f7a0b50170232cd4550061e2321bc2f35abf74d3f4f4d551f3beda"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/authoring-node.d.ts",
+      "bytes": 1194,
+      "sha256": "bb10ed4bd83b6e80043cbc249296009b3d3055cebb63f75608c332fd487fd91c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser-native/generated-contract.json",
+      "bytes": 354560,
+      "sha256": "b405bdb007ce18e144c607d92af4127540119c6d302724c313ae6bb0b72ab915"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser-native/native-whole-schemas.json",
+      "bytes": 670600,
+      "sha256": "d32a275259e6ed0c6cad7e5c0083c94bf09990abe5413c067d3648986f7712a6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser-native/native-whole-validators.cjs",
+      "bytes": 4938245,
+      "sha256": "e5e58f9f927f64db2057746ab6b85f65c6ed0f4533112fb9b61bf9aa95b614d8"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser-native/sections/contract.json",
+      "bytes": 547981,
+      "sha256": "dffd1e46389ef2ccd6d4aa305098c099214de282dbd67d3dbf653f84aef3e87f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser-native/validators.generated.js",
+      "bytes": 3875326,
+      "sha256": "f4ff35fe15e66993622d3e49a4c5f17ab0e70b2ea3c6cff521615410d3cdc6be"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browser.d.ts",
+      "bytes": 213,
+      "sha256": "910d2b4e703e18a4d2bd3f4c97eb8e13302a54cfb27f9eaf436706848703a12f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/api.d.ts",
+      "bytes": 1161,
+      "sha256": "6c1cbb6b7860948f82cab407e810a4b58be41a4f572c8113a4dc3aabd17dd768"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/contract.json",
+      "bytes": 28451,
+      "sha256": "7e772201177d84d05965c3a2aa1a7a2515571c4f4f0aa2760537f65684073507"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/descriptor.json",
+      "bytes": 171,
+      "sha256": "d4ce832268a6370504ee672f722d67f8829091f9c4415a24757aa77c6487c5d5"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/planned-whole-api.d.ts",
+      "bytes": 398,
+      "sha256": "b0c3905b9c678043228cc8dd103f0d8dd0b1c324c59807f67cd067c5904a9cae"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAccepted06.json",
+      "bytes": 7675,
+      "sha256": "6e7302270b67b2806f64cdf6a5d8ac794f5ab60c57318183739f49a642bdff47"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAdmissionResult06.json",
+      "bytes": 10243,
+      "sha256": "46ac0409eda1fd3e75ba024c7c9605781c002c6643879425ca683da1835d2065"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAuthorityContext06.json",
+      "bytes": 13745,
+      "sha256": "5804e33c01c9f5c3ec6fbaad36ac0281a83da7091f5ba0676ed6daf8a5723060"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteContract06.json",
+      "bytes": 1021,
+      "sha256": "4182c1eb4b1bd168e3b8bf4d1caa5e65465186fe15fb6afc041e849df3352862"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteObservation06.json",
+      "bytes": 7130,
+      "sha256": "a2b0bed4b970479326c970aa33354db346b037249d852e8c4fa1de90abaf1cef"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteReadAuthority06.json",
+      "bytes": 494,
+      "sha256": "b1b479dbcb47ae27223c3291162c02a8d0ace52c25e3d09966257e0b1eca590b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteRejected06.json",
+      "bytes": 9418,
+      "sha256": "f840a21d22b84f0bb4fcd0f1bbbd86051dee8c93dc0cdc129b7ff590b282add6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/Request06_whole_asset.json",
+      "bytes": 2768,
+      "sha256": "7ff9e13b32eb4b9215d28f394a53f3994b75383db332b9c2ef116d80c6b84ec9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/schemas/SectionSignaturePolicy06.json",
+      "bytes": 983,
+      "sha256": "99f95c34a248f265ac4ba6d48c5bc1a4a611a7a9c29a13b5cdfc187537f4eeb4"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/types.d.ts",
+      "bytes": 5971,
+      "sha256": "89ee5c3e8c4ebf4aadf1e2a48cc029adf12b0283e84ba87a1a9b0738e6465e8e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/browserwhole06/validators.cjs",
+      "bytes": 399266,
+      "sha256": "f02c2783e20d02cf9cccaefd4266bbbedf6fa2e83d17f4ae407f5c6e7ac099f6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/components.d.ts",
+      "bytes": 458,
+      "sha256": "f845f4d0e2bbd82a858a04628524cf7d3222296b3a5d980deb9b4c82b5de3339"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation-sections-node.d.ts",
+      "bytes": 1645,
+      "sha256": "eb643395d4bf068618cc5f76e41f70d7fd8ba426e358243300d21b3e879e317f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/api.d.ts",
+      "bytes": 1645,
+      "sha256": "eb643395d4bf068618cc5f76e41f70d7fd8ba426e358243300d21b3e879e317f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/contract.json",
+      "bytes": 71166,
+      "sha256": "8c9a7e090f9621c23efb8063102713ceefa9dae9905a8cec0914c4fae1b63cc0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/generation-manifest.json",
+      "bytes": 6851,
+      "sha256": "a00f5fb26b4bcacf6b174b0efb382e1bf46c0b3cafb2cfd76314e3b7554ffd0d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/AdmittedNativeCreationRequest06.json",
+      "bytes": 428,
+      "sha256": "324dd685836f27ecf8be381fa3d9e3b2fd78015141576cafeee42e715f921044"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthority06.json",
+      "bytes": 404,
+      "sha256": "342b3555465c82977aaf0e27ee2b4a00b6233091a5d5214025378296baa8c737"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthorityContext06.json",
+      "bytes": 19326,
+      "sha256": "304879518257322c218592a7f6d578a2cd42778ec555e38cd40670c2c012dd8e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationContract06.json",
+      "bytes": 959,
+      "sha256": "8da6366b0a2b00df0cd04d808e70d630ae188e9ea099c19d79c01baf26950933"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationEvidence06.json",
+      "bytes": 5445,
+      "sha256": "7ebd8cb288c3e7d770c1017cef56833200af094e78d96045e3b85638dc145b60"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationInputObservation06.json",
+      "bytes": 2057,
+      "sha256": "8643f5442f8a1c894516ba4623eaa6a698329d30ae95ba55f43266e88c1619c1"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifest06.json",
+      "bytes": 14261,
+      "sha256": "b118a177d72452cf5c1025644c9734f58d8d539ffa5d84402170fdaa4beb17cc"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifestAction06.json",
+      "bytes": 969,
+      "sha256": "e7228c360e04894fdd5d3fba3ceaa6ae5ceb4e3d95f33bc1d62dbb91c8fb64ed"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequest06.json",
+      "bytes": 2499,
+      "sha256": "955982c1d4344358f1619ce2cdde43cf78218078b34ee1c809e09f243dabfe54"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequestAdmission06.json",
+      "bytes": 22887,
+      "sha256": "2fb30f47f2022c60136ab421c839d7e752befea61fe57dfaca625e8c36bca2ed"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/types.d.ts",
+      "bytes": 14764,
+      "sha256": "aa539b6b68ac4ab163261ea84ee2b2f433e35153f357342f55b8cca9bc9e8e74"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/validators.cjs",
+      "bytes": 548763,
+      "sha256": "2e3f98c131c8f5c38b16398dad53cb01fec0a75aecfba958d7369e43d6aa572d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution-sections-node.d.ts",
+      "bytes": 4531,
+      "sha256": "4179f8ec8e4e0fc0ab1480a0ba4f4764b5b6d79bef53a764fcfd0df54e459f1f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution-validators.generated.js",
+      "bytes": 1843182,
+      "sha256": "409d6c2ecc216188e13ddd3be9f86a8adb6070b84b1a1012d5dfc323cd068b9c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution.d.ts",
+      "bytes": 5878,
+      "sha256": "bcaf3a2b91dcba7fb618d987f41fc3530d65fb1f21d5d00c24408895ac14e653"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeAgentHostRequest06.schema.json",
+      "bytes": 437,
+      "sha256": "dcd7c36fd877e424453c140b19d90f52e44e305c70c3aa8260ab3d29caefd493"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeConsumptionPlan06.schema.json",
+      "bytes": 433,
+      "sha256": "dc6d3786aa7d52fc5b9c3dc7986242c201ff2e5fbbf2308d8f38e582b1c5a39e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeRuntimeCapsule06.schema.json",
+      "bytes": 429,
+      "sha256": "c89b6a355c053b85d08ccf848db8149ed8d1021ef484c2a0bf2af9ea895239ee"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostReceipt06.schema.json",
+      "bytes": 6734,
+      "sha256": "95016b5a37400af0c48d9cea83fee77b85d1c7e1f1117585c8f67b6b2c870294"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostRequest06.schema.json",
+      "bytes": 3216,
+      "sha256": "670e81a134217edb85381496a6db987079082452c0e69bae2023e0f72637edd2"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostRequestAdmission06.schema.json",
+      "bytes": 2293,
+      "sha256": "406414ec35b6909a34056c1d0b9c9e567faa683c9805ba446d1b8540eea4b064"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeConsumptionPlan06.schema.json",
+      "bytes": 11715,
+      "sha256": "23cf9a09ffa9306b341cfff4dd48d0e7cfb269acaa9f5afb793e4f04912c6f07"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeConsumptionPlanAdmission06.schema.json",
+      "bytes": 2281,
+      "sha256": "dede7cec03fa9a9e29513b4404c731f62f56914e0e6655f91e8ff5c6ce7da2d7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionAuthorizationObservation06.schema.json",
+      "bytes": 1674,
+      "sha256": "19b87ecbbc8426da86b207076792ebaa0462978e3cc316b07ab425cd0741c60e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionDeliveryObservation06.schema.json",
+      "bytes": 1231,
+      "sha256": "8726335b9eeee28dcee668725a50eb0de86f76deb0273a6cfde99a02a2491383"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionFailure06.schema.json",
+      "bytes": 1083,
+      "sha256": "757328883db5926d942fd7988537fda617836d06c3ef9c448aaa8526f25f9b8d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionHostResult06.schema.json",
+      "bytes": 19789,
+      "sha256": "46d356fc034ef3582cc1e1126a0d21b9da39ab7eb5be6b045e8db75f2679b537"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionOutcomeObservation06.schema.json",
+      "bytes": 1673,
+      "sha256": "0ebf2cb0a2ca12c730f4b3e691e5b1d1577ca07fe1b85f7e2ec6f1edec7497eb"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionPlanOptions06.schema.json",
+      "bytes": 2779,
+      "sha256": "c8677cd39a1f1333c1eb19db8d11bf36e1cdbe7c487e8f859afec6eebcc523dd"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionReceiptValidation06.schema.json",
+      "bytes": 8744,
+      "sha256": "f63350346c33369de0009f82254e0887683226b3df1ceeebcdfe10b99ad52fdf"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRejection06.schema.json",
+      "bytes": 1657,
+      "sha256": "24a0f32bc8eb8fc4e32e14a4c45ea275810b63f4603fd599f28e419a8bf2ffad"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRequestObservation06.schema.json",
+      "bytes": 3623,
+      "sha256": "03e4dfd87745ebf9ec4173e94d227a733013a76253800e3f6cbd03c494ef74b7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRequestOptions06.schema.json",
+      "bytes": 1091,
+      "sha256": "2f2a3caa573250b49533034326be5221d3103bff73129aa334f74bbba0c9434a"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionResponseBody06.schema.json",
+      "bytes": 17713,
+      "sha256": "fe2ef163f62cdef7121a24f4d9a6e13e62edf277b9a4c0da5c10b1d07cb46f23"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionResponseValidation06.schema.json",
+      "bytes": 19823,
+      "sha256": "7a5027d1eb26fd4ec8a0942035ce2e46774dabd0c6ec6a81aade777b4162fd83"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionSource06.schema.json",
+      "bytes": 7594,
+      "sha256": "2acda65ff91aa52ee7c1f3a650fc16be89585afaad8ebe2e7a96276d1557fe70"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionTraceValidation06.schema.json",
+      "bytes": 14639,
+      "sha256": "0275ae34518a9a67fbbf981006356c9ced2e3a04414265c99e3d919923f7299d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeExecutionVersionTuple06.schema.json",
+      "bytes": 1786,
+      "sha256": "884fe0c44c0cd0173ea04606884c50e501fac6a099a798f77800e736bf562510"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeJudgmentTrace06.schema.json",
+      "bytes": 12631,
+      "sha256": "bd15b3c8a6d3be186921c79bc113bcac4dc525e0dab1cb53d2d5a3737813e6c6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeRuntimeCapsule06.schema.json",
+      "bytes": 176373,
+      "sha256": "5837c2840f535d19bc8330df132f253f801de4400bea178ad723db4c50bfab55"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/NativeRuntimeCapsuleAdmission06.schema.json",
+      "bytes": 2281,
+      "sha256": "13e2c9c4cb1942c9f83f3e7538149d025874c0dfea5a58f2a040fe82ef5b0924"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/api.d.ts",
+      "bytes": 4531,
+      "sha256": "4179f8ec8e4e0fc0ab1480a0ba4f4764b5b6d79bef53a764fcfd0df54e459f1f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/contract.json",
+      "bytes": 225481,
+      "sha256": "7688d69fdd68bf2e809689f6cf7d7d475a3fd136eb617ec8ba8f634ba6e834ac"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/generation-manifest.json",
+      "bytes": 16890,
+      "sha256": "6dfd99c7a514c70be627384748683786e1b01edd90f2fc0aa5418c1bb9b6d414"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/types.d.ts",
+      "bytes": 58653,
+      "sha256": "940d99efa1f8a1b06fb301acd4e52e6b74a5b3ce7001d7b677e865b4405974f2"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/execution06/validators.cjs",
+      "bytes": 2809073,
+      "sha256": "89e11c4fef948e92ef5e9f5050b5d5cf9f7b530eb5553de546ffb0e1c788ed6b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/generated-contract.json",
+      "bytes": 354560,
+      "sha256": "b405bdb007ce18e144c607d92af4127540119c6d302724c313ae6bb0b72ab915"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/handoff-validator.generated.js",
+      "bytes": 192114,
+      "sha256": "963104e1421eb3ffe47dfcb3158f16ed474e0acf636b851c022b741a42472bf2"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/issuer-contract.generated.json",
+      "bytes": 28514,
+      "sha256": "4ba21b759d21cefaf88d3c8ade50ab4543ff1e767055484836c5db1d1fad952f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/issuer-validators.generated.js",
+      "bytes": 129336,
+      "sha256": "5cbea6f414af9210d45c3e502a84b16889f3056fff455e038bf53ed8030ccce5"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/key-grant-issuer-node.d.ts",
+      "bytes": 4058,
+      "sha256": "26c545ca7db98dfe1b19396b439f1811bd2936aa47dd1d5d8305fb56c76ce46e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/node.d.ts",
+      "bytes": 214,
+      "sha256": "e43a1dca3f401ccb8a24457add8012f0e5289ffb75905646c39da36dce8d2136"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/package-set-contract.generated.json",
+      "bytes": 19818,
+      "sha256": "1d75527d9c7fbbea54ba1da01a955d5dc365d1c495d9c9ae692fa42ec9fdf598"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/package-set-node.d.ts",
+      "bytes": 5639,
+      "sha256": "748df74b61b63da851a7e07da54826fb36ec471512943d4bf31ed3fb67b7d94e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/package-set-sections-node.d.ts",
+      "bytes": 2895,
+      "sha256": "81e38e6d9c0126b0d8be69185f5d5fabcc83258bb40a153037fd63c0d2fba2b7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/package-set-validators.generated.js",
+      "bytes": 174871,
+      "sha256": "8ccdab12114aaff97625589c32ff394469e88a020dd9f9e86e74c33a25ac813d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/api.d.ts",
+      "bytes": 2895,
+      "sha256": "81e38e6d9c0126b0d8be69185f5d5fabcc83258bb40a153037fd63c0d2fba2b7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/contract.json",
+      "bytes": 307339,
+      "sha256": "51100a21485fb629b4f6a642c61e8bd2710f37a5062e7d106d79e15e5392a389"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/generation-manifest.json",
+      "bytes": 19158,
+      "sha256": "f634eabdba37848704b8f6fa875d22c73ff6565c638e96168f3468df8d2ee9a3"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/read-api.d.ts",
+      "bytes": 2031,
+      "sha256": "60b55b899e3b26a46afbca7dcefb5b953dd999a874998067a3dc3c9bd6b9152a"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/AdmittedNativePackageSet06.json",
+      "bytes": 427,
+      "sha256": "2958ac41c1ab40d65a61005484f971827d5f9ae01fc312126ce0ca91652866de"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/DeliveredNativePackageRead06.json",
+      "bytes": 435,
+      "sha256": "3e9f036584e1511cde8a37e56b4676103bcc02d060572fa9c8faf2f830197fe2"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetAdmissionResult06.json",
+      "bytes": 14220,
+      "sha256": "9e4fa0fc7137e5467db2ad6c23b83ee8631be3eab4014ce8c3539e4bcb4fafb6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetContract06.json",
+      "bytes": 978,
+      "sha256": "00644bd7a284d3c56ffd226769f2db76a554bae476ee25c026f59b6864083814"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecision06.json",
+      "bytes": 2450,
+      "sha256": "0801fed36a8602fc3f44e0ef6fffb0bdc93fb287eff84cb8730761141605e8f9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecisionAllowed06.json",
+      "bytes": 1189,
+      "sha256": "073834126ac347084c2537a4c216579ad6a592b4a927041257d30e8898bcdd3d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecisionRejected06.json",
+      "bytes": 1458,
+      "sha256": "1ad55dc8e33eacf0d319d43654a8cd87e8bb45c3805f885c0b8bd1d5c7d00611"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDescriptor06.json",
+      "bytes": 6440,
+      "sha256": "29e07e340325a77307270209229fb2871d13df00cb416cf21908b66c3126aa3f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetHandoff06.json",
+      "bytes": 6112,
+      "sha256": "e36b4912528780f86bf3d2db07cae363fb8c62fb03976a0c05bdcab2de27c9b8"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetHandoffResult06.json",
+      "bytes": 7179,
+      "sha256": "380a1c48497e8a9a3f2ea3e739d0672bf71dfba22059c7f4dcd1431b09ed67f3"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetLimits06.json",
+      "bytes": 835,
+      "sha256": "20feee1481a74def780d7f93e1edb2be2229b2aeb444dd46db6dead144e760e4"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetLocalFailure06.json",
+      "bytes": 928,
+      "sha256": "5166089ca0905c7a88ef6d604be0c9957e800110549138838a3ac7051c62c8bf"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberFailure06.json",
+      "bytes": 9714,
+      "sha256": "6a64174d59a17108e50ee42dc099fae7783ba884f7cda9149739d387b9ce2f8c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservation06.json",
+      "bytes": 2454,
+      "sha256": "b9ad10165b019af366831318ffc339611da95126076f195e6df372235deb2f3f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservationRequest06.json",
+      "bytes": 2601,
+      "sha256": "4b96f6dd91802842a164cdc858f990c0cd8a37cff60e372122bba58075b577d5"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservationRow06.json",
+      "bytes": 2084,
+      "sha256": "22aed3b86a7c6d208c20c2995be3932c0a2c2df09be286f6d4abe40506a116fb"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberSnapshot06.json",
+      "bytes": 974,
+      "sha256": "e889a0b33333de17c0cb8b22e317ee0112d6078b5fcd4c0f8d45ec9564602074"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetOperation06.json",
+      "bytes": 564,
+      "sha256": "f25de2bd1ae4ae4ccf63e38728d651451ee97731d63cb33b2c0b707a4a2a9fc7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetReadResult06.json",
+      "bytes": 255834,
+      "sha256": "c33e81ba7bc533012e86387af31744b9c23d40033b4089324c2a7652160923b3"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetRecheckResult06.json",
+      "bytes": 4314,
+      "sha256": "e4da3f18f5f18ea44244222cc973399a1fa3e65fcf0049a647fea0a69b354e7e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetStructureResult06.json",
+      "bytes": 3496,
+      "sha256": "1a95abb92c2d1ce0c850442b764a4f3c8827e541bbdb16ebf78a95b31881ff60"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetView06.json",
+      "bytes": 5077,
+      "sha256": "d60bcca8852531c80a12cd56568743f895279aa810c1f2e40a28caeba8c92cf7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/TrustedNativePackageReadProvider06.json",
+      "bytes": 459,
+      "sha256": "3883db00f4f07e4b85be69480584bf3a24568b682e47fd694d4d7bd2eddb77a0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/schemas/TrustedNativePackageSetMemberProvider06.json",
+      "bytes": 479,
+      "sha256": "26ad990f5077011f200751f08c37126d19dff74fae4e3907d7f5b47a343f90dc"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/types.d.ts",
+      "bytes": 83956,
+      "sha256": "b5b44384ccd5ab33154c4bd436069162093163c6b0e30872ca8e50b00e19097f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/packageset06/validators.cjs",
+      "bytes": 2904422,
+      "sha256": "da5a3546a4596ba3ea8c9837233454a4ba7ce7bddc589e2bdf1d8aa90dc1606e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protected-sections-node.d.ts",
+      "bytes": 3551,
+      "sha256": "7a54434da00f28ff194521861e8e07748007ce17e6fbab5147e89f2c94d1e42e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
+      "bytes": 349407,
+      "sha256": "a66b6d4337e1868250868f25a0ab84c01622e0abe3d7157537617676a64e0e1b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protected-source-node.d.ts",
+      "bytes": 10233,
+      "sha256": "ade6dc12f0488cc41518ba0a41f887fcaea4e349026ad0a3db62ec6387b904e1"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
+      "bytes": 86541,
+      "sha256": "95c795868056d79e6db45932b74dde929ddb4e348547659246d58c1ba95171a6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protection-node.d.ts",
+      "bytes": 15836,
+      "sha256": "5bc3927d044eaeafbb9826753e9355b781b42d18251af11c31696544d4677a30"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/protection-validators.generated.js",
+      "bytes": 4243874,
+      "sha256": "dd5957fa95697fb61fcd68d2143a59a06bf485b428cbe57e09285b34baaebcc8"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/read-boundary.d.ts",
+      "bytes": 294,
+      "sha256": "8fcfc384e227c4924df5f9ce1057469265f62ae2ed948310d2eed1fb655f307d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/contract.json",
+      "bytes": 272668,
+      "sha256": "06ca14aac15beed8071f587831c014598ac82138648259c3e57e85dc4c62bc73"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/core-api.d.ts",
+      "bytes": 1566,
+      "sha256": "194e14b5a115e4069e222566fa92cdd43fa94f8dda67a04696335d681232d350"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/descriptor.json",
+      "bytes": 175,
+      "sha256": "f9cfac1a898eb08428bd2844c31221e7aa53cbe453b25b9199768edb50885683"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/read-api.d.ts",
+      "bytes": 1169,
+      "sha256": "47a2afbd4ae1cdb5801edb977c63b7e707f6f3bb9f27df36f8e955b8872b9ade"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionAuthorityContext06.json",
+      "bytes": 15476,
+      "sha256": "b4ff911604fe02bedb9b99265c70026e80540a2be70f7c51e6c27bceb888cc86"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionFailure06.json",
+      "bytes": 5516,
+      "sha256": "26d3b9927c2051d9ff8073bf302e3da677a88e954953f555f0a01d621159d549"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionHostObservation06.json",
+      "bytes": 5495,
+      "sha256": "e64c992d24e8641cca9cfa3e08edc1f9a0665ff69f4af35bfacc8cdafbae6424"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionPreparationData06.json",
+      "bytes": 16448,
+      "sha256": "3c29655b64d21d67cb7326a5bdbc0b3ee6993f260d4ecf730ee28d36baf34396"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionReadCallResult06.json",
+      "bytes": 249895,
+      "sha256": "1ceff04dd319d65b80310743ab296d9f14fa6d50fa493cc506263478ae1d5700"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionRequest06.json",
+      "bytes": 11047,
+      "sha256": "60ecbee79e9a09165e595c64bdf878438f82869e1f0165931f1b5265b2d78154"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/schemas/SectionSignaturePolicy06.json",
+      "bytes": 1001,
+      "sha256": "a35fa69a097344d470198a1465de7ded48d1778456e8ff730420919c134f7866"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-browser06/validators.cjs",
+      "bytes": 2910262,
+      "sha256": "8069185ba970a9b60a2fa0c9d42e7066b6855fc89007512753d830740178668d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-sections-browser.d.ts",
+      "bytes": 1566,
+      "sha256": "194e14b5a115e4069e222566fa92cdd43fa94f8dda67a04696335d681232d350"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained-sections-node.d.ts",
+      "bytes": 1673,
+      "sha256": "d1db52e38c371247f637d263e0d6d6e87102d50dcd1e6e304c40a18887006e8d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/AdmittedRetainedSectionRequest06.schema.json",
+      "bytes": 422,
+      "sha256": "62090ece039274323fbf062243814bb64fbcbc751c7c0be37929f36afe048368"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/PreparedRetainedSectionRead06.schema.json",
+      "bytes": 410,
+      "sha256": "0a6da8d0d9f965392888cb711b69d5033b8bcee6f204ffcbcd00b3d25ba2e946"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedCall06_read_envelope.schema.json",
+      "bytes": 240724,
+      "sha256": "35c2f9894b95222b24c9d800e9787c9ad28936fb2ddb0b708513b1e5f60ea7cb"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedContent06_catalog.schema.json",
+      "bytes": 4986,
+      "sha256": "473ba62c55e49d81d37f38b3852e705f24e09e0d79c337cea7ee7c52bcb5d226"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedContent06_exact_selection.schema.json",
+      "bytes": 176583,
+      "sha256": "1dc578dd8987953c5d01dfd110b9f5a1d6f634a4e02e86239cb4a989655f3640"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedContent06_expand.schema.json",
+      "bytes": 175742,
+      "sha256": "900cb0a63b8e9509d41808da42bd6c5df38163a931f4289699d37ac08aae82d7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedContent06_whole_asset.schema.json",
+      "bytes": 176176,
+      "sha256": "156aa0103267d7c40909050aab2fd46c362927b189942d9c567887b23b9285a9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_catalog.schema.json",
+      "bytes": 54515,
+      "sha256": "b0b1e72210597348fbbc66e2fb2ef5550d2f333168644155a23186abfa6e480e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_exact_selection.schema.json",
+      "bytes": 219579,
+      "sha256": "ad84705fad75f9486ddd69e0162a71263fcad8fe0ed2c938a09369245fee62f3"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_expand.schema.json",
+      "bytes": 218711,
+      "sha256": "62addfe3c9e646d1d8a76cd3648af6389620c95b0312041963e244fdf84a3851"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_whole_asset.schema.json",
+      "bytes": 219160,
+      "sha256": "eae24481f5c086149400c762bea6e1fc0286ca54a8269e07494ade93e72e3225"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedReadEnvelopeRejected06.schema.json",
+      "bytes": 13940,
+      "sha256": "f223bac6c4b046559e61a93303b68e6e25debf4b991b5ce2eaacf1039d82bc51"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_catalog.schema.json",
+      "bytes": 2736,
+      "sha256": "c70eab38ba1aae32d6b0564053f6e172bdf7e3da59f1a5d9f66946f8d6618ca8"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_exact_selection.schema.json",
+      "bytes": 3365,
+      "sha256": "e2d77fe6a40076e73bbdec579cf0be6526e0c6cbe2590705d78458f521cb0ea0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_expand.schema.json",
+      "bytes": 8327,
+      "sha256": "b636ba4b960c1b30bc0e73d107433b256ceca8663f9c9475b4bec8567aa5bb3b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_whole_asset.schema.json",
+      "bytes": 2756,
+      "sha256": "67e0ccd9df26e0cb0e877ba3d3bbb0cf0ab7bac09c287cf31eebe47ed4254119"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionAuthorityContext06.schema.json",
+      "bytes": 15414,
+      "sha256": "825f1b9c465e80e2598b39dfe3a7f0e9be747456466a86c07b641d8ec06000c4"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionContract06.schema.json",
+      "bytes": 937,
+      "sha256": "00bc601fbf97bf66b302675b7951f3d23e2a239f580124edf02e4be3bce2e20c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionDetail06.schema.json",
+      "bytes": 830,
+      "sha256": "04bc90ee55c8620fbd4426037231918633a44c41262dd250449934ce3760e119"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionFailure06.schema.json",
+      "bytes": 5454,
+      "sha256": "5cda929b5bbe09ead89e8460cd0a0378047083542178a87328292e0391a4910a"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionHandle06.schema.json",
+      "bytes": 7424,
+      "sha256": "99cd6d6905814572046275bbe24eedb3c7fb76e83510da98cf3cd57c065433c9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionHostObservation06.schema.json",
+      "bytes": 5433,
+      "sha256": "b525430f8cfb4963fcb47b5de63090490504274f184877fde6647cd4d8283c81"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionOrigin06.schema.json",
+      "bytes": 1452,
+      "sha256": "453eaf95357b4928193b559c5b79c4a9f7a4752df83619167df7d19c87576be6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionPreparationData06.schema.json",
+      "bytes": 16386,
+      "sha256": "5f1476b391b9bef00ac8f764fafe17ddf2e249cd71dc0d020ece4880269192e0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionPreparationResult06.schema.json",
+      "bytes": 6094,
+      "sha256": "07b139eb97fea254b28b1c5836c8417646cdcb90fb85089038ef51a48616e33a"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadAuthority06.schema.json",
+      "bytes": 414,
+      "sha256": "c9c07fd6587126786dc4cac32dc6862d2dd637c5a278682f28d4af36b80d5dc0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadCallResult06.schema.json",
+      "bytes": 249833,
+      "sha256": "dff8ec24d31cb3efcc294e6f3a04479d2930dced3861c58f1a0b6a22780c57da"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadEnvelope06.schema.json",
+      "bytes": 239992,
+      "sha256": "455223bc965111b1836c919ad88d89756fb9484a1ce5bcc733dec2303e280d62"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadIntent06.schema.json",
+      "bytes": 6626,
+      "sha256": "7dbe027b18631ff9ee9aa09ec871d647a0309a26ff5d5cf41b364ed6b4a0ead6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionRequest06.schema.json",
+      "bytes": 10985,
+      "sha256": "47690bf81bc8a64da59f73ab6a87e1f6a1ef3f86c8b03cd51628731cb63510e7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionRequestAdmission06.schema.json",
+      "bytes": 6102,
+      "sha256": "d27a709cb16873d1c54dbdd4b73e5fd0aef9cc7533e55b43c615e86ba6312938"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionSignaturePolicyCheck06.schema.json",
+      "bytes": 1934,
+      "sha256": "7eaa61c79faa2aa6c3df24ba1bbbd8eaf37376e516ae6b34dfe2ac321a06f561"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/RetainedSectionVerification06.schema.json",
+      "bytes": 30148,
+      "sha256": "3e7daf286474d9859f1dcdbce548fb16f98c9edaf98c0912f89bf9f7f1c0cd11"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/api.d.ts",
+      "bytes": 1673,
+      "sha256": "d1db52e38c371247f637d263e0d6d6e87102d50dcd1e6e304c40a18887006e8d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/contract.json",
+      "bytes": 291233,
+      "sha256": "8feb4658edc16d40499cb09e4ed75e16484a6352cc6249f95b402164712c9a4e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/generation-manifest.json",
+      "bytes": 20539,
+      "sha256": "6fdc8cadc1c13344fe41cd67fd732e2b6271325f8b0750792550c354c46e35bf"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/read-api.d.ts",
+      "bytes": 1149,
+      "sha256": "d4811b7ec93f0e4407be67029f718f2ce5a97edcafeb2cd715abf5e19746a0ef"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/types.d.ts",
+      "bytes": 78097,
+      "sha256": "9412d93e10c55e9bff142e69eb984584a730fd840a81fcfac3ed929ca55f7aaa"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/retained/validators.cjs",
+      "bytes": 18409263,
+      "sha256": "ca9c6288faa4d3146b27e150edf93bb74fd30f162fe67bfbd2d5241e9d1e068c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/api.d.ts",
+      "bytes": 864,
+      "sha256": "9eccd81c079c20bf4e523537cdd189c822f7cf2d94dc0b8b37a21cde9ed0b55b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/contract.json",
+      "bytes": 31759,
+      "sha256": "3b0769a637dc70b5add506e2304745bdc6f243ec5220e715ed851d233e2a9549"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/generation-manifest.json",
+      "bytes": 5189,
+      "sha256": "1795609d35aa8ceb44ad42bc04a515faeac68dac6dfcb45bd28b1099942a7c3d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAccepted06.json",
+      "bytes": 7598,
+      "sha256": "9b983428b3c73ae780f5caf3c7632b73644d7851aaa9b892d55aaa934db6f48f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAdmissionResult06.json",
+      "bytes": 10124,
+      "sha256": "4e8bdbb1e39238750eea55e4e2d88594e60428f79709f2d5b6003fd545d0163f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAuthorityContext06.json",
+      "bytes": 13661,
+      "sha256": "6ce75602cf0710882894d893060d8a67166f77a0861b8bf63d4a5d8d16eef926"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteContract06.json",
+      "bytes": 972,
+      "sha256": "7be1d65a169de0366c2fc3b873b1d9504eb75b72d3b17687a02ab9b3a3e05fc6"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteObservation06.json",
+      "bytes": 7067,
+      "sha256": "31ce4c01bd9877cbd02e4100749b5395894790e0d15dae7a0d9ada49cd1c0ec9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteReadAuthority06.json",
+      "bytes": 448,
+      "sha256": "b7d813d7cba565266950db4b3661a4c91778f6c27d6ffed124e33784a7b0947c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteRejected06.json",
+      "bytes": 9334,
+      "sha256": "0c655528c82c6d0e674dd0b1103197809ba879161b5328eb90d4c8a8d8096ae0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/types.d.ts",
+      "bytes": 5856,
+      "sha256": "5fa6257e5d8c0049c8c6c7b24d628daf40c596098c85b957939047eebb0ab549"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sectionbytes/validators.cjs",
+      "bytes": 372056,
+      "sha256": "367564b4d16593534c45b30e6ae301b9f388863f41f388f350bcbb920803e6a4"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sections-bytes-node.d.ts",
+      "bytes": 864,
+      "sha256": "9eccd81c079c20bf4e523537cdd189c822f7cf2d94dc0b8b37a21cde9ed0b55b"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sections/contract.json",
+      "bytes": 547981,
+      "sha256": "dffd1e46389ef2ccd6d4aa305098c099214de282dbd67d3dbf653f84aef3e87f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sections/generation-manifest.json",
+      "bytes": 19987,
+      "sha256": "1378c9131aae1e98283d2512f7121288d9a783d0d19db7a8bf428a859ac83665"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sections/types.d.ts",
+      "bytes": 122264,
+      "sha256": "1a081c40957836cc006dcf053f819febfa8220225ef658a753676aaba9fe978a"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/sections/validators.cjs",
+      "bytes": 40317102,
+      "sha256": "c6a67c7a1fcd2e06b2399d0bf173e7deffe878ecc0efa6aeb07c59880f6bced4"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/selected-context.generated.js",
+      "bytes": 2445,
+      "sha256": "5ea0d9f7205cf721555682229a7f6148cd9f91638f5686884d739885be604473"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/source-sections-node.d.ts",
+      "bytes": 6279,
+      "sha256": "33dc342a1b55abcedfad3045dc082f18ee5b741147ac137403bf9132ea19acb3"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/source-validators.generated.js",
+      "bytes": 319024,
+      "sha256": "1e116f1ec74b96c8d79cdbc3ed935fce3e6cab3f51e8c2e7cb1be473d82e6587"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/source06/contract.json",
+      "bytes": 76676,
+      "sha256": "613e65f2d2b81ced49260ae58f566818dded65fa097a4496140da3a0756fcf5c"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/source06/types.d.ts",
+      "bytes": 16774,
+      "sha256": "2dd73bc0740b039fb099af33219f9d479c2c574409edc328d8daac49286c5608"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/source06/validators.cjs",
+      "bytes": 1088197,
+      "sha256": "f4edc972f719015840c3e68f19477496b80e784605bea2967f3c5334ae95c929"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/static-policy.d.ts",
+      "bytes": 515,
+      "sha256": "fc355a5dad8cfddd9edfc77ddabf208d6f0e9b3e1c10767d7a3a4c8e1e24f1a9"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/types.d.ts",
+      "bytes": 88868,
+      "sha256": "d39c8ffc01dce73d65cfe19783132c3341ebc66bd98e1cdacd050a4c9bd7c5d7"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/validators.generated.js",
+      "bytes": 3875326,
+      "sha256": "f4ff35fe15e66993622d3e49a4c5f17ab0e70b2ea3c6cff521615410d3cdc6be"
+    },
+    {
+      "path": "packages/kdna-read/schema/read-contract-0.6.4.schema.json",
+      "bytes": 241789,
+      "sha256": "0cb44f77120f8f34161a5e607d1279e276b70504483f9e6ee9bdf7fd19a8be08"
+    },
+    {
+      "path": "packages/kdna-read/schema/read-transport-admission-0.2.1.schema.json",
+      "bytes": 212237,
+      "sha256": "7fcb513a9769f221b792a4a95e3644d4ec88f17f3e04a4948b5be8bc0dea4dbd"
+    },
+    {
+      "path": "packages/kdna-read/src/browser.d.ts",
+      "bytes": 414,
+      "sha256": "ffed4b5806dee908feac2beca8704cd6a3b79d1ab11706d5acfdc32e3fe9cea1"
+    },
+    {
+      "path": "packages/kdna-read/src/embedding.d.ts",
+      "bytes": 926,
+      "sha256": "b9c06f411c035e26c6ef79fc8de430ea47d9986e6dbf3c5885cb16429ed57884"
+    },
+    {
+      "path": "packages/kdna-read/src/index.d.ts",
+      "bytes": 496,
+      "sha256": "62f043a30eb38c2d7f9a0ce93a773e45cfe269e723a555d70681ff05470edb58"
+    },
+    {
+      "path": "packages/kdna-read/src/installation.generated.json",
+      "bytes": 75,
+      "sha256": "ab90ed23a2a300973693e68018336a79b61f5c1102910e293ce46238581dc2c4"
+    },
+    {
+      "path": "packages/kdna-read/src/node.d.ts",
+      "bytes": 359,
+      "sha256": "5733ca8c8be900ff68c48f5b8f58f9c9b577f2368382430be23c4af4be9ac30b"
+    },
+    {
+      "path": "packages/kdna-read/src/package-set-contract.generated.json",
+      "bytes": 7550,
+      "sha256": "f17a58012f5913dc69f3cff5921f1053e1f0005a6cfdfc954eff45c609655bfe"
+    },
+    {
+      "path": "packages/kdna-read/src/package-set-node.d.ts",
+      "bytes": 2267,
+      "sha256": "d7f381d0fac1c9c909fb3a5e7f45d9b6c010e852bc23b44d189e0b9ec6925318"
+    },
+    {
+      "path": "packages/kdna-read/src/package-set-sections-node.d.ts",
+      "bytes": 2031,
+      "sha256": "60b55b899e3b26a46afbca7dcefb5b953dd999a874998067a3dc3c9bd6b9152a"
+    },
+    {
+      "path": "packages/kdna-read/src/protected-sections-node.d.ts",
+      "bytes": 1713,
+      "sha256": "d6d5ed85039d4f8f2834886a7c296b8f25f2ec931bd5fe451b337728e7758edb"
+    },
+    {
+      "path": "packages/kdna-read/src/protection-node.d.ts",
+      "bytes": 1777,
+      "sha256": "653eeb563ec356113a9a9de4c2dbdbd9647714919c17f01d9ee33c5de1d44564"
+    },
+    {
+      "path": "packages/kdna-read/src/protection-node.js",
+      "bytes": 6354,
+      "sha256": "67c69d688c6d052bc76ea4c6106888fe0dae0f530627cf13cc031e1d5446309e"
+    },
+    {
+      "path": "packages/kdna-read/src/retained-sections-browser.d.ts",
+      "bytes": 1169,
+      "sha256": "47a2afbd4ae1cdb5801edb977c63b7e707f6f3bb9f27df36f8e955b8872b9ade"
+    },
+    {
+      "path": "packages/kdna-read/src/retained-sections-node.d.ts",
+      "bytes": 1149,
+      "sha256": "d4811b7ec93f0e4407be67029f718f2ce5a97edcafeb2cd715abf5e19746a0ef"
+    },
+    {
+      "path": "packages/kdna-read/src/sections/contract.json",
+      "bytes": 547981,
+      "sha256": "dffd1e46389ef2ccd6d4aa305098c099214de282dbd67d3dbf653f84aef3e87f"
+    },
+    {
+      "path": "packages/kdna-read/src/sections/generation-manifest.json",
+      "bytes": 19987,
+      "sha256": "1378c9131aae1e98283d2512f7121288d9a783d0d19db7a8bf428a859ac83665"
+    },
+    {
+      "path": "packages/kdna-read/src/sections/types.d.ts",
+      "bytes": 122264,
+      "sha256": "1a081c40957836cc006dcf053f819febfa8220225ef658a753676aaba9fe978a"
+    },
+    {
+      "path": "packages/kdna-read/src/sections/validators.cjs",
+      "bytes": 40317102,
+      "sha256": "c6a67c7a1fcd2e06b2399d0bf173e7deffe878ecc0efa6aeb07c59880f6bced4"
+    },
+    {
+      "path": "packages/kdna-read/src/selected-context.generated.js",
+      "bytes": 2445,
+      "sha256": "5ea0d9f7205cf721555682229a7f6148cd9f91638f5686884d739885be604473"
+    },
+    {
+      "path": "packages/kdna-read/src/transport-contract.json",
+      "bytes": 1144,
+      "sha256": "765e53d46b0c7df1ca0cd187be9c2e0cb228a90a45dbf2d6ef1887316e1f41d2"
+    },
+    {
+      "path": "packages/kdna-read/src/transport-validators.generated.js",
+      "bytes": 1625648,
+      "sha256": "fd85fe6cf393818d74dfb71d50f451bbf15b8f87842521811a8743d38fd90934"
+    },
+    {
+      "path": "packages/kdna-read/src/transport.d.ts",
+      "bytes": 4950,
+      "sha256": "525da44e67ce69a9fe1d71372c41af053dc5b9d0344e28f4532608f1c1916b93"
+    },
+    {
+      "path": "packages/kdna-read/src/types.d.ts",
+      "bytes": 106,
+      "sha256": "be0b080421d40be4402e628ba63f4c47b83b19dfec1811802ca31bc11aacc839"
+    },
+    {
+      "path": "schema/agent-host-receipt-0.3.1.schema.json",
+      "bytes": 6542,
+      "sha256": "d6a5888402af549f69c30171f510677197ff5d414719865f15dc97541fb2aa0e"
+    },
+    {
+      "path": "schema/agent-host-request-0.3.1.schema.json",
+      "bytes": 3024,
+      "sha256": "d06c0cad6e04ddaefbfd48b9790ad7cf3c4f2ff988ed73f0dbf31fd67d32d8df"
+    },
+    {
+      "path": "schema/consumption-plan-0.3.1.schema.json",
+      "bytes": 9929,
+      "sha256": "2052439e9c0d4dd19c842b17b4c1c3ff7afd82606ede5c8e778485347ea86109"
+    },
+    {
+      "path": "schema/judgment-trace-0.3.1.schema.json",
+      "bytes": 10845,
+      "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
+    },
+    {
+      "path": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "bytes": 16760,
+      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+    },
+    {
+      "path": "schema/payload-profile-0.5.1.schema.json",
+      "bytes": 107892,
+      "sha256": "771f92035b761592e6424cfbf956342a1b0dc03751e3b7a9ca5bc7d1a1240a17"
+    },
+    {
+      "path": "schema/runtime-capsule-0.3.1.schema.json",
+      "bytes": 174587,
+      "sha256": "6e8c2df290f7a0b50170232cd4550061e2321bc2f35abf74d3f4f4d551f3beda"
+    },
+    {
+      "path": "specs/canonical-ir-0.6.1.schema.json",
+      "bytes": 180519,
+      "sha256": "e51a80cfafc51754174e15bc718341f7748d95a9f3cf0a918954983bb9d8d051"
+    },
+    {
+      "path": "specs/checksums-document-1.schema.json",
+      "bytes": 2485,
+      "sha256": "b0fe8251e9247b5aab4330beab76ace10aa7d427872580f7cb2bdf45912def0e"
+    },
+    {
+      "path": "specs/component-semantics-2.md",
+      "bytes": 8518,
+      "sha256": "b89d181ad3cdea7c8c6af3712b0f4c6f953d01208aedbf9e5f11a27e0678d837"
+    },
+    {
+      "path": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "bytes": 15366,
+      "sha256": "0df4e31e1988f1b5338fecac558f1e1d07a738bd6217f70dff45ff27b5e5840b"
+    },
+    {
+      "path": "specs/external-grant-issuer.d.ts",
+      "bytes": 4098,
+      "sha256": "3bbb4ac1462f63dec0bf6436734709848e840b5e1ffe471147abd003a7705689"
+    },
+    {
+      "path": "specs/package-set-node-0.2.1.schema.json",
+      "bytes": 12754,
+      "sha256": "71ed0a43f519fb37e58496d209316d8072abe0e7fa5f722f027286d3030dc1c7"
+    },
+    {
+      "path": "specs/package-set-node.d.ts",
+      "bytes": 2319,
+      "sha256": "5297023267fa8fcd2af739db6c6d1960e8473d57a608ec71241f446a6a2393aa"
+    },
+    {
+      "path": "specs/protected-source-r2-binding-7.schema.json",
+      "bytes": 34580,
+      "sha256": "10c0882b293a9325734f673316f6420fe53de78907704b0e8f0ca89e3f3aa4ef"
+    },
+    {
+      "path": "specs/protected-source.d.ts",
+      "bytes": 10473,
+      "sha256": "57886a03c2fd2e8d110194852e8d17dab40b38253ab509cb68463d9e21fd014c"
+    },
+    {
+      "path": "specs/protection-admission-r2-binding-7.schema.json",
+      "bytes": 249039,
+      "sha256": "26467ba715f413e21fedbd14bd841e39a34fc33867ef7900baa07e33f5a8a02c"
+    },
+    {
+      "path": "specs/protection-admission.d.ts",
+      "bytes": 15876,
+      "sha256": "0283eeff038a2399977bbf10bc3f65371fd8ca30aadedf7d4dc4ee9d60eeaae0"
+    },
+    {
+      "path": "specs/public-diagnostics.json",
+      "bytes": 44065,
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
+    },
+    {
+      "path": "specs/public-generation-manifest.json",
+      "bytes": 42085,
+      "sha256": "71db5ab6e6c9076209efaad470d68aad3fd2c943aed48c150259dd29f4a5a3cd"
+    },
+    {
+      "path": "specs/public-vocabulary.json",
+      "bytes": 93744,
+      "sha256": "ba84ab16cf0501bbd7c7241cd945fb616775bf748021df4a4234e8d141c480ff"
+    },
+    {
+      "path": "specs/read-contract-0.6.4.schema.json",
+      "bytes": 241789,
+      "sha256": "0cb44f77120f8f34161a5e607d1279e276b70504483f9e6ee9bdf7fd19a8be08"
+    },
+    {
+      "path": "specs/read-transport-admission-0.2.1.schema.json",
+      "bytes": 212237,
+      "sha256": "7fcb513a9769f221b792a4a95e3644d4ec88f17f3e04a4948b5be8bc0dea4dbd"
+    },
+    {
+      "path": "specs/static-policy-2.md",
+      "bytes": 6219,
+      "sha256": "006e7d42fa82e65973d7894751ea0d83360321c811dbbf05d925d15c6faf7379"
+    }
+  ],
+  "scope": "One source, explicit type ownership and public metadata projection. Generated structure and provenance do not establish runtime, consumer, protection or release acceptance."
+}

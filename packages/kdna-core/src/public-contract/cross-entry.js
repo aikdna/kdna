@@ -445,4 +445,18 @@ function assertPayload(payload, registry) {
   return true;
 }
 
-module.exports = {IMPLEMENTED_RULE_IDS, RULE_IDS: IMPLEMENTED_RULE_IDS, checkPayload, assertPayload, sameAsset};
+// Internal scoped caller supplies actually read graph inputs and loaded bodies.
+function assertScopedPayload(payload,registry,loaded,headers){
+ const local={...payload,judgments:payload.judgments.filter(j=>loaded.has(j.id))};
+ for(const rule of RULES){
+  if(rule.rule_id==='PUBLIC-ASSET-CAPABILITY')continue;
+  const allGraph=['PUBLIC-PARENT-CLOSURE','PUBLIC-LIFECYCLE'].includes(rule.rule_id);
+  const localBody=['PUBLIC-FORM-CONSISTENCY','PUBLIC-TERM-VOCABULARY','PUBLIC-NAVIGATION-LABEL'].includes(rule.rule_id);
+  const input=allGraph?{...payload,judgments:headers}:localBody?local:payload;
+  const violations=rule.run(input,registry);if(!violations.length)continue;
+  let pointer=violations[0].path;if(localBody){const match=pointer.match(/^\/judgments\/(\d+)/);if(match){const id=local.judgments[Number(match[1])].id,index=payload.judgments.findIndex(j=>j.id===id);pointer=pointer.replace(/^\/judgments\/\d+/,'/judgments/'+index);}}
+  const error=new Error(rule.rule_id+': '+violations[0].message);error.reason='READ_CORE_INVALID';error.crossEntryRule=rule.rule_id;error.diagnostic={subject:null,field:'/payload'+pointer};throw error;
+ }
+ return true;
+}
+module.exports = {IMPLEMENTED_RULE_IDS, RULE_IDS: IMPLEMENTED_RULE_IDS, checkPayload, assertPayload, assertScopedPayload, sameAsset};

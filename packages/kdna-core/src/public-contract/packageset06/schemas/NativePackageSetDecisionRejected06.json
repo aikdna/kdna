@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetDecisionRejected06",
+  "title": "NativePackageSetDecisionRejected06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetDecisionRejected06",
+  "$defs": {
+    "NativePackageSetDecisionRejected06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "diagnostic": {
+          "type": "string",
+          "enum": [
+            "READ_INPUT_INVALID",
+            "SET_MEMBER_UNAUTHORIZED",
+            "SET_MEMBER_MISSING",
+            "SET_MEMBER_EXTRA",
+            "SET_MEMBER_DUPLICATE",
+            "READ_UNSUPPORTED_VERSION",
+            "READ_MIXED_VERSION_TUPLE",
+            "READ_CORE_INVALID",
+            "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE",
+            "READ_SELECTION_AMBIGUOUS",
+            "READ_SELECTION_NOT_FOUND"
+          ]
+        },
+        "merged_ir": {
+          "type": "boolean",
+          "const": false
+        },
+        "action_authorized": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "merged_ir",
+        "action_authorized"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

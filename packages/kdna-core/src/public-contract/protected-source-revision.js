@@ -1,5 +1,5 @@
 'use strict';
-// B3 source-bound revision: one-use contexts, validation-only preview, and the
+// Source-bound revision: one-use contexts, validation-only preview, and the
 // producer that turns an adopted proposal back into a licensed encrypted asset.
 //
 // Lifecycle (each numbered step is enforced in code, in this order):
@@ -17,7 +17,7 @@
 //
 // The producer deliberately duplicates the encryption/integrity sequence of
 // `protection-producer.js` rather than calling it: that accepted producer opens its
-// input through the ORDINARY authoring path, and B3 is forbidden from changing it.
+// input through the ordinary authoring path; the protected route preserves it.
 // Sharing would require changing an accepted leaf; duplicating two call sites is the
 // smaller, disclosed cost. Both paths call the same crypto/integrity primitives.
 const { randomUUID } = require('node:crypto');

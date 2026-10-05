@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedSectionReadIntent06",
+  "title": "RetainedSectionReadIntent06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedSectionReadIntent06",
+  "$defs": {
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionOrigin06": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "whole",
+            "catalog"
+          ]
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "admission_request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "verification_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_sections_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "capture_id",
+        "admission_request_digest",
+        "verification_digest",
+        "checked_sections_digest"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionReadIntent06": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "type": "string",
+          "const": "read_retained"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "origin": {
+          "$ref": "#/$defs/RetainedSectionOrigin06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "whole_asset",
+            "catalog",
+            "exact_selection",
+            "expand"
+          ]
+        },
+        "projection_node_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "descriptor_node_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "issuable_handle_scopes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "anchor": {
+                "$ref": "#/$defs/SectionExpansionAnchor06"
+              },
+              "target": {
+                "$ref": "#/$defs/Ref"
+              },
+              "scope": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Identifier"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "anchor",
+              "target",
+              "scope"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        },
+        "protected_operation": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "operation",
+        "operation_id",
+        "origin",
+        "request_digest",
+        "mode",
+        "projection_node_ids",
+        "descriptor_node_ids",
+        "issuable_handle_scopes",
+        "physical_reads",
+        "protected_operation"
+      ],
+      "additionalProperties": false
+    },
+    "SectionExpansionAnchor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "asset"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "selection_set"
+            },
+            "selection": {
+              "$ref": "#/$defs/SelectionSet06"
+            }
+          },
+          "required": [
+            "kind",
+            "selection"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SelectionSet06": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_ids"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

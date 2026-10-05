@@ -1,0 +1,2 @@
+import api from './retained-sections-browser.js';
+export const {getRetainedSectionBrowserContract,admitRetainedSectionRequestJson,inspectRetainedSectionRequest,createRetainedSectionReadAuthorityJson,prepareRetainedSectionRead,inspectRetainedSectionPreparation} = api;

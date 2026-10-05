@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedSectionSignaturePolicyCheck06",
+  "title": "RetainedSectionSignaturePolicyCheck06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedSectionSignaturePolicyCheck06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "RetainedSectionSignaturePolicyCheck06": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "type": "string",
+          "const": "immutable_origin_signature_receipt"
+        },
+        "policy": {
+          "$ref": "#/$defs/SectionSignaturePolicy06"
+        },
+        "policy_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "origin_receipt_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "result": {
+          "type": "string",
+          "const": "satisfied"
+        },
+        "new_signature_verification": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "basis",
+        "policy",
+        "policy_digest",
+        "origin_receipt_digest",
+        "result",
+        "new_signature_verification"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
