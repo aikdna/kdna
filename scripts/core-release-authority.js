@@ -1512,6 +1512,23 @@ function runTrustedNpmCommand(args, options = {}) {
     assert(!result.error, 'trusted npm workflow command failed');
     assert(Number.isInteger(result.status), 'trusted npm workflow command failed');
     if (result.status !== 0) {
+      if (args[0] === 'publish') {
+        // Surface only npm's own formatted failure lines so CI logs can
+        // distinguish error classes (E403/E404/EUSAGE/...) instead of one
+        // generic wrapper message. npm never prints credential values; the
+        // scrub below additionally drops token/OTP/password mentions and
+        // absolute local paths as belt-and-braces. Success paths and all
+        // non-publish commands are unchanged.
+        const safeFailureLines = String(result.stderr || '')
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => /^npm (?:ERR!|error) /.test(line))
+          .filter((line) => !/(token|otp|password|secret|bearer)/i.test(line))
+          .filter((line) => !/(?:^|\s)\/(?:Users|home|var|private|tmp)\//.test(line))
+          .slice(0, 4)
+          .map((line) => line.slice(0, 200));
+        for (const line of safeFailureLines) process.stderr.write(`${line}\n`);
+      }
       const safeStage = extractSafeEcosystemFailureStage(args, result);
       fail(
         safeStage
