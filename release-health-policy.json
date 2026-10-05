@@ -121,10 +121,20 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
-      "version": "0.22.0",
-      "candidate_version": "0.36.0",
+      "version": "0.36.0",
       "canonical_tag": {
         "type": "natural"
+      }
+    },
+    {
+      "label": "KDNA Read",
+      "repository": "aikdna/kdna",
+      "package_json": "packages/kdna-read/package.json",
+      "npm_package": "@aikdna/kdna-read",
+      "version": "0.11.0",
+      "canonical_tag": {
+        "type": "prefix",
+        "value": "read/"
       }
     },
     {
