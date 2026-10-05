@@ -126,7 +126,6 @@
         {
           "if": { "properties": { "release_status": { "const": "candidate" } } },
           "then": {
-            "required": ["published_version"],
             "properties": {
               "published_version": { "$ref": "#/$defs/stableSemver" },
               "npm_package": { "type": "string", "minLength": 1 },

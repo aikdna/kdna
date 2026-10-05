@@ -11,6 +11,16 @@ const MODULES = [
   'protected_source',
 ];
 const SOURCE_PATH = 'specs/public-semantic-source.json';
+// Current-target vocabulary: an rc-era source identifies its line through the
+// version suffix; a promoted stable source identifies it through the unique
+// current target row. Zero or multiple current rows stay a hard failure.
+const CURRENT_TARGET_STATUSES = new Set(['CURRENT_UNPUBLISHED_TARGET', 'CURRENT_RELEASED_TARGET']);
+function currentLineOf(targets, coreVersion) {
+  const rc = coreVersion.split('-rc.')[1]?.replace(/\.(\d+)$/, '.rc$1');
+  if (typeof rc === 'string') return rc;
+  const current = targets.filter((row) => CURRENT_TARGET_STATUSES.has(row?.status));
+  return current.length === 1 ? current[0]?.line : undefined;
+}
 function navigationError(message) {
   return Object.assign(new Error(message), { code: 'SOURCE_NAVIGATION_CONFLICT' });
 }
@@ -110,10 +120,13 @@ function isDeepEqual(actual, expected) {
 }
 function validateCurrentTarget(source, decisions, check = admitNavigation) {
   const versions = source.engineering.package_versions;
-  const line = versions.core.split('-rc.')[1]?.replace(/\.(\d+)$/, '.rc$1');
+  const line = currentLineOf(
+    Array.isArray(source.target_lines) ? source.target_lines : [],
+    versions.core,
+  );
   const targets = Array.isArray(source.target_lines) ? source.target_lines : [];
   const rows = targets.filter((row) => row?.line === line);
-  const current = targets.filter((row) => row?.status === 'CURRENT_UNPUBLISHED_TARGET');
+  const current = targets.filter((row) => CURRENT_TARGET_STATUSES.has(row?.status));
   check(
     'current-target:unique',
     typeof line === 'string' && rows.length === 1 && current.length === 1 && current[0] === rows[0],
@@ -552,7 +565,10 @@ function checkCurrentNavigation(root, options = {}) {
       observedAxisNames.every((axis) => expectedAxisNames.has(axis)),
     { expected: [...expectedAxisNames], observed: observedAxisNames },
   );
-  const currentLine = versions.core.split('-rc.')[1]?.replace(/\.(\d+)$/, '.rc$1');
+  const currentLine = currentLineOf(
+    Array.isArray(source.target_lines) ? source.target_lines : [],
+    versions.core,
+  );
   check('current-decisions:line', decisions.line === currentLine, {
     expected: currentLine,
     observed: decisions.line,
@@ -902,8 +918,14 @@ function checkCurrentNavigation(root, options = {}) {
             : null,
     ]),
   ]) {
-    exactFamily(file, start, end, /0\.36\.0-rc\.r2\.\d+/g, versions.core);
-    exactFamily(file, start, end, /0\.11\.0-rc\.r2\.\d+/g, versions.read);
+    const coreFamily = versions.core.includes('-rc.')
+      ? { regex: /0\.36\.0-rc\.r2\.\d+/g, expected: versions.core }
+      : { regex: /0\.36\.0(?!-)/g, expected: versions.core };
+    const readFamily = versions.read.includes('-rc.')
+      ? { regex: /0\.11\.0-rc\.r2\.\d+/g, expected: versions.read }
+      : { regex: /0\.11\.0(?!-)/g, expected: versions.read };
+    exactFamily(file, start, end, coreFamily.regex, coreFamily.expected);
+    exactFamily(file, start, end, readFamily.regex, readFamily.expected);
   }
   for (const name of ['core', 'read']) {
     const prefix = `packages/kdna-${name}`,

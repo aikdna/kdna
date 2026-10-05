@@ -17,7 +17,7 @@ Status: UNPUBLISHED_CANDIDATE. This policy specifies the issued coordinates for 
 | trace | `kdna.judgment-trace/0.3.1` |
 | read | `kdna.read/0.6.4` |
 
-The local package candidates are `@aikdna/kdna-core@0.36.0-rc.r2.7` and `@aikdna/kdna-read@0.11.0-rc.r2.7`. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
+The local package candidates are `@aikdna/kdna-core@0.36.0` and `@aikdna/kdna-read@0.11.0`. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
 
 The container framing remains 0.5.0. The Manifest contract is selected by the existing fields `(format_version, compatibility.profile, compatibility.profile_version)`: `(0.5.0, kdna.payload.judgment, 0.5.1)`. It maps to `urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1`, generated as `schema/manifest-container-0.5.0-judgment-0.5.1.schema.json` and mirrored in Core. No schema URI, package version, loader-minimum field, body appearance or caller assertion selects a different schema.
 

@@ -216,6 +216,7 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
     new Set(core.packages.map((entry) => entry.npm_package)),
     new Set([
       '@aikdna/kdna-core',
+      '@aikdna/kdna-read',
       '@aikdna/kdna-eval',
       '@aikdna/kdna-conformance',
       '@aikdna/kdna',
@@ -742,17 +743,6 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
       component({
         packages: [
           packageRecord({
-            release_status: 'candidate',
-            lifecycle: 'Legacy',
-            legacy_replacement: '@aikdna/replacement',
-          }),
-        ],
-      }),
-    ]),
-    manifest([
-      component({
-        packages: [
-          packageRecord({
             version: '1.0.1',
             published_version: '1.0.0+candidate',
             release_status: 'candidate',
@@ -766,6 +756,28 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
     const result = runValidator(manifestPath, root);
     assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
     assert.match(result.stderr, /manifest schema/u);
+  }
+
+  // A candidate without an incumbent (a first release) is schema-legal under
+  // the no-incumbent candidate rule; this fixture is then rejected later, at
+  // the live-checkout gate, instead of at the schema tier.
+  {
+    const firstRelease = manifest([
+      component({
+        packages: [
+          packageRecord({
+            release_status: 'candidate',
+            lifecycle: 'Legacy',
+            legacy_replacement: '@aikdna/replacement',
+          }),
+        ],
+      }),
+    ]);
+    const manifestPath = path.join(root, 'ecosystem-manifest.json');
+    fs.writeFileSync(manifestPath, JSON.stringify(firstRelease));
+    const result = runValidator(manifestPath, root);
+    assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+    assert.doesNotMatch(result.stderr, /manifest schema/u);
   }
 
   // an active package with published_version different from version is

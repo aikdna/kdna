@@ -590,6 +590,7 @@ if (validateSchema()) {
       }
       if (
         packageRecord.release_status === 'candidate' &&
+        packageRecord.published_version !== undefined &&
         compareSemver(packageRecord.version, packageRecord.published_version) <= 0
       ) {
         fail(

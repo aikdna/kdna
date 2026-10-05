@@ -1,6 +1,6 @@
 # KDNA Read — R2 candidate
 
-UNPUBLISHED `R2` source package `0.11.0-rc.r2.7` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.36.0-rc.r2.7` (`kdna.core/0.8.2`) and Canonical IR `0.6.0`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not claim publication or content quality.
+UNPUBLISHED `R2` source package `0.11.0` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.36.0` (`kdna.core/0.8.2`) and Canonical IR `0.6.0`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not claim publication or content quality.
 
 This 2026-09-23 source identity comes from [`package.json`](package.json).
 Runtime CLI 0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9

@@ -118,7 +118,7 @@ test('generator refuses duplicate owning roots even when a lookup would overwrit
 const mutations = [
   ['root README current package', 'README.md', '0.36.0-rc.r2.7', '0.35.0-rc.source.1'],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', '0.11.0-rc.r2.7', '0.3.0-rc.component-semantics.2'],
+  ['Chinese README package', 'README.zh.md', 'Read `0.11.0`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -128,19 +128,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    '0.36.0-rc.r2.7',
+    'actual source package `0.36.0`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    '0.11.0-rc.r2.7',
+    'source package `0.11.0`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    '0.36.0-rc.r2.7',
+    'peer `@aikdna/kdna-core@0.36.0`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -164,7 +164,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'exact Core peer `0.36.0-rc.r2.7`',
+    'exact Core peer `0.36.0`',
     'exact Core peer `0.36.0-rc.r2.4`',
   ],
   [
@@ -203,7 +203,12 @@ const mutations = [
     'reject all four modes',
     'permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '0.36.0-rc.r2.7', '0.35.0-rc.source.1'],
+  [
+    'Start Here package',
+    'docs/start-here.md',
+    'Core `0.36.0` / Read `0.11.0`',
+    '0.35.0-rc.source.1',
+  ],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -213,7 +218,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.36.0-rc.r2.7`',
+    '| `@aikdna/kdna-core` | `0.36.0`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -243,15 +248,30 @@ const mutations = [
   ],
   ['protected source schema id', 'specs/protected-source-r2.md', ':binding:r2:7', ':binding:r2:4'],
   ['issuer schema id', 'specs/external-grant-issuer.md', ':binding:r2:7', ':binding:r2:4'],
-  ['issuer current pair', 'specs/external-grant-issuer.md', '0.36.0-rc.r2.7', '0.36.0-rc.r2.2'],
-  ['adoption current pair', 'specs/protection-adoption.md', '0.36.0-rc.r2.7', '0.35.0-rc.source.1'],
+  [
+    'issuer current pair',
+    'specs/external-grant-issuer.md',
+    'Core `0.36.0`、Read `0.11.0`',
+    '0.36.0-rc.r2.2',
+  ],
+  [
+    'adoption current pair',
+    'specs/protection-adoption.md',
+    'Core `0.36.0` and Read',
+    '0.35.0-rc.source.1',
+  ],
   [
     'crypto ordinary admission boundary',
     'specs/kdna-crypto-profiles.md',
     'Current R2 ordinary root/browser',
     'Current grammar.3 public Core',
   ],
-  ['Read middle current pair', 'specs/read-contract.md', '0.36.0-rc.r2.7', '0.36.0-rc.r2.3'],
+  [
+    'Read middle current pair',
+    'specs/read-contract.md',
+    'Core `0.36.0` and Read `0.11.0`',
+    '0.36.0-rc.r2.3',
+  ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:7', 'binding:r2:3'],
   [
     'policy current tuple',
@@ -385,7 +405,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`',
+    'local package line is Core `0.36.0` / Read `0.11.0`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -976,6 +996,87 @@ for (const [label, mutate, issue] of [
     );
     rejectsInputsBeforeGeneration(inputs);
   });
+// Promotion-era fixtures (F1-F4): the in-tree source is already promoted to
+// stable versions, so the current line resolves through the unique current
+// target row. These cases find the row by status and never depend on its name.
+test('a promoted source with a released current row keeps the current line resolvable', () => {
+  const inputs = changedNavigationInputs(({ source: s }) => {
+    const row = s.target_lines.find(
+      (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+    );
+    assert.ok(row, 'expected exactly one current unpublished target row');
+    row.status = 'CURRENT_RELEASED_TARGET';
+  });
+  const result = checkInputs(inputs);
+  assert.deepEqual(
+    result.issues.filter(
+      (row) =>
+        row.name.startsWith('current-target:') ||
+        row.name === 'current-decisions:line' ||
+        row.name.startsWith('current-decisions:package:'),
+    ),
+    [],
+  );
+});
+for (const [label, mutate] of [
+  [
+    'zero current rows on a promoted source',
+    ({ source: s }) => {
+      const row = s.target_lines.find(
+        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+      );
+      row.status = 'UNACCEPTED_SUPERSEDED_CANDIDATE_HISTORY';
+    },
+  ],
+  [
+    'two current rows on a promoted source',
+    ({ source: s }) => {
+      const row = s.target_lines.find(
+        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+      );
+      const clone = structuredClone(row);
+      clone.status = 'CURRENT_RELEASED_TARGET';
+      s.target_lines.push(clone);
+    },
+  ],
+  [
+    'two released rows on a promoted source',
+    ({ source: s }) => {
+      const row = s.target_lines.find(
+        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+      );
+      row.status = 'CURRENT_RELEASED_TARGET';
+      const clone = structuredClone(row);
+      s.target_lines.push(clone);
+    },
+  ],
+])
+  test(`promotion navigation rejects ${label}`, () => {
+    const inputs = changedNavigationInputs(mutate);
+    assert.ok(
+      checkInputs(inputs).issues.some((row) => row.name === 'current-target:unique'),
+      label,
+    );
+    rejectsInputsBeforeGeneration(inputs);
+  });
+test('a promoted document section missing its current stable identity is refused', () => {
+  const file = 'specs/read-contract.md',
+    original = fs.readFileSync(path.join(root, file), 'utf8');
+  const marker = 'The current exact pair is Core `0.36.0` and Read `0.11.0`';
+  assert.ok(original.includes(marker), 'expected the current stable pair statement');
+  const changed = original.replace(
+    marker,
+    'The current exact pair is Core `0.36.1` and Read `0.11.0`',
+  );
+  const result = checkCurrentNavigation(root, {
+    compiled: false,
+    readText: (rel) => (rel === file ? changed : fs.readFileSync(path.join(root, rel), 'utf8')),
+  });
+  assert.ok(
+    result.issues.some((row) => row.name.startsWith(`${file}:identity-family:`)),
+    JSON.stringify(result.issues.slice(0, 3)),
+  );
+});
 test('source-map edge order and target history order carry no identity meaning', () => {
   const result = checkInputs(
     changedNavigationInputs(({ map, source: s }) => {

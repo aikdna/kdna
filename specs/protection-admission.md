@@ -5,7 +5,7 @@ Its current Schema is `urn:kdna:schema:protection-admission:1.0.0:binding:r2:7`,
 [protection-admission-r2-binding-7.schema.json](protection-admission-r2-binding-7.schema.json).
 The unique source is `public-semantic-source.json#protection_admission`; its explicit
 `schema_binding` fixes the complete [R2 tuple](public-version-policy.md), Core
-`0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7`. The binding participates in the existing
+`0.36.0` and Read `0.11.0`. The binding participates in the existing
 canonical definition digest. Base id/version alone cannot identify this combination.
 Changing a bound package constant or reachable shape requires a new binding coordinate.
 

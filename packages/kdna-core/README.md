@@ -1,9 +1,9 @@
 # KDNA Core — R2 candidate
 
-Unpublished `R2` source candidate: actual source package `0.36.0-rc.r2.7`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. The published incumbent is `0.22.0`; this source candidate is not a published replacement. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
+Unpublished `R2` source candidate: actual source package `0.36.0`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. The published incumbent is `0.22.0`; this source candidate is not a published replacement. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
 
 This source description follows [`package.json`](package.json).
-Read source `0.11.0-rc.r2.7` declares this exact Core peer. Runtime CLI
+Read source `0.11.0` declares this exact Core peer. Runtime CLI
 0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9 archives; see the
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 Editing this source README does not replace a previously fixed archive or

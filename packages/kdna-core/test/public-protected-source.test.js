@@ -95,7 +95,7 @@ test('the source module exposes exactly six callables and leaves the protection 
   assert.equal(descriptor.contract.id, 'kdna.protected-source/1');
   assert.equal(descriptor.contract.version, '1.0.0');
   assert.equal(descriptor.implementation.package, '@aikdna/kdna-core');
-  assert.equal(descriptor.implementation.version, '0.36.0-rc.r2.7');
+  assert.equal(descriptor.implementation.version, '0.36.0');
   assert.equal(descriptor.profiles.length, 2);
   assert.equal(descriptor.limits.timeout_ms_max, 60000);
   assert.match(descriptor.contract.definition_digest, /^sha256:[0-9a-f]{64}$/);
@@ -335,7 +335,7 @@ test('L07 preview consults no output-secret provider and returns no artifact', a
   assert.match(preview.validation.edits_digest, /^sha256:[0-9a-f]{64}$/);
   assert.match(preview.validation.policy_digest, /^sha256:[0-9a-f]{64}$/);
   assert.equal(Object.hasOwn(preview.validation, 'snapshot_id'), false);
-  assert.equal(preview.validation.implementation.version, '0.36.0-rc.r2.7');
+  assert.equal(preview.validation.implementation.version, '0.36.0');
   assert.equal(providerCalls, 0);
   assert.ok(captured);
 

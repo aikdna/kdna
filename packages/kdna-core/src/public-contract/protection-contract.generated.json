@@ -13,7 +13,7 @@
     "schema_path": "specs/checksums-document-1.schema.json",
     "version": "1.0.0"
   },
-  "definition_digest": "sha256:0c84c6fb73b3f6fbb453a7b7494baba81249814d6a9a6f72719ce219392751ab",
+  "definition_digest": "sha256:fc6e6b3108e15c8caf84de08d3bb77d96138c1dcff6d67e0d9ca450f10e7b797",
   "delivery_history": {
     "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
     "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
@@ -801,8 +801,8 @@
   "runtime_not_implemented": [],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.36.0-rc.r2.7",
-      "@aikdna/kdna-read": "0.11.0-rc.r2.7"
+      "@aikdna/kdna-core": "0.36.0",
+      "@aikdna/kdna-read": "0.11.0"
     },
     "version_tuple": {
       "container": "0.5.0",
@@ -820,9 +820,9 @@
   "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:7",
   "schema_path": "specs/protection-admission-r2-binding-7.schema.json",
   "specification": {
-    "bytes": 37918,
+    "bytes": 37902,
     "path": "specs/protection-admission.md",
-    "sha256": "995681e3836abc3087c98adfd5d18bba59de3d6ee31d3a351438bd43b8c732ba"
+    "sha256": "e8665e8c325e5743d4cce7acbb5b36ae3581d8eb2c261e09c66f0683ece99835"
   },
   "types": {
     "ChecksumsDocument1": {
@@ -1059,7 +1059,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0-rc.r2.7",
+              "const": "0.36.0",
               "type": "string"
             }
           },
@@ -2294,7 +2294,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0-rc.r2.7",
+              "const": "0.36.0",
               "type": "string"
             }
           },

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.36.0 (2026-10-05)
+
+- Stable R2 native-sections line, promoted from the `0.36.0-rc.r2.7` pre-release.
+
 ## 0.22.0 (2026-08-17)
 
 ### Added

@@ -169,7 +169,7 @@ Read0.7.0-rc.protection.1 provide the B1 candidate Node surfaces; exact installe
 consumer, fixed-vector and lifecycle evidence still require independent review.
 
 The paragraph above records the historical B1 candidate. The current unpublished
-local package line is Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`, as recorded
+local package line is Core `0.36.0` / Read `0.11.0`, as recorded
 in [public-semantic-source.json](public-semantic-source.json) (`engineering.package_versions`)
 and the package metadata. Current package coordinates do not upgrade historical
 acceptance scope or imply public release; pinned historical documents and accepted
