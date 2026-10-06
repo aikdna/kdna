@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -8,14 +10,27 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const source = JSON.parse(
   fs.readFileSync(path.join(root, 'specs/public-semantic-source.json'), 'utf8'),
 );
-const scratch = process.env.KDNA_PROTECTION_TEST_ARTIFACT_ROOT;
-assert.ok(scratch, 'Explicit isolated test artifact root required.');
+// An explicit isolated root stays available through the environment; when none is
+// given, provision one under the system temp dir so the suite runs unconfigured.
+const scratch =
+  process.env.KDNA_PROTECTION_TEST_ARTIFACT_ROOT ??
+  fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-protection-scope-'));
 fs.mkdirSync(scratch, { recursive: true });
+const recipeBytes = fs.readFileSync(
+  path.join(root, 'scripts/public-contract/native-output-recipe.json'),
+);
 function rejects(id, mutate, pattern) {
   const changed = structuredClone(source);
   mutate(changed);
   const input = path.join(scratch, id + '.json');
   fs.writeFileSync(input, JSON.stringify(changed));
+  // The entry composes the native builder for the cumulative source; pair every
+  // mutated source with a recipe copy whose identity pin matches it. The copy
+  // lives only in the isolated root and stores no absolute path.
+  const recipe = JSON.parse(recipeBytes);
+  recipe.input_sha256 = crypto.createHash('sha256').update(fs.readFileSync(input)).digest('hex');
+  const recipeFile = path.join(scratch, id + '.recipe.json');
+  fs.writeFileSync(recipeFile, JSON.stringify(recipe));
   const argv = [
     'scripts/public-contract/generate.mjs',
     '--source',
@@ -24,9 +39,15 @@ function rejects(id, mutate, pattern) {
     root,
     '--out-dir',
     root,
+    '--dependency-root',
+    root,
     '--check',
   ];
-  const result = spawnSync(process.execPath, argv, { cwd: root, encoding: 'utf8' });
+  const result = spawnSync(process.execPath, argv, {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...process.env, KDNA_NATIVE_RECIPE: recipeFile },
+  });
   fs.writeFileSync(
     path.join(scratch, id + '.result.json'),
     JSON.stringify(
@@ -51,6 +72,8 @@ test('each rule scope rejects missing registration, false implementation and non
       '--root',
       root,
       '--out-dir',
+      root,
+      '--dependency-root',
       root,
       '--check',
     ],
