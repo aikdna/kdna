@@ -89,7 +89,7 @@ async function verifyIntegrityBrowser(entries, manifest, E, policy) {
   return integrity;
 }
 async function admitProtectedBrowser(input, inputProvider) {
-  let copied = null, plaintext = null, stage = 'input';
+  let copied, plaintext, stage = 'input';
   try {
     copied = inputs(input, inputProvider); plaintext = copied.plaintext; const bytes = copied.bytes;
     stage = 'container'; const entries = parseContainer(bytes, inflate);
