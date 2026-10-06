@@ -13,7 +13,10 @@ export type ProtectedBrowserDisclosure = { readonly "slot_selection": ConsumerUn
 export type ProtectedBrowserAccepted = { readonly "status": "accepted"; readonly "snapshot": CanonicalReadSnapshot; readonly "disclosure": ProtectedBrowserDisclosure; };
 export type ProtectedBrowserCatalogOnly = { readonly "status": "catalog_only"; readonly "catalog": CoreAdmissionCatalogOnly; readonly "disclosure": ProtectedBrowserDisclosure; };
 export type ProtectedBrowserCoreRejected = { readonly "status": "core_rejected"; readonly "stage": "container" | "manifest" | "payload" | "interpretation"; readonly "core": CoreAdmissionRejected; };
-export type ProtectedBrowserFailed = { readonly "status": "protection_failed"; readonly "diagnostic": ProtectionDiagnostic; };
+export type ProtectedBrowserFailed = { readonly "status": "protection_failed"; readonly "diagnostic": ProtectedBrowserDiagnostic; };
+// D-CBPA-IMPL-3/4 intermediate: the observation-phase codes are new to the family and
+// are finalized with the implementation review; the shared node codes keep their stages.
+export type ProtectedBrowserDiagnostic = (ProtectionDiagnostic | { readonly "code": "PROTECTION_OBSERVATION_INVALID"; readonly "stage": "observation"; } | { readonly "code": "PROTECTION_OBSERVATION_BINDING_INVALID"; readonly "stage": "binding"; } | { readonly "code": "PROTECTION_NOT_DECLARED"; readonly "stage": "declaration"; });
 export type ProtectedBrowserAdmissionResult = (ProtectedBrowserAccepted | ProtectedBrowserCatalogOnly | ProtectedBrowserCoreRejected | ProtectedBrowserFailed);
 export declare function getProtectionContract(): ProtectionRuntimeDescriptor;
 export declare function admitProtectedBrowser(input: ProtectedBrowserInput, provider: TrustedProtectionProvider): Promise<ProtectedBrowserAdmissionResult>;

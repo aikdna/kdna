@@ -9,8 +9,9 @@ const policy={requireSignature:false,expectedPublicKeyHex:null},provider={kind:'
 const passwords=[{slot:'primary',password:Buffer.from('first-password-canary')},{slot:'second',password:Buffer.from('second-password-canary')}];
 const selection=(slotIndex,slot,kdf_profile='scrypt-sha256')=>({slotIndex,slot,kdf_profile});
 const observation=sel=>({kind:'consumer_unlock_observation',proof:'observation_not_authority',checked_at_ms:1000,selection:sel});
-async function fixture(){
- const a=asset(),original=F.encode(a,req,{entries:{'attachments/preserve.bin':Buffer.from([1,2,3,4])}});
+async function fixture(patch=null){
+ const a=asset();if(patch)patch(a);
+ const original=F.encode(a,req,{entries:{'attachments/preserve.bin':Buffer.from([1,2,3,4])}});
  const out=await core.protectSourceBytes(original,{kind:'password',asset_uid:a.manifest.asset_uid,entitlement:{profile:'password'},slots:[{slot:'primary',kdf_profile:'scrypt-sha256'},{slot:'second',kdf_profile:'scrypt-sha256'}],checksums:true,signature:'ed25519'},{passwords,signingSeed:crypto.randomBytes(32)});
  assert.equal(out.status,'produced',JSON.stringify(out));
  const entries=parseContainer(out.bytes),manifest=JSON.parse(Buffer.from(entries['kdna.json']));
@@ -38,10 +39,21 @@ test('browser admission rejects a slot name or KDF that does not match the envel
  assertObservationRejection(await browser.admitProtectedBrowser({bytes:f.bytes,plaintextPayload:f.plaintext,observation:observation(selection(0,'second')),signaturePolicy:policy},provider),'slot mismatch');
  assertObservationRejection(await browser.admitProtectedBrowser({bytes:f.bytes,plaintextPayload:f.plaintext,observation:observation(selection(0,'primary','argon2id')),signaturePolicy:policy},provider),'kdf mismatch');
 });
-test('browser admission rejects plaintext that does not belong to the container',async()=>{
- const f1=await fixture(),f2=await fixture();
+test('browser admission splits the cross-container plaintext face by what is checkable',async()=>{
+ const f1=await fixture();
+ // P↔B 交叉检查表②（CORE-BROWSER-PROTECTED-ADMISSION-IMPL-PLAN01，批准面）：身份字段
+ // （asset_id/version/judgment_version 明文侧 vs 容器 manifest 逐项），可核者必拒。
+ const f2=await fixture(a=>{a.manifest.asset_id='asset:bytes-b';a.payload.asset.asset_id='asset:bytes-b';});
  const r=await browser.admitProtectedBrowser({bytes:f1.bytes,plaintextPayload:f2.plaintext,observation:observation(selection(0,'primary')),signaturePolicy:policy},provider);
- assert.notEqual(r.status,'accepted','cross-container plaintext: '+JSON.stringify(r));
+ assert.equal(r.status,'core_rejected','identity-differing cross: '+JSON.stringify(r));
+ assert.equal(r.stage,'payload');
+ // 不可核者入同一具名清单（同清单随实现件送核）：同身份/同修订换容器在无密钥下不可判
+ // （ciphertext↔plaintext 不可验），产物以披露面限定为主机声明；以下断言即清单首项读数。
+ const f3=await fixture();
+ const same=await browser.admitProtectedBrowser({bytes:f1.bytes,plaintextPayload:f3.plaintext,observation:observation(selection(0,'primary')),signaturePolicy:policy},provider);
+ assert.equal(same.status,'accepted','same-identity cross reading: '+JSON.stringify(same));
+ assert.equal(same.disclosure.provenance,'host_supplied_triple');
+ assert.equal(same.disclosure.observation_not_authority,true);
 });
 test('browser admission rejects an observation that is not the consumer unlock observation',async()=>{
  const f=await fixture();
