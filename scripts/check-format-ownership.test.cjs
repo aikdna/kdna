@@ -56,7 +56,7 @@ function rejected(result, expected) {
 test('format ownership validates real generator bytes and existing historical owners', () => {
   const result = run();
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /FORMAT-OWNERSHIP: MATCH \(48 exact paths;/u);
+  assert.match(result.stdout, /FORMAT-OWNERSHIP: MATCH \(49 exact paths;/u);
 });
 test('format ownership rejects changed historical bytes despite formatter exclusion', () => {
   mutate(

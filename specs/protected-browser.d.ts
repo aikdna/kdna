@@ -1,6 +1,6 @@
 // Generated protected-browser definitions; schema validity is not authority.
-import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, CoreAdmissionRejected } from './types.js';
-import type { ProtectionDiagnostic, ProtectionRuntimeDescriptor, ProtectedSignaturePolicy, TrustedProtectionProvider } from './protection-node.js';
+import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, CoreAdmissionRejected } from '../packages/kdna-core/src/public-contract/types.js';
+import type { ProtectionDiagnostic, ProtectionRuntimeDescriptor, ProtectedSignaturePolicy, TrustedProtectionProvider } from '../packages/kdna-core/src/public-contract/protection-node.js';
 export type ConsumerUnlockSelection = { readonly "slotIndex": number; readonly "slot": string; readonly "kdf_profile": "scrypt-sha256" | "argon2id"; };
 export type ConsumerUnlockObservation = { readonly "kind": "consumer_unlock_observation"; readonly "proof": "observation_not_authority"; readonly "checked_at_ms": number; readonly "selection": ConsumerUnlockSelection; };
 export type ProtectedBrowserInput = { readonly "bytes": Uint8Array; readonly "plaintextPayload": Uint8Array; readonly "observation": ConsumerUnlockObservation; readonly "signaturePolicy"?: ProtectedSignaturePolicy; };
