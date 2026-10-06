@@ -32,6 +32,7 @@ const OWNED_PATHS = Object.freeze([
   'specs/package-set-node-0.2.schema.json',
   'specs/package-set-node.d.ts',
   'specs/package-set-node.schema.json',
+  'specs/protected-browser.d.ts',
   'specs/protected-source-r2-binding-1.schema.json',
   'specs/protected-source-r2-binding-2.schema.json',
   'specs/protected-source-r2-binding-3.schema.json',

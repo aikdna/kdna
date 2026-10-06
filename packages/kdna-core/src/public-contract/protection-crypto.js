@@ -4,28 +4,18 @@ const { fail } = require('./protection-declaration.js');
 const { aesWrap, aesUnwrap } = require('../crypto-profile.js');
 const { externalEnvelopeAad, deriveExternalAssetCek } = require('../external-key-grant.js');
 const { digest } = require('./digests.js');
-const { PasswordEnvelope: passwordShape, ExternalEnvelope: externalShape } = require('./protection-validators.generated.js');
+const { decode64Bytes, validateEnvelopeShape, passwordAadBytes } = require('./protection-envelope-codec.js');
+// The pure shapes live in the codec module (browser-reusable); these wrappers keep the
+// retained result identities (Buffer outputs, same verdicts, same codes) so every existing
+// caller in this package stays unchanged.
 function decode64(value, length = null, url = false) {
-  const encoding = url ? 'base64url' : 'base64';
-  if (typeof value !== 'string') fail('ENVELOPE_INVALID','envelope');
-  const decoded = Buffer.from(value,encoding);
-  if (decoded.toString(encoding) !== value || (length !== null && decoded.length !== length)) fail('ENVELOPE_INVALID','envelope');
-  return decoded;
+  return Buffer.from(decode64Bytes(value, length, url));
 }
 function validateEnvelope(value, profile) {
-  if (value?.profile !== profile.id || (value.profile_version ?? value.contract_version) !== profile.version) fail('PROFILE_UNSUPPORTED','envelope');
-  if (profile.id === 'kdna.envelope.aead') {
-    if (!passwordShape(value) || value.kdf_profile !== value.key_slots[0].kdf_profile) fail('ENVELOPE_INVALID','envelope');
-    for (const slot of value.key_slots) { decode64(slot.kdf_params.salt,16); decode64(slot.wrapped_key,40); }
-    decode64(value.iv,12); decode64(value.tag,16); decode64(value.ciphertext);
-  } else {
-    if (!externalShape(value) || value.entry_path !== 'payload.kdnab') fail('ENVELOPE_INVALID','envelope');
-    decode64(value.iv,12,true); decode64(value.tag,16,true); decode64(value.ciphertext,null,true);
-  }
-  return value;
+  return validateEnvelopeShape(value, profile);
 }
 function passwordAad(manifest) {
-  return Buffer.from(['kdna.envelope.aead','0.1.0',manifest.asset_uid,manifest.asset_id,manifest.version,'payload.kdnab',manifest.access,manifest.entitlement.profile].join('\n'));
+  return Buffer.from(passwordAadBytes(manifest));
 }
 function deriveKek(password, slot) {
   const salt = decode64(slot.kdf_params.salt,16);

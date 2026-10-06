@@ -36,6 +36,7 @@ INTEGRATION_OUTPUTS.push('specs/protection-admission.d.ts','packages/kdna-core/s
 INTEGRATION_OUTPUTS.push('packages/kdna-core/src/public-contract/protection-node.d.ts','packages/kdna-read/src/protection-node.d.ts','packages/kdna-read/src/protection-node.js');
 INTEGRATION_OUTPUTS.push('specs/external-grant-issuer.d.ts','packages/kdna-core/src/public-contract/key-grant-issuer-node.d.ts','packages/kdna-core/src/public-contract/issuer-contract.generated.json');
 INTEGRATION_OUTPUTS.push('specs/protected-source.d.ts','packages/kdna-core/src/public-contract/protected-source-node.d.ts','packages/kdna-core/src/public-contract/protected-source-contract.generated.json');
+INTEGRATION_OUTPUTS.push('specs/protected-browser.d.ts','packages/kdna-core/src/public-contract/protected-browser.d.ts');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const utf8sort=(a,b)=>Buffer.compare(Buffer.from(a),Buffer.from(b));
 const ordered=v=>Array.isArray(v)?v.map(ordered):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,ordered(v[k])])):v;
@@ -226,6 +227,7 @@ for(const [name,entry] of Object.entries(psn.input_records)){
  if(!Array.isArray(entry.keys)||entry.keys.some(k=>typeof k!=='string'||k==='')||new Set(entry.keys).size!==entry.keys.length)fail('SOURCE','invalid key list for '+name);
  if(!Array.isArray(entry.required)||entry.required.some(k=>!entry.keys.includes(k)))fail('SOURCE','invalid required list for '+name);}
 protectionDefinitions(source,outputs,o,protectionRuntimeEnforcement);
+browserDefinitions(source,outputs);
 protectedSourceDefinitions(source,outputs,o);
 issuerDefinitions(source,outputs,deriveEnforcement(ruleScopes[2]));
 const artifactRows=[...outputs].filter(([p])=>OUTPUTS.includes(p)).map(([p,b])=>({path:p,bytes:b.length,sha256:sha(b)})).sort((a,b)=>utf8sort(a.path,b.path));const scriptRows=['generate.mjs','verify.mjs','proof-inventory.mjs','cross-entry-check.mjs','selected-context.mjs','generation-writer.mjs'].map(n=>{const b=regular(path.join(SCRIPT_DIR,n));return {path:'scripts/public-contract/'+n,bytes:b.length,sha256:sha(b)};});
@@ -282,6 +284,16 @@ function protectionDefinitions(source,outputs,o,runtimeEnforcement){
   .replace(/const EXPECTED_PROTECTION = .*; \/\/ @protection-expectation/,'const EXPECTED_PROTECTION = '+JSON.stringify(ordered(expected))+'; // @protection-expectation')
   .replace(/const EXPECTED_READ_VERSION = .*; \/\/ @protection-read-version/,'const EXPECTED_READ_VERSION = '+JSON.stringify(source.engineering.package_versions.read)+'; // @protection-read-version')));
  outputs.set('packages/kdna-core/src/public-contract/protection-contract.generated.json',bytes({...p,types:compileNode(p.types,source),derived_runtime_enforcement:runtimeEnforcement,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
+}
+// The browser protected entry (case A) is an independent admission-only surface: the host
+// supplies the container bytes, the payload plaintext and the unlock observation, and the
+// shell never decrypts. Its declarations are owned by the same unique source.
+function browserDefinitions(source,outputs){
+ const p=source.protection_admission;
+ if(typeof p.browser_api_typescript!=='string'||!p.browser_api_typescript.startsWith('import type {')||!p.browser_api_typescript.includes("from './protection-node.js';"))fail('SOURCE','protected-browser declarations missing or unanchored');
+ const lines=['// Generated protected-browser definitions; schema validity is not authority.',p.browser_api_typescript];
+ outputs.set('packages/kdna-core/src/public-contract/protected-browser.d.ts',Buffer.from(lines.join('\n')+'\n'));
+ outputs.set('specs/protected-browser.d.ts',Buffer.from(lines.join('\n').replaceAll("'./types.js'","'../packages/kdna-core/src/public-contract/types.js'").replaceAll("'./protection-node.js'","'../packages/kdna-core/src/public-contract/protection-node.js'")+'\n'));
 }
 // B3: the protected-source module is a third independent module descriptor, after
 // protection and transport. It owns its own schema, types, descriptor and validator, and

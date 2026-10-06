@@ -75,4 +75,63 @@ function envelopeRegExp(pattern, flags) {
   return new RegExp(pattern,flags);
 }
 envelopeRegExp.code = "require('./protection-envelope-codec.js').envelopeRegExp";
-module.exports = { encodeEnvelope, decodeEnvelope, envelopeRegExp };
+// Pure base64/base64url codec for the frozen envelope domain: exactly the recognize-or-reject
+// language of the retained Node buffer codec (strict canonical round-trip plus an optional
+// length pin), with no Buffer/atob dependency so browser consumers can reuse it.
+const B64_ALPHABETS = { std: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/', url: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_' };
+const B64_MAPS = {};
+function b64Map(url) {
+  const key = url ? 'url' : 'std';
+  if (!B64_MAPS[key]) { const map = new Int16Array(128).fill(-1); const alphabet = B64_ALPHABETS[key]; for (let i = 0; i < 64; i++) map[alphabet.charCodeAt(i)] = i; B64_MAPS[key] = map; }
+  return B64_MAPS[key];
+}
+function b64Encode(bytes, url) {
+  const alphabet = B64_ALPHABETS[url ? 'url' : 'std']; let out = '';
+  for (let i = 0; i < bytes.length; i += 3) {
+    const b0 = bytes[i], b1 = bytes[i + 1], b2 = bytes[i + 2];
+    out += alphabet[b0 >> 2] + alphabet[((b0 & 3) << 4) | (b1 === undefined ? 0 : b1 >> 4)];
+    if (b1 === undefined) { if (!url) out += '=='; break; }
+    out += alphabet[((b1 & 15) << 2) | (b2 === undefined ? 0 : b2 >> 6)];
+    if (b2 === undefined) { if (!url) out += '='; break; }
+    out += alphabet[b2 & 63];
+  }
+  return out;
+}
+function decode64Bytes(value, length = null, url = false) {
+  if (typeof value !== 'string') invalid();
+  const map = b64Map(url), n = value.length;
+  if (n % 4 === 1) invalid();
+  const out = new Uint8Array(((n + 3) >> 2) * 3);
+  let o = 0, acc = 0, bits = 0, padded = false;
+  for (let i = 0; i < n; i++) {
+    const code = value.charCodeAt(i);
+    if (code === 61) { padded = true; continue; }
+    if (padded) invalid();
+    const v = code < 128 ? map[code] : -1;
+    if (v < 0) invalid();
+    acc = ((acc << 6) | v) & 0xFFFFFF; bits += 6;
+    if (bits >= 8) { bits -= 8; out[o++] = (acc >> bits) & 0xff; }
+  }
+  const bytes = out.subarray(0, o);
+  if (b64Encode(bytes, url) !== value) invalid();
+  if (length !== null && bytes.length !== length) invalid();
+  return bytes;
+}
+function validateEnvelopeShape(value, profile) {
+  if (value?.profile !== profile.id || (value.profile_version ?? value.contract_version) !== profile.version) fail('PROFILE_UNSUPPORTED','envelope');
+  // Lazy: the generated validators require this module for the frozen ciphertext recognizer.
+  const { PasswordEnvelope: passwordShape, ExternalEnvelope: externalShape } = require('./protection-validators.generated.js');
+  if (profile.id === 'kdna.envelope.aead') {
+    if (!passwordShape(value) || value.kdf_profile !== value.key_slots[0].kdf_profile) fail('ENVELOPE_INVALID','envelope');
+    for (const slot of value.key_slots) { decode64Bytes(slot.kdf_params.salt,16); decode64Bytes(slot.wrapped_key,40); }
+    decode64Bytes(value.iv,12); decode64Bytes(value.tag,16); decode64Bytes(value.ciphertext);
+  } else {
+    if (!externalShape(value) || value.entry_path !== 'payload.kdnab') fail('ENVELOPE_INVALID','envelope');
+    decode64Bytes(value.iv,12,true); decode64Bytes(value.tag,16,true); decode64Bytes(value.ciphertext,null,true);
+  }
+  return value;
+}
+function passwordAadBytes(manifest) {
+  return new TextEncoder().encode(['kdna.envelope.aead','0.1.0',manifest.asset_uid,manifest.asset_id,manifest.version,'payload.kdnab',manifest.access,manifest.entitlement.profile].join('\n'));
+}
+module.exports = { encodeEnvelope, decodeEnvelope, envelopeRegExp, decode64Bytes, validateEnvelopeShape, passwordAadBytes };

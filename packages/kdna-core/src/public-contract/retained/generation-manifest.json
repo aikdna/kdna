@@ -3,14 +3,14 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1435345,
-    "sha256": "28018561bd66bfadf909e7ba22ad23cc4b41359db45565351757d506275f743b"
+    "bytes": 1438084,
+    "sha256": "17f9feab4c1e198a2b4ab28eba7434bb47f5f7dab52e613f8ce49a468aa7f447"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 155707,
-      "sha256": "ea953902450caad189fc9daa21d606aebb6c577945191a093c449cd1d1f48f33"
+      "sha256": "1d812656f3d8d96126749d17156e931f32a5e1a47ca98fcfc56fcbfab458b70f"
     },
     "scripts": [
       {
@@ -30,8 +30,8 @@
       },
       {
         "path": "scripts/public-contract/generate.mjs",
-        "bytes": 72318,
-        "sha256": "cd1914a7fd684fc033f635bd331bb5491446222352097fec72dc05982e0e4661"
+        "bytes": 73563,
+        "sha256": "9ed819f22c943fcda69a8df10ea1d49439255fee0fb72f81a8e5a6d5c1a4dd26"
       }
     ]
   },
@@ -618,7 +618,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/retained/contract.json",
       "bytes": 291233,
-      "sha256": "d75b129a47bbb993290a51395a0deef190c4afc51cd596a81db58d9ee931eb58"
+      "sha256": "619f91d2b0ea6e9387df4efd1067c03c7e9a08e564299a9b0fd80884a6269cb5"
     },
     {
       "path": "packages/kdna-core/src/public-contract/retained/api.d.ts",
