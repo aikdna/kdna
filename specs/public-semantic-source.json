@@ -32566,8 +32566,8 @@
           "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
           "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
           "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
-          "packages/kdna-core/src/public-contract/protection-crypto.js:1-91",
-          "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-78"
+          "packages/kdna-core/src/public-contract/protection-crypto.js:1-82",
+          "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-138"
         ],
         "runtime_uncovered": [],
         "proof": [

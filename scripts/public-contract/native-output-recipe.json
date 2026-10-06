@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "28018561bd66bfadf909e7ba22ad23cc4b41359db45565351757d506275f743b",
+  "input_sha256": "c40ba0cf160a6a3daa3ccce4f693550533c9c5c15f75d063d3cf4a28f6dad659",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -2890,7 +2890,7 @@
     },
     {
       "pointer": "/protection_admission",
-      "digest": "sha256:fc6e6b3108e15c8caf84de08d3bb77d96138c1dcff6d67e0d9ca450f10e7b797"
+      "digest": "sha256:f26fb81e9b6d76ef9ad9cb3278b45d002868d71c277f205cd6641f59f57ba887"
     },
     {
       "pointer": "/external_grant_issuer",

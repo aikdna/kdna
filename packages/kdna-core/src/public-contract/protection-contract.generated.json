@@ -13,7 +13,7 @@
     "schema_path": "specs/checksums-document-1.schema.json",
     "version": "1.0.0"
   },
-  "definition_digest": "sha256:fc6e6b3108e15c8caf84de08d3bb77d96138c1dcff6d67e0d9ca450f10e7b797",
+  "definition_digest": "sha256:f26fb81e9b6d76ef9ad9cb3278b45d002868d71c277f205cd6641f59f57ba887",
   "delivery_history": {
     "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
     "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
@@ -177,8 +177,8 @@
         "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
-        "packages/kdna-core/src/public-contract/protection-crypto.js:1-91",
-        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-78"
+        "packages/kdna-core/src/public-contract/protection-crypto.js:1-82",
+        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-138"
       ],
       "proof": [
         {
@@ -707,8 +707,8 @@
         "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
-        "packages/kdna-core/src/public-contract/protection-crypto.js:1-91",
-        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-78"
+        "packages/kdna-core/src/public-contract/protection-crypto.js:1-82",
+        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-138"
       ]
     },
     "PROTECTION-RESULTS": {
