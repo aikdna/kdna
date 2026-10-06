@@ -281,7 +281,8 @@
             "kdna.encryption.licensed-entry",
             "kdna.encryption.password",
             "kdna.encryption.password.scrypt",
-            "kdna.envelope.external-grant"
+            "kdna.envelope.external-grant",
+            "kdna.envelope.aead"
           ]
         },
         "profile_version": {
