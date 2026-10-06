@@ -60,22 +60,55 @@ test('issuer definitions keep exact result arms and two callables', () => {
   assert.ok(!source.diagnostic_registry.some((x) => x.startsWith('ISSUER_')));
 });
 test('issuer registration rejects cross-scope duplicates coverage gaps and false runtime claims', async () => {
-  const { generate } = await import('./generate.mjs'),
+  const { spawnSync } = await import('node:child_process'),
+    crypto = await import('node:crypto'),
     os = await import('node:os'),
     path = await import('node:path');
   const root = new URL('../../', import.meta.url).pathname,
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'issuer-scope-'));
-  try {
-    assert.equal(
-      generate([
+  const recipeBytes = fs.readFileSync(
+    path.join(root, 'scripts/public-contract/native-output-recipe.json'),
+  );
+  // The entry composes the native builder for the cumulative source. The unmodified
+  // source runs against the committed recipe; each mutated source is paired with a
+  // recipe copy whose identity pin matches it, exactly as the navigation tests do
+  // through KDNA_NATIVE_RECIPE. The copy lives only in this test's temp dir and
+  // stores no absolute path; a mutation must fail on its own rule before any
+  // generated output could be compared.
+  const runGenerator = (sourceFile, pairRecipe) => {
+    let env = process.env;
+    if (pairRecipe) {
+      const recipe = JSON.parse(recipeBytes);
+      recipe.input_sha256 = crypto
+        .createHash('sha256')
+        .update(fs.readFileSync(sourceFile))
+        .digest('hex');
+      const recipeFile = path.join(dir, 'recipe.json');
+      fs.writeFileSync(recipeFile, JSON.stringify(recipe));
+      env = { ...process.env, KDNA_NATIVE_RECIPE: recipeFile };
+    }
+    return spawnSync(
+      process.execPath,
+      [
+        'scripts/public-contract/generate.mjs',
         '--source',
-        path.join(root, 'specs/public-semantic-source.json'),
+        sourceFile,
         '--root',
         root,
         '--out-dir',
         root,
+        '--dependency-root',
+        root,
         '--check',
-      ]).status,
+      ],
+      { cwd: root, encoding: 'utf8', env },
+    );
+  };
+  try {
+    const clean = runGenerator(path.join(root, 'specs/public-semantic-source.json'), false);
+    assert.equal(clean.status, 0, clean.stdout + clean.stderr);
+    assert.equal(
+      JSON.parse(clean.stdout).status,
       'CHECK_MATCH',
       'The unchanged current source passes before negative mutations',
     );
@@ -119,9 +152,12 @@ test('issuer registration rejects cross-scope duplicates coverage gaps and false
       change(bad);
       const file = path.join(dir, String(index++) + '.json');
       fs.writeFileSync(file, JSON.stringify(bad));
-      assert.throws(
-        () => generate(['--source', file, '--root', root, '--out-dir', root, '--check']),
-        (error) => error.code === 'SOURCE' && reason.test(error.message),
+      const result = runGenerator(file, true);
+      assert.equal(result.status, 1, name + ': ' + result.stdout + result.stderr);
+      const failure = JSON.parse(result.stderr);
+      assert.equal(failure.code, 'SOURCE', name);
+      assert.ok(
+        reason.test(failure.message),
         name + ' must reach its own rule, not pin/navigation or unrelated validation',
       );
     }
