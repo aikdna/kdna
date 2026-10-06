@@ -60,6 +60,11 @@
       "import": "./src/public-contract/protection-node.mjs",
       "require": "./src/public-contract/protection-node.js"
     },
+    "./protected-browser": {
+      "types": "./src/public-contract/protected-browser.d.ts",
+      "import": "./src/public-contract/protected-browser.mjs",
+      "require": "./src/public-contract/protected-browser.js"
+    },
     "./protected-source-node": {
       "types": "./src/public-contract/protected-source-node.d.ts",
       "import": "./src/public-contract/protected-source-node.mjs",

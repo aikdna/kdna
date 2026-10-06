@@ -1,0 +1,19 @@
+// Hand-authored entry types for the browser protected admission (case A).
+// Draft for review (D-CBPA-IMPL-3/4 finalization): the result face mirrors the
+// retained node entry minus the operation/authorization machinery (browser
+// scope is admission only, password scope only); the disclosure field names and
+// the integrity/signature scope are finalized with the implementation review.
+// Shared primitives are imported from the retained generated entries.
+import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, CoreAdmissionRejected } from './types.js';
+import type { ProtectionDiagnostic, ProtectionRuntimeDescriptor, ProtectedSignaturePolicy, TrustedProtectionProvider } from './protection-node.js';
+export type ConsumerUnlockSelection = { readonly "slotIndex": number; readonly "slot": string; readonly "kdf_profile": "scrypt-sha256" | "argon2id"; };
+export type ConsumerUnlockObservation = { readonly "kind": "consumer_unlock_observation"; readonly "proof": "observation_not_authority"; readonly "checked_at_ms": number; readonly "selection": ConsumerUnlockSelection; };
+export type ProtectedBrowserInput = { readonly "bytes": Uint8Array; readonly "plaintextPayload": Uint8Array; readonly "observation": ConsumerUnlockObservation; readonly "signaturePolicy"?: ProtectedSignaturePolicy; };
+export type ProtectedBrowserDisclosure = { readonly "slot_selection": ConsumerUnlockSelection; readonly "observation_not_authority": true; readonly "provenance": "host_supplied_triple"; };
+export type ProtectedBrowserAccepted = { readonly "status": "accepted"; readonly "snapshot": CanonicalReadSnapshot; readonly "disclosure": ProtectedBrowserDisclosure; };
+export type ProtectedBrowserCatalogOnly = { readonly "status": "catalog_only"; readonly "catalog": CoreAdmissionCatalogOnly; readonly "disclosure": ProtectedBrowserDisclosure; };
+export type ProtectedBrowserCoreRejected = { readonly "status": "core_rejected"; readonly "stage": "container" | "manifest" | "payload" | "interpretation"; readonly "core": CoreAdmissionRejected; };
+export type ProtectedBrowserFailed = { readonly "status": "protection_failed"; readonly "diagnostic": ProtectionDiagnostic; };
+export type ProtectedBrowserAdmissionResult = (ProtectedBrowserAccepted | ProtectedBrowserCatalogOnly | ProtectedBrowserCoreRejected | ProtectedBrowserFailed);
+export declare function getProtectionContract(): ProtectionRuntimeDescriptor;
+export declare function admitProtectedBrowser(input: ProtectedBrowserInput, provider: TrustedProtectionProvider): Promise<ProtectedBrowserAdmissionResult>;
