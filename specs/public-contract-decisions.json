@@ -6,7 +6,7 @@
   "owner": "Public contract maintainers",
   "acceptance": "SEPARATE_BYTE_BOUND_RECEIPT",
   "version_policy": {
-    "status": "UNPUBLISHED_CANDIDATE",
+    "status": "PUBLISHED",
     "line": "r2.rc7",
     "supported_tuple": {
       "container": "0.5.0",
@@ -134,7 +134,7 @@
         "candidate_version": "0.37.0",
         "current_source_version": "0.37.0",
         "current_source_version_observed": "2026-10-07",
-        "status": "UNPUBLISHED_CANDIDATE",
+        "status": "PUBLISHED",
         "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
@@ -148,7 +148,7 @@
         "candidate_version": "0.11.1",
         "current_source_version": "0.11.1",
         "current_source_version_observed": "2026-10-07",
-        "status": "UNPUBLISHED_CANDIDATE",
+        "status": "PUBLISHED",
         "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",

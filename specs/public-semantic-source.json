@@ -89,8 +89,8 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 50638,
-      "sha256": "ad1d8ad9e4dcb8bfee002bae4d09bdcdeefb63ff7643156e520746e415a63457"
+      "bytes": 50602,
+      "sha256": "1019d47678f6e78506b7a8a102a2e70f804535c6ad444e0a2216181c3704be66"
     },
     {
       "path": "specs/public-source-map.json",
@@ -38484,7 +38484,7 @@
     },
     {
       "line": "r2.rc7",
-      "status": "CURRENT_UNPUBLISHED_TARGET",
+      "status": "CURRENT_RELEASED_TARGET",
       "versionTuple": {
         "container": "0.5.0",
         "payload_profile": "kdna.payload.judgment",

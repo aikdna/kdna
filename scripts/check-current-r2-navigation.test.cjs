@@ -999,13 +999,11 @@ for (const [label, mutate, issue] of [
 // Promotion-era fixtures (F1-F4): the in-tree source is already promoted to
 // stable versions, so the current line resolves through the unique current
 // target row. These cases find the row by status and never depend on its name.
-test('a promoted source with a released current row keeps the current line resolvable', () => {
+test('a promoted source resolves the current line under either current status', () => {
   const inputs = changedNavigationInputs(({ source: s }) => {
-    const row = s.target_lines.find(
-      (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
-    );
-    assert.ok(row, 'expected exactly one current unpublished target row');
-    row.status = 'CURRENT_RELEASED_TARGET';
+    const row = s.target_lines.find((candidate) => candidate.status === 'CURRENT_RELEASED_TARGET');
+    assert.ok(row, 'expected exactly one released current target row');
+    row.status = 'CURRENT_UNPUBLISHED_TARGET';
   });
   const result = checkInputs(inputs);
   assert.deepEqual(
@@ -1023,7 +1021,7 @@ for (const [label, mutate] of [
     'zero current rows on a promoted source',
     ({ source: s }) => {
       const row = s.target_lines.find(
-        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+        (candidate) => candidate.status === 'CURRENT_RELEASED_TARGET',
       );
       row.status = 'UNACCEPTED_SUPERSEDED_CANDIDATE_HISTORY';
     },
@@ -1032,10 +1030,10 @@ for (const [label, mutate] of [
     'two current rows on a promoted source',
     ({ source: s }) => {
       const row = s.target_lines.find(
-        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+        (candidate) => candidate.status === 'CURRENT_RELEASED_TARGET',
       );
       const clone = structuredClone(row);
-      clone.status = 'CURRENT_RELEASED_TARGET';
+      clone.status = 'CURRENT_UNPUBLISHED_TARGET';
       s.target_lines.push(clone);
     },
   ],
@@ -1043,9 +1041,8 @@ for (const [label, mutate] of [
     'two released rows on a promoted source',
     ({ source: s }) => {
       const row = s.target_lines.find(
-        (candidate) => candidate.status === 'CURRENT_UNPUBLISHED_TARGET',
+        (candidate) => candidate.status === 'CURRENT_RELEASED_TARGET',
       );
-      row.status = 'CURRENT_RELEASED_TARGET';
       const clone = structuredClone(row);
       s.target_lines.push(clone);
     },
