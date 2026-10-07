@@ -27,8 +27,8 @@ test('issuer definitions keep exact result arms and two callables', () => {
     ],
   );
   assert.equal(p.types.IssuerIssuedObservation.additionalProperties, false);
-  assert.equal(p.schema_path, 'specs/external-grant-issuer-r2-binding-7.schema.json');
-  assert.equal(p.schema_id, 'urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7');
+  assert.equal(p.schema_path, 'specs/external-grant-issuer-r2-binding-8.schema.json');
+  assert.equal(p.schema_id, 'urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8');
   const schema = JSON.parse(fs.readFileSync(new URL('../../' + p.schema_path, import.meta.url))),
     valid = new Ajv({ strict: false, validateFormats: false }).compile(schema);
   for (const arm of p.types.IssuerFailedObservation.oneOf) {

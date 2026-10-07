@@ -56,7 +56,7 @@ function rejected(result, expected) {
 test('format ownership validates real generator bytes and existing historical owners', () => {
   const result = run();
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /FORMAT-OWNERSHIP: MATCH \(49 exact paths;/u);
+  assert.match(result.stdout, /FORMAT-OWNERSHIP: MATCH \(52 exact paths;/u);
 });
 test('format ownership rejects changed historical bytes despite formatter exclusion', () => {
   mutate(
@@ -128,3 +128,13 @@ test('format ownership refuses hiding ordinary files before its checked block', 
     () => rejected(run(), /preexisting format exclusion set differs/u),
   );
 });
+
+for (const module of ['protection-admission', 'protected-source', 'external-grant-issuer']) {
+  test(`format ownership freezes released binding7 ${module} bytes`, () => {
+    mutate(
+      `specs/${module}-r2-binding-7.schema.json`,
+      (bytes) => Buffer.concat([bytes, Buffer.from(' ')]),
+      () => rejected(run(), /format-owned byte length differs/u),
+    );
+  });
+}

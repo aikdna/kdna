@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedSignaturePolicy",
+  "title": "BrowserProtectedSignaturePolicy",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedSignaturePolicy",
+  "$defs": {
+    "BrowserProtectedSignaturePolicy": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

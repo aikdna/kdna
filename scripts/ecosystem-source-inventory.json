@@ -587,7 +587,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.0"
+          "version": "0.37.1-rc.browser.1"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -597,7 +597,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.1"
+          "version": "0.11.2-rc.browser.1"
         },
         {
           "path": "packages/kdna/package.json",
@@ -634,7 +634,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.0"
+          "declared": "0.37.1-rc.browser.1"
         },
         {
           "path": "packages/kdna/package.json",
@@ -657,7 +657,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "696a024147661af9bf7426a37ab7ea6e010dbbf0d0add3a02e28e4ef8c5d477a",
+          "sha256": "0a0be9e0fda7022d8e9bb6e379455810704d3a42d615f6b3270f8dead6a33024",
           "local_archives": []
         }
       ],
@@ -762,9 +762,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.0",
-          "member_count": 431,
-          "members_sha256": "ac1dd84418006fde370c328d91cd3d0791c66856a88ba49c14bfb5d481184084",
+          "version": "0.37.1-rc.browser.1",
+          "member_count": 456,
+          "members_sha256": "beab3a4aa3e58d9e4070da0cb3a230c586a636e339da13b347f552e386aa7307",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -863,6 +863,8 @@
             "src/public-contract/browser-native/validate.js",
             "src/public-contract/browser-native/validators.generated.js",
             "src/public-contract/browser-native/whole.js",
+            "src/public-contract/browser-protected/request.js",
+            "src/public-contract/browser-protected/state.js",
             "src/public-contract/browser-retained/common.js",
             "src/public-contract/browser-retained/plan.js",
             "src/public-contract/browser-retained/prepare.js",
@@ -1013,6 +1015,26 @@
             "src/public-contract/packageset06/types.d.ts",
             "src/public-contract/packageset06/validators.cjs",
             "src/public-contract/portable-inflate.js",
+            "src/public-contract/protected-browser-contract/contract.json",
+            "src/public-contract/protected-browser-contract/descriptor.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedAdmissionResult.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedAuthorityContext.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedBinding.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedCallResult.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedDeliveryToken.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedExpansionHandle.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedHostContext.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedHostObservation.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedReadAuthority.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedReadResult.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedRequest.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedRequestAdmission.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedSignaturePolicy.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedSnapshotData.json",
+            "src/public-contract/protected-browser-contract/schemas/BrowserProtectedTransportCommitResult.json",
+            "src/public-contract/protected-browser-contract/schemas/TrustedBrowserProtectedHost.json",
+            "src/public-contract/protected-browser-contract/types.d.ts",
+            "src/public-contract/protected-browser-contract/validators.cjs",
             "src/public-contract/protected-browser.d.ts",
             "src/public-contract/protected-browser.js",
             "src/public-contract/protected-browser.mjs",
@@ -1020,6 +1042,9 @@
             "src/public-contract/protected-payload-comment-locator.js",
             "src/public-contract/protected-payload-request.js",
             "src/public-contract/protected-payload-state.js",
+            "src/public-contract/protected-sections-browser.d.ts",
+            "src/public-contract/protected-sections-browser.js",
+            "src/public-contract/protected-sections-browser.mjs",
             "src/public-contract/protected-sections-node.d.ts",
             "src/public-contract/protected-sections-node.js",
             "src/public-contract/protected-sections-node.mjs",
@@ -1251,9 +1276,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.1",
-          "member_count": 90,
-          "members_sha256": "db511d08d300b840490ee4acccea499ce15c91a2a6ce8d5bbab8183c59340804",
+          "version": "0.11.2-rc.browser.1",
+          "member_count": 97,
+          "members_sha256": "31cb541fe028b84496cb7376f317dde25eac4b29d42e947fde0f37eb7e460657",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -1307,11 +1332,18 @@
             "src/package-set-sections-node.mjs",
             "src/pipeline.js",
             "src/project.js",
+            "src/protected-browser-bridge.js",
+            "src/protected-browser-contract.json",
+            "src/protected-browser-delivery.js",
+            "src/protected-browser-host.js",
             "src/protected-delivery.js",
             "src/protected-payload-bridge.js",
             "src/protected-payload-delivery.js",
             "src/protected-payload-host.js",
             "src/protected-payload-project.js",
+            "src/protected-sections-browser.d.ts",
+            "src/protected-sections-browser.js",
+            "src/protected-sections-browser.mjs",
             "src/protected-sections-node.d.ts",
             "src/protected-sections-node.js",
             "src/protected-sections-node.mjs",

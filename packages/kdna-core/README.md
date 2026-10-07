@@ -1,9 +1,11 @@
 # KDNA Core — R2 candidate
 
-Published stable release: actual source package `0.37.0`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. The published release is `0.37.0`; it supersedes the `0.36.0` incumbent. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
+Current unpublished browser candidate: actual source package `0.37.1-rc.browser.1`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
+
+The published stable release remains Core `0.37.0`, paired with Read `0.11.1`; its artifacts and release evidence remain separate from this candidate. Core `0.37.0` supersedes the `0.36.0` incumbent.
 
 This source description follows [`package.json`](package.json).
-Read source `0.11.1` declares this exact Core peer. Runtime CLI
+Read source `0.11.2-rc.browser.1` declares this exact Core peer. Runtime CLI
 0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9 archives; see the
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 Editing this source README does not replace a previously fixed archive or
@@ -25,6 +27,12 @@ Core admits one immutable container, validates its Manifest and typed Payload, r
 | `/remote-runtime` | `loadRemoteRuntimeAsset` | Preserved explicit legacy 0.1 remote loader; independently declared types, no R2 conversion |
 | `/read-boundary` | `inspectSnapshot`, `isProtectedSnapshot` | Pure private-snapshot probes; availability is not current authority |
 | `/protection-node` | `getProtectionContract`, `admitProtectedNode`, `bindProtectionOperation`, `disposeProtectionOperation`, `protectSourceBytes` | Explicit Node protection, trusted provider and opaque operation |
+| `/protected-browser` | `getProtectionContract`, `admitProtectedBrowser` | Host-supplied container bytes, plaintext Payload and unlock observation; trusted provider |
+| `/protected-sections-browser` | `admitProtectedPayloadRequestJson`, `inspectProtectedPayloadRequest`, `createProtectedPayloadReadAuthorityJson`, `admitProtectedSectionBrowser`, `inspectProtectedPayloadSnapshot`, `bindProtectedPayloadRequest`, `disposeProtectedSectionOperation` | Genuine browser admission snapshot, closed JSON request and independently trusted authority |
+
+The candidate `/protected-sections-browser` entry retains one genuine accepted snapshot from `/protected-browser`'s `admitProtectedBrowser`. Admit the request JSON, create an independently trusted Read authority, then call `admitProtectedSectionBrowser(snapshot, request, authority)` and retain its returned operation and normalized request. Bind later request JSON with `bindProtectedPayloadRequest`; close the operation with `disposeProtectedSectionOperation`. The [generated declarations](src/public-contract/protected-sections-browser.d.ts) define the seven callables and closed inputs.
+
+The original input triple is container bytes, Host-supplied plaintext Payload and an unlock observation. It does not prove decryption or ciphertext/plaintext authentication. This adapter performs no new decryption or physical read; its observation and receipt preserve `host_supplied_triple` and `observation_not_authority`. It uses the independent base tuple above, including container `0.5.0` and Read `kdna.read/0.6.4`; Node native-section witnesses and serialized snapshot copies cannot establish browser origin. Disclosure additionally requires the [Read browser adapter](../kdna-read/README.md#protected-browser-read-candidate) and its independently trusted Host scope.
 
 ```js
 import { admitNode } from '@aikdna/kdna-core/node';

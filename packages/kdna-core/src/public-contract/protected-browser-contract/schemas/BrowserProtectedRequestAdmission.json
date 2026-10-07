@@ -1,0 +1,1016 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedRequestAdmission",
+  "title": "BrowserProtectedRequestAdmission",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedRequestAdmission",
+  "$defs": {
+    "AdmissionDiagnostic": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "const": "admission",
+          "type": "string"
+        },
+        "severity": {
+          "const": "error",
+          "type": "string"
+        },
+        "reason": {
+          "$ref": "#/$defs/AdmissionReason"
+        },
+        "field": {
+          "$ref": "#/$defs/AdmissionField"
+        }
+      },
+      "required": [
+        "stage",
+        "severity",
+        "reason",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "AdmissionField": {
+      "type": "string",
+      "enum": [
+        "$candidate",
+        "$unknown",
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle",
+        "tuple.container",
+        "tuple.payload_profile",
+        "tuple.payload_version",
+        "tuple.core",
+        "tuple.ir",
+        "tuple.runtime",
+        "tuple.plan",
+        "tuple.host",
+        "tuple.trace",
+        "tuple.read",
+        "selection.asset_id",
+        "selection.asset_version",
+        "selection.judgment_id",
+        "handle.handle_id",
+        "handle.asset_id",
+        "handle.asset_version",
+        "handle.A",
+        "handle.C",
+        "handle.snapshot_id",
+        "handle.core_version",
+        "handle.ir_version",
+        "handle.read_version",
+        "handle.target",
+        "handle.scope",
+        "handle.issued_at",
+        "handle.expires_at",
+        "handle.host_id",
+        "handle.host_epoch",
+        "handle.anchor",
+        "handle.anchor.kind",
+        "handle.anchor.selection",
+        "handle.anchor.selection.asset_id",
+        "handle.anchor.selection.asset_version",
+        "handle.anchor.selection.judgment_id",
+        "handle.target.kind",
+        "handle.target.id",
+        "handle.target.asset",
+        "handle.target.asset.asset_id",
+        "handle.target.asset.asset_version",
+        "handle.target.asset.judgment_version"
+      ]
+    },
+    "AdmissionNoBodyControl": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "const": "READ_ADMISSION_RESPONSE_TOO_SMALL"
+        },
+        "semantic_cause": {
+          "type": "string",
+          "const": "READ_INPUT_INVALID"
+        },
+        "correlation": {
+          "$ref": "#/$defs/ReadCorrelation"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "code",
+        "semantic_cause",
+        "correlation",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "AdmissionReason": {
+      "type": "string",
+      "enum": [
+        "representation_not_object",
+        "unknown_field",
+        "missing_required",
+        "wrong_type",
+        "invalid_identifier",
+        "unsafe_integer",
+        "out_of_range",
+        "mode_shape_invalid"
+      ]
+    },
+    "AdmittedBrowserProtectedRequest": false,
+    "Assessment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AssessmentNotEvaluated"
+        },
+        {
+          "$ref": "#/$defs/AssessmentReported"
+        }
+      ]
+    },
+    "AssessmentKind": {
+      "type": "string",
+      "enum": [
+        "semantic_understanding",
+        "external_evaluation"
+      ]
+    },
+    "AssessmentNotEvaluated": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "not_evaluated",
+          "type": "string"
+        },
+        "kind": {
+          "const": null,
+          "type": "null"
+        },
+        "assessor_id": {
+          "const": null,
+          "type": "null"
+        },
+        "evidence_ref": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "kind",
+        "assessor_id",
+        "evidence_ref"
+      ],
+      "additionalProperties": false
+    },
+    "AssessmentReported": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "reported",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AssessmentKind"
+        },
+        "assessor_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "state",
+        "kind",
+        "assessor_id",
+        "evidence_ref"
+      ],
+      "additionalProperties": false
+    },
+    "Boolean": {
+      "type": "boolean"
+    },
+    "BrowserProtectedRejectedEnvelope": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "const": "rejected",
+          "type": "string"
+        },
+        "tuple": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionTuple"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "asset": {
+          "const": null,
+          "type": "null"
+        },
+        "snapshot_id": {
+          "const": null,
+          "type": "null"
+        },
+        "digests": {
+          "const": null,
+          "type": "null"
+        },
+        "content": {
+          "const": null,
+          "type": "null"
+        },
+        "states": {
+          "$ref": "#/$defs/ResponsibilityStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Omission"
+          },
+          "maxItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/RejectedReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequestAdmission": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedRequestAdmitted"
+        },
+        {
+          "$ref": "#/$defs/Call_admission_rejection"
+        },
+        {
+          "$ref": "#/$defs/Call_no_body_control"
+        },
+        {
+          "$ref": "#/$defs/Call_transport_failure"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequestRejectedCall"
+        }
+      ]
+    },
+    "BrowserProtectedRequestAdmitted": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "const": "admitted_request"
+        },
+        "request": {
+          "$ref": "#/$defs/AdmittedBrowserProtectedRequest"
+        }
+      },
+      "required": [
+        "channel",
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequestRejectedCall": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "read_envelope",
+          "type": "string"
+        },
+        "envelope": {
+          "$ref": "#/$defs/BrowserProtectedRejectedEnvelope"
+        },
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "Call_admission_rejection": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "admission_rejection",
+          "type": "string"
+        },
+        "envelope": {
+          "const": null,
+          "type": "null"
+        },
+        "admission_rejection": {
+          "$ref": "#/$defs/ReadAdmissionRejection"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "Call_no_body_control": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "no_body_control",
+          "type": "string"
+        },
+        "envelope": {
+          "const": null,
+          "type": "null"
+        },
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "control": {
+          "$ref": "#/$defs/ReadNoBodyControl"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "Call_transport_failure": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "transport_failure",
+          "type": "string"
+        },
+        "envelope": {
+          "const": null,
+          "type": "null"
+        },
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "transport_failure": {
+          "$ref": "#/$defs/ReadTransportFailure"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "ConfirmationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "claimed_unverified",
+        "verified",
+        "rejected"
+      ]
+    },
+    "ControlBudget": {
+      "type": "object",
+      "properties": {
+        "limit_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "actual_bytes": {
+          "$ref": "#/$defs/FixedByteCount"
+        }
+      },
+      "required": [
+        "limit_bytes",
+        "actual_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "EnvelopeNoBodyControl": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "const": "READ_RESPONSE_BUDGET_TOO_SMALL"
+        },
+        "semantic_cause": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReadDiagnosticCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correlation": {
+          "$ref": "#/$defs/ReadCorrelation"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "code",
+        "semantic_cause",
+        "correlation",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "FixedByteCount": {
+      "type": "string",
+      "pattern": "^[0-9]{16}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "InterpretationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    "Omission": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "explicitly_omitted",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "field": {
+          "$ref": "#/$defs/Text"
+        },
+        "reason": {
+          "$ref": "#/$defs/OmissionReason"
+        },
+        "expandable": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "handle_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "target",
+        "field",
+        "reason",
+        "expandable",
+        "handle_id"
+      ],
+      "additionalProperties": false
+    },
+    "OmissionReason": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "not_in_mode",
+        "outside_selection"
+      ]
+    },
+    "ReadAdmissionRejection": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "const": "kdna.read-admission/0.1.0",
+          "type": "string"
+        },
+        "code": {
+          "const": "READ_INPUT_INVALID",
+          "type": "string"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/AdmissionDiagnostic"
+        },
+        "correlation": {
+          "$ref": "#/$defs/ReadCorrelation"
+        },
+        "control_budget": {
+          "$ref": "#/$defs/ControlBudget"
+        }
+      },
+      "required": [
+        "contract",
+        "code",
+        "diagnostic",
+        "correlation",
+        "control_budget"
+      ],
+      "additionalProperties": false
+    },
+    "ReadBudget": {
+      "type": "object",
+      "properties": {
+        "limit_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "required_bytes": {
+          "$ref": "#/$defs/FixedByteCount"
+        },
+        "actual_bytes": {
+          "$ref": "#/$defs/FixedByteCount"
+        }
+      },
+      "required": [
+        "limit_bytes",
+        "required_bytes",
+        "actual_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "ReadCorrelation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValidatedCorrelation"
+        },
+        {
+          "$ref": "#/$defs/UnavailableCorrelation"
+        }
+      ]
+    },
+    "ReadDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ]
+    },
+    "ReadNoBodyControl": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AdmissionNoBodyControl"
+        },
+        {
+          "$ref": "#/$defs/EnvelopeNoBodyControl"
+        }
+      ]
+    },
+    "ReadPermission": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "allowed",
+        "denied"
+      ]
+    },
+    "ReadStage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    "ReadTransportFailure": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "const": "READ_TRANSPORT_FAILURE",
+          "type": "string"
+        },
+        "semantic_cause": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReadDiagnosticCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correlation": {
+          "$ref": "#/$defs/ReadCorrelation"
+        },
+        "delivery": {
+          "const": "not_confirmed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "semantic_cause",
+        "correlation",
+        "delivery"
+      ],
+      "additionalProperties": false
+    },
+    "RejectedReceipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_epoch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disclosed_at": {
+          "type": "null",
+          "const": null
+        },
+        "delivery": {
+          "type": "string",
+          "const": "not_delivered"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "request_id",
+        "snapshot_id",
+        "host_id",
+        "host_epoch",
+        "decision_id",
+        "disclosed_at",
+        "delivery"
+      ],
+      "additionalProperties": false
+    },
+    "ResponsibilityStates": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        },
+        "writer": {
+          "$ref": "#/$defs/WriterState"
+        },
+        "confirmation": {
+          "$ref": "#/$defs/ConfirmationState"
+        },
+        "read_permission": {
+          "$ref": "#/$defs/ReadPermission"
+        },
+        "action_authorization": {
+          "const": "not_evaluated",
+          "type": "string"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation",
+        "writer",
+        "confirmation",
+        "read_permission",
+        "action_authorization"
+      ],
+      "additionalProperties": false
+    },
+    "TechnicalState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "UnavailableCorrelation": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "unavailable",
+          "type": "string"
+        },
+        "request_id": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "ValidatedCorrelation": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "validated",
+          "type": "string"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "state",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionTuple": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.5.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.6.4",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "WriterState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "sufficient",
+        "insufficient"
+      ]
+    }
+  }
+}

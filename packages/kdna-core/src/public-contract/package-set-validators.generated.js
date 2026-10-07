@@ -2324,7 +2324,7 @@ return errors === 0;
 }
 validate41.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
-const schema87 = {"additionalProperties":false,"properties":{"claims":{"const":"claims_not_authenticated","type":"string"},"contract":{"const":"kdna.package-set-node/0.2.1","type":"string"},"core_callables":{"items":{"$ref":"#/$defs/Identifier"},"maxItems":7,"minItems":7,"type":"array"},"core_version":{"const":"0.37.0","type":"string"},"definition_digest":{"$ref":"#/$defs/Digest"},"limits":{"$ref":"#/$defs/PackageSetLimits"},"local_failures":{"items":{"$ref":"#/$defs/PackageSetLocalFailure"},"maxItems":12,"minItems":12,"type":"array"},"module_version":{"const":"0.2.0","type":"string"},"read_callables":{"items":{"$ref":"#/$defs/Identifier"},"maxItems":5,"minItems":5,"type":"array"},"read_version":{"const":"0.11.1","type":"string"}},"required":["contract","module_version","core_version","read_version","limits","local_failures","core_callables","read_callables","claims","definition_digest"],"type":"object"};
+const schema87 = {"additionalProperties":false,"properties":{"claims":{"const":"claims_not_authenticated","type":"string"},"contract":{"const":"kdna.package-set-node/0.2.1","type":"string"},"core_callables":{"items":{"$ref":"#/$defs/Identifier"},"maxItems":7,"minItems":7,"type":"array"},"core_version":{"const":"0.37.1-rc.browser.1","type":"string"},"definition_digest":{"$ref":"#/$defs/Digest"},"limits":{"$ref":"#/$defs/PackageSetLimits"},"local_failures":{"items":{"$ref":"#/$defs/PackageSetLocalFailure"},"maxItems":12,"minItems":12,"type":"array"},"module_version":{"const":"0.2.0","type":"string"},"read_callables":{"items":{"$ref":"#/$defs/Identifier"},"maxItems":5,"minItems":5,"type":"array"},"read_version":{"const":"0.11.2-rc.browser.1","type":"string"}},"required":["contract","module_version","core_version","read_version","limits","local_failures","core_callables","read_callables","claims","definition_digest"],"type":"object"};
 const schema90 = {"additionalProperties":false,"properties":{"maxMembers":{"const":10000,"type":"integer"},"maxTotalSourceBytes":{"const":104857600,"type":"integer"}},"required":["maxMembers","maxTotalSourceBytes"],"type":"object"};
 const schema91 = {"enum":["invalid_limits","member_limit_exceeded","source_bytes_limit_exceeded","invalid_member_source","invalid_read_request","provider_invalid","provider_failed","provider_observation_invalid","cancelled","core_unavailable","delivery_unconfirmed","handoff_invalid"],"type":"string"};
 
@@ -2460,8 +2460,8 @@ if(typeof data4 !== "string"){
 validate45.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/type",keyword:"type",params:{type: "string"},message:"must be string"}];
 return false;
 }
-if("0.37.0" !== data4){
-validate45.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/const",keyword:"const",params:{allowedValue: "0.37.0"},message:"must be equal to constant"}];
+if("0.37.1-rc.browser.1" !== data4){
+validate45.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/const",keyword:"const",params:{allowedValue: "0.37.1-rc.browser.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs11 === errors;
@@ -2696,8 +2696,8 @@ if(typeof data14 !== "string"){
 validate45.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/type",keyword:"type",params:{type: "string"},message:"must be string"}];
 return false;
 }
-if("0.11.1" !== data14){
-validate45.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/const",keyword:"const",params:{allowedValue: "0.11.1"},message:"must be equal to constant"}];
+if("0.11.2-rc.browser.1" !== data14){
+validate45.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/const",keyword:"const",params:{allowedValue: "0.11.2-rc.browser.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs36 === errors;
@@ -2973,8 +2973,8 @@ if(typeof data4 !== "string"){
 validate55.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/type",keyword:"type",params:{type: "string"},message:"must be string"}];
 return false;
 }
-if("0.37.0" !== data4){
-validate55.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/const",keyword:"const",params:{allowedValue: "0.37.0"},message:"must be equal to constant"}];
+if("0.37.1-rc.browser.1" !== data4){
+validate55.errors = [{instancePath:instancePath+"/core_version",schemaPath:"#/properties/core_version/const",keyword:"const",params:{allowedValue: "0.37.1-rc.browser.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs11 === errors;
@@ -3209,8 +3209,8 @@ if(typeof data14 !== "string"){
 validate55.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/type",keyword:"type",params:{type: "string"},message:"must be string"}];
 return false;
 }
-if("0.11.1" !== data14){
-validate55.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/const",keyword:"const",params:{allowedValue: "0.11.1"},message:"must be equal to constant"}];
+if("0.11.2-rc.browser.1" !== data14){
+validate55.errors = [{instancePath:instancePath+"/read_version",schemaPath:"#/properties/read_version/const",keyword:"const",params:{allowedValue: "0.11.2-rc.browser.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs36 === errors;

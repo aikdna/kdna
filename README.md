@@ -56,15 +56,17 @@ unpacking or decoding asset internals is not a compatible consumption path.
 ## Current source: choose the matching implementation
 
 The [Core/Read source guide](./docs/core-read-current-status.md) records the
-**2026-09-23 local source** identities and how to obtain a matching delivery.
+**2026-10-07 local source** identities and how to obtain a matching delivery.
 These are unpublished candidates; this page does not establish that remote
 `main` or npm contains these bytes.
 
 | Entry | Exact local package combination | Use |
 | --- | --- | --- |
-| This repository | Core `0.37.0` / Read `0.11.1` (exact Core peer) | Public admission, Read and explicit reference subpaths; Node >=20 |
+| This repository | Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` (exact Core peer) | Unpublished browser candidate; public admission, Read and explicit reference subpaths; Node >=20 |
 | [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` archives | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22; unpublished |
 | [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their own artifacts and release evidence. The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance.
 
 The source row and the native CLI archive row have distinct byte identities.
 The CLI binds container `0.6.0` and native public export targets in its exact

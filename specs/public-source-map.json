@@ -280,14 +280,14 @@
     },
     {
       "source": "specs/public-semantic-source.json",
-      "target": "specs/protection-admission-r2-binding-7.schema.json",
+      "target": "specs/protection-admission-r2-binding-8.schema.json",
       "writer": "generator",
       "role": "R2 generated derivative; historical same-purpose schema retained",
       "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
     },
     {
       "source": "specs/public-semantic-source.json",
-      "target": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "target": "specs/external-grant-issuer-r2-binding-8.schema.json",
       "writer": "generator",
       "role": "R2 generated derivative; historical same-purpose schema retained",
       "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
@@ -301,7 +301,7 @@
     },
     {
       "source": "specs/public-semantic-source.json#/protected_source",
-      "target": "specs/protected-source-r2-binding-7.schema.json",
+      "target": "specs/protected-source-r2-binding-8.schema.json",
       "role": "R2 binding with exact package/tuple and diagnostic closure; old schema retained"
     },
     {

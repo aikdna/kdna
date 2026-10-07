@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.37.0",
+  "version": "0.37.1-rc.browser.1",
   "description": "Public KDNA Core with bounded component interpretation and Canonical IR.",
   "engines": {
     "node": ">=20"
@@ -129,6 +129,11 @@
       "types": "./src/public-contract/retained-sections-browser.d.ts",
       "import": "./src/public-contract/retained-sections-browser.mjs",
       "require": "./src/public-contract/retained-sections-browser.js"
+    },
+    "./protected-sections-browser": {
+      "types": "./src/public-contract/protected-sections-browser.d.ts",
+      "import": "./src/public-contract/protected-sections-browser.mjs",
+      "require": "./src/public-contract/protected-sections-browser.js"
     }
   },
   "types": "src/public-contract/types.d.ts",

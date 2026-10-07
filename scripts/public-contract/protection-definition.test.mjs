@@ -70,8 +70,8 @@ test('protection definitions preserve all preexisting semantic leaves and absenc
     trace: 'kdna.judgment-trace/0.3.1',
     read: 'kdna.read/0.6.4',
   });
-  assert.equal(source.engineering.package_versions.core, '0.37.0');
-  assert.equal(source.engineering.package_versions.read, '0.11.1');
+  assert.equal(source.engineering.package_versions.core, '0.37.1-rc.browser.1');
+  assert.equal(source.engineering.package_versions.read, '0.11.2-rc.browser.1');
   assert.deepEqual(source.types.ProtectionEntitlement, {
     type: 'object',
     properties: {
@@ -124,7 +124,7 @@ assert.equal(
   manifestSchema.$id,
   'urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1',
 );
-assert.equal(protectionSchema.$id, 'urn:kdna:schema:protection-admission:1.0.0:binding:r2:7');
+assert.equal(protectionSchema.$id, 'urn:kdna:schema:protection-admission:1.0.0:binding:r2:8');
 ajv.addSchema(manifestSchema);
 ajv.addSchema(protectionSchema);
 ajv.addSchema(checksumsSchema);

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedReadAuthority",
+  "title": "BrowserProtectedReadAuthority",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedReadAuthority",
+  "$defs": {
+    "BrowserProtectedReadAuthority": false
+  }
+}

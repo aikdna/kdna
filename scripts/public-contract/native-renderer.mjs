@@ -370,10 +370,14 @@ export function buildNativeOutputs(source, sourceBytes, recipe, producer, depend
     }
     const validator = owner.members.find((relative) => relative.endsWith('/validators.cjs'));
     // The original sections header is a literal LF escape in its generator recipe.
-    outputs.set(
-      validator,
-      Buffer.from(owner.validator_header.replaceAll('\\n', '\n') + standalone(ajv, roots) + '\n'),
-    );
+    let validatorText =
+      owner.validator_header.replaceAll('\\n', '\n') + standalone(ajv, roots) + '\n';
+    if (owner.validator_final_newline !== undefined) {
+      if (owner.validator_final_newline !== 'single')
+        fail('RECIPE_VALIDATOR_NEWLINE', 'Unsupported validator newline policy');
+      validatorText = validatorText.replace(/\n+$/u, '') + '\n';
+    }
+    outputs.set(validator, Buffer.from(validatorText));
     if (owner.typescript.generated)
       outputs.set(
         owner.members.find((relative) => relative.endsWith('/types.d.ts')),
@@ -437,6 +441,15 @@ export function buildNativeOutputs(source, sourceBytes, recipe, producer, depend
         descriptor,
         jsonBytes({ id: module.id, version: module.version, definition_digest: digest(module) }),
       );
+    for (const mirror of owner.output_mirrors ?? []) {
+      if (
+        !owner.members.includes(mirror.from) ||
+        !owner.members.includes(mirror.to) ||
+        !outputs.has(mirror.from)
+      )
+        fail('OUTPUT_MIRROR', 'Mirror must copy a generated member of its owner');
+      outputs.set(mirror.to, outputs.get(mirror.from));
+    }
     const rows = [...outputs]
       .filter(([relative]) => !start.has(relative))
       .map(([relative, bytes]) => byteIdentity(relative, bytes));

@@ -1,0 +1,7 @@
+import type { BrowserProtectedOperation, AdmittedBrowserProtectedRequest, BrowserProtectedReadAuthority, BrowserProtectedHostContext, TrustedBrowserProtectedHost, BrowserProtectedCallResult, BrowserProtectedDeliveryToken, BrowserProtectedReadResult, BrowserProtectedTransportCommitResult } from '@aikdna/kdna-core/protected-sections-browser';
+export type * from '@aikdna/kdna-core/protected-sections-browser';
+export type BrowserProtectedObserveJson = (context: Readonly<BrowserProtectedHostContext>) => string | Promise<string>;
+export declare function createTrustedProtectedPayloadHostJson(observeJson: BrowserProtectedObserveJson, deliver: (result: Readonly<BrowserProtectedCallResult>, token: BrowserProtectedDeliveryToken) => boolean | Promise<boolean>): TrustedBrowserProtectedHost;
+export declare function readProtectedSectionBrowser(operation: BrowserProtectedOperation, request: AdmittedBrowserProtectedRequest, authority: BrowserProtectedReadAuthority, host: TrustedBrowserProtectedHost): Promise<BrowserProtectedReadResult>;
+// Reservation precedes callbacks. Commit acknowledgement must be synchronous literal true.
+export declare function commitProtectedSectionTransport(operation: BrowserProtectedOperation, token: BrowserProtectedDeliveryToken, observeScopeJson: BrowserProtectedObserveJson, commit: (result: Readonly<BrowserProtectedCallResult>) => boolean): Promise<BrowserProtectedTransportCommitResult>;

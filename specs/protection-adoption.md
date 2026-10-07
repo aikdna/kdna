@@ -12,13 +12,14 @@ remain as declared by their source documents; no deprecation is issued here.
 
 ## 1. Current capability and evidence
 
-The current unpublished local package line is Core `0.37.0` and Read
-`0.11.1`. Local package identity is recorded in
+The current unpublished local browser package line is Core `0.37.1-rc.browser.1` and Read
+`0.11.2-rc.browser.1`. Local package identity is recorded in
 [public-semantic-source.json](public-semantic-source.json) (`engineering.package_versions`)
 and the [Core](../packages/kdna-core/package.json) / [Read](../packages/kdna-read/package.json)
 package metadata. [SPEC-INDEX](../SPEC-INDEX.md) records the current contract family.
 Fixed historical pages retain their named coordinates and are not current selectors.
 These local candidates are not a public release.
+The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The browser candidate requires its own artifact and installed-consumer acceptance.
 Its ordinary public root, Node and browser admission share the rejection in
 [`admit.js`](../packages/kdna-core/src/public-contract/admit.js): after container
 and Manifest validation, any encrypted payload, `manifest.encryption`,

@@ -1,0 +1,939 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedAuthorityContext",
+  "title": "BrowserProtectedAuthorityContext",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedAuthorityContext",
+  "$defs": {
+    "AssetDigests": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/DigestA"
+        },
+        "C": {
+          "$ref": "#/$defs/DigestC"
+        },
+        "E": {
+          "$ref": "#/$defs/DigestE"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAdmissionDisclosure": {
+      "type": "object",
+      "properties": {
+        "slot_selection": {
+          "type": "object",
+          "properties": {
+            "slotIndex": {
+              "$ref": "#/$defs/UInt"
+            },
+            "slot": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kdf_profile": {
+              "type": "string",
+              "enum": [
+                "scrypt-sha256",
+                "argon2id"
+              ]
+            }
+          },
+          "required": [
+            "slotIndex",
+            "slot",
+            "kdf_profile"
+          ],
+          "additionalProperties": false
+        },
+        "observation_not_authority": {
+          "type": "boolean",
+          "const": true
+        },
+        "provenance": {
+          "type": "string",
+          "const": "host_supplied_triple"
+        }
+      },
+      "required": [
+        "slot_selection",
+        "observation_not_authority",
+        "provenance"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAuthorityContext": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/BrowserProtectedRequest"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "read_intent": {
+          "$ref": "#/$defs/BrowserProtectedReadIntent"
+        },
+        "read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "signature_policy": {
+          "$ref": "#/$defs/BrowserProtectedSignaturePolicy"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedAdmissionDisclosure"
+        }
+      },
+      "required": [
+        "request",
+        "request_digest",
+        "tuple",
+        "asset",
+        "digests",
+        "read_intent",
+        "read_intent_digest",
+        "signature_policy",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExpansionHandle": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedWholeHandle"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedSetHandle"
+        }
+      ]
+    },
+    "BrowserProtectedReadIntent": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            "admit_retained_protected_snapshot",
+            "read_protected_projection",
+            "expand_protected_projection",
+            "projection",
+            "host_observation",
+            "host_handoff",
+            "read_return",
+            "transport_commit"
+          ]
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "whole_asset",
+            "catalog",
+            "exact_selection",
+            "expand"
+          ]
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        },
+        "provenance": {
+          "type": "string",
+          "const": "host_supplied_triple"
+        },
+        "new_decryption": {
+          "type": "boolean",
+          "const": false
+        },
+        "new_domain_validation": {
+          "type": "boolean",
+          "const": false
+        },
+        "new_signature_verification": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "operation",
+        "operation_id",
+        "capture_id",
+        "snapshot_id",
+        "request_digest",
+        "mode",
+        "physical_reads",
+        "provenance",
+        "new_decryption",
+        "new_domain_validation",
+        "new_signature_verification"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_whole_asset"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_catalog"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_exact_selection"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_expand"
+        }
+      ]
+    },
+    "BrowserProtectedRequest_catalog": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "catalog",
+          "type": "string"
+        },
+        "selection": {
+          "const": null,
+          "type": "null"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_exact_selection": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "exact_selection",
+          "type": "string"
+        },
+        "selection": {
+          "$ref": "#/$defs/BrowserProtectedSelection"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_expand": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "expand"
+        },
+        "selection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BrowserProtectedSelection"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "handle": {
+          "$ref": "#/$defs/BrowserProtectedExpansionHandle"
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_whole_asset": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "whole_asset",
+          "type": "string"
+        },
+        "selection": {
+          "const": null,
+          "type": "null"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSelection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_ids"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSetHandle": {
+      "type": "object",
+      "properties": {
+        "handle_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "core_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "ir_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "read_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "selection_set"
+            },
+            "selection": {
+              "$ref": "#/$defs/BrowserProtectedSelection"
+            }
+          },
+          "required": [
+            "kind",
+            "selection"
+          ],
+          "additionalProperties": false
+        },
+        "binding_kind": {
+          "type": "string",
+          "const": "protected_selection_set"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "handle_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "C",
+        "snapshot_id",
+        "core_version",
+        "ir_version",
+        "read_version",
+        "anchor",
+        "target",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "host_id",
+        "host_epoch",
+        "binding_kind",
+        "operation_id",
+        "capture_id"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSignaturePolicy": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedWholeHandle": {
+      "type": "object",
+      "properties": {
+        "handle_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "core_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "ir_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "read_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "asset"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "handle_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "C",
+        "snapshot_id",
+        "core_version",
+        "ir_version",
+        "read_version",
+        "anchor",
+        "target",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "host_id",
+        "host_epoch"
+      ],
+      "additionalProperties": false
+    },
+    "Compared": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/ComparedState"
+        },
+        "expected": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expected_source": {
+          "$ref": "#/$defs/ExpectedSource"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "ComparedState": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "mismatched"
+      ]
+    },
+    "Comparison": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/NoComparison"
+        },
+        {
+          "$ref": "#/$defs/Compared"
+        }
+      ]
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "DigestA": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "container_bytes",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.container-bytes",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestC": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "content_tree",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.content-tree",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "DigestE": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "const": "runtime_entry_set",
+          "type": "string"
+        },
+        "profile": {
+          "const": "kdna.digest-basis.runtime-entry-set",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "SHA-256",
+          "type": "string"
+        },
+        "observed": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "$ref": "#/$defs/Comparison"
+        }
+      },
+      "required": [
+        "basis",
+        "profile",
+        "profile_version",
+        "algorithm",
+        "observed",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSource": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ExpectedSourceKind"
+        },
+        "source_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "kind",
+        "source_id"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedSourceKind": {
+      "type": "string",
+      "enum": [
+        "caller",
+        "manifest_declaration",
+        "checksums_declaration",
+        "trusted_receipt",
+        "host_observation"
+      ]
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NoComparison": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "not_compared",
+          "type": "string"
+        },
+        "expected": {
+          "const": null,
+          "type": "null"
+        },
+        "expected_source": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "expected",
+        "expected_source"
+      ],
+      "additionalProperties": false
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    },
+    "VersionTuple": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.5.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.6.4",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

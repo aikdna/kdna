@@ -1,17 +1,19 @@
 # Core and Read: current implementation status
 
-> Source status: 2026-09-23. Current line: **R2**, **UNPUBLISHED_CANDIDATE**.
+> Source status: 2026-10-07. Current line: **R2**, browser candidate, **UNPUBLISHED_CANDIDATE**.
 > Implementation: **REFERENCE_IMPLEMENTATION**. Acceptance: **SEPARATE_BYTE_BOUND_ACCEPTANCE** — final-byte freeze and independent acceptance are separate, still-required records; this page does not issue them.
 > Registry observations and older acceptance remain dated history, not evidence that a current candidate is published or that downstream consumers have rebound.
 
 ## Current source and coordinates
 
 The actual local package manifests are
-[`@aikdna/kdna-core@0.37.0`](../packages/kdna-core/package.json) and
-[`@aikdna/kdna-read@0.11.1`](../packages/kdna-read/package.json).
-Read declares the exact Core peer `0.37.0`; both declare Node >=20.
+[`@aikdna/kdna-core@0.37.1-rc.browser.1`](../packages/kdna-core/package.json) and
+[`@aikdna/kdna-read@0.11.2-rc.browser.1`](../packages/kdna-read/package.json).
+Read declares the exact Core peer `0.37.1-rc.browser.1`; both declare Node >=20.
 These are source identities. Exact archives, installed dependency graphs and
 consumer behavior still require their own byte-bound evidence.
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their own artifacts and release evidence. This browser candidate is unpublished; its source changes do not renew acceptance of another artifact.
 
 The complete tuple is container `0.5.0`, payload profile `kdna.payload.judgment`
 version `0.5.1`, Core `kdna.core/0.8.2`, Canonical IR
@@ -31,9 +33,9 @@ acceptance tied to its prior bytes; a version label alone cannot renew it.
 | Remote `main` | A repository link is a source location, not a fixed delivery identity. Pin the source revision you receive and compare its manifests, lock, binding and archives with the intended row below. This page does not assert that remote `main` contains the local candidates. |
 | Local unpublished candidates | Obtain a complete source delivery or the owning repository's coordinated local-consumer bundle, including its dependency archives and lock. If these exact inputs are unavailable, the candidate route is unavailable; do not fill gaps from `latest`, a global install or another graph. |
 
-| Local entry (2026-09-23) | Package combination | Binding/install entry |
+| Local entry (2026-10-07) | Package combination | Binding/install entry |
 | --- | --- | --- |
-| Core/Read source | Core `0.37.0` / Read `0.11.1` | The package manifests above; Node >=20; Read's exact Core peer must resolve to the same Core instance |
+| Core/Read source | Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` | Unpublished browser candidate; the package manifests above; Node >=20; Read's exact Core peer must resolve to the same Core instance |
 | Runtime CLI | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [CLI README](https://github.com/aikdna/kdna-cli#readme), [binding](https://github.com/aikdna/kdna-cli/blob/main/public-contract-binding.json), [archive inventory](https://github.com/aikdna/kdna-cli/blob/main/release-surface/dependency-archives.json); Node >=22 |
 | Loader/MCP | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [MCP manifest](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/package.json), [complete local installation](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md), [canonical Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md); Node >=22 |
 | Studio creation and bounded source revision | Studio CLI `0.17.0-rc.material-edit.1` / Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1` | [Studio installation](https://github.com/aikdna/kdna-studio-cli#readme), [archive/member binding](https://github.com/aikdna/kdna-studio-cli/blob/main/src/public-bindings.json), [Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md); Node >=22; use the complete source identity below and its installation conditions |

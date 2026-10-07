@@ -7,8 +7,8 @@ const {clone,freeze,jcs}=require('./util.js');
 const delivery=require('./protected-delivery.js');
 const protectedHosts=new WeakMap(),handleOperations=new WeakMap();
 // Generated independent expectation. Do not derive this from the installed Core at runtime.
-const EXPECTED_PROTECTION = {"capabilities":["protected_admission","protected_operation","protected_production"],"contract":{"definition_digest":"sha256:c88dfae7dc756d00fad579b02c7ea0f14b21f3d1ca3edecbf2fad8f4c5fd9e4a","id":"kdna.protection-admission/1","version":"1.0.0"},"implementation":{"package":"@aikdna/kdna-core","version":"0.37.0"},"kdfs":["scrypt-sha256","argon2id"],"profiles":["kdna.envelope.aead/0.1.0","kdna.envelope.external-grant/0.1.0","kdna.checksums.document/1@1.0.0","kdsig.ed25519/0.1.0"]}; // @protection-expectation
-const EXPECTED_READ_VERSION = "0.11.1"; // @protection-read-version
+const EXPECTED_PROTECTION = {"capabilities":["protected_admission","protected_operation","protected_production"],"contract":{"definition_digest":"sha256:7257adf964aadbce546b1403a059852b72f5df269503d6b58445d1f549e2252d","id":"kdna.protection-admission/1","version":"1.0.0"},"implementation":{"package":"@aikdna/kdna-core","version":"0.37.1-rc.browser.1"},"kdfs":["scrypt-sha256","argon2id"],"profiles":["kdna.envelope.aead/0.1.0","kdna.envelope.external-grant/0.1.0","kdna.checksums.document/1@1.0.0","kdsig.ed25519/0.1.0"]}; // @protection-expectation
+const EXPECTED_READ_VERSION = "0.11.2-rc.browser.1"; // @protection-read-version
 function sameInstallation(){
   try{return EXPECTED_PROTECTION!==null&&require('../package.json').version===EXPECTED_READ_VERSION&&require('@aikdna/kdna-core/package.json').version===EXPECTED_PROTECTION.implementation.version&&require('../package.json').peerDependencies['@aikdna/kdna-core']===EXPECTED_PROTECTION.implementation.version&&jcs(core.getProtectionContract())===jcs(EXPECTED_PROTECTION);}catch{return false;}
 }

@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "5e4144f68a9daea1011b1c429f2eaaac07fc0c30358e78621ecc4f309527f149",
+  "input_sha256": "a05af27e97be03a8909375217ab353017b72a10532ad7d700b6ae278e30d1d5f",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -2244,13 +2244,156 @@
           "active_facade_target": "packages/kdna-read/src/retained-sections-browser.d.ts"
         }
       ]
+    },
+    {
+      "id": "protected-browser",
+      "source_module_pointer": "/representation_candidate/a15_protection/browser_adapter",
+      "roots_pointer": "/representation_candidate/a15_protection/browser_adapter/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "BrowserProtectedRequest",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedRequest",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedRequest.json"
+        },
+        {
+          "name": "BrowserProtectedSignaturePolicy",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedSignaturePolicy",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedSignaturePolicy.json"
+        },
+        {
+          "name": "BrowserProtectedAuthorityContext",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedAuthorityContext",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedAuthorityContext.json"
+        },
+        {
+          "name": "BrowserProtectedHostObservation",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedHostObservation",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedHostObservation.json"
+        },
+        {
+          "name": "BrowserProtectedBinding",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedBinding",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedBinding.json"
+        },
+        {
+          "name": "BrowserProtectedExpansionHandle",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedExpansionHandle",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedExpansionHandle.json"
+        },
+        {
+          "name": "BrowserProtectedCallResult",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedCallResult",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedCallResult.json"
+        },
+        {
+          "name": "BrowserProtectedRequestAdmission",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedRequestAdmission",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedRequestAdmission.json"
+        },
+        {
+          "name": "BrowserProtectedSnapshotData",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedSnapshotData",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedSnapshotData.json"
+        },
+        {
+          "name": "BrowserProtectedAdmissionResult",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedAdmissionResult",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedAdmissionResult.json"
+        },
+        {
+          "name": "BrowserProtectedReadResult",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedReadResult",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedReadResult.json"
+        },
+        {
+          "name": "BrowserProtectedTransportCommitResult",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedTransportCommitResult",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedTransportCommitResult.json"
+        },
+        {
+          "name": "BrowserProtectedReadAuthority",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedReadAuthority",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedReadAuthority.json"
+        },
+        {
+          "name": "TrustedBrowserProtectedHost",
+          "schema_id": "urn:kdna:candidate:protected-browser:TrustedBrowserProtectedHost",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/TrustedBrowserProtectedHost.json"
+        },
+        {
+          "name": "BrowserProtectedDeliveryToken",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedDeliveryToken",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedDeliveryToken.json"
+        },
+        {
+          "name": "BrowserProtectedHostContext",
+          "schema_id": "urn:kdna:candidate:protected-browser:BrowserProtectedHostContext",
+          "package_target": "packages/kdna-core/src/public-contract/protected-browser-contract/schemas/BrowserProtectedHostContext.json"
+        }
+      ],
+      "root_count": 16,
+      "type_closure_count": 381,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "BrowserProtectedSnapshot",
+          "AdmittedBrowserProtectedRequest",
+          "BrowserProtectedReadAuthority",
+          "TrustedBrowserProtectedHost",
+          "BrowserProtectedDeliveryToken",
+          "BrowserProtectedOperation"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Generated from the single maintained semantic source.\n"
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/protected-browser-contract/validators.cjs",
+        "packages/kdna-core/src/public-contract/protected-browser-contract/types.d.ts",
+        "packages/kdna-core/src/public-contract/protected-browser-contract/contract.json",
+        "packages/kdna-core/src/public-contract/protected-browser-contract/descriptor.json",
+        "packages/kdna-read/src/protected-browser-contract.json"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a15_protection/browser_adapter/api/core_declaration",
+          "active_facade_target": "packages/kdna-core/src/public-contract/protected-sections-browser.d.ts"
+        },
+        {
+          "role": "read",
+          "source_pointer": "/representation_candidate/a15_protection/browser_adapter/api/read_declaration",
+          "active_facade_target": "packages/kdna-read/src/protected-sections-browser.d.ts"
+        }
+      ],
+      "output_mirrors": [
+        {
+          "from": "packages/kdna-core/src/public-contract/protected-browser-contract/descriptor.json",
+          "to": "packages/kdna-read/src/protected-browser-contract.json"
+        }
+      ],
+      "validator_final_newline": "single"
     }
   ],
   "module_projections": [
     {
       "pointer": "/representation_candidate",
       "output": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "input_digest": "sha256:ff94dcfd09bc366ee8fad3e4a40798bfc9dc2dd08dc3449652a774fc68a964b0",
+      "input_digest": "sha256:9a8748b7c95a72c46ceb24faa6ea2c2d54abc0e15af9ceee3fdc0e90b22febcc",
       "operations": [
         {
           "action": "replace",
@@ -2506,6 +2649,11 @@
           "action": "delete",
           "pointer": "/sole_final_authority",
           "expected_before_sha256": "sha256:9eef11bc72032a9dc450338dfd53cd6b85fe39bfaae8a56aa1a839992cbd69de"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a15_protection/browser_adapter",
+          "expected_before_sha256": "sha256:1478288cbca451771dacedd61fd3b35871fc7a9945ee71e0c322e383b36efdb1"
         }
       ],
       "output_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f",
@@ -2873,6 +3021,17 @@
         "sha256": "4b646e32745ffc847bd9d22941a7bfe49d937a57009d4290b0e3cc4613610da1",
         "coordinate": "urn:kdna:source:sha256:4b646e32745ffc847bd9d22941a7bfe49d937a57009d4290b0e3cc4613610da1"
       }
+    },
+    {
+      "pointer": "/representation_candidate/a15_protection/browser_adapter",
+      "output": "packages/kdna-core/src/public-contract/protected-browser-contract/contract.json",
+      "input_digest": "sha256:1478288cbca451771dacedd61fd3b35871fc7a9945ee71e0c322e383b36efdb1",
+      "operations": [],
+      "output_digest": "sha256:1478288cbca451771dacedd61fd3b35871fc7a9945ee71e0c322e383b36efdb1",
+      "historical_original_source": {
+        "scope": "new_browser_adapter_has_no_historical_original_contract",
+        "coordinate": "urn:kdna:source:browser-protected-adapter"
+      }
     }
   ],
   "registered_preimages": [
@@ -2886,15 +3045,15 @@
     },
     {
       "pointer": "/protected_source",
-      "digest": "sha256:612b285c79566eb308ff613fbc4fd1599ee35076efaf5c1214c271ebfa3334ab"
+      "digest": "sha256:6a0c62e9908100fcd03b9f9b735bb0d928fa340fbe57fb894f501968aac188a8"
     },
     {
       "pointer": "/protection_admission",
-      "digest": "sha256:c88dfae7dc756d00fad579b02c7ea0f14b21f3d1ca3edecbf2fad8f4c5fd9e4a"
+      "digest": "sha256:7257adf964aadbce546b1403a059852b72f5df269503d6b58445d1f549e2252d"
     },
     {
       "pointer": "/external_grant_issuer",
-      "digest": "sha256:ab50c19d28f5c2cffd9f8b20a340aa132ab38f749e6b18852c5aec8771cfd716"
+      "digest": "sha256:33e91624bc825ccdbbd7b0e85f961f0b455bb72cabd1fac6397f1e3fee319329"
     }
   ],
   "base_json_projections": [

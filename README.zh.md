@@ -34,7 +34,9 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 先阅读 [Core/Read 源码指引](./docs/core-read-current-status.md)、
 [Core](./packages/kdna-core/README.md) 和 [Read](./packages/kdna-read/README.md)
-的精确输入与 API。当前未发布 R2 源码组合为 Core `0.37.0` / Read `0.11.1`，Read 要求精确 Core peer。完整语义坐标见 [版本策略](./specs/public-version-policy.md) 与 [规范索引](./SPEC-INDEX.md)。Core 对不可变字节入场，生成 Canonical IR 并签发私有 snapshot。Read 明确区分 `read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`；披露需要独立可信的 control / Host provider，读取结果不授予行动权限。
+的精确输入与 API。当前未发布 R2 浏览器候选源码组合为 Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`，Read 要求精确 Core peer。完整语义坐标见 [版本策略](./specs/public-version-policy.md) 与 [规范索引](./SPEC-INDEX.md)。Core 对不可变字节入场，生成 Canonical IR 并签发私有 snapshot。Read 明确区分 `read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`；披露需要独立可信的 control / Host provider，读取结果不授予行动权限。
+
+已发布的 Core `0.37.0` / Read `0.11.1` 保留各自发布产物与证据。上述浏览器候选尚未发布，须独立核验其产物、安装依赖图和消费者行为。
 
 Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场与显式 Host 参考 API。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md) 有自己的输入和可信 provider 边界。源码存在不等于独立接受、原生环境或真实服务可用。CLI、MCP、Studio 仍按各自精确依赖图使用，不能从本仓版本推断已重绑定。
 
