@@ -87,8 +87,8 @@ rebinding follows from those labels.
 
 | Current local package (2026-09-23) | Actual source version | Bound graph and state |
 |---|---|---|
-| `@aikdna/kdna-core` | `0.36.0` | Unpublished reference implementation; Node >=20; separate byte-bound acceptance |
-| `@aikdna/kdna-read` | `0.11.0` | Exact Core `0.36.0` peer; Node >=20 |
+| `@aikdna/kdna-core` | `0.37.0` | Unpublished reference implementation; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.11.1` | Exact Core `0.37.0` peer; Node >=20 |
 | `@aikdna/kdna-cli` | `0.40.0-rc.protection.1` | Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; private candidate; Node >=22 |
 | `@aikdna/kdna-studio-core` | `4.5.0-rc.material-edit.1` | Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |
 | `@aikdna/kdna-studio-cli` | `0.17.0-rc.material-edit.1` | Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.37.0 (2026-10-07)
+
+- Adds the `./protected-browser` entry: `getProtectionContract` and `admitProtectedBrowser`
+  over a host-supplied container, plaintext and unlock observation; the core never decrypts
+  and every result carries an explicit disclosure.
+- The envelope shape codec gains browser-reusable parts (size-pinned base64 decoding, shape
+  validation, AAD bytes) with identical verdicts; the Node entry and semantics are unchanged.
+
 ## 0.36.0 (2026-10-05)
 
 - Stable R2 native-sections line, promoted from the `0.36.0-rc.r2.7` pre-release.

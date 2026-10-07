@@ -151,7 +151,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0",
+              "const": "0.37.0",
               "type": "string"
             }
           },

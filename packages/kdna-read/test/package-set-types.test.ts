@@ -60,8 +60,8 @@ const badFailure: PackageSetLocalFailure = 'SET_MEMBER_UNAUTHORIZED';
 const descriptor: PackageSetNodeDescriptor = {
   contract: 'kdna.package-set-node/0.2.1',
   module_version: '0.2.0',
-  core_version: '0.36.0',
-  read_version: '0.11.0',
+  core_version: '0.37.0',
+  read_version: '0.11.1',
   limits: { maxMembers: 10000, maxTotalSourceBytes: 104857600 },
   local_failures: failures,
   core_callables: [

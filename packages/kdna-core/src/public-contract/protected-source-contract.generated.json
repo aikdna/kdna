@@ -1,6 +1,6 @@
 {
   "api_typescript": "export type ProtectedSourceContractIdentity = { readonly id: 'kdna.protected-source/1'; readonly version: '1.0.0'; readonly definition_digest: import('./types.js').Digest };\nexport type ProtectedSourceRuntimeDescriptor = { readonly contract: ProtectedSourceContractIdentity; readonly implementation: { readonly package: '@aikdna/kdna-core'; readonly version: string }; readonly profiles: ReadonlyArray<'kdna.envelope.aead/0.1.0' | 'kdna.envelope.external-grant/0.1.0'>; readonly callables: ReadonlyArray<'getProtectedSourceContract' | 'createTrustedProtectedSourceHost' | 'withProtectedSourceNode' | 'commitProtectedSourceTransport' | 'previewProtectedSourceRevision' | 'produceProtectedSourceRevision'>; readonly limits: { readonly container_bytes: 26214400; readonly entries: 128; readonly entry_bytes: 8388608; readonly total_uncompressed_bytes: 12582912; readonly delivered_plaintext_bytes: 8388608; readonly documented_raw_byte_bound: 20971520; readonly timeout_ms_max: 60000 }; readonly proof_limits: ReadonlyArray<string> };\nexport type SourceHostObservationContext = { readonly context_id: string | null; readonly epoch: string | null; readonly asset_digest: string; readonly scope: 'complete_source'; readonly purpose: string; readonly requested_at_ms: number };\nexport type ProtectedSourceMember = { readonly name: string; readonly type: 'file'; readonly mode: number; readonly bytes: Uint8Array };\nexport type ProtectedSourceInventoryEntry = { readonly name: string; readonly type: 'file'; readonly mode: number; readonly size: number; readonly sha256: string };\nexport type ProtectedSourceBundle = { readonly identity: { readonly A: string; readonly C: string; readonly E: string }; readonly manifest: unknown; readonly payload: unknown; readonly original_members: ReadonlyArray<ProtectedSourceMember>; readonly original_inventory: ReadonlyArray<ProtectedSourceInventoryEntry>; readonly plaintext_payload: { readonly entry: 'payload.kdnab'; readonly bytes: Uint8Array; readonly sha256: string }; readonly prior_snapshot: unknown; readonly host_observation: unknown; readonly proof_limits: ReadonlyArray<string> };\nexport type ProtectedSourceRevisionContext = { readonly [brand: symbol]: true };\nexport type ProtectedSourcePreparedDelivery = { readonly [brand: symbol]: true };\nexport type ProtectedSourceHostCallbacks = { readonly observe: (context: SourceHostObservationContext) => SourceHostObservation | Promise<SourceHostObservation>; readonly deliver: (bundle: ProtectedSourceBundle, prepared: ProtectedSourcePreparedDelivery, context: ProtectedSourceRevisionContext) => boolean | Promise<boolean> };\nexport type TrustedProtectedSourceHost = { readonly [brand: symbol]: true };\nexport type ProtectedSourceRevisionOptions = { readonly admission: import('./protection-node.js').ProtectedAdmissionOptions; readonly expected_A: string; readonly timeout_ms: number };\nexport type TrustedProtectedSourceTransport = { readonly observeScope: () => SourceHostObservation | Promise<SourceHostObservation>; readonly commit: (bundle: ProtectedSourceBundle | null) => boolean };\nexport type ProtectedSourceCommitResult = { readonly status: 'source_committed'; readonly disclosure: import('./protection-node.js').ProtectionDisclosure; readonly body: null; readonly body_bytes: 0 } | SourceFailed;\nexport type ProtectedSourcePolicy = ({ readonly kind: 'password'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'password'; readonly offline?: boolean; readonly revocable?: boolean }; readonly slots: ReadonlyArray<{ readonly slot: string; readonly kdf_profile: 'scrypt-sha256' | 'argon2id' }> } | { readonly kind: 'external-grant'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'account' | 'org'; readonly offline?: boolean; readonly revocable?: boolean }; readonly key_ref: string; readonly issuer_key_id: string }) & { readonly checksums: boolean; readonly signature: 'none' | 'ed25519' };\nexport type ProtectedSourceEdits = { readonly manifest?: unknown; readonly payload?: unknown };\nexport type ProtectedSourceProviderRequest = { readonly source_A: string; readonly edits_digest: string; readonly policy_digest: string; readonly kind: 'password' | 'external-grant'; readonly signature: 'none' | 'ed25519' };\nexport type ProtectedSourceOutputSecrets = { readonly passwords?: ReadonlyArray<{ readonly slot: string; readonly password: Uint8Array }>; readonly signingSeed?: Uint8Array; readonly issuerRootKey?: Uint8Array };\nexport type SourceRevisionEvidence = { readonly contract: ProtectedSourceContractIdentity; readonly implementation: { readonly package: '@aikdna/kdna-core'; readonly version: string }; readonly source_A: string; readonly output: { readonly A: string; readonly C: string; readonly E: string }; readonly profile: { readonly id: string; readonly version: string }; readonly entry: 'payload.kdnab'; readonly member_actions: { readonly [name: string]: 'added' | 'replaced' | 'removed' }; readonly integrity: unknown; readonly payload_source: 'explicit_edit' | 'original_decrypted_cbor'; readonly proof: 'producer_observation_not_consumer_admission'; readonly output_delivery: 'not_published' | 'trusted_host'; readonly output_A: string | null };\nexport type ProtectedSourceRevisionResult = { readonly status: 'revision_produced'; readonly bytes: Uint8Array; readonly evidence: SourceRevisionEvidence; readonly body_bytes: number } | { readonly status: 'revision_rejected'; readonly diagnostic: SourceDiagnostic; readonly body: null; readonly body_bytes: 0 };\nexport declare function getProtectedSourceContract(): ProtectedSourceRuntimeDescriptor;\nexport declare function createTrustedProtectedSourceHost(callbacks: ProtectedSourceHostCallbacks): TrustedProtectedSourceHost;\nexport declare function withProtectedSourceNode(input: string | Uint8Array, options: ProtectedSourceRevisionOptions, protectionProvider: import('./protection-node.js').TrustedProtectionProvider, sourceHost: TrustedProtectedSourceHost): Promise<ProtectedSourceObservation>;\nexport declare function commitProtectedSourceTransport(prepared: ProtectedSourcePreparedDelivery, transport: TrustedProtectedSourceTransport): Promise<ProtectedSourceCommitResult>;\nexport declare function previewProtectedSourceRevision(context: ProtectedSourceRevisionContext, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy): Promise<ProtectedSourceRevisionPreviewResult>;\nexport declare function produceProtectedSourceRevision(context: ProtectedSourceRevisionContext, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy, outputSecretProvider: (request: ProtectedSourceProviderRequest) => ProtectedSourceOutputSecrets | Promise<ProtectedSourceOutputSecrets>): Promise<ProtectedSourceRevisionResult>;\n",
-  "definition_digest": "sha256:86abadc6c0276ce39ae09bb02ac75b732da2858450397f93c79def6f85841897",
+  "definition_digest": "sha256:612b285c79566eb308ff613fbc4fd1599ee35076efaf5c1214c271ebfa3334ab",
   "id": "kdna.protected-source/1",
   "limits": {
     "container_bytes": 26214400,
@@ -29,8 +29,8 @@
   ],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.36.0",
-      "@aikdna/kdna-read": "0.11.0"
+      "@aikdna/kdna-core": "0.37.0",
+      "@aikdna/kdna-read": "0.11.1"
     },
     "version_tuple": {
       "container": "0.5.0",
@@ -9260,7 +9260,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0",
+              "const": "0.37.0",
               "type": "string"
             }
           },
@@ -10632,7 +10632,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0",
+              "const": "0.37.0",
               "type": "string"
             }
           },
@@ -13783,7 +13783,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.36.0",
+              "const": "0.37.0",
               "type": "string"
             }
           },

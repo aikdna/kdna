@@ -920,10 +920,10 @@ function checkCurrentNavigation(root, options = {}) {
   ]) {
     const coreFamily = versions.core.includes('-rc.')
       ? { regex: /0\.36\.0-rc\.r2\.\d+/g, expected: versions.core }
-      : { regex: /0\.36\.0(?!-)/g, expected: versions.core };
+      : { regex: /0\.37\.0(?!-)/g, expected: versions.core };
     const readFamily = versions.read.includes('-rc.')
       ? { regex: /0\.11\.0-rc\.r2\.\d+/g, expected: versions.read }
-      : { regex: /0\.11\.0(?!-)/g, expected: versions.read };
+      : { regex: /0\.11\.1(?!-)/g, expected: versions.read };
     exactFamily(file, start, end, coreFamily.regex, coreFamily.expected);
     exactFamily(file, start, end, readFamily.regex, readFamily.expected);
   }
