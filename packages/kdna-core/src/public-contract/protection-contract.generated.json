@@ -14,7 +14,7 @@
     "schema_path": "specs/checksums-document-1.schema.json",
     "version": "1.0.0"
   },
-  "definition_digest": "sha256:c88dfae7dc756d00fad579b02c7ea0f14b21f3d1ca3edecbf2fad8f4c5fd9e4a",
+  "definition_digest": "sha256:7257adf964aadbce546b1403a059852b72f5df269503d6b58445d1f549e2252d",
   "delivery_history": {
     "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
     "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
@@ -802,8 +802,8 @@
   "runtime_not_implemented": [],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.37.0",
-      "@aikdna/kdna-read": "0.11.1"
+      "@aikdna/kdna-core": "0.37.1-rc.browser.1",
+      "@aikdna/kdna-read": "0.11.2-rc.browser.1"
     },
     "version_tuple": {
       "container": "0.5.0",
@@ -818,12 +818,12 @@
       "trace": "kdna.judgment-trace/0.3.1"
     }
   },
-  "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:7",
-  "schema_path": "specs/protection-admission-r2-binding-7.schema.json",
+  "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:8",
+  "schema_path": "specs/protection-admission-r2-binding-8.schema.json",
   "specification": {
-    "bytes": 37902,
+    "bytes": 38180,
     "path": "specs/protection-admission.md",
-    "sha256": "7dbc85924d7c0a1d0d4556aeac92de8ac91d331185b4a65d066c0d165c3fadcc"
+    "sha256": "35180f6583ac97302096a8e2ff786f1c7a9a0c10caabc3a4fa627affd1640bef"
   },
   "types": {
     "ChecksumsDocument1": {
@@ -1060,7 +1060,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.0",
+              "const": "0.37.1-rc.browser.1",
               "type": "string"
             }
           },
@@ -2295,7 +2295,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.0",
+              "const": "0.37.1-rc.browser.1",
               "type": "string"
             }
           },

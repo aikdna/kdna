@@ -9,7 +9,7 @@ for(const file of ['envelope-aead-vector-01-scrypt-basic.json','envelope-aead-ve
  assert.deepEqual(codec.decodeEnvelope(codec.encodeEnvelope(envelope)),envelope);
 });
 test('canonical CBOR length-first order is independently pinned and rejects duplicate/noncanonical/JSON wire',()=>{
- const expected=Buffer.from('a361610161620262616103','hex'),value={aa:3,b:2,a:1};assert.equal(codec.encodeEnvelope(value).toString('hex'),expected.toString('hex'));assert.deepEqual(codec.decodeEnvelope(expected),{a:1,b:2,aa:3});
+ const expected=Buffer.from('a361610161620262616103','hex'),value={aa:3,b:2,a:1};assert.equal(Buffer.from(codec.encodeEnvelope(value)).toString('hex'),expected.toString('hex'));assert.deepEqual(codec.decodeEnvelope(expected),{a:1,b:2,aa:3});
  for(const hex of ['a2616101616102','a262616103616101','a161611801','bf616101ff','c1a1616101','a161610100','a10101','a16161f5','a161614100','a161611b0020000000000000'])assert.throws(()=>codec.decodeEnvelope(Buffer.from(hex,'hex')),hex);
  assert.throws(()=>codec.decodeEnvelope(Buffer.from('{"profile":"kdna.envelope.aead"}')));
 });

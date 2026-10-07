@@ -45,6 +45,8 @@ npm run release:check:prerelease --workspace @aikdna/kdna-read -- --candidate=<f
 
 ## Candidate file (`kdna.prerelease-candidate/1`)
 
+The JSON below is a historical R2 format example. Its versions, tag and member counts are not the current browser candidate; use the exact manifest and counts produced for the candidate being reviewed.
+
 ```json
 {
   "format": "kdna.prerelease-candidate/1",

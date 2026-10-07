@@ -89,23 +89,23 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 50602,
-      "sha256": "1019d47678f6e78506b7a8a102a2e70f804535c6ad444e0a2216181c3704be66"
+      "bytes": 50903,
+      "sha256": "b2e954e373dcbaa6d71c36a9c5442627805a3cf8a4f5e2f09d8f6c52fac36382"
     },
     {
       "path": "specs/public-source-map.json",
       "bytes": 17230,
-      "sha256": "af6e9fffc8a3ea1de0fe51be360d4774df7ca4c3e55d1f44e04f0ebfed739366"
+      "sha256": "15f4ff4c2d3ddc3f48af2e4683fbe7b32e72a57e20a8a68dfa3c1b6af6284cf5"
     },
     {
       "path": "specs/public-version-policy.md",
-      "bytes": 12296,
-      "sha256": "1e6c5d5b658ee5a527afdf6d6f81dccdf5184c312e743d95c64c001245ce0d17"
+      "bytes": 12961,
+      "sha256": "4cb53dd2da00d5e98a8197a551bf655e866fb6d3a76b759cf179a8b0b8352e83"
     },
     {
       "path": "specs/read-contract.md",
-      "bytes": 10922,
-      "sha256": "3c25b9eb5251556e718169706d41a49e256acb1b6e81decf18057ff5415fa1f4"
+      "bytes": 11669,
+      "sha256": "d2a53ba37feb9e0d5b99fc334e955d6c8f3e5e86e95c6cc7daeb318088c662c4"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -27146,6 +27146,2424 @@
           "$ref": "#/$defs/NativeBrowserSectionByteRejected06"
         }
       ]
+    },
+    "BrowserProtectedRequest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_whole_asset"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_catalog"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_exact_selection"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequest_expand"
+        }
+      ]
+    },
+    "BrowserProtectedRequest_whole_asset": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "whole_asset",
+          "type": "string"
+        },
+        "selection": {
+          "const": null,
+          "type": "null"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_catalog": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "catalog",
+          "type": "string"
+        },
+        "selection": {
+          "const": null,
+          "type": "null"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_exact_selection": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "const": "exact_selection",
+          "type": "string"
+        },
+        "selection": {
+          "$ref": "#/$defs/BrowserProtectedSelection"
+        },
+        "handle": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequest_expand": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "budget_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "mode": {
+          "type": "string",
+          "const": "expand"
+        },
+        "selection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BrowserProtectedSelection"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "handle": {
+          "$ref": "#/$defs/BrowserProtectedExpansionHandle"
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSelection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_ids"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedWholeHandle": {
+      "type": "object",
+      "properties": {
+        "handle_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "core_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "ir_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "read_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "asset"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "handle_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "C",
+        "snapshot_id",
+        "core_version",
+        "ir_version",
+        "read_version",
+        "anchor",
+        "target",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "host_id",
+        "host_epoch"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSetHandle": {
+      "type": "object",
+      "properties": {
+        "handle_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "core_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "ir_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "read_version": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "selection_set"
+            },
+            "selection": {
+              "$ref": "#/$defs/BrowserProtectedSelection"
+            }
+          },
+          "required": [
+            "kind",
+            "selection"
+          ],
+          "additionalProperties": false
+        },
+        "binding_kind": {
+          "type": "string",
+          "const": "protected_selection_set"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "handle_id",
+        "asset_id",
+        "asset_version",
+        "A",
+        "C",
+        "snapshot_id",
+        "core_version",
+        "ir_version",
+        "read_version",
+        "anchor",
+        "target",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "host_id",
+        "host_epoch",
+        "binding_kind",
+        "operation_id",
+        "capture_id"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExpansionHandle": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedWholeHandle"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedSetHandle"
+        }
+      ]
+    },
+    "BrowserProtectedBinding": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "source_request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "operation_id",
+        "snapshot_id",
+        "capture_id",
+        "request_id",
+        "request_digest",
+        "source_request_digest",
+        "read_intent_digest",
+        "tuple",
+        "asset",
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedHostObservation": {
+      "type": "object",
+      "properties": {
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "decision_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "policy_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "current_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "revoked": {
+          "type": "boolean"
+        },
+        "lift_denial": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_id",
+        "host_epoch",
+        "decision_id",
+        "request_id",
+        "snapshot_id",
+        "A",
+        "C",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "decision",
+        "policy_id",
+        "operation_id",
+        "capture_id",
+        "request_digest",
+        "read_intent_digest",
+        "tuple",
+        "asset",
+        "E",
+        "current_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedHostContext": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/BrowserProtectedRequest"
+        },
+        "binding": {
+          "$ref": "#/$defs/BrowserProtectedBinding"
+        },
+        "projection_scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "uniqueItems": true
+        },
+        "issued_handle_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BrowserProtectedExpansionHandle"
+          }
+        },
+        "protection_receipt": {
+          "$ref": "#/$defs/BrowserProtectedReceipt"
+        }
+      },
+      "required": [
+        "request",
+        "binding",
+        "projection_scope",
+        "issued_handle_scopes",
+        "protection_receipt"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSelectedContent": {
+      "type": "object",
+      "properties": {
+        "declarations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "selected": {
+          "$ref": "#/$defs/BrowserProtectedSelection"
+        },
+        "closure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReference"
+          },
+          "minItems": 0
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRRelationship"
+          },
+          "minItems": 0
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Missing"
+          },
+          "minItems": 0
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "expansion_handles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BrowserProtectedSetHandle"
+          },
+          "minItems": 0
+        },
+        "asset_capability": {
+          "$ref": "#/$defs/AssetCapability"
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TargetDescriptor"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "declarations",
+        "catalog",
+        "selected",
+        "closure",
+        "references",
+        "relationships",
+        "missing",
+        "provenance",
+        "expansion_handles",
+        "asset_capability",
+        "asset_index"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExpandedContent": {
+      "type": "object",
+      "properties": {
+        "declarations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "selected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BrowserProtectedSelection"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "closure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReference"
+          },
+          "minItems": 0
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRRelationship"
+          },
+          "minItems": 0
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Missing"
+          },
+          "minItems": 0
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "expansion_handles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpansionHandle"
+          },
+          "minItems": 0,
+          "maxItems": 0
+        },
+        "asset_capability": {
+          "$ref": "#/$defs/AssetCapability"
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TargetDescriptor"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "declarations",
+        "catalog",
+        "selected",
+        "closure",
+        "references",
+        "relationships",
+        "missing",
+        "provenance",
+        "expansion_handles",
+        "asset_capability",
+        "asset_index"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedCatalogContent": {
+      "type": "object",
+      "properties": {
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRTargetDescriptor"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "catalog",
+        "asset_index"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedWholeContent": {
+      "type": "object",
+      "properties": {
+        "declarations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "selected": {
+          "type": "null",
+          "const": null
+        },
+        "closure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReference"
+          },
+          "minItems": 0
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRRelationship"
+          },
+          "minItems": 0
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Missing"
+          },
+          "minItems": 0
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "expansion_handles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpansionHandle"
+          },
+          "minItems": 0
+        },
+        "asset_capability": {
+          "$ref": "#/$defs/AssetCapability"
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TargetDescriptor"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "declarations",
+        "catalog",
+        "selected",
+        "closure",
+        "references",
+        "relationships",
+        "missing",
+        "provenance",
+        "expansion_handles",
+        "asset_capability",
+        "asset_index"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadProof": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "whole_asset",
+            "catalog",
+            "exact_selection",
+            "expand"
+          ]
+        },
+        "integrity_and_semantics": {
+          "$ref": "#/$defs/BrowserProtectedObservation"
+        },
+        "operation_receipt": {
+          "$ref": "#/$defs/BrowserProtectedReceipt"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedAdmissionDisclosure"
+        },
+        "projection_basis": {
+          "type": "string",
+          "const": "original_registry_order_and_required_context"
+        },
+        "cost_model": {
+          "type": "string",
+          "const": "retained_host_supplied_plaintext_projection"
+        },
+        "authority_boundary": {
+          "type": "string",
+          "const": "current_browser_authority_plus_independent_host_scope"
+        },
+        "binding": {
+          "$ref": "#/$defs/BrowserProtectedBinding"
+        },
+        "observation_phase": {
+          "type": "string",
+          "const": "projection_before_host_delivery"
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        },
+        "new_decryption": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "mode",
+        "integrity_and_semantics",
+        "operation_receipt",
+        "disclosure",
+        "projection_basis",
+        "cost_model",
+        "authority_boundary",
+        "binding",
+        "observation_phase",
+        "physical_reads",
+        "new_decryption"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedEnvelope_whole_asset": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "type": "string",
+          "const": "ready"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "content": {
+          "$ref": "#/$defs/BrowserProtectedWholeContent"
+        },
+        "states": {
+          "$ref": "#/$defs/ReadyStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ReadDiagnostic"
+              },
+              {
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "const": "warning"
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OmissionRecord"
+          },
+          "minItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ReadyReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        },
+        "verification": {
+          "$ref": "#/$defs/BrowserProtectedReadProof"
+        },
+        "mode": {
+          "type": "string",
+          "const": "whole_asset"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget",
+        "verification",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedEnvelope_catalog": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "type": "string",
+          "const": "catalog_only"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "content": {
+          "$ref": "#/$defs/BrowserProtectedCatalogContent"
+        },
+        "states": {
+          "$ref": "#/$defs/ReadyStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ReadDiagnostic"
+              },
+              {
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "const": "warning"
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OmissionRecord"
+          },
+          "minItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ReadyReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        },
+        "verification": {
+          "$ref": "#/$defs/BrowserProtectedReadProof"
+        },
+        "mode": {
+          "type": "string",
+          "const": "catalog"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget",
+        "verification",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedEnvelope_exact_selection": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "type": "string",
+          "const": "ready"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "content": {
+          "$ref": "#/$defs/BrowserProtectedSelectedContent"
+        },
+        "states": {
+          "$ref": "#/$defs/ReadyStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ReadDiagnostic"
+              },
+              {
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "const": "warning"
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OmissionRecord"
+          },
+          "minItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ReadyReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        },
+        "verification": {
+          "$ref": "#/$defs/BrowserProtectedReadProof"
+        },
+        "mode": {
+          "type": "string",
+          "const": "exact_selection"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget",
+        "verification",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedEnvelope_expand": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "type": "string",
+          "const": "ready"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "content": {
+          "$ref": "#/$defs/BrowserProtectedExpandedContent"
+        },
+        "states": {
+          "$ref": "#/$defs/ReadyStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ReadDiagnostic"
+              },
+              {
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "const": "warning"
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OmissionRecord"
+          },
+          "minItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ReadyReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        },
+        "verification": {
+          "$ref": "#/$defs/BrowserProtectedReadProof"
+        },
+        "mode": {
+          "type": "string",
+          "const": "expand"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget",
+        "verification",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRejectedEnvelope": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-read/0.1.0-candidate"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "const": "rejected",
+          "type": "string"
+        },
+        "tuple": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionTuple"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "asset": {
+          "const": null,
+          "type": "null"
+        },
+        "snapshot_id": {
+          "const": null,
+          "type": "null"
+        },
+        "digests": {
+          "const": null,
+          "type": "null"
+        },
+        "content": {
+          "const": null,
+          "type": "null"
+        },
+        "states": {
+          "$ref": "#/$defs/ResponsibilityStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Omission"
+          },
+          "maxItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/RejectedReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedEnvelope": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedEnvelope_whole_asset"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedEnvelope_catalog"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedEnvelope_exact_selection"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedEnvelope_expand"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRejectedEnvelope"
+        }
+      ]
+    },
+    "BrowserProtectedCallEnvelope": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "read_envelope",
+          "type": "string"
+        },
+        "envelope": {
+          "$ref": "#/$defs/BrowserProtectedEnvelope"
+        },
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedCallResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedCallEnvelope"
+        },
+        {
+          "$ref": "#/$defs/Call_admission_rejection"
+        },
+        {
+          "$ref": "#/$defs/Call_no_body_control"
+        },
+        {
+          "$ref": "#/$defs/Call_transport_failure"
+        }
+      ]
+    },
+    "BrowserProtectedReadReturned": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "read_result"
+        },
+        "result": {
+          "$ref": "#/$defs/BrowserProtectedCallResult"
+        },
+        "receipt": {
+          "$ref": "#/$defs/BrowserProtectedReceipt"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedDisclosure"
+        }
+      },
+      "required": [
+        "status",
+        "result",
+        "receipt",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "protection_failed"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/BrowserProtectedDiagnostic"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedDisclosure"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedDeliveryFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "delivery_failed"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "host_callback_failed",
+            "transport_commit_failed"
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedDisclosure"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedReadReturned"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedReadFailed"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedDeliveryFailed"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedReadRequestFailed"
+        }
+      ]
+    },
+    "BrowserProtectedRequestAdmitted": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "const": "admitted_request"
+        },
+        "request": {
+          "$ref": "#/$defs/AdmittedBrowserProtectedRequest"
+        }
+      },
+      "required": [
+        "channel",
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequestRejectedCall": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "const": "read_envelope",
+          "type": "string"
+        },
+        "envelope": {
+          "$ref": "#/$defs/BrowserProtectedRejectedEnvelope"
+        },
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedRequestAdmission": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedRequestAdmitted"
+        },
+        {
+          "$ref": "#/$defs/Call_admission_rejection"
+        },
+        {
+          "$ref": "#/$defs/Call_no_body_control"
+        },
+        {
+          "$ref": "#/$defs/Call_transport_failure"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedRequestRejectedCall"
+        }
+      ]
+    },
+    "BrowserProtectedTransportCommitted": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "committed"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "committed_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedConfirmedDisclosure"
+        }
+      },
+      "required": [
+        "status",
+        "operation_id",
+        "committed_at_ms",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedTransportCommitResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedTransportCommitted"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedReadFailed"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedDeliveryFailed"
+        }
+      ]
+    },
+    "BrowserProtectedDisclosure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "none"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/BrowserProtectedExternalCommitNotInvoked"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "trusted_host"
+            },
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/BrowserProtectedExternalCommit"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "BrowserProtectedConfirmedDisclosure": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "trusted_host"
+        },
+        "at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "external_commit": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "const": "confirmed"
+            },
+            "attempt_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "attempted_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "confirmed_at_ms": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "state",
+            "attempt_id",
+            "attempted_at_ms",
+            "confirmed_at_ms"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "external_commit"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExternalCommit": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitNotInvoked"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitUnknown"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitConfirmed"
+        }
+      ]
+    },
+    "BrowserProtectedExternalCommitNotInvoked": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "not_invoked"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExternalCommitUnknown": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "outcome_unknown"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExternalCommitConfirmed": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "confirmed"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadRequestFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "request_failed"
+        },
+        "result": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/BrowserProtectedRequestRejectedCall"
+            },
+            {
+              "$ref": "#/$defs/Call_admission_rejection"
+            },
+            {
+              "$ref": "#/$defs/Call_no_body_control"
+            },
+            {
+              "$ref": "#/$defs/Call_transport_failure"
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    "AdmittedBrowserProtectedRequest": {
+      "$opaque": true
+    },
+    "BrowserProtectedOperation": {
+      "$opaque": true
+    },
+    "BrowserProtectedSnapshot": {
+      "$opaque": true
+    },
+    "BrowserProtectedReadAuthority": {
+      "$opaque": true
+    },
+    "BrowserProtectedDeliveryToken": {
+      "$opaque": true
+    },
+    "TrustedBrowserProtectedHost": {
+      "$opaque": true
+    },
+    "BrowserProtectedSignaturePolicy": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "stage": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReceipt": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "kdna.protected-browser-observation/0.1.0-candidate"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "proof": {
+          "type": "string",
+          "const": "observation_not_authority"
+        },
+        "provenance": {
+          "type": "string",
+          "const": "host_supplied_triple"
+        }
+      },
+      "required": [
+        "contract",
+        "operation_id",
+        "snapshot_id",
+        "A",
+        "C",
+        "E",
+        "checked_at_ms",
+        "proof",
+        "provenance"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAdmissionDisclosure": {
+      "type": "object",
+      "properties": {
+        "slot_selection": {
+          "type": "object",
+          "properties": {
+            "slotIndex": {
+              "$ref": "#/$defs/UInt"
+            },
+            "slot": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kdf_profile": {
+              "type": "string",
+              "enum": [
+                "scrypt-sha256",
+                "argon2id"
+              ]
+            }
+          },
+          "required": [
+            "slotIndex",
+            "slot",
+            "kdf_profile"
+          ],
+          "additionalProperties": false
+        },
+        "observation_not_authority": {
+          "type": "boolean",
+          "const": true
+        },
+        "provenance": {
+          "type": "string",
+          "const": "host_supplied_triple"
+        }
+      },
+      "required": [
+        "slot_selection",
+        "observation_not_authority",
+        "provenance"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedIntegrity": {
+      "type": "object",
+      "properties": {
+        "checksums": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "verified_document_1"
+          ]
+        },
+        "signature": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "verified_self_key",
+            "verified_pinned_key"
+          ]
+        },
+        "signature_content_digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "public_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "checksums",
+        "signature",
+        "signature_content_digest",
+        "public_key"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedUnlockObservation": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "consumer_unlock_observation"
+        },
+        "proof": {
+          "type": "string",
+          "const": "observation_not_authority"
+        },
+        "checked_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "selection": {
+          "type": "object",
+          "properties": {
+            "slotIndex": {
+              "$ref": "#/$defs/UInt"
+            },
+            "slot": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kdf_profile": {
+              "type": "string",
+              "enum": [
+                "scrypt-sha256",
+                "argon2id"
+              ]
+            }
+          },
+          "required": [
+            "slotIndex",
+            "slot",
+            "kdf_profile"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "kind",
+        "proof",
+        "checked_at_ms",
+        "selection"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedObservation": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "ir_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "integrity": {
+          "$ref": "#/$defs/BrowserProtectedIntegrity"
+        },
+        "unlock_observation": {
+          "$ref": "#/$defs/BrowserProtectedUnlockObservation"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedAdmissionDisclosure"
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        },
+        "new_decryption": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "tuple",
+        "asset",
+        "A",
+        "C",
+        "E",
+        "ir_digest",
+        "integrity",
+        "unlock_observation",
+        "disclosure",
+        "physical_reads",
+        "new_decryption"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadIntent": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            "admit_retained_protected_snapshot",
+            "read_protected_projection",
+            "expand_protected_projection",
+            "projection",
+            "host_observation",
+            "host_handoff",
+            "read_return",
+            "transport_commit"
+          ]
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "whole_asset",
+            "catalog",
+            "exact_selection",
+            "expand"
+          ]
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        },
+        "provenance": {
+          "type": "string",
+          "const": "host_supplied_triple"
+        },
+        "new_decryption": {
+          "type": "boolean",
+          "const": false
+        },
+        "new_domain_validation": {
+          "type": "boolean",
+          "const": false
+        },
+        "new_signature_verification": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "operation",
+        "operation_id",
+        "capture_id",
+        "snapshot_id",
+        "request_digest",
+        "mode",
+        "physical_reads",
+        "provenance",
+        "new_decryption",
+        "new_domain_validation",
+        "new_signature_verification"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAuthorityContext": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/BrowserProtectedRequest"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "read_intent": {
+          "$ref": "#/$defs/BrowserProtectedReadIntent"
+        },
+        "read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "signature_policy": {
+          "$ref": "#/$defs/BrowserProtectedSignaturePolicy"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedAdmissionDisclosure"
+        }
+      },
+      "required": [
+        "request",
+        "request_digest",
+        "tuple",
+        "asset",
+        "digests",
+        "read_intent",
+        "read_intent_digest",
+        "signature_policy",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedSnapshotData": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "digests": {
+          "$ref": "#/$defs/AssetDigests"
+        },
+        "ir": {
+          "$ref": "#/$defs/CanonicalIR"
+        },
+        "ir_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "runtime_entry_names": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntryName"
+          },
+          "minItems": 0
+        },
+        "expansion_targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpansionTarget"
+          },
+          "minItems": 0
+        },
+        "observation": {
+          "$ref": "#/$defs/BrowserProtectedObservation"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "tuple",
+        "asset",
+        "digests",
+        "ir",
+        "ir_digest",
+        "runtime_entry_names",
+        "expansion_targets",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAdmissionAccepted": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "accepted"
+        },
+        "request": {
+          "$ref": "#/$defs/AdmittedBrowserProtectedRequest"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/BrowserProtectedSnapshot"
+        },
+        "operation": {
+          "$ref": "#/$defs/BrowserProtectedOperation"
+        },
+        "receipt": {
+          "$ref": "#/$defs/BrowserProtectedReceipt"
+        },
+        "observation": {
+          "$ref": "#/$defs/BrowserProtectedObservation"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedAdmissionDisclosure"
+        },
+        "physical_reads": {
+          "type": "string",
+          "const": "none"
+        }
+      },
+      "required": [
+        "status",
+        "request",
+        "snapshot",
+        "operation",
+        "receipt",
+        "observation",
+        "disclosure",
+        "physical_reads"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAdmissionFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "protection_failed"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/BrowserProtectedDiagnostic"
+        },
+        "checked_at_ms": {
+          "type": "null",
+          "const": null
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "checked_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedAdmissionResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedAdmissionAccepted"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedAdmissionFailed"
+        }
+      ]
     }
   },
   "non_schema_rules": [
@@ -28013,8 +30431,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.0",
-      "read": "0.11.1"
+      "core": "0.37.1-rc.browser.1",
+      "read": "0.11.2-rc.browser.1"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -29382,6 +31800,26 @@
           "module": "a21_retained_browser",
           "callables_pointer": "/representation_candidate/a21_retained_browser/api/read_callables",
           "declaration_pointer": "/representation_candidate/a21_retained_browser/api/read_declaration"
+        },
+        {
+          "package": "kdna-core",
+          "subpath": "./protected-sections-browser",
+          "cjs": "./src/public-contract/protected-sections-browser.js",
+          "esm": "./src/public-contract/protected-sections-browser.mjs",
+          "types": "./src/public-contract/protected-sections-browser.d.ts",
+          "module": "a15_protection.browser_adapter",
+          "callables_pointer": "/representation_candidate/a15_protection/browser_adapter/api/core_callables",
+          "declaration_pointer": "/representation_candidate/a15_protection/browser_adapter/api/core_declaration"
+        },
+        {
+          "package": "kdna-read",
+          "subpath": "./protected-sections-browser",
+          "cjs": "./src/protected-sections-browser.js",
+          "esm": "./src/protected-sections-browser.mjs",
+          "types": "./src/protected-sections-browser.d.ts",
+          "module": "a15_protection.browser_adapter",
+          "callables_pointer": "/representation_candidate/a15_protection/browser_adapter/api/read_callables",
+          "declaration_pointer": "/representation_candidate/a15_protection/browser_adapter/api/read_declaration"
         }
       ],
       "conditions": [
@@ -29409,7 +31847,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.11.1",
+    "package_version": "0.11.2-rc.browser.1",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -30685,8 +33123,8 @@
       "Read/protection-node:readProtectedNode",
       "Read/protection-node:commitProtectedTransport"
     ],
-    "schema_path": "specs/protection-admission-r2-binding-7.schema.json",
-    "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:7",
+    "schema_path": "specs/protection-admission-r2-binding-8.schema.json",
+    "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:8",
     "root": "ProtectionDefinitionObservation",
     "types": {
       "ProtectionOperation": {
@@ -32464,8 +34902,8 @@
     ],
     "specification": {
       "path": "specs/protection-admission.md",
-      "bytes": 37902,
-      "sha256": "7dbc85924d7c0a1d0d4556aeac92de8ac91d331185b4a65d066c0d165c3fadcc"
+      "bytes": 38180,
+      "sha256": "35180f6583ac97302096a8e2ff786f1c7a9a0c10caabc3a4fa627affd1640bef"
     },
     "non_schema_rules": [
       {
@@ -32799,7 +35237,7 @@
     },
     "api_typescript": "export type ProtectedSignaturePolicy = { readonly requireSignature: boolean; readonly expectedPublicKeyHex: string | null };\nexport type ProtectionGrantExpectations = { readonly issuer: string; readonly signing_key_id: string; readonly issuer_public_key: string; readonly account_id: string; readonly entitlement_id: string; readonly entitlement_profile: 'account' | 'org'; readonly device_id: string; readonly device_agreement_public_key: string; readonly device_signing_public_key: string };\nexport type ProtectedCredential = { readonly kind: 'none' } | { readonly kind: 'password'; readonly password: Uint8Array; readonly slotIndex?: number } | { readonly kind: 'external-grant'; readonly grantBytes: Uint8Array; readonly deviceAgreementPrivateKeyPkcs8: Uint8Array; readonly mode: 'online' | 'offline'; readonly expected: ProtectionGrantExpectations };\nexport type ProtectedAdmissionOptions = { readonly credential: ProtectedCredential; readonly signaturePolicy: ProtectedSignaturePolicy };\nexport type ProtectionStateScope = { readonly issuer: string; readonly account_id: string; readonly entitlement_id: string };\nexport type ProtectionHighWater = { readonly scope: ProtectionStateScope; readonly highest_status_version: number; readonly status: 'active' | 'revoked' | 'expired'; readonly last_trusted_time_ms: number; readonly revision: number };\nexport type ProtectionStateAdvance = { readonly scope: ProtectionStateScope; readonly device_id: string; readonly verified: { readonly grant_digest: string; readonly status_version: number; readonly status: 'active' | 'revoked' | 'expired'; readonly observed_at_ms: number } };\nexport type ProtectionRefreshContext = ProtectionStateScope & { readonly device_id: string; readonly A: string; readonly grant_id: string; readonly status_version: number; readonly purpose: 'authorization' | 'projection' | 'host_handoff' | 'transport_commit' };\nexport type TrustedProtectionProvider = { readonly kind: 'local'; readonly clock: () => number } | { readonly kind: 'external'; readonly clock: () => number; readonly capabilities: { readonly offline: boolean; readonly status_refresh: boolean; readonly revocation: boolean }; readonly readAdvance: (input: ProtectionStateAdvance) => Promise<ProtectionHighWater>; readonly refresh?: (context: ProtectionRefreshContext) => Promise<Uint8Array> };\nexport type ProtectionPhase = 'projection' | 'host_observation' | 'host_handoff' | 'read_return' | 'transport_commit' | 'execution';\nexport type ProtectionCurrent = { readonly status: 'current'; readonly receipt: ProtectionReceipt };\nexport type ProtectionObserved = ProtectionCurrent & { readonly checkpoint: ProtectionCheckpoint };\nexport type ProtectionSource = { readonly kind: 'snapshot'; readonly snapshot: CanonicalReadSnapshot } | { readonly kind: 'catalog'; readonly catalog: CoreAdmissionCatalogOnly };\nexport type ProtectionBindingResult = { readonly status: 'bound'; readonly binding: ProtectionBinding } | ProtectedAdmissionFailed;\nexport type ProtectedExportOptions = ({ readonly kind: 'integrity' } | { readonly kind: 'password'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'password'; readonly offline?: boolean; readonly revocable?: boolean }; readonly slots: ReadonlyArray<{ readonly slot: string; readonly kdf_profile: 'scrypt-sha256' | 'argon2id' }> } | { readonly kind: 'external-grant'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'account' | 'org'; readonly offline?: boolean; readonly revocable?: boolean }; readonly key_ref: string; readonly issuer_key_id: string }) & { readonly checksums: boolean; readonly signature: 'none' | 'ed25519' };\nexport type ProtectedProducerSecrets = { readonly passwords: ReadonlyArray<{ readonly slot: string; readonly password: Uint8Array }>; readonly signingSeed?: Uint8Array; readonly issuerRootKey?: never } | { readonly issuerRootKey: Uint8Array; readonly signingSeed?: Uint8Array; readonly passwords?: never } | { readonly signingSeed?: Uint8Array; readonly issuerRootKey?: never; readonly passwords?: never };\nexport type ProtectedExportResult = { readonly status: 'produced'; readonly bytes: Uint8Array; readonly evidence: ProtectedExportEvidence } | ProtectedCoreRejected | ProtectedAdmissionFailed;\nexport declare function getProtectionContract(): ProtectionRuntimeDescriptor;\nexport declare function admitProtectedNode(input: string | Uint8Array, options: ProtectedAdmissionOptions, provider: TrustedProtectionProvider): Promise<ProtectedAdmissionResult>;\nexport declare function bindProtectionOperation(operation: ProtectionOperation): ProtectionBindingResult;\nexport declare function disposeProtectionOperation(operation: ProtectionOperation): void;\nexport declare function protectSourceBytes(input: Uint8Array, options: ProtectedExportOptions, secrets: ProtectedProducerSecrets): Promise<ProtectedExportResult>;\n",
     "read_api_typescript": "import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, ReadRequest, ReadCallResult, HostReadContextData, TrustedReadControlProvider } from '@aikdna/kdna-core';\nimport type { ProtectionOperation, ProtectionPreparedDelivery, ProtectedReadResult, ProtectedTransportCommitResult, ProtectedHostReadProvider } from '@aikdna/kdna-core/protection-node';\nexport type * from '@aikdna/kdna-core/protection-node';\nexport type ProtectedHostObservation = HostReadContextData & { readonly current_ms: number; readonly revoked?: boolean; readonly lift_denial?: boolean };\nexport type ProtectedHostObservationContext = { readonly request: ReadRequest; readonly snapshot: CanonicalReadSnapshot | CoreAdmissionCatalogOnly };\nexport type ProtectedHostCallbacks = { readonly observe: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly deliver: (result: ReadCallResult, prepared: ProtectionPreparedDelivery) => boolean | Promise<boolean> };\nexport type TrustedProtectedTransport = { readonly observeScope: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly commit: (result: ReadCallResult) => boolean };\nexport declare function createTrustedProtectedHostReadProvider(callbacks: ProtectedHostCallbacks): ProtectedHostReadProvider;\nexport declare function readProtectedNode(operation: ProtectionOperation, request: unknown, control: TrustedReadControlProvider, host: ProtectedHostReadProvider): Promise<ProtectedReadResult>;\nexport declare function commitProtectedTransport(operation: ProtectionOperation, prepared: ProtectionPreparedDelivery, transport: TrustedProtectedTransport): Promise<ProtectedTransportCommitResult>;\n",
-  "browser_api_typescript": "import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, CoreAdmissionRejected } from './types.js';\nimport type { ProtectionDiagnostic, ProtectionRuntimeDescriptor, ProtectedSignaturePolicy, TrustedProtectionProvider } from './protection-node.js';\nexport type ConsumerUnlockSelection = { readonly \"slotIndex\": number; readonly \"slot\": string; readonly \"kdf_profile\": \"scrypt-sha256\" | \"argon2id\"; };\nexport type ConsumerUnlockObservation = { readonly \"kind\": \"consumer_unlock_observation\"; readonly \"proof\": \"observation_not_authority\"; readonly \"checked_at_ms\": number; readonly \"selection\": ConsumerUnlockSelection; };\nexport type ProtectedBrowserInput = { readonly \"bytes\": Uint8Array; readonly \"plaintextPayload\": Uint8Array; readonly \"observation\": ConsumerUnlockObservation; readonly \"signaturePolicy\"?: ProtectedSignaturePolicy; };\nexport type ProtectedBrowserDisclosure = { readonly \"slot_selection\": ConsumerUnlockSelection; readonly \"observation_not_authority\": true; readonly \"provenance\": \"host_supplied_triple\"; };\nexport type ProtectedBrowserAccepted = { readonly \"status\": \"accepted\"; readonly \"snapshot\": CanonicalReadSnapshot; readonly \"disclosure\": ProtectedBrowserDisclosure; };\nexport type ProtectedBrowserCatalogOnly = { readonly \"status\": \"catalog_only\"; readonly \"catalog\": CoreAdmissionCatalogOnly; readonly \"disclosure\": ProtectedBrowserDisclosure; };\nexport type ProtectedBrowserCoreRejected = { readonly \"status\": \"core_rejected\"; readonly \"stage\": \"container\" | \"manifest\" | \"payload\" | \"interpretation\"; readonly \"core\": CoreAdmissionRejected; };\nexport type ProtectedBrowserFailed = { readonly \"status\": \"protection_failed\"; readonly \"diagnostic\": ProtectedBrowserDiagnostic; };\n// The observation-phase codes are the reviewed family extension settled under\n// D-CBPA-IMPL-3 (2026-10-06); the shared node codes keep their stages.\nexport type ProtectedBrowserDiagnostic = (ProtectionDiagnostic | { readonly \"code\": \"PROTECTION_OBSERVATION_INVALID\"; readonly \"stage\": \"observation\"; } | { readonly \"code\": \"PROTECTION_OBSERVATION_BINDING_INVALID\"; readonly \"stage\": \"binding\"; } | { readonly \"code\": \"PROTECTION_NOT_DECLARED\"; readonly \"stage\": \"declaration\"; });\nexport type ProtectedBrowserAdmissionResult = (ProtectedBrowserAccepted | ProtectedBrowserCatalogOnly | ProtectedBrowserCoreRejected | ProtectedBrowserFailed);\nexport declare function getProtectionContract(): ProtectionRuntimeDescriptor;\nexport declare function admitProtectedBrowser(input: ProtectedBrowserInput, provider: TrustedProtectionProvider): Promise<ProtectedBrowserAdmissionResult>;",
+    "browser_api_typescript": "import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, CoreAdmissionRejected } from './types.js';\nimport type { ProtectionDiagnostic, ProtectionRuntimeDescriptor, ProtectedSignaturePolicy, TrustedProtectionProvider } from './protection-node.js';\nexport type ConsumerUnlockSelection = { readonly \"slotIndex\": number; readonly \"slot\": string; readonly \"kdf_profile\": \"scrypt-sha256\" | \"argon2id\"; };\nexport type ConsumerUnlockObservation = { readonly \"kind\": \"consumer_unlock_observation\"; readonly \"proof\": \"observation_not_authority\"; readonly \"checked_at_ms\": number; readonly \"selection\": ConsumerUnlockSelection; };\nexport type ProtectedBrowserInput = { readonly \"bytes\": Uint8Array; readonly \"plaintextPayload\": Uint8Array; readonly \"observation\": ConsumerUnlockObservation; readonly \"signaturePolicy\"?: ProtectedSignaturePolicy; };\nexport type ProtectedBrowserDisclosure = { readonly \"slot_selection\": ConsumerUnlockSelection; readonly \"observation_not_authority\": true; readonly \"provenance\": \"host_supplied_triple\"; };\nexport type ProtectedBrowserAccepted = { readonly \"status\": \"accepted\"; readonly \"snapshot\": CanonicalReadSnapshot; readonly \"disclosure\": ProtectedBrowserDisclosure; };\nexport type ProtectedBrowserCatalogOnly = { readonly \"status\": \"catalog_only\"; readonly \"catalog\": CoreAdmissionCatalogOnly; readonly \"disclosure\": ProtectedBrowserDisclosure; };\nexport type ProtectedBrowserCoreRejected = { readonly \"status\": \"core_rejected\"; readonly \"stage\": \"container\" | \"manifest\" | \"payload\" | \"interpretation\"; readonly \"core\": CoreAdmissionRejected; };\nexport type ProtectedBrowserFailed = { readonly \"status\": \"protection_failed\"; readonly \"diagnostic\": ProtectedBrowserDiagnostic; };\n// The observation-phase codes are the reviewed family extension settled under\n// D-CBPA-IMPL-3 (2026-10-06); the shared node codes keep their stages.\nexport type ProtectedBrowserDiagnostic = (ProtectionDiagnostic | { readonly \"code\": \"PROTECTION_OBSERVATION_INVALID\"; readonly \"stage\": \"observation\"; } | { readonly \"code\": \"PROTECTION_OBSERVATION_BINDING_INVALID\"; readonly \"stage\": \"binding\"; } | { readonly \"code\": \"PROTECTION_NOT_DECLARED\"; readonly \"stage\": \"declaration\"; });\nexport type ProtectedBrowserAdmissionResult = (ProtectedBrowserAccepted | ProtectedBrowserCatalogOnly | ProtectedBrowserCoreRejected | ProtectedBrowserFailed);\nexport declare function getProtectionContract(): ProtectionRuntimeDescriptor;\nexport declare function admitProtectedBrowser(input: ProtectedBrowserInput, provider: TrustedProtectionProvider): Promise<ProtectedBrowserAdmissionResult>;",
     "capability_shapes": {
       "ProtectionBinding": "{ readonly source: () => ProtectionSource | ProtectedAdmissionFailed; readonly observe: (phase: ProtectionPhase) => Promise<ProtectionObserved | ProtectionCurrentFailure>; readonly assertCurrent: (checkpoint: ProtectionCheckpoint) => ProtectionCurrent | ProtectionCurrentFailure }"
     },
@@ -32817,8 +35255,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.0",
-        "@aikdna/kdna-read": "0.11.1"
+        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
+        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -32842,8 +35280,8 @@
       "Core/protected-source-node:previewProtectedSourceRevision",
       "Core/protected-source-node:produceProtectedSourceRevision"
     ],
-    "schema_path": "specs/protected-source-r2-binding-7.schema.json",
-    "schema_id": "urn:kdna:schema:protected-source:1.0.0:binding:r2:7",
+    "schema_path": "specs/protected-source-r2-binding-8.schema.json",
+    "schema_id": "urn:kdna:schema:protected-source:1.0.0:binding:r2:8",
     "root": "ProtectedSourceObservation",
     "types": {
       "ProtectedSourceDigests": {
@@ -33292,8 +35730,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.0",
-        "@aikdna/kdna-read": "0.11.1"
+        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
+        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
       }
     }
   },
@@ -33301,8 +35739,8 @@
     "id": "kdna.external-grant-issuer/1",
     "version": "1.0.0",
     "status": "IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
-    "schema_path": "specs/external-grant-issuer-r2-binding-7.schema.json",
-    "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7",
+    "schema_path": "specs/external-grant-issuer-r2-binding-8.schema.json",
+    "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8",
     "root": "IssuerResultObservation",
     "runtime_exports": [
       "getExternalGrantIssuerContract",
@@ -34114,8 +36552,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.0",
-        "@aikdna/kdna-read": "0.11.1"
+        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
+        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
       }
     }
   },
@@ -34820,10 +37258,10 @@
       "PublicAgentHostRequest": "schema/agent-host-request-0.3.1.schema.json",
       "PublicAgentHostReceipt": "schema/agent-host-receipt-0.3.1.schema.json",
       "PublicJudgmentTrace": "schema/judgment-trace-0.3.1.schema.json",
-      "ProtectionDefinitionObservation": "specs/protection-admission-r2-binding-7.schema.json",
+      "ProtectionDefinitionObservation": "specs/protection-admission-r2-binding-8.schema.json",
       "PackageSetNodeSurface": "specs/package-set-node-0.2.1.schema.json",
-      "IssuerResultObservation": "specs/external-grant-issuer-r2-binding-7.schema.json",
-      "ProtectedSourceObservation": "specs/protected-source-r2-binding-7.schema.json"
+      "IssuerResultObservation": "specs/external-grant-issuer-r2-binding-8.schema.json",
+      "ProtectedSourceObservation": "specs/protected-source-r2-binding-8.schema.json"
     },
     "manifest_selector": {
       "format_version": "0.5.0",
@@ -38172,6 +40610,24 @@
       "bytes": 210623,
       "sha256": "5657316ede4018b7cbae1def965426b2d39a1435e23b295a1a5e9f480df4d8a2",
       "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID."
+    },
+    {
+      "path": "specs/protection-admission-r2-binding-7.schema.json",
+      "bytes": 249023,
+      "sha256": "4ac1437c88e6ad165f0f7e0ce82e515f19c55733cfb8df7e63e896db008506e2",
+      "reason": "Preserved released package binding for Core 0.37.0 / Read 0.11.1. The browser candidate uses a separately named binding."
+    },
+    {
+      "path": "specs/protected-source-r2-binding-7.schema.json",
+      "bytes": 34572,
+      "sha256": "a3273aa20740d58cac88d46e4a835cb71ce20925c9cbfd4eba633aa82a4f48db",
+      "reason": "Preserved released package binding for Core 0.37.0 / Read 0.11.1. The browser candidate uses a separately named binding."
+    },
+    {
+      "path": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "bytes": 15358,
+      "sha256": "4fbb302fedbbf729f350179d815a472f733d4db8aff868c1e79f0a758b1d71a7",
+      "reason": "Preserved released package binding for Core 0.37.0 / Read 0.11.1. The browser candidate uses a separately named binding."
     }
   ],
   "target_lines": [
@@ -38484,7 +40940,7 @@
     },
     {
       "line": "r2.rc7",
-      "status": "CURRENT_RELEASED_TARGET",
+      "status": "RELEASED_TARGET",
       "versionTuple": {
         "container": "0.5.0",
         "payload_profile": "kdna.payload.judgment",
@@ -38504,6 +40960,29 @@
         }
       ],
       "preservation": "Native binding repair target; matching package metadata alone does not establish actual native runtime behavior or compatible consumers."
+    },
+    {
+      "line": "browser.rc1",
+      "status": "CURRENT_UNPUBLISHED_TARGET",
+      "versionTuple": {
+        "container": "0.5.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.1",
+        "core": "kdna.core/0.8.2",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.6.4"
+      },
+      "package_versions": [
+        {
+          "core": "0.37.1-rc.browser.1",
+          "read": "0.11.2-rc.browser.1"
+        }
+      ],
+      "preservation": "The released Core 0.37.0 / Read 0.11.1 pair and its three binding-7 schemas remain unchanged historical coordinates. This candidate adds retained browser protected projection and independent lifecycle; registry, consumer acceptance and publication are separate evidence."
     }
   ],
   "representation_candidate": {
@@ -39627,7 +42106,83 @@
         "No producer/migration endpoint introduced in this scope. A new asset/grant requires separate authorized original producer path; original accepted bytes immutable.",
         "No protected range savings or performance claim is implied; every initial mode incurs complete authentication and domain validation cost."
       ],
-      "api_typescript_context": "All new generated types are locally declared/exported in this subpath declaration closure; original ProtectedAdmissionOptions/TrustedProtectionProvider imported explicitly from original protection-node. Read imports every local signature type explicitly in addition to reexport. Opaque declarations use independent private unique symbols; no JSON-callable constructor can mint operation/snapshot/delivery authority."
+      "api_typescript_context": "All new generated types are locally declared/exported in this subpath declaration closure; original ProtectedAdmissionOptions/TrustedProtectionProvider imported explicitly from original protection-node. Read imports every local signature type explicitly in addition to reexport. Opaque declarations use independent private unique symbols; no JSON-callable constructor can mint operation/snapshot/delivery authority.",
+      "browser_adapter": {
+        "id": "kdna.protected-sections-browser",
+        "version": "0.1.0-candidate",
+        "candidate_only": true,
+        "versionTuple": {
+          "container": "0.5.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.5.1",
+          "core": "kdna.core/0.8.2",
+          "ir": "kdna.canonical-ir/0.6.1",
+          "runtime": "kdna.runtime-capsule/0.3.1",
+          "plan": "kdna.consumption-plan/0.3.1",
+          "host": "kdna.agent-host/0.3.1",
+          "trace": "kdna.judgment-trace/0.3.1",
+          "read": "kdna.read/0.6.4"
+        },
+        "domain": {
+          "origin": "Only the exact successful admitProtectedBrowser snapshot registered in this same Core instance; ordinary, copied, foreign, consumed or closed origins reject.",
+          "interpretation": "Complete original base payload/IR admission; catalog is a projection of that complete origin.",
+          "physical_reads": "none",
+          "provenance": "host_supplied_triple",
+          "proof": "observation_not_authority",
+          "new_decryption": false
+        },
+        "api": {
+          "core_callables": [
+            "admitProtectedPayloadRequestJson",
+            "inspectProtectedPayloadRequest",
+            "createProtectedPayloadReadAuthorityJson",
+            "admitProtectedSectionBrowser",
+            "inspectProtectedPayloadSnapshot",
+            "bindProtectedPayloadRequest",
+            "disposeProtectedSectionOperation"
+          ],
+          "read_callables": [
+            "createTrustedProtectedPayloadHostJson",
+            "readProtectedSectionBrowser",
+            "commitProtectedSectionTransport"
+          ],
+          "core_declaration": "import type { CanonicalReadSnapshot } from './types.js';\nimport type { BrowserProtectedRequestAdmission, AdmittedBrowserProtectedRequest, BrowserProtectedRequest, BrowserProtectedAuthorityContext, BrowserProtectedReadAuthority, BrowserProtectedAdmissionResult, BrowserProtectedSnapshot, BrowserProtectedSnapshotData, BrowserProtectedOperation } from './protected-browser-contract/types.js';\nexport type * from './protected-browser-contract/types.js';\nexport declare function admitProtectedPayloadRequestJson(requestJson: string): BrowserProtectedRequestAdmission;\nexport declare function inspectProtectedPayloadRequest(request: AdmittedBrowserProtectedRequest): Readonly<BrowserProtectedRequest> | null;\nexport declare function createProtectedPayloadReadAuthorityJson(callback: (context: Readonly<BrowserProtectedAuthorityContext>) => boolean | Promise<boolean>, signaturePolicyJson?: string): BrowserProtectedReadAuthority;\n// Consumes one genuine admitProtectedBrowser origin. No new decryption or physical read.\nexport declare function admitProtectedSectionBrowser(snapshot: CanonicalReadSnapshot, request: AdmittedBrowserProtectedRequest, authority: BrowserProtectedReadAuthority): Promise<BrowserProtectedAdmissionResult>;\nexport declare function inspectProtectedPayloadSnapshot(snapshot: BrowserProtectedSnapshot): Readonly<BrowserProtectedSnapshotData> | null;\nexport declare function bindProtectedPayloadRequest(operation: BrowserProtectedOperation, requestJson: string): BrowserProtectedRequestAdmission;\nexport declare function disposeProtectedSectionOperation(operation: BrowserProtectedOperation): void;\n",
+          "read_declaration": "import type { BrowserProtectedOperation, AdmittedBrowserProtectedRequest, BrowserProtectedReadAuthority, BrowserProtectedHostContext, TrustedBrowserProtectedHost, BrowserProtectedCallResult, BrowserProtectedDeliveryToken, BrowserProtectedReadResult, BrowserProtectedTransportCommitResult } from '@aikdna/kdna-core/protected-sections-browser';\nexport type * from '@aikdna/kdna-core/protected-sections-browser';\nexport type BrowserProtectedObserveJson = (context: Readonly<BrowserProtectedHostContext>) => string | Promise<string>;\nexport declare function createTrustedProtectedPayloadHostJson(observeJson: BrowserProtectedObserveJson, deliver: (result: Readonly<BrowserProtectedCallResult>, token: BrowserProtectedDeliveryToken) => boolean | Promise<boolean>): TrustedBrowserProtectedHost;\nexport declare function readProtectedSectionBrowser(operation: BrowserProtectedOperation, request: AdmittedBrowserProtectedRequest, authority: BrowserProtectedReadAuthority, host: TrustedBrowserProtectedHost): Promise<BrowserProtectedReadResult>;\n// Reservation precedes callbacks. Commit acknowledgement must be synchronous literal true.\nexport declare function commitProtectedSectionTransport(operation: BrowserProtectedOperation, token: BrowserProtectedDeliveryToken, observeScopeJson: BrowserProtectedObserveJson, commit: (result: Readonly<BrowserProtectedCallResult>) => boolean): Promise<BrowserProtectedTransportCommitResult>;\n"
+        },
+        "generation_roots": {
+          "BrowserProtectedRequest": "candidate/protected-browser/schemas/BrowserProtectedRequest.json",
+          "BrowserProtectedSignaturePolicy": "candidate/protected-browser/schemas/BrowserProtectedSignaturePolicy.json",
+          "BrowserProtectedAuthorityContext": "candidate/protected-browser/schemas/BrowserProtectedAuthorityContext.json",
+          "BrowserProtectedHostObservation": "candidate/protected-browser/schemas/BrowserProtectedHostObservation.json",
+          "BrowserProtectedBinding": "candidate/protected-browser/schemas/BrowserProtectedBinding.json",
+          "BrowserProtectedExpansionHandle": "candidate/protected-browser/schemas/BrowserProtectedExpansionHandle.json",
+          "BrowserProtectedCallResult": "candidate/protected-browser/schemas/BrowserProtectedCallResult.json",
+          "BrowserProtectedRequestAdmission": "candidate/protected-browser/schemas/BrowserProtectedRequestAdmission.json",
+          "BrowserProtectedSnapshotData": "candidate/protected-browser/schemas/BrowserProtectedSnapshotData.json",
+          "BrowserProtectedAdmissionResult": "candidate/protected-browser/schemas/BrowserProtectedAdmissionResult.json",
+          "BrowserProtectedReadResult": "candidate/protected-browser/schemas/BrowserProtectedReadResult.json",
+          "BrowserProtectedTransportCommitResult": "candidate/protected-browser/schemas/BrowserProtectedTransportCommitResult.json",
+          "BrowserProtectedReadAuthority": "candidate/protected-browser/schemas/BrowserProtectedReadAuthority.json",
+          "TrustedBrowserProtectedHost": "candidate/protected-browser/schemas/TrustedBrowserProtectedHost.json",
+          "BrowserProtectedDeliveryToken": "candidate/protected-browser/schemas/BrowserProtectedDeliveryToken.json",
+          "BrowserProtectedHostContext": "candidate/protected-browser/schemas/BrowserProtectedHostContext.json"
+        },
+        "rules": {
+          "tuple": "Request tuple must equal the actual immutable base snapshot tuple. Unknown and mixed tuples reject; no candidate06 relabeling.",
+          "authority": "Fresh independent current callback and immutable origin signature-policy check for admission, every read and each lifecycle boundary including transport. Unlock observation never grants read authority.",
+          "capture_id": "Ephemeral same-operation retained-origin identity, not a file-descriptor or new physical capture attestation.",
+          "ingress": "Request/policy and settled Host observations are primitive JSON text, strict duplicate-key/scalar parsing and generated validators. Opaque tokens are same-instance WeakMap authority. Trusted callback returns retain JavaScript await semantics.",
+          "projection": "Original registry ordered closure/whole semantics reused. Set selections union mandatory closures of original single-judgment base IR in original global node order. Selection-set handles are separately bound to operation/origin/Host; no recursive target discovery.",
+          "budget": "Entire final envelope including verification, binding, disclosure and handles is measured by exact canonical JSON bytes before Host handoff.",
+          "delivery": "Independent two current Host observations and final transport observation cover full projection and deferred target scopes; denial/epoch/expiry rules apply. Handles register only after confirmed deliver and current read return.",
+          "lifecycle": "Origin reserved before authority await. Transport token reserved before callbacks, consumed and outcome_unknown recorded before one synchronous side effect. Dispose cancels pending boundaries, clears private retained references, revokes registered handles and prevents late delivery. Caller-owned input/snapshot and previously disclosed bytes cannot be erased.",
+          "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
+        },
+        "package_versions": {
+          "core": "0.37.1-rc.browser.1",
+          "read": "0.11.2-rc.browser.1"
+        }
+      }
     },
     "a15_source_producer": {
       "candidate_only": true,

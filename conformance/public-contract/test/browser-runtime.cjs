@@ -171,12 +171,6 @@ function bundle(runtime, out, extraEntries = []) {
       };
     modules.push(row);
     const specs = filename.endsWith('.json') ? [] : literals(source);
-    if (filename.endsWith('/kdna-core/src/public-contract/validate.js'))
-      specs.push(
-        '../../schema/manifest-0.2.schema.json',
-        '../../schema/payload-profile-0.2.schema.json',
-        '../../schema/canonical-ir-0.1.schema.json',
-      );
     for (const spec of [...new Set(specs)]) {
       const target = resolve(spec, filename);
       row.dependencies[spec] = add(target);
@@ -206,7 +200,7 @@ function bundle(runtime, out, extraEntries = []) {
       /[<>&\u2028\u2029]/gu,
       (c) => '\\u' + c.codePointAt(0).toString(16).padStart(4, '0'),
     );
-  const code = `'use strict';\n(()=>{const factories=[${modules.map((m) => `function(require,module,exports){\n${m.path.endsWith('.json') ? 'module.exports=' + m.source + ';' : m.source}\n}`).join(',\n')}];const dependencies=${scriptJson(modules.map((m) => m.dependencies))};const entries=${scriptJson(entries)};globalThis.createKDNA=()=>{const cache={};function load(id){if(cache[id])return cache[id].exports;const module={exports:{}};cache[id]=module;factories[id](spec=>{if(!Object.hasOwn(dependencies[id],spec))throw Error('Unbundled dependency');return load(dependencies[id][spec]);},module,module.exports);return module.exports;}return {transport:entries['@aikdna/kdna-read/transport']===undefined?null:load(entries['@aikdna/kdna-read/transport']).admitReadTransportResponse,core:load(entries['@aikdna/kdna-core']),boundary:load(entries['@aikdna/kdna-core/read-boundary']),readRoot:load(entries['@aikdna/kdna-read']),embed:load(entries['@aikdna/kdna-read/embedding']),admit:load(entries['@aikdna/kdna-core/browser']).admitBrowser,read:load(entries['@aikdna/kdna-read/browser']).readBrowser,readBytes:load(entries['@aikdna/kdna-read/browser']).readBrowser};};})();\n`;
+  const code = `'use strict';\n(()=>{const factories=[${modules.map((m) => `function(require,module,exports){\n${m.path.endsWith('.json') ? 'module.exports=' + m.source + ';' : m.source}\n}`).join(',\n')}];const dependencies=${scriptJson(modules.map((m) => m.dependencies))};const entries=${scriptJson(entries)};globalThis.createKDNA=()=>{const cache={};function load(id){if(cache[id])return cache[id].exports;const module={exports:{}};cache[id]=module;factories[id](spec=>{if(!Object.hasOwn(dependencies[id],spec))throw Error('Unbundled dependency');return load(dependencies[id][spec]);},module,module.exports);return module.exports;}return {publicEntries:Object.freeze(Object.fromEntries(Object.entries(entries).map(([name,id])=>[name,load(id)]))),transport:entries['@aikdna/kdna-read/transport']===undefined?null:load(entries['@aikdna/kdna-read/transport']).admitReadTransportResponse,core:load(entries['@aikdna/kdna-core']),boundary:load(entries['@aikdna/kdna-core/read-boundary']),readRoot:load(entries['@aikdna/kdna-read']),embed:load(entries['@aikdna/kdna-read/embedding']),admit:load(entries['@aikdna/kdna-core/browser']).admitBrowser,read:load(entries['@aikdna/kdna-read/browser']).readBrowser,readBytes:load(entries['@aikdna/kdna-read/browser']).readBrowser};};})();\n`;
   fs.writeFileSync(out, code);
   return {
     path: out,
@@ -216,7 +210,7 @@ function bundle(runtime, out, extraEntries = []) {
     edges,
     node_builtins: [],
     dynamic_require_context:
-      'Only the three existing validate.js schema mirrors; unchanged module sources',
+      'No synthetic schema mirrors; all current static require dependencies resolved from unchanged module sources',
   };
 }
 function zipRows(rows) {

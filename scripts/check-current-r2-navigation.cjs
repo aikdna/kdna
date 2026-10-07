@@ -918,14 +918,16 @@ function checkCurrentNavigation(root, options = {}) {
             : null,
     ]),
   ]) {
-    const coreFamily = versions.core.includes('-rc.')
-      ? { regex: /0\.36\.0-rc\.r2\.\d+/g, expected: versions.core }
-      : { regex: /0\.37\.0(?!-)/g, expected: versions.core };
-    const readFamily = versions.read.includes('-rc.')
-      ? { regex: /0\.11\.0-rc\.r2\.\d+/g, expected: versions.read }
-      : { regex: /0\.11\.1(?!-)/g, expected: versions.read };
-    exactFamily(file, start, end, coreFamily.regex, coreFamily.expected);
-    exactFamily(file, start, end, readFamily.regex, readFamily.expected);
+    for (const name of ['core', 'read']) {
+      const version = versions[name];
+      const escaped = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // The current family comes from the source, including new prerelease
+      // labels. The all-coordinate pass above still rejects older families.
+      const family = version.includes('-rc.')
+        ? escaped.replace(/\\\.\d+$/, '\\.\\d+')
+        : escaped + '(?![0-9.-])';
+      exactFamily(file, start, end, new RegExp(family, 'g'), version);
+    }
   }
   for (const name of ['core', 'read']) {
     const prefix = `packages/kdna-${name}`,

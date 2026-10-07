@@ -116,9 +116,14 @@ test('generator refuses duplicate owning roots even when a lookup would overwrit
     candidate.protected_source.root = candidate.protection_admission.root;
   }));
 const mutations = [
-  ['root README current package', 'README.md', '0.36.0-rc.r2.7', '0.35.0-rc.source.1'],
+  ['root README current package', 'README.md', '0.37.1-rc.browser.1', '0.35.0-rc.source.1'],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', 'Read `0.11.1`', '0.3.0-rc.component-semantics.2'],
+  [
+    'Chinese README package',
+    'README.zh.md',
+    'Read `0.11.2-rc.browser.1`',
+    '0.3.0-rc.component-semantics.2',
+  ],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -128,19 +133,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'actual source package `0.37.0`',
+    'actual source package `0.37.1-rc.browser.1`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'source package `0.11.1`',
+    'source package `0.11.2-rc.browser.1`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    'peer `@aikdna/kdna-core@0.37.0`',
+    'peer `@aikdna/kdna-core@0.37.1-rc.browser.1`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -164,7 +169,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'exact Core peer `0.37.0`',
+    'exact Core peer `0.37.1-rc.browser.1`',
     'exact Core peer `0.36.0-rc.r2.4`',
   ],
   [
@@ -206,7 +211,7 @@ const mutations = [
   [
     'Start Here package',
     'docs/start-here.md',
-    'Core `0.37.0` / Read `0.11.1`',
+    'Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
     '0.35.0-rc.source.1',
   ],
   [
@@ -218,7 +223,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.0`',
+    '| `@aikdna/kdna-core` | `0.37.1-rc.browser.1`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -236,28 +241,28 @@ const mutations = [
   [
     'protection heading',
     'specs/protection-admission.md',
-    'binding 7 candidate',
+    'binding 8 candidate',
     'binding 1 candidate',
   ],
-  ['protection schema id', 'specs/protection-admission.md', ':binding:r2:7', ':binding:r2:4'],
+  ['protection schema id', 'specs/protection-admission.md', ':binding:r2:8', ':binding:r2:4'],
   [
     'protection lower schema link',
     'specs/protection-admission.md',
-    'The generated [schema](protection-admission-r2-binding-7.schema.json)',
+    'The generated [schema](protection-admission-r2-binding-8.schema.json)',
     'The generated [schema](protection-admission-r2-binding-2.schema.json)',
   ],
-  ['protected source schema id', 'specs/protected-source-r2.md', ':binding:r2:7', ':binding:r2:4'],
-  ['issuer schema id', 'specs/external-grant-issuer.md', ':binding:r2:7', ':binding:r2:4'],
+  ['protected source schema id', 'specs/protected-source-r2.md', ':binding:r2:8', ':binding:r2:4'],
+  ['issuer schema id', 'specs/external-grant-issuer.md', ':binding:r2:8', ':binding:r2:4'],
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.0`、Read `0.11.1`',
+    'Core `0.37.1-rc.browser.1`、Read `0.11.2-rc.browser.1`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.0` and Read',
+    'Core `0.37.1-rc.browser.1` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -269,17 +274,17 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.0` and Read `0.11.1`',
+    'Core `0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`',
     '0.36.0-rc.r2.3',
   ],
-  ['Read middle binding', 'specs/read-contract.md', 'binding:r2:7', 'binding:r2:3'],
+  ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
   [
     'policy current tuple',
     'specs/public-version-policy.md',
     '| read | `kdna.read/0.6.4` |',
     '| read | `kdna.read/0.6.1` |',
   ],
-  ['policy current binding', 'specs/public-version-policy.md', ':binding:r2:7', ':binding:r2:4'],
+  ['policy current binding', 'specs/public-version-policy.md', ':binding:r2:8', ':binding:r2:4'],
   ['missing local file', 'README.md', '(./docs/start-here.md)', '(./docs/absent-current-entry.md)'],
   [
     'missing local anchor',
@@ -405,7 +410,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.0` / Read `0.11.1`',
+    'local package line is Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -873,28 +878,31 @@ for (const [label, mutate, issue] of [
   [
     'absent current target',
     ({ source: s }) => {
-      s.target_lines = s.target_lines.filter((row) => row.line !== 'r2.rc7');
+      s.target_lines = s.target_lines.filter((row) => row.line !== 'browser.rc1');
     },
     'current-target:unique',
   ],
   [
     'duplicate current target',
     ({ source: s }) => {
-      s.target_lines.push(structuredClone(s.target_lines.find((row) => row.line === 'r2.rc7')));
+      s.target_lines.push(
+        structuredClone(s.target_lines.find((row) => row.line === 'browser.rc1')),
+      );
     },
     'current-target:unique',
   ],
   [
     'wrong current tuple',
     ({ source: s }) => {
-      s.target_lines.find((row) => row.line === 'r2.rc7').versionTuple.read = 'kdna.read/0.6.0';
+      s.target_lines.find((row) => row.line === 'browser.rc1').versionTuple.read =
+        'kdna.read/0.6.0';
     },
     'current-target:tuple',
   ],
   [
     'wrong Core package',
     ({ source: s }) => {
-      s.target_lines.find((row) => row.line === 'r2.rc7').package_versions[0].core =
+      s.target_lines.find((row) => row.line === 'browser.rc1').package_versions[0].core =
         '0.36.0-rc.r2.2';
     },
     'current-target:packages',
@@ -902,7 +910,7 @@ for (const [label, mutate, issue] of [
   [
     'wrong Read package',
     ({ source: s }) => {
-      s.target_lines.find((row) => row.line === 'r2.rc7').package_versions[0].read =
+      s.target_lines.find((row) => row.line === 'browser.rc1').package_versions[0].read =
         '0.11.0-rc.r2.2';
     },
     'current-target:packages',
@@ -910,7 +918,7 @@ for (const [label, mutate, issue] of [
   [
     'duplicate package pair',
     ({ source: s }) => {
-      const row = s.target_lines.find((row) => row.line === 'r2.rc7');
+      const row = s.target_lines.find((row) => row.line === 'browser.rc1');
       row.package_versions.push(structuredClone(row.package_versions[0]));
     },
     'current-target:packages',
@@ -925,7 +933,7 @@ for (const [label, mutate, issue] of [
   [
     'missing current label',
     ({ source: s }) => {
-      s.target_lines.find((row) => row.line === 'r2.rc7').status =
+      s.target_lines.find((row) => row.line === 'browser.rc1').status =
         'UNACCEPTED_SUPERSEDED_CANDIDATE_HISTORY';
     },
     'current-target:unique',
@@ -996,13 +1004,26 @@ for (const [label, mutate, issue] of [
     );
     rejectsInputsBeforeGeneration(inputs);
   });
-// Promotion-era fixtures (F1-F4): the in-tree source is already promoted to
-// stable versions, so the current line resolves through the unique current
-// target row. These cases find the row by status and never depend on its name.
+// Promotion fixtures are built explicitly from either a candidate or released
+// source. Stable versions resolve through the one current row, not its label.
+function promoteFixture({ source: s, decisions }) {
+  const row = s.target_lines.find((candidate) =>
+    ['CURRENT_RELEASED_TARGET', 'CURRENT_UNPUBLISHED_TARGET'].includes(candidate.status),
+  );
+  assert.ok(row);
+  row.status = 'CURRENT_RELEASED_TARGET';
+  for (const key of ['core', 'read'])
+    s.engineering.package_versions[key] = s.engineering.package_versions[key].split('-')[0];
+  row.package_versions = [structuredClone(s.engineering.package_versions)];
+  for (const pkg of decisions.version_policy.planned_packages) {
+    const key = pkg.name.endsWith('kdna-core') ? 'core' : 'read';
+    pkg.candidate_version = pkg.current_source_version = s.engineering.package_versions[key];
+  }
+  return row;
+}
 test('a promoted source resolves the current line under either current status', () => {
-  const inputs = changedNavigationInputs(({ source: s }) => {
-    const row = s.target_lines.find((candidate) => candidate.status === 'CURRENT_RELEASED_TARGET');
-    assert.ok(row, 'expected exactly one released current target row');
+  const inputs = changedNavigationInputs((input) => {
+    const row = promoteFixture(input);
     row.status = 'CURRENT_UNPUBLISHED_TARGET';
   });
   const result = checkInputs(inputs);
@@ -1049,7 +1070,10 @@ for (const [label, mutate] of [
   ],
 ])
   test(`promotion navigation rejects ${label}`, () => {
-    const inputs = changedNavigationInputs(mutate);
+    const inputs = changedNavigationInputs((input) => {
+      promoteFixture(input);
+      mutate(input);
+    });
     assert.ok(
       checkInputs(inputs).issues.some((row) => row.name === 'current-target:unique'),
       label,
@@ -1059,11 +1083,12 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.0` and Read `0.11.1`';
+  const marker =
+    'The current exact pair is Core `0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
-    'The current exact pair is Core `0.36.1` and Read `0.11.1`',
+    'The current exact pair is Core `0.36.1` and Read `0.11.2-rc.browser.1`',
   );
   const result = checkCurrentNavigation(root, {
     compiled: false,

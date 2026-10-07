@@ -31,11 +31,11 @@ test('D003 and D004 descriptors bind installed packages, generated definitions a
   assert.equal(source.getProtectedSourceContract().contract.definition_digest,definition('protected-source').definition_digest);
   assert.equal(issuer.getExternalGrantIssuerContract().definition_digest,definition('issuer').definition_digest);
   for(const descriptor of [core.getProtectionContract(),source.getProtectedSourceContract(),issuer.getExternalGrantIssuerContract()])assert.equal(descriptor.implementation.version,req('@aikdna/kdna-core/package.json').version);
-  assert.equal(definition('issuer').schema_id,'urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7');
-  assert.equal(definition('protected-source').schema_id,'urn:kdna:schema:protected-source:1.0.0:binding:r2:7');
+  assert.equal(definition('issuer').schema_id,'urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8');
+  assert.equal(definition('protected-source').schema_id,'urn:kdna:schema:protected-source:1.0.0:binding:r2:8');
 });
 test('issuer current schema accepts the installed descriptor and rejects the old package coordinate',()=>{
-  const Ajv=require('ajv/dist/2020'),schema=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../specs/external-grant-issuer-r2-binding-7.schema.json')));
+  const Ajv=require('ajv/dist/2020'),schema=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../specs/external-grant-issuer-r2-binding-8.schema.json')));
   const ajv=new Ajv({strict:false,validateFormats:false}),validate=ajv.compile({$defs:schema.$defs,$ref:'#/$defs/IssuerDescriptor'});
   const descriptor=issuer.getExternalGrantIssuerContract();assert.equal(validate(descriptor),true,JSON.stringify(validate.errors));
   for(const version of ['0.35.0-rc.source.1','0.36.0-rc.r2.1','0.36.0-rc.r2.2','0.36.0-rc.r2.3','0.36.0-rc.r2.4'])assert.equal(validate({...descriptor,implementation:{...descriptor.implementation,version}}),false);
@@ -67,7 +67,7 @@ for(const [name,edit,reason] of [
   const host=source.createTrustedProtectedSourceHost({observe:()=>({context_id:'r2-negative',epoch:'one',asset_digest:digest(f.bytes),permission:'allowed',scope:'complete_source',current_ms:1000,expires_at_ms:2000,revoked:false}),deliver:()=>{deliveries++;return true;}});
   const opened=await source.withProtectedSourceNode(f.bytes,{admission,expected_A:digest(f.bytes),timeout_ms:10000},provider,host);
   assert.equal(opened.status,'core_rejected',JSON.stringify(opened));assert.equal(opened.core.reason,reason);assert.equal(deliveries,0);assert.equal(opened.body,null);assert.ok(!JSON.stringify(opened).includes('R2_PRIVATE_CANARY'));
-  const Ajv=require('ajv/dist/2020'),schema=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../specs/protected-source-r2-binding-7.schema.json')));
+  const Ajv=require('ajv/dist/2020'),schema=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../specs/protected-source-r2-binding-8.schema.json')));
   const validate=new Ajv({strict:false,validateFormats:false}).compile(schema);assert.equal(validate(opened),true,JSON.stringify(validate.errors));
   if(reason==='READ_UNSUPPORTED_CRITICAL') { const old=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../specs/protected-source.schema.json')));assert.equal(new Ajv({strict:false,validateFormats:false}).compile(old)(opened),false); }
 });

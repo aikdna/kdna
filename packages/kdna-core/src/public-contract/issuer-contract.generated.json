@@ -1,6 +1,6 @@
 {
   "api_typescript": "export type IssuerSecrets = { readonly issuerRootKey: Uint8Array; readonly issuerSigningPrivateKeyPkcs8: Uint8Array; readonly signaturePolicy: IssuerSignaturePolicy };\nexport type IssuanceResult = (IssuerIssuedObservation & { readonly grantBytes: Uint8Array }) | IssuerCoreRejectedObservation | IssuerFailedObservation;\nexport declare function getExternalGrantIssuerContract(): IssuerDescriptor;\nexport declare function issueExternalKeyGrantForAsset(input: string | Uint8Array, options: IssuerOptions, secrets: IssuerSecrets): Promise<IssuanceResult>;\n",
-  "definition_digest": "sha256:ab50c19d28f5c2cffd9f8b20a340aa132ab38f749e6b18852c5aec8771cfd716",
+  "definition_digest": "sha256:33e91624bc825ccdbbd7b0e85f961f0b455bb72cabd1fac6397f1e3fee319329",
   "derived_runtime_enforcement": {
     "ISSUER-AUTHENTICATION": {
       "generator_machine_check": "none",
@@ -384,8 +384,8 @@
   "runtime_not_implemented": [],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.37.0",
-      "@aikdna/kdna-read": "0.11.1"
+      "@aikdna/kdna-core": "0.37.1-rc.browser.1",
+      "@aikdna/kdna-read": "0.11.2-rc.browser.1"
     },
     "version_tuple": {
       "container": "0.5.0",
@@ -400,8 +400,8 @@
       "trace": "kdna.judgment-trace/0.3.1"
     }
   },
-  "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7",
-  "schema_path": "specs/external-grant-issuer-r2-binding-7.schema.json",
+  "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8",
+  "schema_path": "specs/external-grant-issuer-r2-binding-8.schema.json",
   "status": "IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
   "types": {
     "IssuerAdmissionObservation": {
@@ -543,7 +543,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.0",
+              "const": "0.37.1-rc.browser.1",
               "type": "string"
             }
           },

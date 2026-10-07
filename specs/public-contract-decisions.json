@@ -6,8 +6,8 @@
   "owner": "Public contract maintainers",
   "acceptance": "SEPARATE_BYTE_BOUND_RECEIPT",
   "version_policy": {
-    "status": "PUBLISHED",
-    "line": "r2.rc7",
+    "status": "UNPUBLISHED_CANDIDATE",
+    "line": "browser.rc1",
     "supported_tuple": {
       "container": "0.5.0",
       "payload_profile": "kdna.payload.judgment",
@@ -130,30 +130,30 @@
       {
         "name": "@aikdna/kdna-core",
         "path": "packages/kdna-core",
-        "line": "r2.rc7",
-        "candidate_version": "0.37.0",
-        "current_source_version": "0.37.0",
+        "line": "browser.rc1",
+        "candidate_version": "0.37.1-rc.browser.1",
+        "current_source_version": "0.37.1-rc.browser.1",
         "current_source_version_observed": "2026-10-07",
-        "status": "PUBLISHED",
+        "status": "UNPUBLISHED_CANDIDATE",
         "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED",
-        "note": "Isolated local R2 candidate label; acceptance, artifacts and release require separately bound evidence."
+        "note": "Local browser protected-read candidate. The released Core 0.37.0 / Read 0.11.1 pair retains its release evidence; this candidate requires independent artifact and consumer acceptance before publication."
       },
       {
         "name": "@aikdna/kdna-read",
         "path": "packages/kdna-read",
-        "line": "r2.rc7",
-        "candidate_version": "0.11.1",
-        "current_source_version": "0.11.1",
+        "line": "browser.rc1",
+        "candidate_version": "0.11.2-rc.browser.1",
+        "current_source_version": "0.11.2-rc.browser.1",
         "current_source_version_observed": "2026-10-07",
-        "status": "PUBLISHED",
+        "status": "UNPUBLISHED_CANDIDATE",
         "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED",
-        "note": "Isolated local R2 candidate label; acceptance, artifacts and release require separately bound evidence."
+        "note": "Local browser protected-read candidate. The released Core 0.37.0 / Read 0.11.1 pair retains its release evidence; this candidate requires independent artifact and consumer acceptance before publication."
       }
     ]
   },

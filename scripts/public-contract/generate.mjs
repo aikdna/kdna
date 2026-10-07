@@ -13,11 +13,11 @@ const SELF=fileURLToPath(import.meta.url), SCRIPT_DIR=path.dirname(SELF);
 const BASE_OUTPUTS=['schema/manifest-container-0.5.0-judgment-0.5.1.schema.json','schema/payload-profile-0.5.1.schema.json','specs/canonical-ir-0.6.1.schema.json','specs/read-contract-0.6.4.schema.json','specs/public-diagnostics.json','specs/public-vocabulary.json'];
 BASE_OUTPUTS.push('schema/runtime-capsule-0.3.1.schema.json','schema/consumption-plan-0.3.1.schema.json','schema/agent-host-request-0.3.1.schema.json','schema/agent-host-receipt-0.3.1.schema.json','schema/judgment-trace-0.3.1.schema.json');
 const TRANSPORT_OUTPUT='specs/read-transport-admission-0.2.1.schema.json';
-const PROTECTION_OUTPUTS=['specs/protection-admission-r2-binding-7.schema.json','specs/checksums-document-1.schema.json'];
+const PROTECTION_OUTPUTS=['specs/protection-admission-r2-binding-8.schema.json','specs/checksums-document-1.schema.json'];
 const OUTPUTS=[...BASE_OUTPUTS,TRANSPORT_OUTPUT,...PROTECTION_OUTPUTS];
-const PROTECTED_SOURCE_OUTPUTS=['specs/protected-source-r2-binding-7.schema.json'];
+const PROTECTED_SOURCE_OUTPUTS=['specs/protected-source-r2-binding-8.schema.json'];
 OUTPUTS.push(...PROTECTED_SOURCE_OUTPUTS);
-const ISSUER_SCHEMA='specs/external-grant-issuer-r2-binding-7.schema.json';
+const ISSUER_SCHEMA='specs/external-grant-issuer-r2-binding-8.schema.json';
 OUTPUTS.push(ISSUER_SCHEMA);
 const MANIFEST='specs/public-generation-manifest.json';
 const CORE_VALIDATOR='packages/kdna-core/src/public-contract/validators.generated.js';
@@ -242,7 +242,7 @@ function assertSchemaBinding(module,source){const expected={version_tuple:source
 // The independent protection module owns its runtime types and exact Node surfaces.
 function protectionDefinitions(source,outputs,o,runtimeEnforcement){
  const p=source.protection_admission;
- if(!p||p.id!=='kdna.protection-admission/1'||p.version!=='1.0.0'||p.status!=='B1_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED'||JSON.stringify(p.runtime_exports)!==JSON.stringify(['Core/protection-node:getProtectionContract','Core/protection-node:admitProtectedNode','Core/protection-node:bindProtectionOperation','Core/protection-node:disposeProtectionOperation','Core/protection-node:protectSourceBytes','Core/read-boundary:isProtectedSnapshot','Read/protection-node:createTrustedProtectedHostReadProvider','Read/protection-node:readProtectedNode','Read/protection-node:commitProtectedTransport'])||p.schema_path!=='specs/protection-admission-r2-binding-7.schema.json'||p.schema_id!=='urn:kdna:schema:protection-admission:1.0.0:binding:r2:7'||p.root!=='ProtectionDefinitionObservation')fail('SOURCE','unexpected protection definition coordinate or capability');
+ if(!p||p.id!=='kdna.protection-admission/1'||p.version!=='1.0.0'||p.status!=='B1_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED'||JSON.stringify(p.runtime_exports)!==JSON.stringify(['Core/protection-node:getProtectionContract','Core/protection-node:admitProtectedNode','Core/protection-node:bindProtectionOperation','Core/protection-node:disposeProtectionOperation','Core/protection-node:protectSourceBytes','Core/read-boundary:isProtectedSnapshot','Read/protection-node:createTrustedProtectedHostReadProvider','Read/protection-node:readProtectedNode','Read/protection-node:commitProtectedTransport'])||p.schema_path!=='specs/protection-admission-r2-binding-8.schema.json'||p.schema_id!=='urn:kdna:schema:protection-admission:1.0.0:binding:r2:8'||p.root!=='ProtectionDefinitionObservation')fail('SOURCE','unexpected protection definition coordinate or capability');
  if(p.checksums?.id!=='kdna.checksums.document/1'||p.checksums.version!=='1.0.0'||p.checksums.schema_path!=='specs/checksums-document-1.schema.json'||p.checksums.root!=='ChecksumsDocument1')fail('SOURCE','unexpected checksums definition coordinate');
  assertSchemaBinding(p,source);
  const combined={...source.types,...p.types};
@@ -305,7 +305,7 @@ function protectedSourceDefinitions(source,outputs){
  if(!p)return;
  if(p.id!=='kdna.protected-source/1'||p.version!=='1.0.0'||p.status!=='B3_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED')fail('SOURCE','unexpected protected-source coordinate or status');
  if(JSON.stringify(p.runtime_exports)!==JSON.stringify(['Core/protected-source-node:getProtectedSourceContract','Core/protected-source-node:createTrustedProtectedSourceHost','Core/protected-source-node:withProtectedSourceNode','Core/protected-source-node:commitProtectedSourceTransport','Core/protected-source-node:previewProtectedSourceRevision','Core/protected-source-node:produceProtectedSourceRevision']))fail('SOURCE','protected-source runtime surface drift');
- if(!PROTECTED_SOURCE_OUTPUTS.includes(p.schema_path)||p.schema_id!=='urn:kdna:schema:protected-source:1.0.0:binding:r2:7'||p.root!=='ProtectedSourceObservation')fail('SOURCE','unexpected protected-source schema coordinate');
+ if(!PROTECTED_SOURCE_OUTPUTS.includes(p.schema_path)||p.schema_id!=='urn:kdna:schema:protected-source:1.0.0:binding:r2:8'||p.root!=='ProtectedSourceObservation')fail('SOURCE','unexpected protected-source schema coordinate');
  const protection=source.protection_admission;
  const combined={...source.types,...protection.types,...p.types};
  for(const [name,node]of Object.entries(p.types)){
@@ -329,7 +329,7 @@ function protectedSourceDefinitions(source,outputs){
 }
 function issuerDefinitions(source,outputs,runtimeEnforcement){
  const p=source.external_grant_issuer;
- if(p.schema_path!==ISSUER_SCHEMA||p.schema_id!=='urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7'||p.root!=='IssuerResultObservation'||JSON.stringify(p.runtime_exports)!==JSON.stringify(['getExternalGrantIssuerContract','issueExternalKeyGrantForAsset']))fail('SOURCE','issuer surface drift');
+ if(p.schema_path!==ISSUER_SCHEMA||p.schema_id!=='urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8'||p.root!=='IssuerResultObservation'||JSON.stringify(p.runtime_exports)!==JSON.stringify(['getExternalGrantIssuerContract','issueExternalKeyGrantForAsset']))fail('SOURCE','issuer surface drift');
  assertSchemaBinding(p,source);
  const combined={...source.types,...p.types};
  for(const [name,node]of Object.entries(p.types)){
@@ -486,7 +486,7 @@ const executionAjv=new Ajv({...options,allErrors:true}),executionRoots={};
 for(const artifact of source.artifacts.filter(x=>x.root?.startsWith('Public')&&x.path.endsWith('-0.3.1.schema.json'))){const schema=JSON.parse(outputs.get(artifact.path));executionAjv.addSchema(schema);executionRoots[artifact.root]=schema.$id;}
 const envelopeRegExp=require(path.join(o.root,'packages/kdna-core/src/public-contract/protection-envelope-codec.js')).envelopeRegExp;
 const protectionAjv=new Ajv({...options,code:{...options.code,regExp:envelopeRegExp}}),protectionRoots={};
- const protectionDefs=JSON.parse(outputs.get('specs/protection-admission-r2-binding-7.schema.json')).$defs;
+ const protectionDefs=JSON.parse(outputs.get('specs/protection-admission-r2-binding-8.schema.json')).$defs;
  for(const name of ['ProtectionReceipt','ProtectedAdmissionResult','ProtectedReadResult','ProtectedTransportCommitResult','ChecksumsDocument1']){const id='urn:kdna:protection-validator:'+name;protectionAjv.addSchema({$id:id,$schema:source.schema_dialect,$ref:'#/$defs/'+name,$defs:protectionDefs});protectionRoots[name]=id;}
  for(const [name,file]of [['PasswordEnvelope','specs/envelope-aead.schema.json'],['ExternalEnvelope','specs/external-grant-envelope.schema.json'],['ExternalGrant','specs/external-key-grant.schema.json']]){const schema=JSON.parse(regular(path.join(o.root,file)));protectionAjv.addSchema(schema);protectionRoots[name]=schema.$id;}
 const issuerAjv=new Ajv(options),issuerRoots={},issuerDefs=JSON.parse(outputs.get(ISSUER_SCHEMA)).$defs;

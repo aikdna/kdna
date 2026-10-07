@@ -34,7 +34,7 @@ published line.
 Start with the [matching-source and installation guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 Its 2026-09-23 local source combinations are distinct:
 
-- This protocol repository: Core `0.37.0` / Read `0.11.1` (unpublished R2).
+- This protocol repository: Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` (unpublished R2 browser candidate).
 - [Runtime CLI](https://github.com/aikdna/kdna-cli#readme): CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
 - [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme): MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
 
@@ -61,6 +61,8 @@ and its exact CLI 0.39.1/MCP combination. The protocol repository's
 Host delivery, semantic adoption and real human acceptance remain `not_run`;
 Skill placement and transport examples do not establish native activation.
 Old-line demos and APIs stay with their matching published implementation below.
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their own artifacts and release evidence. The browser source candidate requires separate artifact and installed-consumer acceptance.
 
 ## 5-Minute Quick Start
 

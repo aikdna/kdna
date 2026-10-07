@@ -169,8 +169,10 @@ Read0.7.0-rc.protection.1 provide the B1 candidate Node surfaces; exact installe
 consumer, fixed-vector and lifecycle evidence still require independent review.
 
 The paragraph above records the historical B1 candidate. The current unpublished
-local package line is Core `0.37.0` / Read `0.11.1`, as recorded
+local package line is Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`, as recorded
 in [public-semantic-source.json](public-semantic-source.json) (`engineering.package_versions`)
 and the package metadata. Current package coordinates do not upgrade historical
 acceptance scope or imply public release; pinned historical documents and accepted
 consumer graphs retain their own identities until separately updated.
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The browser package candidate remains unpublished and requires separate artifact and installed-consumer acceptance.

@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedTransportCommitResult",
+  "title": "BrowserProtectedTransportCommitResult",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedTransportCommitResult",
+  "$defs": {
+    "BrowserProtectedConfirmedDisclosure": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "trusted_host"
+        },
+        "at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "external_commit": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "const": "confirmed"
+            },
+            "attempt_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "attempted_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "confirmed_at_ms": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "state",
+            "attempt_id",
+            "attempted_at_ms",
+            "confirmed_at_ms"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "external_commit"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedDeliveryFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "delivery_failed"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "host_callback_failed",
+            "transport_commit_failed"
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedDisclosure"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "stage": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedDisclosure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "none"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/BrowserProtectedExternalCommitNotInvoked"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "trusted_host"
+            },
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/BrowserProtectedExternalCommit"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "BrowserProtectedExternalCommit": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitNotInvoked"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitUnknown"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedExternalCommitConfirmed"
+        }
+      ]
+    },
+    "BrowserProtectedExternalCommitConfirmed": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "confirmed"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExternalCommitNotInvoked": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "not_invoked"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedExternalCommitUnknown": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "outcome_unknown"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedReadFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "protection_failed"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/BrowserProtectedDiagnostic"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedDisclosure"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedTransportCommitResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BrowserProtectedTransportCommitted"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedReadFailed"
+        },
+        {
+          "$ref": "#/$defs/BrowserProtectedDeliveryFailed"
+        }
+      ]
+    },
+    "BrowserProtectedTransportCommitted": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "committed"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "committed_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/BrowserProtectedConfirmedDisclosure"
+        }
+      },
+      "required": [
+        "status",
+        "operation_id",
+        "committed_at_ms",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  }
+}

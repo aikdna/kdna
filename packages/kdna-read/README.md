@@ -1,8 +1,10 @@
 # KDNA Read — R2 candidate
 
-Published stable release: source package `0.11.1` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.37.0` (`kdna.core/0.8.2`) and Canonical IR `0.6.0`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not establish content quality.
+Current unpublished browser candidate: source package `0.11.2-rc.browser.1` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.37.1-rc.browser.1` (`kdna.core/0.8.2`) and Canonical IR `0.6.1`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not establish content quality.
 
-This 2026-09-23 source identity comes from [`package.json`](package.json).
+The published stable releases remain Read `0.11.1` with exact Core `0.37.0`; their artifacts and release evidence remain separate from this candidate.
+
+This 2026-10-07 source identity comes from [`package.json`](package.json).
 Runtime CLI 0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9
 archives; see the [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 A source README edit does not replace a fixed archive or renew its acceptance.
@@ -19,6 +21,7 @@ Use the manifest and member inventory delivered with the exact installed graph.
 | `/analysis` | `summarizeRead`, `compareReadSelections` |
 | `/types` | Type declarations only |
 | `/protection-node` | `createTrustedProtectedHostReadProvider`, `readProtectedNode`, `commitProtectedTransport` |
+| `/protected-sections-browser` | `createTrustedProtectedPayloadHostJson`, `readProtectedSectionBrowser`, `commitProtectedSectionTransport` |
 
 Request admission validates the candidate and trusted control provider before Core or Host work. Pure `project` requires the private admitted request and Core snapshot. It reads no file, clock, Host or DOM, grants no permission and issues no handles. Projections requiring deferred asset-index bodies or handles must use the trusted Host-facing adapters.
 
@@ -44,6 +47,14 @@ package or this repository.
 For an exact judgment selection, Read preserves the entire Core method value: native declaration, declared/undeclared field presence, original content and every supported interpretation body. It does not parse extension content or infer mechanisms from prose. An invalid explicit component prevents disclosure before Host evaluation. Profile absence remains explicit; a declared component must still satisfy its R2 role and native method requirements. Full-envelope budgeting includes all repeated raw and interpreted bytes, with no criteria truncation or partial semantics.
 
 Read also supplies the complete Core-owned `IRNode_judgment.static_policy_interpretation` from the explicit `/2` carrier and its new definition digest as mandatory selected content. `priority` means a single first matching candidate in the explicit direction: a true entry requires every earlier condition to be explicitly false, an unknown prior condition blocks later candidates, and fallback requires every condition to be explicitly false. Read communicates these common static semantics; it neither evaluates conditions nor asserts that any candidate was actually selected. It never rewrites the rule from prose or changes an asset to fit this finite strategy. Publication, Studio creation, Reader presentation and other consumer support remain separately verified responsibilities.
+
+## Protected browser Read candidate
+
+Use `@aikdna/kdna-read/protected-sections-browser` with an operation and normalized request returned by the [Core browser adapter](../kdna-core/README.md), plus its independently trusted Read authority. `createTrustedProtectedPayloadHostJson(observeJson, deliver)` creates the Host provider: `observeJson` returns closed observation JSON for the exact supplied binding and scope; `deliver(result, token)` acknowledges delivery with literal `true`. Call `readProtectedSectionBrowser(operation, request, authority, host)`. The [generated declarations](src/protected-sections-browser.d.ts) define all three callables.
+
+If the Host hands the result to an external sink, use `commitProtectedSectionTransport` with that one-use delivery token during the delivery callback. It rechecks current authority and Host scope before the sink; the sink acknowledgement must be synchronous literal `true`. Delivery and commit histories describe local handoff, and do not certify remote receipt. Dispose the Core operation when finished; its handles and retained projection authority then close.
+
+This candidate uses `kdna.protected-browser-read/0.1.0-candidate` and the base container `0.5.0` / Read `kdna.read/0.6.4` tuple. The original browser admission consumes Host-supplied container bytes, plaintext and unlock observation; that triple is no proof of decryption or ciphertext/plaintext authentication. This Read performs no new decryption or physical read. Its `host_supplied_triple` observations and receipts confer no authority; current Read authority and independent Host scope govern disclosure. Node native-section witnesses cannot substitute for the genuine browser origin. Browser-engine, installed-consumer and publication acceptance remain separate.
 
 ## Supplied-content analysis
 

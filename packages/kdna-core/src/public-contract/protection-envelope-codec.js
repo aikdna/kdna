@@ -1,30 +1,34 @@
 'use strict';
 const fail = (code, stage) => require('./protection-declaration.js').fail(code, stage);
+const { utf8, equal, concat } = require('./browser-native/bytes.js');
 const LIMIT = 8 * 1024 * 1024;
 function invalid() { fail('ENVELOPE_INVALID','envelope'); }
 function head(major, n) {
   if (!Number.isSafeInteger(n) || n < 0) invalid();
-  if (n < 24) return Buffer.from([(major << 5) | n]);
+  if (n < 24) return Uint8Array.of((major << 5) | n);
   const width = n <= 255 ? 1 : n <= 65535 ? 2 : n <= 4294967295 ? 4 : 8;
-  const out = Buffer.alloc(width + 1); out[0] = (major << 5) | ({1:24,2:25,4:26,8:27})[width];
-  if (width === 8) out.writeBigUInt64BE(BigInt(n),1); else out.writeUIntBE(n,1,width);
+  const out = new Uint8Array(width + 1), view = new DataView(out.buffer); out[0] = (major << 5) | ({1:24,2:25,4:26,8:27})[width];
+  if (width === 8) view.setBigUint64(1,BigInt(n),false);
+  else if (width === 4) view.setUint32(1,n,false);
+  else if (width === 2) view.setUint16(1,n,false);
+  else out[1]=n;
   return out;
 }
-function compare(a,b) { return a.length - b.length || Buffer.compare(a,b); }
+function compare(a,b) { if(a.length!==b.length)return a.length-b.length;for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0; }
 function encodeEnvelope(value) {
   let count = 0;
   function encode(v, depth) {
     if (++count > 100000 || depth > 16) invalid();
     if (typeof v === 'string') {
       if (!v.isWellFormed()) invalid();
-      const bytes = Buffer.from(v); if (bytes.length > LIMIT) invalid();
-      return Buffer.concat([head(3,bytes.length),bytes]);
+      const bytes = utf8(v); if (bytes.length > LIMIT) invalid();
+      return concat([head(3,bytes.length),bytes]);
     }
     if (Number.isSafeInteger(v) && v >= 0) return head(0,v);
-    if (Array.isArray(v)) return Buffer.concat([head(4,v.length), ...v.map(x=>encode(x,depth+1))]);
+    if (Array.isArray(v)) return concat([head(4,v.length), ...v.map(x=>encode(x,depth+1))]);
     if (v && typeof v === 'object' && [Object.prototype,null].includes(Object.getPrototypeOf(v))) {
       const members = Object.keys(v).map(k => [encode(k,depth+1), encode(v[k],depth+1)]).sort((a,b)=>compare(a[0],b[0]));
-      return Buffer.concat([head(5,members.length), ...members.flat()]);
+      return concat([head(5,members.length), ...members.flat()]);
     }
     invalid();
   }
@@ -34,7 +38,7 @@ function encodeEnvelope(value) {
 // It never decodes Payload: authenticated plaintext goes to the sole Payload codec.
 function decodeEnvelope(input) {
   if (!(input instanceof Uint8Array) || !input.length || input.length > LIMIT) invalid();
-  const bytes = Buffer.from(input); let offset = 0, count = 0;
+  const bytes = new Uint8Array(input), view = new DataView(bytes.buffer); let offset = 0, count = 0;
   const decoder = new TextDecoder('utf-8',{fatal:true});
   function read(depth) {
     if (++count > 100000 || depth > 16 || offset >= bytes.length) invalid();
@@ -43,7 +47,7 @@ function decodeEnvelope(input) {
     let n = add;
     if (add >= 24) {
       const width = 2 ** (add - 24); if (offset + width > bytes.length) invalid();
-      n = width === 8 ? Number(bytes.readBigUInt64BE(offset)) : bytes.readUIntBE(offset,width); offset += width;
+      n = width === 8 ? Number(view.getBigUint64(offset,false)) : width === 4 ? view.getUint32(offset,false) : width === 2 ? view.getUint16(offset,false) : bytes[offset]; offset += width;
       if (!Number.isSafeInteger(n) || n < (width === 1 ? 24 : 2 ** (8 * width / 2))) invalid();
     }
     if (major === 0) return n;
@@ -63,7 +67,7 @@ function decodeEnvelope(input) {
     }
     return value;
   }
-  const value = read(0); if (offset !== bytes.length || !encodeEnvelope(value).equals(bytes)) invalid(); return value;
+  const value = read(0); if (offset !== bytes.length || !equal(encodeEnvelope(value),bytes)) invalid(); return value;
 }
 // The frozen RFC18 ciphertext pattern is strict canonical padded base64. Native
 // RegExp's repeated four-character group can exhaust the VM stack on an otherwise
@@ -71,7 +75,7 @@ function decodeEnvelope(input) {
 // (including padding bits) in bounded linear memory; all other patterns stay native.
 const CIPHERTEXT_PATTERN = '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?$';
 function envelopeRegExp(pattern, flags) {
-  if(pattern===CIPHERTEXT_PATTERN)return {test:value=>typeof value==='string'&&Buffer.from(value,'base64').toString('base64')===value};
+  if(pattern===CIPHERTEXT_PATTERN)return {test:value=>{try {decode64Bytes(value);return true;}catch{return false;}}};
   return new RegExp(pattern,flags);
 }
 envelopeRegExp.code = "require('./protection-envelope-codec.js').envelopeRegExp";

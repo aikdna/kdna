@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:protected-browser:BrowserProtectedHostObservation",
+  "title": "BrowserProtectedHostObservation",
+  "description": "Browser protected retained projection contract. Original base tuple and host-supplied-triple provenance; no native authentication claims.",
+  "$ref": "#/$defs/BrowserProtectedHostObservation",
+  "$defs": {
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "BrowserProtectedHostObservation": {
+      "type": "object",
+      "properties": {
+        "host_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "host_epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "decision_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UInt"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "policy_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "read_intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "tuple": {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "current_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "revoked": {
+          "type": "boolean"
+        },
+        "lift_denial": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_id",
+        "host_epoch",
+        "decision_id",
+        "request_id",
+        "snapshot_id",
+        "A",
+        "C",
+        "scope",
+        "issued_at",
+        "expires_at",
+        "decision",
+        "policy_id",
+        "operation_id",
+        "capture_id",
+        "request_digest",
+        "read_intent_digest",
+        "tuple",
+        "asset",
+        "E",
+        "current_ms"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    },
+    "VersionTuple": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.5.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.6.4",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

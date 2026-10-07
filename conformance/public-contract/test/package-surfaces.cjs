@@ -38,6 +38,16 @@ const surfaces = {
     'getAuthoringWorkflowContract',
   ],
   '@aikdna/kdna-core/browser': ['admitBrowser'],
+  '@aikdna/kdna-core/protected-browser': ['admitProtectedBrowser', 'getProtectionContract'],
+  '@aikdna/kdna-core/protected-sections-browser': [
+    'admitProtectedPayloadRequestJson',
+    'inspectProtectedPayloadRequest',
+    'createProtectedPayloadReadAuthorityJson',
+    'admitProtectedSectionBrowser',
+    'inspectProtectedPayloadSnapshot',
+    'bindProtectedPayloadRequest',
+    'disposeProtectedSectionOperation',
+  ],
   '@aikdna/kdna-core/read-boundary': ['inspectSnapshot', 'isProtectedSnapshot'],
   '@aikdna/kdna-core/execution': [
     'parseExecutionJson',
@@ -69,6 +79,11 @@ const surfaces = {
   '@aikdna/kdna-read': ['admitReadRequest', 'project'],
   '@aikdna/kdna-read/node': ['readNode'],
   '@aikdna/kdna-read/browser': ['readBrowser'],
+  '@aikdna/kdna-read/protected-sections-browser': [
+    'createTrustedProtectedPayloadHostJson',
+    'readProtectedSectionBrowser',
+    'commitProtectedSectionTransport',
+  ],
   '@aikdna/kdna-read/analysis': ['summarizeRead', 'compareReadSelections'],
   '@aikdna/kdna-read/embedding': [
     'createTrustedHostReadProvider',

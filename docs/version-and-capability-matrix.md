@@ -85,14 +85,16 @@ The current package labels below are read from the actual local manifests; Read
 uses the exact Core peer shown. No publication, installed acceptance or downstream
 rebinding follows from those labels.
 
-| Current local package (2026-09-23) | Actual source version | Bound graph and state |
+| Current local package (2026-10-07) | Actual source version | Bound graph and state |
 |---|---|---|
-| `@aikdna/kdna-core` | `0.37.0` | Unpublished reference implementation; Node >=20; separate byte-bound acceptance |
-| `@aikdna/kdna-read` | `0.11.1` | Exact Core `0.37.0` peer; Node >=20 |
+| `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | Unpublished browser candidate; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.11.2-rc.browser.1` | Exact Core `0.37.1-rc.browser.1` peer; unpublished browser candidate; Node >=20 |
 | `@aikdna/kdna-cli` | `0.40.0-rc.protection.1` | Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; private candidate; Node >=22 |
 | `@aikdna/kdna-studio-core` | `4.5.0-rc.material-edit.1` | Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |
 | `@aikdna/kdna-studio-cli` | `0.17.0-rc.material-edit.1` | Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |
 | `@aikdna/kdna-mcp-server` | `0.8.1-rc.combination.1` | CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; private candidate; Node >=22 |
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their artifacts and release evidence. The browser candidate rows above do not assert publication or downstream rebinding.
 
 The [source/delivery guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery)
 links each exact manifest, binding, archive inventory and installation entry.

@@ -30,14 +30,22 @@ function checkDeclaration(manifest) {
 }
 function inputs(value, inputProvider) {
   closed(value, ['bytes', 'plaintextPayload', 'observation'], ['signaturePolicy']);
-  if (!(value.bytes instanceof Uint8Array) || !(value.plaintextPayload instanceof Uint8Array)) fail('INPUT_INVALID', 'input');
+  const containerBytes = value.bytes, suppliedPlaintext = value.plaintextPayload;
+  if (!(containerBytes instanceof Uint8Array) || !(suppliedPlaintext instanceof Uint8Array)) fail('INPUT_INVALID', 'input');
   const policy = value.signaturePolicy === undefined ? { requireSignature: false, expectedPublicKeyHex: null } : closed(value.signaturePolicy, ['requireSignature', 'expectedPublicKeyHex']);
   if (typeof policy.requireSignature !== 'boolean' || (policy.expectedPublicKeyHex !== null && (typeof policy.expectedPublicKeyHex !== 'string' || !/^[0-9a-f]{64}$/.test(policy.expectedPublicKeyHex)))) fail('INPUT_INVALID', 'input');
   const o = closed(value.observation, ['kind', 'proof', 'checked_at_ms', 'selection']);
   if (o.kind !== 'consumer_unlock_observation' || o.proof !== 'observation_not_authority' || !uint(o.checked_at_ms)) fail('OBSERVATION_INVALID', 'observation');
   const s = closed(o.selection, ['slotIndex', 'slot', 'kdf_profile']);
   if (!uint(s.slotIndex) || !identifier(s.slot) || !['scrypt-sha256', 'argon2id'].includes(s.kdf_profile)) fail('OBSERVATION_INVALID', 'observation');
-  return { bytes: new Uint8Array(value.bytes), plaintext: new Uint8Array(value.plaintextPayload), observation: { kind: o.kind, proof: o.proof, checked_at_ms: o.checked_at_ms, selection: { slotIndex: s.slotIndex, slot: s.slot, kdf_profile: s.kdf_profile } }, signaturePolicy: { ...policy }, trustedProvider: provider(inputProvider, 'password') };
+  const trustedProvider = provider(inputProvider, 'password');
+  // Finish every caller-owned metadata access before allocating the plaintext
+  // copy. The caller may still throw while a Proxy supplies a data property.
+  const copied = { observation: { kind: o.kind, proof: o.proof, checked_at_ms: o.checked_at_ms, selection: { slotIndex: s.slotIndex, slot: s.slot, kdf_profile: s.kdf_profile } }, signaturePolicy: { ...policy }, trustedProvider };
+  const observed = copied.observation, selected = observed.selection, signaturePolicy = copied.signaturePolicy;
+  if (observed.kind !== 'consumer_unlock_observation' || observed.proof !== 'observation_not_authority' || !uint(observed.checked_at_ms) || !uint(selected.slotIndex) || !identifier(selected.slot) || !['scrypt-sha256', 'argon2id'].includes(selected.kdf_profile)) fail('OBSERVATION_INVALID', 'observation');
+  if (typeof signaturePolicy.requireSignature !== 'boolean' || (signaturePolicy.expectedPublicKeyHex !== null && (typeof signaturePolicy.expectedPublicKeyHex !== 'string' || !/^[0-9a-f]{64}$/.test(signaturePolicy.expectedPublicKeyHex)))) fail('INPUT_INVALID', 'input');
+  return { ...copied, bytes: new Uint8Array(containerBytes), plaintext: new Uint8Array(suppliedPlaintext) };
 }
 function assertObservationBinding(observation, envelope) {
   const slots = envelope.key_slots;
@@ -63,7 +71,7 @@ function parseKdsigBundle(raw) {
   return value;
 }
 async function verifyIntegrityBrowser(entries, manifest, E, policy) {
-  const integrity = { checksums: 'absent', signature: 'absent', signature_content_digest: null };
+  const integrity = { checksums: 'absent', signature: 'absent', signature_content_digest: null, public_key: null };
   if (Object.hasOwn(entries, 'checksums.json')) {
     const raw = entries['checksums.json']; let value;
     try { if (raw.length > 1048576) throw Error(); value = parseJson(raw); } catch { fail('CHECKSUMS_INVALID', 'integrity'); }
@@ -85,6 +93,7 @@ async function verifyIntegrityBrowser(entries, manifest, E, policy) {
     } catch (error) { if (isFailure(error)) throw error; throw Object.assign(new Error('WebCrypto Ed25519 failed'), { reason: 'READ_CORE_CAPABILITY_UNAVAILABLE' }); }
     integrity.signature = policy.expectedPublicKeyHex === null ? 'verified_self_key' : 'verified_pinned_key';
     integrity.signature_content_digest = signatureDigest;
+    integrity.public_key = bundle.public_key;
   } else if (policy.requireSignature || policy.expectedPublicKeyHex !== null) fail('SIGNATURE_INVALID', 'integrity');
   return integrity;
 }
@@ -103,6 +112,15 @@ async function admitProtectedBrowser(input, inputProvider) {
     stage = 'payload'; const payload = decodeValidatedPayload(manifest, plaintext);
     stage = 'interpretation'; const result = finishAdmission(manifest, payload, entries, digests, integrity.checksums === 'verified_document_1' ? digests.E : null);
     const disclosure = freeze({ slot_selection: { ...copied.observation.selection }, observation_not_authority: true, provenance: 'host_supplied_triple' });
+    if (result.status === 'accepted') {
+      const view = require('./brand.js').inspectSnapshot(result.snapshot);
+      require('./browser-protected/state.js').register(result.snapshot, {
+        provider: copied.trustedProvider, integrity, disclosure,
+        observation: { snapshot_id: view.snapshot_id, tuple: view.tuple, asset: view.asset,
+          ...digests, ir_digest: view.ir_digest, integrity, unlock_observation: copied.observation,
+          disclosure, physical_reads: 'none', new_decryption: false }
+      });
+    }
     return freeze(result.status === 'accepted' ? { status: 'accepted', snapshot: result.snapshot, disclosure } : { status: 'catalog_only', catalog: result, disclosure });
   } catch (error) {
     if (isFailure(error) || stage === 'input') return failure(error);

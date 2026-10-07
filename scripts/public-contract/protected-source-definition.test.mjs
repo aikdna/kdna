@@ -28,8 +28,8 @@ const ordered = (v) =>
 test('the protected-source definition is an independent additive module', () => {
   assert.equal(module.id, 'kdna.protected-source/1');
   assert.equal(module.version, '1.0.0');
-  assert.equal(module.schema_path, 'specs/protected-source-r2-binding-7.schema.json');
-  assert.equal(module.schema_id, 'urn:kdna:schema:protected-source:1.0.0:binding:r2:7');
+  assert.equal(module.schema_path, 'specs/protected-source-r2-binding-8.schema.json');
+  assert.equal(module.schema_id, 'urn:kdna:schema:protected-source:1.0.0:binding:r2:8');
   assert.equal(module.root, 'ProtectedSourceObservation');
   assert.deepEqual(module.runtime_exports, [
     'Core/protected-source-node:getProtectedSourceContract',
@@ -48,8 +48,8 @@ test('the protected-source definition is an independent additive module', () => 
     assert.equal(Object.hasOwn(source.types, name), false, name);
     assert.equal(Object.hasOwn(source.protection_admission.types, name), false, name);
   }
-  assert.equal(source.engineering.package_versions.core, '0.37.0');
-  assert.equal(source.engineering.package_versions.read, '0.11.1');
+  assert.equal(source.engineering.package_versions.core, '0.37.1-rc.browser.1');
+  assert.equal(source.engineering.package_versions.read, '0.11.2-rc.browser.1');
 });
 
 test('the packed module exposes exactly the declared callables in CJS and ESM', async () => {
@@ -166,7 +166,7 @@ test('every declared arm is closed and validated by the generated validator', ()
     status: 'preview_valid',
     validation: {
       contract: { id: 'kdna.protection-admission/1', version: '1.0.0', definition_digest: digest },
-      implementation: { name: '@aikdna/kdna-core', version: '0.37.0' },
+      implementation: { name: '@aikdna/kdna-core', version: '0.37.1-rc.browser.1' },
       source_A: digest,
       original_payload_digest: digest,
       edits_digest: digest,

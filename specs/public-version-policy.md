@@ -17,7 +17,9 @@ Status: UNPUBLISHED_CANDIDATE. This policy specifies the issued coordinates for 
 | trace | `kdna.judgment-trace/0.3.1` |
 | read | `kdna.read/0.6.4` |
 
-The local package candidates are `@aikdna/kdna-core@0.37.0` and `@aikdna/kdna-read@0.11.1`. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
+The local package candidates are `@aikdna/kdna-core@0.37.1-rc.browser.1` and `@aikdna/kdna-read@0.11.2-rc.browser.1`. This browser package candidate is unpublished. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
+
+The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance. Its protocol tuple remains the base combination in the table; the added browser adapter does not select the Node native-section tuple.
 
 The container framing remains 0.5.0. The Manifest contract is selected by the existing fields `(format_version, compatibility.profile, compatibility.profile_version)`: `(0.5.0, kdna.payload.judgment, 0.5.1)`. It maps to `urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1`, generated as `schema/manifest-container-0.5.0-judgment-0.5.1.schema.json` and mirrored in Core. No schema URI, package version, loader-minimum field, body appearance or caller assertion selects a different schema.
 
@@ -45,15 +47,17 @@ R2 dependent Schema bindings use new identities while retaining their base algor
 
 | Module | Current Schema |
 |---|---|
-| Protection admission /1 | `urn:kdna:schema:protection-admission:1.0.0:binding:r2:7` |
-| External grant issuer /1 | `urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7` |
-| Protected source /1 | `urn:kdna:schema:protected-source:1.0.0:binding:r2:7` |
+| Protection admission /1 | `urn:kdna:schema:protection-admission:1.0.0:binding:r2:8` |
+| External grant issuer /1 | `urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8` |
+| Protected source /1 | `urn:kdna:schema:protected-source:1.0.0:binding:r2:8` |
 | PackageSet Node 0.2 | `urn:kdna:schema:package-set-node:0.2.1` |
 
 Each binding is explicit in the unique source and participates in its normal definition
 digest. Fixed tuple/package constants and reachable diagnostics are part of its identity.
 Old same-purpose Schema files retain their exact bytes; a retained /1 algorithm name
 alone does not establish compatibility with the R2 combination.
+
+The three binding7 schemas remain frozen for the published pair. Binding8 names the new package binding; it changes no base encryption, signing or authorization algorithm.
 
 The optional static policy carrier is now `kdna.static-policy/2`, version `2.0.0`.
 Its complete new definition includes empty native `condition_refs`, exclusion of a
@@ -80,8 +84,9 @@ Runtime/plan/host/trace now use 0.3.1 artifacts because their exact embedded tup
 changed. The framing and static execution algorithms are unchanged. All previous
 schemas, including the historical RC6 execution schemas and fixed wrappers, keep their original
 bytes and IDs. The complete RC6 tuple is unsupported by the current consumer.
-Current source-map and target_lines navigation identify the full RC7 combination
-and its sole public semantic source. These coordinates do not establish publication.
+The RC7 semantic combination remains the base tuple. Current source-map and
+target_lines navigation identify the browser package candidate and its sole public
+semantic source. These candidate coordinates do not establish publication.
 
 ## Candidate history (not current)
 

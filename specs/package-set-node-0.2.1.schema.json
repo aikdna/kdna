@@ -376,7 +376,7 @@
           "type": "array"
         },
         "core_version": {
-          "const": "0.37.0",
+          "const": "0.37.1-rc.browser.1",
           "type": "string"
         },
         "definition_digest": {
@@ -406,7 +406,7 @@
           "type": "array"
         },
         "read_version": {
-          "const": "0.11.1",
+          "const": "0.11.2-rc.browser.1",
           "type": "string"
         }
       },

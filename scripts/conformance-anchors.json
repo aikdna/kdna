@@ -13,6 +13,18 @@
           "version": "0.36.0"
         }
       }
+    },
+    {
+      "commit": "41ac52cddaac98e6feb5855fa7f60f5bae9b16ce",
+      "tree": "21eb4979328b94c21c27f0085da7a8df97f3df4d",
+      "historical_fixture": {
+        "scope": "historical-contract-fixture",
+        "core_package": {
+          "package_json": "packages/kdna-core/package.json",
+          "package_name": "@aikdna/kdna-core",
+          "version": "0.37.0"
+        }
+      }
     }
   ]
 }

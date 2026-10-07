@@ -1,13 +1,15 @@
-# Protection admission /1 — R2 binding 7 candidate
+# Protection admission /1 — R2 binding 8 candidate
 
 The protection base contract remains `kdna.protection-admission/1`, version `1.0.0`.
-Its current Schema is `urn:kdna:schema:protection-admission:1.0.0:binding:r2:7`,
-[protection-admission-r2-binding-7.schema.json](protection-admission-r2-binding-7.schema.json).
+Its current Schema is `urn:kdna:schema:protection-admission:1.0.0:binding:r2:8`,
+[protection-admission-r2-binding-8.schema.json](protection-admission-r2-binding-8.schema.json).
 The unique source is `public-semantic-source.json#protection_admission`; its explicit
 `schema_binding` fixes the complete [R2 tuple](public-version-policy.md), Core
-`0.37.0` and Read `0.11.1`. The binding participates in the existing
+`0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`. The binding participates in the existing
 canonical definition digest. Base id/version alone cannot identify this combination.
 Changing a bound package constant or reachable shape requires a new binding coordinate.
+
+This browser package candidate is unpublished. The published Core `0.37.0` / Read `0.11.1` releases and their binding7 schemas retain their original bytes and release evidence. Binding8 has its own artifact and installed-consumer acceptance boundary.
 
 The cryptographic algorithms, grant/revocation rules, prepared delivery ownership,
 one-use tokens, and outcome-unknown rules below retain their base meaning. Decrypted
@@ -197,7 +199,7 @@ verification says verified_pinned_key, not identity, judgment truth or access.
 The generated [definition types](protection-admission.d.ts) freeze non-callable
 unions. All branch records are closed; any field not listed is forbidden.
 `ProtectionOperation` and `ProtectionPreparedDelivery` have private same-instance
-brands. The generated [schema](protection-admission-r2-binding-7.schema.json) describes
+brands. The generated [schema](protection-admission-r2-binding-8.schema.json) describes
 observations and includes all result definitions; opaque authorities deliberately
 compile to false, so JSON can never validate as an accepted branded result.
 Admission observations replace a snapshot/operation with only its coordinate and
