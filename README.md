@@ -56,29 +56,42 @@ unpacking or decoding asset internals is not a compatible consumption path.
 ## Current source: choose the matching implementation
 
 The [Core/Read source guide](./docs/core-read-current-status.md) records the
-**2026-10-07 local source** identities and how to obtain a matching delivery.
-These are unpublished candidates; this page does not establish that remote
-`main` or npm contains these bytes.
+**2026-10-07 local browser candidate** identities and how to obtain a matching
+delivery. That Core/Read pair remains unpublished; this page does not establish
+that remote `main` or npm contains its bytes.
 
-| Entry | Exact local package combination | Use |
+| Entry | Exact package combination | Use |
 | --- | --- | --- |
 | This repository | Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` (exact Core peer) | Unpublished browser candidate; public admission, Read and explicit reference subpaths; Node >=20 |
-| [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` archives | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22; unpublished |
+| [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | Published prerelease CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22 |
 | [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |
 
 The published Core `0.37.0` / Read `0.11.1` releases retain their own artifacts and release evidence. The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance.
 
-The source row and the native CLI archive row have distinct byte identities.
-The CLI binds container `0.6.0` and native public export targets in its exact
-archives; a live Core/Read checkout with the same package versions is not
-automatically that implementation. The CLI's
-[native delivery guide](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)
-records its archive coordinates and offline host graph. This does not change
-the live source's independent specification, tuple or exports.
+The browser source candidate and the published native CLI combination retain
+separate contracts. Obtain `@aikdna/kdna-cli@0.39.0-rc.native-sections.2` from
+npm with its exact dependencies, `@aikdna/kdna-core@0.36.0-rc.r2.7` and
+`@aikdna/kdna-read@0.11.0-rc.r2.7`. That CLI retains container `0.6.0` and
+Read `0.7.0-candidate`; the browser candidate does not replace its Core/Read pair.
+The packaged [native delivery guide](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md)
+documents a frozen offline graph and retains prepublication wording. Registry
+installation resolves a separate dependency graph; retain its generated lock.
+
+With Node 22, run the published recipe in a new directory:
+
+```sh
+mkdir kdna-native-example
+cd kdna-native-example
+npm init -y
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2
+node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
+```
+
+Keep `package-lock.json` and use a new output directory for each run.
 
 The package combinations differ deliberately. Use each entry's own manifest,
-lock, binding and complete dependency archives; do not replace its CLI or Core
-with a newer sibling or a registry package having a similar name. The canonical
+binding and matching dependency graph, preserving its exact KDNA coordinates.
+The canonical
 [Loader Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md)
 belongs to the Loader/MCP combination. This repository's
 [`skills/`](./skills/README.md) directory is a historical compatibility copy.
@@ -94,14 +107,16 @@ root/browser admission retains protection refusals; explicit Node protection
 entries have their own [contract](./specs/protection-admission.md) and do not
 establish production accounts, native credential storage or Host acceptance.
 
-For the native asset archive combination, start with the
-[authored CLI example](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md).
-It describes a separate prepared example; the guide is not evidence of a run,
-human confirmation or a complete Agent workflow. The independent creation
-toolchain retains its separate
+For native asset authoring, start with the packaged
+[authored CLI example](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md)
+and its [executable native recipe](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs).
+The dedicated native Creator guide is not included in this CLI package; this
+route uses its packaged example and recipe. The independent Studio creation
+route retains its separate
 [Studio CLI installation](https://github.com/aikdna/kdna-studio-cli#readme) and
-[Creator Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md).
-Do not infer a complete creation-to-consumption acceptance from any version row.
+[Studio Creator Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md).
+These examples and version rows do not establish human confirmation, Agent task
+adoption or complete creation-to-consumption acceptance.
 
 ## Published CLI 0.36.1 walkthrough
 
