@@ -413,12 +413,21 @@ test('registered historical fixture preserves its own Core identity without cert
   // This scenario exercises the registered historical fixture against the
   // candidate-anchor rules; the in-tree record is released, so restore the
   // pre-release candidate shape and its historical fixture anchor in memory.
-  assert.equal(proof.anchors.length, 1);
+  const historicalCommit = '11eef63bc119b5c79dad6210e5f1740de448a655';
+  const historicalAnchor = (document) => {
+    const entries = document.anchors.filter((entry) => entry.commit === historicalCommit);
+    assert.equal(entries.length, 1);
+    return entries[0];
+  };
+  const historical = historicalAnchor(proof);
+  assert.equal(historical.tree, 'e02dfaca8f1d4ee2d8a1c97f4c810d91deca506a');
+  assert.equal(historical.historical_fixture.scope, 'historical-contract-fixture');
+  assert.equal(historical.historical_fixture.core_package.version, '0.36.0');
   current.release_status = 'candidate';
   current.published_version = '0.22.0';
-  core.conformance_commit = proof.anchors[0].commit;
-  assert.equal(proof.anchors[0].commit, core.conformance_commit);
-  assert.notEqual(proof.anchors[0].historical_fixture.core_package.version, current.version);
+  core.conformance_commit = historicalCommit;
+  assert.equal(historical.commit, core.conformance_commit);
+  assert.notEqual(historical.historical_fixture.core_package.version, current.version);
   const manifestPath = writeManifest(root, [core]);
   const positive = runValidator(manifestPath);
   assert.equal(positive.status, 0, positive.stderr);
@@ -429,49 +438,49 @@ test('registered historical fixture preserves its own Core identity without cert
     [
       'wrong historical version',
       (p) => {
-        p.anchors[0].historical_fixture.core_package.version = current.version;
+        historicalAnchor(p).historical_fixture.core_package.version = current.version;
       },
       /conformance_commit package version mismatch/u,
     ],
     [
       'wrong exact tree',
       (p) => {
-        p.anchors[0].tree = '0'.repeat(40);
+        historicalAnchor(p).tree = '0'.repeat(40);
       },
       /recorded conformance tree|historical conformance fixture tree/u,
     ],
     [
       'unknown scope',
       (p) => {
-        p.anchors[0].historical_fixture.scope = 'current-candidate';
+        historicalAnchor(p).historical_fixture.scope = 'current-candidate';
       },
       /historical conformance fixture identity is invalid/u,
     ],
     [
       'extra fixture claim',
       (p) => {
-        p.anchors[0].historical_fixture.current_candidate_accepted = true;
+        historicalAnchor(p).historical_fixture.current_candidate_accepted = true;
       },
       /historical conformance fixture identity is invalid/u,
     ],
     [
       'extra package claim',
       (p) => {
-        p.anchors[0].historical_fixture.core_package.accepted = true;
+        historicalAnchor(p).historical_fixture.core_package.accepted = true;
       },
       /historical conformance fixture identity is invalid/u,
     ],
     [
       'wrong package path',
       (p) => {
-        p.anchors[0].historical_fixture.core_package.package_json = 'package.json';
+        historicalAnchor(p).historical_fixture.core_package.package_json = 'package.json';
       },
       /historical conformance fixture identity is invalid/u,
     ],
     [
       'missing historical registration',
       (p) => {
-        delete p.anchors[0].historical_fixture;
+        delete historicalAnchor(p).historical_fixture;
       },
       /conformance_commit package version mismatch/u,
     ],
