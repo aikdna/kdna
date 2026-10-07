@@ -89,8 +89,8 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 50602,
-      "sha256": "f8430cad0b8dd2cd9e4a918737924fa3e819aef0b9def1787e46a5d48da326d3"
+      "bytes": 50638,
+      "sha256": "ad1d8ad9e4dcb8bfee002bae4d09bdcdeefb63ff7643156e520746e415a63457"
     },
     {
       "path": "specs/public-source-map.json",
@@ -100,12 +100,12 @@
     {
       "path": "specs/public-version-policy.md",
       "bytes": 12296,
-      "sha256": "af0bc3839d32229375232eb71d40476549a1aa9403d8e60a5532b9d455935a43"
+      "sha256": "1e6c5d5b658ee5a527afdf6d6f81dccdf5184c312e743d95c64c001245ce0d17"
     },
     {
       "path": "specs/read-contract.md",
       "bytes": 10922,
-      "sha256": "beb3a621c07d77bd90b9bd813e89f34b2174f01d270429e50c4d7bb468afcaf5"
+      "sha256": "3c25b9eb5251556e718169706d41a49e256acb1b6e81decf18057ff5415fa1f4"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -28013,8 +28013,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.36.0",
-      "read": "0.11.0"
+      "core": "0.37.0",
+      "read": "0.11.1"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -29409,7 +29409,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.11.0",
+    "package_version": "0.11.1",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -32465,7 +32465,7 @@
     "specification": {
       "path": "specs/protection-admission.md",
       "bytes": 37902,
-      "sha256": "e8665e8c325e5743d4cce7acbb5b36ae3581d8eb2c261e09c66f0683ece99835"
+      "sha256": "7dbc85924d7c0a1d0d4556aeac92de8ac91d331185b4a65d066c0d165c3fadcc"
     },
     "non_schema_rules": [
       {
@@ -32817,8 +32817,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.36.0",
-        "@aikdna/kdna-read": "0.11.0"
+        "@aikdna/kdna-core": "0.37.0",
+        "@aikdna/kdna-read": "0.11.1"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -33292,8 +33292,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.36.0",
-        "@aikdna/kdna-read": "0.11.0"
+        "@aikdna/kdna-core": "0.37.0",
+        "@aikdna/kdna-read": "0.11.1"
       }
     }
   },
@@ -34114,8 +34114,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.36.0",
-        "@aikdna/kdna-read": "0.11.0"
+        "@aikdna/kdna-core": "0.37.0",
+        "@aikdna/kdna-read": "0.11.1"
       }
     }
   },
@@ -38484,7 +38484,7 @@
     },
     {
       "line": "r2.rc7",
-      "status": "CURRENT_RELEASED_TARGET",
+      "status": "CURRENT_UNPUBLISHED_TARGET",
       "versionTuple": {
         "container": "0.5.0",
         "payload_profile": "kdna.payload.judgment",
@@ -38499,8 +38499,8 @@
       },
       "package_versions": [
         {
-          "core": "0.36.0",
-          "read": "0.11.0"
+          "core": "0.37.0",
+          "read": "0.11.1"
         }
       ],
       "preservation": "Native binding repair target; matching package metadata alone does not establish actual native runtime behavior or compatible consumers."

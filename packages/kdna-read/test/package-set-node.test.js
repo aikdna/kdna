@@ -164,8 +164,8 @@ function planFor(nine, set, planId = 'plan:n1') {
 test('the read contract pins the installed Core and exposes exactly the declared callables', () => {
   const contract = R.getPackageReadContract();
   assert.equal(contract.descriptor.contract, 'kdna.package-set-node/0.2.1');
-  assert.equal(contract.descriptor.core_version, '0.36.0');
-  assert.equal(contract.descriptor.read_version, '0.11.0');
+  assert.equal(contract.descriptor.core_version, '0.37.0');
+  assert.equal(contract.descriptor.read_version, '0.11.1');
   assert.match(contract.core_contract_digest, /^sha256:[0-9a-f]{64}$/);
   assert.deepEqual(Object.keys(R).sort(), [...contract.descriptor.read_callables].sort());
 });

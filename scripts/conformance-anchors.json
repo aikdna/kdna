@@ -3,14 +3,14 @@
   "purpose": "Preserve the exact source tree of the recorded conformance anchor across a rebase merge. Resolving an identical tree does not create a new acceptance or rename the original commit.",
   "anchors": [
     {
-      "commit": "5cb766f1b31a945d3b7a3a612ce7a9a26a0d1ff2",
-      "tree": "2bd86ccb5cd926bd5db8f0802a521cea86c6d61b",
+      "commit": "11eef63bc119b5c79dad6210e5f1740de448a655",
+      "tree": "e02dfaca8f1d4ee2d8a1c97f4c810d91deca506a",
       "historical_fixture": {
         "scope": "historical-contract-fixture",
         "core_package": {
           "package_json": "packages/kdna-core/package.json",
           "package_name": "@aikdna/kdna-core",
-          "version": "0.24.0-rc.component-semantics.2"
+          "version": "0.36.0"
         }
       }
     }

@@ -587,7 +587,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.36.0"
+          "version": "0.37.0"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -597,7 +597,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.0"
+          "version": "0.11.1"
         },
         {
           "path": "packages/kdna/package.json",
@@ -634,7 +634,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.36.0"
+          "declared": "0.37.0"
         },
         {
           "path": "packages/kdna/package.json",
@@ -657,7 +657,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "6157d29bbffd5266b515d9cb00dab4caca2c6883ac8df9c02aa4e455fd5c9698",
+          "sha256": "696a024147661af9bf7426a37ab7ea6e010dbbf0d0add3a02e28e4ef8c5d477a",
           "local_archives": []
         }
       ],
@@ -762,9 +762,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.36.0",
+          "version": "0.37.0",
           "member_count": 431,
-          "members_sha256": "842b9eb4627f6b6cac2252e6f731e4734a2e993b3d5a933271a2f1e943165ac7",
+          "members_sha256": "ed69a183746d1de872f9394acd25698630ad1293652d7018b21843cc4aee03a6",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -1251,9 +1251,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.0",
+          "version": "0.11.1",
           "member_count": 90,
-          "members_sha256": "3afe10a5e235c3ac23e88010532b6271aa9b53d6714dd24083302947209a210d",
+          "members_sha256": "067c477d0f10371c4b06b553cc744694d6ba5b2ebe8ee7697193789dd4cfbb1d",
           "paths": [
             "LICENSE",
             "NOTICE",
