@@ -1,6 +1,7 @@
 # KDNA Version and Capability Matrix
 
-> Core/Read, CLI, Studio and MCP local source bindings reviewed: 2026-09-23.
+> Core/Read browser candidate source reviewed: 2026-10-07.
+> CLI, Studio and MCP local source observations remain dated 2026-09-23.
 > Other component source observations remain dated 2026-09-14;
 > registry observations remain dated 2026-09-13. This
 > update is neither a new registry check nor downstream consumer acceptance.

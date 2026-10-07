@@ -32,7 +32,7 @@ published line.
 ## Current source entry
 
 Start with the [matching-source and installation guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
-Its 2026-09-23 local source combinations are distinct:
+Its 2026-10-07 Core/Read browser candidate and separately bound local tool combinations are distinct:
 
 - This protocol repository: Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` (unpublished R2 browser candidate).
 - [Runtime CLI](https://github.com/aikdna/kdna-cli#readme): CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.

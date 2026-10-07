@@ -38,6 +38,30 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 已发布的 Core `0.37.0` / Read `0.11.1` 保留各自发布产物与证据。上述浏览器候选尚未发布，须独立核验其产物、安装依赖图和消费者行为。
 
+原生资产创作可从 npm 取得公开预发布包 `@aikdna/kdna-cli@0.39.0-rc.native-sections.2`，
+其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7` 与
+`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合保留 container `0.6.0` / Read
+`0.7.0-candidate` 的原生合同，上述浏览器候选不替换其 Core/Read。包内
+[原生交付说明](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md)
+记载冻结的离线依赖图，仍含发布前措辞；registry 安装解析独立依赖图，应保留其生成的 lock。
+从包内[作者示例](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md)
+及[可执行原生配方](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs)
+开始这条原生创作路径，使用上述已发布 CLI 组合。该 CLI 包未包含专门的原生 Creator 指南，
+这条路径使用包内作者示例与配方。Studio 保留独立创作路径。
+
+使用 Node 22，在新目录中运行：
+
+```sh
+mkdir kdna-native-example
+cd kdna-native-example
+npm init -y
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2
+node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
+```
+
+保留生成的 `package-lock.json`，每次运行使用新的输出目录。
+这些示例不证明人类确认、Agent 实际任务采用或完整创作到消费接受。
+
 Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场与显式 Host 参考 API。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md) 有自己的输入和可信 provider 边界。源码存在不等于独立接受、原生环境或真实服务可用。CLI、MCP、Studio 仍按各自精确依赖图使用，不能从本仓版本推断已重绑定。
 
 ## 已发布 CLI 0.36.1 的五分钟路径
