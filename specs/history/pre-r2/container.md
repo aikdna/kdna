@@ -17,7 +17,7 @@ This container contract is content-neutral. It does not decide whether an
 asset's judgment, taste, values, standards, or personality are good or true.
 It also does not decide whether an authoring process is complete or whether a
 person or organization confirmed the judgment. See
-[Creation Output Boundary](./creation-output-boundary.md).
+[Creation Output Boundary](https://github.com/aikdna/kdna/blob/86997419ef8c7559d70d3f51619c2826e30b9135/specs/creation-output-boundary.md).
 
 ## 2. One Authoring-to-Consumption Path
 
@@ -84,7 +84,7 @@ top level MUST be rejected.
 
 ## 4. Runtime Manifest
 
-The authoritative schema is [`../schema/manifest.schema.json`](../schema/manifest.schema.json).
+The authoritative schema is [`../schema/manifest.schema.json`](https://github.com/aikdna/kdna/blob/86997419ef8c7559d70d3f51619c2826e30b9135/schema/manifest.schema.json).
 A minimal public manifest has this shape:
 
 ```json
@@ -144,7 +144,7 @@ boundaries, cases, or self-checks.
 ## 5. CBOR Payload
 
 For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
-[`../schema/payload-profile.schema.json`](../schema/payload-profile.schema.json):
+[`../schema/payload-profile.schema.json`](https://github.com/aikdna/kdna/blob/86997419ef8c7559d70d3f51619c2826e30b9135/schema/payload-profile.schema.json):
 
 ```text
 {
@@ -171,7 +171,7 @@ decoding fails.
 still needs at least one non-empty axiom and a declared domain, role, boundary,
 or applicability condition as required by the payload schema. Official
 Creation Writers use the stricter output profile in
-[Creation Output Boundary](./creation-output-boundary.md) and emit the field
+[Creation Output Boundary](https://github.com/aikdna/kdna/blob/86997419ef8c7559d70d3f51619c2826e30b9135/specs/creation-output-boundary.md) and emit the field
 explicitly; they do not derive it from the first axiom.
 
 ## 6. Encryption and Authorization
