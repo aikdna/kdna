@@ -337,39 +337,9 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: aikdna/kdna-vscode
-          ref: f5629f664efc098916f9576c4d3652a62c994bd4
-          path: .ecosystem-repos/kdna-vscode
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-activation-server
-          ref: 31b76fabc5d3f487221a7ea862f352cf190fa825
-          path: .ecosystem-repos/kdna-activation-server
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
           repository: aikdna/kdna-remote-server
           ref: 81b563598ecc19da480d5191f9554a20cef19744
           path: .ecosystem-repos/kdna-remote-server
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-web-server
-          ref: f4907a9786f82f13e62db1040690a5f7df8f512b
-          path: .ecosystem-repos/kdna-web-server
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-web-client
-          ref: f86d46255b7a4e93b40700741de9e0ddcb6bb812
-          path: .ecosystem-repos/kdna-web-client
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-react
-          ref: 1c55b6539aa13604acaff589016d7cbc218f05b0
-          path: .ecosystem-repos/kdna-react
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/create-kdna-web-app
-          ref: a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39
-          path: .ecosystem-repos/create-kdna-web-app
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-assets

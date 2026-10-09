@@ -53,6 +53,10 @@ function packageVersion(npmPackage) {
 }
 
 function checkVSCodeBoundary() {
+  // The boundary below only exists while the editor component is declared in
+  // this repository's manifest. A repository that is not part of the current
+  // release surface is not declared, so there is no public boundary to check.
+  if (!manifest.components.some((entry) => entry.repository === 'aikdna/kdna-vscode')) return;
   const vscode = component('aikdna/kdna-vscode');
   const vscodeRoot = componentPath('aikdna/kdna-vscode');
   if (!vscode || !vscodeRoot) return;

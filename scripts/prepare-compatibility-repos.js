@@ -13,7 +13,32 @@ function prepareCompatibilityRepos(controlRoot, destination, reposRoot) {
   const selected = manifest.components.filter(
     (component) => component.local_path && component.local_path !== '.' && component.source_commit,
   );
-  assert.equal(selected.length, 16, 'compatibility repository inventory differs');
+  const names = selected.map((component) => component.repository);
+  assert.ok(names.length > 0, 'compatibility repository inventory differs');
+  assert.equal(new Set(names).size, names.length, 'compatibility repository inventory differs');
+  // When the accepted declaration inventory sits beside the control root, the
+  // manifest must cover exactly the repositories those declarations name.
+  const declarations = path.join(controlRoot, 'scripts', 'compatibility-bindings.json');
+  if (fs.existsSync(declarations)) {
+    const accepted = JSON.parse(fs.readFileSync(declarations, 'utf8')).bindings.map(
+      (binding) => `aikdna/${binding.repository}`,
+    );
+    // Declarations owned by the control repository itself are satisfied by the
+    // control checkout, not by an external compatibility snapshot.
+    const internal = manifest.components
+      .filter((component) => !component.local_path || component.local_path === '.')
+      .map((component) => component.repository);
+    // A declared component may legitimately carry no npm compatibility
+    // declaration (the Apple-platform components do not), but every declared
+    // consumer must be present in the manifest.
+    assert.deepEqual(
+      [...new Set(accepted)]
+        .filter((name) => !names.includes(name) && !internal.includes(name))
+        .sort(),
+      [],
+      'compatibility repository inventory differs',
+    );
+  }
   const inputs = selected.map((component) => {
     assert.match(component.repository, /^aikdna\/[a-z0-9-]+$/u);
     assert.match(component.source_commit, /^[a-f0-9]{40}$/u);

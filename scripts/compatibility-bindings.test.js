@@ -132,10 +132,10 @@ before(() => {
 });
 after(() => fs.rmSync(temporary, { recursive: true, force: true }));
 
-test('all 35 accepted declarations have verified Git blob provenance and canonical root identity', () => {
-  assert.equal(verified.size, 35);
+test('all 18 accepted declarations have verified Git blob provenance and canonical root identity', () => {
+  assert.equal(verified.size, 18);
   const consumers = discover();
-  assert.equal(consumers.length, 35);
+  assert.equal(consumers.length, 18);
   assert.equal(consumers.filter((row) => !row.ok).length, 0);
   assert.equal(
     consumers.some((row) => row.repository === 'arbitrary-control-directory'),
@@ -358,7 +358,7 @@ test('missing manifest and missing dependency still fail complete compatibility 
   }
 });
 
-test('compatibility preparation creates sixteen exact detached snapshots without changing inputs', () => {
+test('compatibility preparation creates eleven exact detached snapshots without changing inputs', () => {
   const before = new Map(
     fs.readdirSync(repositories).map((name) => {
       const root = path.join(repositories, name);
@@ -373,7 +373,7 @@ test('compatibility preparation creates sixteen exact detached snapshots without
     }),
   );
   const rows = prepareCompatibilityRepos(control, path.join(temporary, 'prepared'), repositories);
-  assert.equal(rows.length, 16);
+  assert.equal(rows.length, 11);
   for (const row of rows) {
     assert.equal(git(row.path, ['rev-parse', 'HEAD']), row.commit);
     assert.equal(git(row.path, ['branch', '--show-current']), '');
@@ -472,7 +472,7 @@ test('actual strict CLI rejects a manifest leaf symlink even when its bytes matc
 });
 
 test('actual strict CLI rejects a symlinked manifest parent with identical file bytes', () => {
-  const row = records.find((item) => item.repository === 'create-kdna-web-app');
+  const row = records.find((item) => item.repository === 'kdna-skills');
   const root = rootFor(row.repository);
   const directory = path.dirname(path.join(root, row.manifest));
   const held = path.join(temporary, 'held-template-directory');

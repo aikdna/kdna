@@ -46,31 +46,11 @@
       }
     },
     {
-      "label": "KDNA Activation Server",
-      "repository": "aikdna/kdna-activation-server",
-      "package_json": "package.json",
-      "npm_package": "@aikdna/kdna-activation-server",
-      "version": "0.2.1",
-      "canonical_tag": {
-        "type": "natural"
-      }
-    },
-    {
       "label": "KDNA Remote Server",
       "repository": "aikdna/kdna-remote-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-remote-server",
       "version": "0.4.2",
-      "canonical_tag": {
-        "type": "natural"
-      }
-    },
-    {
-      "label": "KDNA Web Server",
-      "repository": "aikdna/kdna-web-server",
-      "package_json": "package.json",
-      "npm_package": "@aikdna/kdna-web-server",
-      "version": "0.3.1",
       "canonical_tag": {
         "type": "natural"
       }
@@ -84,36 +64,6 @@
       "canonical_tag": {
         "type": "prefix",
         "value": "conformance/"
-      }
-    },
-    {
-      "label": "KDNA Web Client",
-      "repository": "aikdna/kdna-web-client",
-      "package_json": "package.json",
-      "npm_package": "@aikdna/kdna-web-client",
-      "version": "0.3.0",
-      "canonical_tag": {
-        "type": "natural"
-      }
-    },
-    {
-      "label": "KDNA React",
-      "repository": "aikdna/kdna-react",
-      "package_json": "package.json",
-      "npm_package": "@aikdna/kdna-react",
-      "version": "0.4.0",
-      "canonical_tag": {
-        "type": "natural"
-      }
-    },
-    {
-      "label": "Create KDNA Web App",
-      "repository": "aikdna/create-kdna-web-app",
-      "package_json": "package.json",
-      "npm_package": "create-kdna-web-app",
-      "version": "0.5.0",
-      "canonical_tag": {
-        "type": "natural"
       }
     },
     {

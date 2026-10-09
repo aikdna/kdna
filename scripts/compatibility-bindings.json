@@ -2,78 +2,6 @@
   "schema_version": "1.0.0",
   "bindings": [
     {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/express/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "d6c44674e882101feec96f3284131663e53f1741d5e6a2b58f83bbf011e6b3d1"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/express/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-web-server",
-      "declared": "0.3.1",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "d6c44674e882101feec96f3284131663e53f1741d5e6a2b58f83bbf011e6b3d1"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs-pages/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs-pages/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-react",
-      "declared": "0.4.0",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs-pages/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-web-server",
-      "declared": "0.3.1",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-react",
-      "declared": "0.4.0",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
-      "repository": "create-kdna-web-app",
-      "manifest": "templates/nextjs/package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-web-server",
-      "declared": "0.3.1",
-      "source": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
-      "manifest_sha256": "9fa50371be96a65f1b25b2ce66c8ae6b402e9de947c9855ed0926c36169a0308"
-    },
-    {
       "repository": "kdna",
       "manifest": "package.json",
       "section": "devDependencies",
@@ -126,15 +54,6 @@
       "declared": "0.37.1-rc.browser.1",
       "manifest_sha256": "4a7be66544648ada4c73dde605f416bd2c0766d4f57497a39be7ebe99b0f70e9",
       "source_manifest_blob": "86f40f194cd64d3b3acd06bfcaeeba430de26d2c"
-    },
-    {
-      "repository": "kdna-activation-server",
-      "manifest": "package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "31b76fabc5d3f487221a7ea862f352cf190fa825",
-      "manifest_sha256": "2775cab51dbd286e00875eefe4adfab8e27a5dc5652831d0881deac18fd07361"
     },
     {
       "repository": "kdna-assets",
@@ -200,42 +119,6 @@
       "manifest_sha256": "1c1bc0de0a3648aad3c8af91fc87f7054a96bad4671f3e8221cae639e571a99d"
     },
     {
-      "repository": "kdna-react",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "1c55b6539aa13604acaff589016d7cbc218f05b0",
-      "manifest_sha256": "29885e8a752502bbe1437191b8201a9ce4aece4158f8da00d25b7a4dba129746"
-    },
-    {
-      "repository": "kdna-react",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-activation-server",
-      "declared": "0.2.1",
-      "source": "1c55b6539aa13604acaff589016d7cbc218f05b0",
-      "manifest_sha256": "29885e8a752502bbe1437191b8201a9ce4aece4158f8da00d25b7a4dba129746"
-    },
-    {
-      "repository": "kdna-react",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-web-server",
-      "declared": "0.3.1",
-      "source": "1c55b6539aa13604acaff589016d7cbc218f05b0",
-      "manifest_sha256": "29885e8a752502bbe1437191b8201a9ce4aece4158f8da00d25b7a4dba129746"
-    },
-    {
-      "repository": "kdna-react",
-      "manifest": "package.json",
-      "section": "dependencies",
-      "packageName": "@aikdna/kdna-web-client",
-      "declared": "0.3.0",
-      "source": "1c55b6539aa13604acaff589016d7cbc218f05b0",
-      "manifest_sha256": "29885e8a752502bbe1437191b8201a9ce4aece4158f8da00d25b7a4dba129746"
-    },
-    {
       "repository": "kdna-remote-server",
       "manifest": "package.json",
       "section": "dependencies",
@@ -279,42 +162,6 @@
       "declared": "0.21.0",
       "source": "b315ac7a0142ba594649eb764c525ba752a21e12",
       "manifest_sha256": "61121733250f360e71c3432d10071f55a4c5651a5791cf1c977f5c22f588eee7"
-    },
-    {
-      "repository": "kdna-web-client",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-web-server",
-      "declared": "0.3.1",
-      "source": "f86d46255b7a4e93b40700741de9e0ddcb6bb812",
-      "manifest_sha256": "a35102056a9c5d30caee548011248e9f3f3ad1f1fe870e00b9c90588f844c078"
-    },
-    {
-      "repository": "kdna-web-server",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "f4907a9786f82f13e62db1040690a5f7df8f512b",
-      "manifest_sha256": "a627b45c456636541cc8e50762e70c9435a6a571c714a6cef72950f09f06e0d7"
-    },
-    {
-      "repository": "kdna-web-server",
-      "manifest": "package.json",
-      "section": "peerDependencies",
-      "packageName": "@aikdna/kdna-core",
-      "declared": "0.21.0",
-      "source": "f4907a9786f82f13e62db1040690a5f7df8f512b",
-      "manifest_sha256": "a627b45c456636541cc8e50762e70c9435a6a571c714a6cef72950f09f06e0d7"
-    },
-    {
-      "repository": "kdna-web-server",
-      "manifest": "package.json",
-      "section": "devDependencies",
-      "packageName": "@aikdna/kdna-activation-server",
-      "declared": "0.2.1",
-      "source": "f4907a9786f82f13e62db1040690a5f7df8f512b",
-      "manifest_sha256": "a627b45c456636541cc8e50762e70c9435a6a571c714a6cef72950f09f06e0d7"
     }
   ]
 }
