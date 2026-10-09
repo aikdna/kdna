@@ -30,15 +30,71 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 >
 > 当前状态与路线图 → [Status](./docs/status.zh.md) · [Public Roadmap](./docs/public-roadmap.md)
 
-## 当前源码：Core 入场与 Read
+## 当前源码：选择匹配的实现
 
-先阅读 [Core/Read 源码指引](./docs/core-read-current-status.md)、
-[Core](./packages/kdna-core/README.md) 和 [Read](./packages/kdna-read/README.md)
-的精确输入与 API。当前未发布 R2 浏览器候选源码组合为 Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`，Read 要求精确 Core peer。完整语义坐标见 [版本策略](./specs/public-version-policy.md) 与 [规范索引](./SPEC-INDEX.md)。Core 对不可变字节入场，生成 Canonical IR 并签发私有 snapshot。Read 明确区分 `read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`；披露需要独立可信的 control / Host provider，读取结果不授予行动权限。
+先读[当前支持与分发矩阵](./docs/current-release-support.md)和
+[Core/Read 源码指引](./docs/core-read-current-status.md)，区分源码版本、包字节、
+容器合同与公开渠道。当前预览组合仍是候选；源码、`main` 或已有 `latest` 包
+都不能证明这些精确版本已经发布。
 
-已发布的 Core `0.37.0` / Read `0.11.1` 保留各自发布产物与证据。上述浏览器候选尚未发布，须独立核验其产物、安装依赖图和消费者行为。
+| 入口 | 精确候选组合 | 使用边界 |
+| --- | --- | --- |
+| Core/Read | Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
+| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.3` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
+| [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` 与上述精确 Core/Read | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
-原生资产创作可从 npm 取得公开预发布包 `@aikdna/kdna-cli@0.39.0-rc.native-sections.2`，
+两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
+请选择生产该资产的路径所声明的 reader。原生 CLI 的 Plan/load 不可用；
+Core `/execution` 的原生 0.3.1 Plan/Capsule 与显式 Host 参考 API 是独立入口。
+普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；
+[显式 Node 保护入口](./specs/protection-admission.md)有自己的输入和可信 provider 边界。
+
+第一次做 Agent 任务，可让 Codex Agent 通过本地工具调用准备好的精确原生 CLI。
+明确任务、资产文件和 Read 披露权限，再由 Agent 取得 catalog、读取精确选择，
+用于撰写或修订任务输出。[合成周报案例](./examples/native-team-update/README.md)
+记录了一次实际 Agent 任务的前后作品、所用偏好及 Agent 创作的 Source 修订。
+它只证明这个 Agent 在这项合成任务中的使用，不证明 MCP 交付、具名 Host 激活或
+真人确认。本地工具调用也不证明 Agent 模型在本地处理披露内容。
+
+先从 [CLI 完整源码](https://github.com/aikdna/kdna-cli#readme)按
+[交付生成说明](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)
+准备源优先交付：CLI 与十一份必需依赖共十二份精确 archive、相对文件 lock、
+完整成员绑定和许可证。包内[作者示例](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md)
+与[可执行配方](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs)
+演示创建、精确选择披露、实质 Source 修订、重新打开及原文件保持不变。
+
+只有官方 registry 元数据确认这三个精确预览版本后，才可在新目录用独立的
+registry 安装路径：
+
+```sh
+mkdir kdna-native-example
+cd kdna-native-example
+npm init -y
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3
+node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
+```
+
+保留各自生成的 lock 与旧文件，每次配方使用新输出目录。源码离线交付和 registry
+安装使用不同 lock，但应绑定同一组声明的 KDNA 包字节。
+[预览发行流程](./docs/release-preview.md)使用 Core/Read 的 `browser-preview` 与
+CLI 的 `native-preview`，均保持 `latest` 不变。
+
+规范 [Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md) 与
+[Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md)
+按 Host 的精确安装选择原生或明确匹配的 Studio 路径。本仓
+[`skills/`](./skills/README.md) 保留历史兼容副本。Studio 的 container `0.5.0`
+保护导出要求其自己的可信 Host、凭据通道和读回；具名 Host 交付与独立接受仍待实际执行。
+任何路径都不运行模型、认证个人或授予行动权限。
+
+已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
+保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
+工作使用 `.3`，不能覆盖已经发布的 `.2`。技术检查和脚本配方不证明真人确认、
+作品适用性或实际任务采用。
+
+## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径
+
+下面保留已发布原生线的独立历史示例。可从 npm 取得公开预发布包 `@aikdna/kdna-cli@0.39.0-rc.native-sections.2`，
 其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7` 与
 `@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合保留 container `0.6.0` / Read
 `0.7.0-candidate` 的原生合同，上述浏览器候选不替换其 Core/Read。包内
@@ -62,11 +118,10 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 保留生成的 `package-lock.json`，每次运行使用新的输出目录。
 这些示例不证明人类确认、Agent 实际任务采用或完整创作到消费接受。
 
-Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场与显式 Host 参考 API。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md) 有自己的输入和可信 provider 边界。源码存在不等于独立接受、原生环境或真实服务可用。CLI、MCP、Studio 仍按各自精确依赖图使用，不能从本仓版本推断已重绑定。
-
 ## 已发布 CLI 0.36.1 的五分钟路径
 
-下面保留已发布线的独立示例，安装固定版本，不与当前 Core/Read 源码或资产混用：
+下面保留已发布线的独立示例：CLI `0.36.1` 绑定 Core `0.21.0` 与
+`cbor-x` `1.6.4`。安装固定版本，不与当前 Core/Read 源码或资产混用：
 
 ```bash
 npm install -g @aikdna/kdna-cli@0.36.1
@@ -201,7 +256,8 @@ kdna plan-load ./my-domain.kdna
 
 KDNA 的公开生态保留 17 个仓库使命，覆盖协议/Core、Runtime CLI、Studio、参考
 资产、Apple、Agent/MCP/编辑器、Web、授权与远程消费。它们成熟度不同，也不会
-同时发布。机器可读的精确版本与生命周期见
+同时发布。当前源码组合与公开渠道分别列在
+[支持与分发矩阵](./docs/current-release-support.md)；机器可读的版本化记录见
 [`ecosystem-manifest.json`](./ecosystem-manifest.json)。
 
 ## 成熟度

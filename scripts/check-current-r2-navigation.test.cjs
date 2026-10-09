@@ -169,14 +169,14 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'exact Core peer `0.37.1-rc.browser.1`',
-    'exact Core peer `0.36.0-rc.r2.4`',
+    'Read declares Core `0.37.1-rc.browser.1` as its exact peer',
+    'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
     'CoreRead guide payload coordinate',
     'docs/core-read-current-status.md',
-    'version `0.5.1`',
-    'version `0.4.0`',
+    'kdna.payload.judgment/0.5.1',
+    'kdna.payload.judgment/0.4.0',
   ],
   [
     'CoreRead guide Core coordinate',
@@ -199,19 +199,19 @@ const mutations = [
   [
     'CoreRead guide execution coordinate',
     'docs/core-read-current-status.md',
-    'Trace `0.3.1`',
-    'Trace `0.2.0`',
+    'execution coordinates `0.3.1`',
+    'execution coordinates `0.2.0`',
   ],
   [
     'CoreRead guide unknown critical',
     'docs/core-read-current-status.md',
-    'reject all four modes',
-    'permit historical catalog_only',
+    'Unknown critical semantics reject',
+    'Unknown critical semantics permit historical catalog_only',
   ],
   [
     'Start Here package',
     'docs/start-here.md',
-    'Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
+    '`0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
     '0.35.0-rc.source.1',
   ],
   [
@@ -347,18 +347,18 @@ test('adding a stale current identity beside the correct text is refused', () =>
     }).issues.length > 0,
   );
 });
-test('historical policy and actual downstream old dependency rows are retained without becoming current selectors', () => {
+test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
+  assert.ok(guide.includes('CLI `0.39.0-rc.native-sections.3` with the exact SDK pair above'));
   assert.ok(
     guide.includes(
-      'Studio CLI `0.17.0-rc.material-edit.1` / Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
+      'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent source candidates.',
     ),
   );
-  assert.ok(
-    guide.includes(
-      'MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`',
-    ),
-  );
+  assert.equal(guide.includes('0.17.0-rc.material-edit.1'), false);
+  const history = fs.readFileSync(path.join(root, 'docs/version-and-capability-matrix.md'), 'utf8');
+  assert.ok(history.includes('4.5.0-rc.material-edit.1'));
+  assert.ok(history.includes('0.8.1-rc.combination.1'));
   assert.ok(
     fs
       .readFileSync(path.join(root, 'specs/public-version-policy.md'), 'utf8')
@@ -396,81 +396,103 @@ test('the published native graph is retained separately while browser current id
 });
 const nativeIdentityMutations = [
   [
-    'CLI row publication fact',
+    'CLI candidate row',
     'README.md',
-    'Published prerelease CLI `0.39.0-rc.native-sections.2`',
-    'Unpublished CLI `0.39.0-rc.native-sections.2`',
+    'CLI `0.39.0-rc.native-sections.3` with that exact Core/Read pair',
+    'CLI `0.39.0-rc.native-sections.2` with that exact Core/Read pair',
   ],
   [
-    'CLI row Core',
+    'MCP candidate row',
     'README.md',
-    '/ exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` |',
-    '/ exact Core `0.37.1-rc.browser.1` and Read `0.11.0-rc.r2.7` |',
+    'MCP `0.8.0-rc.native-sections.1` with that exact native CLI',
+    'MCP `0.8.1-rc.combination.1` with that exact native CLI',
   ],
   [
-    'CLI row Read',
+    'Studio candidate row',
     'README.md',
-    '/ exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` |',
-    '/ exact Core `0.36.0-rc.r2.7` and Read `0.11.2-rc.browser.1` |',
+    'StudioCore `4.0.0-rc.components.2` with that exact Core/Read pair',
+    'StudioCore `4.5.0-rc.material-edit.1` with that exact Core/Read pair',
   ],
   [
-    'English native Core',
+    'English published Core',
     'README.md',
-    'npm with its exact dependencies, `@aikdna/kdna-core@0.36.0-rc.r2.7`',
-    'npm with its exact dependencies, `@aikdna/kdna-core@0.37.1-rc.browser.1`',
+    '`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI',
+    '`0.37.1-rc.browser.1` / Read `0.11.0-rc.r2.7`; loading CLI',
   ],
   [
-    'English native Read',
+    'English published Read',
     'README.md',
-    '`@aikdna/kdna-read@0.11.0-rc.r2.7`. That CLI',
-    '`@aikdna/kdna-read@0.11.2-rc.browser.1`. That CLI',
+    '`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI',
+    '`0.36.0-rc.r2.7` / Read `0.11.2-rc.browser.1`; loading CLI',
   ],
   [
-    'Chinese native Core',
+    'Chinese published Core',
     'README.zh.md',
     '其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7`',
     '其精确依赖为 `@aikdna/kdna-core@0.37.1-rc.browser.1`',
   ],
   [
-    'Chinese native Read',
+    'Chinese published Read',
     'README.zh.md',
     '`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合',
     '`@aikdna/kdna-read@0.11.2-rc.browser.1`。该组合',
   ],
   [
-    'status native Core',
+    'status published Core',
     'docs/core-read-current-status.md',
-    'with exact Core `0.36.0-rc.r2.7` and Read',
-    'with exact Core `0.37.1-rc.browser.1` and Read',
+    '`0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read',
+    '`0.39.0-rc.native-sections.2` with Core `0.37.1-rc.browser.1` / Read',
   ],
   [
-    'status native Read',
+    'status published Read',
     'docs/core-read-current-status.md',
-    'and Read `0.11.0-rc.r2.7`. Its container',
-    'and Read `0.11.2-rc.browser.1`. Its container',
+    '`0.11.0-rc.r2.7`. These are distinct installed graphs.',
+    '`0.11.2-rc.browser.1`. These are distinct installed graphs.',
+  ],
+  [
+    'historical publication role',
+    'README.md',
+    'Historical native CLI `0.39.0-rc.native-sections.2`',
+    'Current native CLI `0.39.0-rc.native-sections.2`',
+  ],
+  [
+    'Chinese published status',
+    'README.zh.md',
+    '下面保留已发布原生线的独立历史示例。',
+    '下面保留未发布原生线的独立历史示例。',
+  ],
+  [
+    'support old Web graph',
+    'docs/current-release-support.md',
+    'Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`',
+    'Core `0.37.1-rc.browser.1` / Read `0.3.0-rc.component-semantics.2`',
+  ],
+  [
+    'support Studio status',
+    'docs/current-release-support.md',
+    'npm `3.0.0`. Current source is not a stable npm release.',
+    'npm `4.0.0`. Current source is a stable npm release.',
+  ],
+  [
+    'support editor compatibility',
+    'docs/current-release-support.md',
+    'Workspace control is currently unsupported.',
+    'Workspace control is currently supported.',
   ],
 ];
-for (const [file, labels] of [
-  ['README.md', ['native delivery guide', 'authored CLI example', 'executable native recipe']],
-  ['README.zh.md', ['原生交付说明', '作者示例', '可执行原生配方']],
-  [
-    'docs/core-read-current-status.md',
-    ['packaged guide', 'packaged author example', 'executable recipe'],
-  ],
-])
-  for (const label of labels)
-    nativeIdentityMutations.push([
-      `${file} ${label} fixed package URL`,
-      file,
-      `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/`,
-      `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.1-rc.combination.1/`,
-    ]);
+for (const label of ['原生交付说明', '作者示例', '可执行原生配方'])
+  nativeIdentityMutations.push([
+    `Chinese ${label} fixed published URL`,
+    'README.zh.md',
+    `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/`,
+    `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.1-rc.combination.1/`,
+  ]);
 for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
-    `${file} installed CLI coordinate`,
+    `${file} candidate installed CLI coordinate`,
     file,
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2',
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.1-rc.combination.1',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
   test(`the fixed published native context refuses ${label}`, () => {
@@ -484,20 +506,20 @@ const nativeContextAnchors = [
   [
     'README.md',
     '## Current source: choose the matching implementation',
-    'installation resolves a separate dependency graph; retain its generated lock.',
-    'The browser source candidate and the published native CLI combination retain',
+    'actual task adoption.',
+    'Published Core `0.37.0`',
   ],
   [
     'README.zh.md',
-    '## 当前源码：Core 入场与 Read',
+    '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
     '这条路径使用包内作者示例与配方。Studio 保留独立创作路径。',
-    '原生资产创作可从 npm 取得公开预发布包',
+    '下面保留已发布原生线的独立历史示例。',
   ],
   [
     'docs/core-read-current-status.md',
-    '## Choose and obtain one matching delivery',
-    'preserve the separate lock generated by a registry installation. |',
-    '| Published native CLI |',
+    '## Matching consumer routes',
+    'No page, clean checkout, package.json version or draft PR establishes that fact.',
+    'The published history retains',
   ],
 ];
 for (const [file, heading, anchor, startAnchor] of nativeContextAnchors) {
@@ -570,6 +592,140 @@ for (const file of ['docs/version-taxonomy.md', 'specs/read-contract.md'])
       (text) => text + `\nCurrent Read \`${source.engineering.package_versions.core}\`.\n`,
     );
     assert.ok(result.issues.some((issue) => issue.name.includes('current-owner')));
+  });
+for (const [file, before, after] of [
+  [
+    'README.md',
+    'Once official registry metadata confirms the exact preview versions',
+    'The exact preview versions are already published',
+  ],
+  ['README.md', 'CLI `.2` is already published', 'CLI `.2` is not published'],
+  ['README.md', '`.3` and must not overwrite `.2`', '`.3` and may overwrite `.2`'],
+  [
+    'README.zh.md',
+    '只有官方 registry 元数据确认这三个精确预览版本后',
+    '这三个精确预览版本现在已在官方 registry 发布',
+  ],
+  [
+    'docs/start-here.md',
+    'publication is disabled and named Host delivery remains NOT_RUN',
+    'publication is enabled and named Host delivery is accepted',
+  ],
+  [
+    'docs/current-release-support.md',
+    'The candidate combinations below are not declared published',
+    'The candidate combinations below are already published',
+  ],
+  [
+    'docs/current-release-support.md',
+    'A descriptor supplied by an Agent does not establish authorization by itself',
+    'A descriptor supplied by an Agent establishes authorization by itself',
+  ],
+  [
+    'docs/core-read-current-status.md',
+    '`latest` remains unchanged and existing version collisions fail closed',
+    '`latest` is replaced and existing version collisions are overwritten',
+  ],
+  [
+    'docs/core-read-current-status.md',
+    'not enable Plan/load in the native asset CLI',
+    'enable Plan/load in the native asset CLI',
+  ],
+  [
+    'docs/core-read-current-status.md',
+    'do not fall back to plaintext or a raw parser',
+    'fall back to plaintext or a raw parser',
+  ],
+])
+  test(`current publication or permission fact stays explicit: ${file}: ${before}`, () => {
+    const result = changedDocument(file, (text) => {
+      assert.equal(text.split(before).length - 1, 1);
+      return text.replace(before, after);
+    });
+    assert.ok(
+      result.issues.length,
+      'Correct coordinates cannot rescue a false capability or publication statement',
+    );
+  });
+for (const [file, heading, firstCell] of [
+  ['README.md', '## Current source:', '[Native CLI](https://github.com/aikdna/kdna-cli#readme)'],
+  ['README.zh.md', '## 当前源码', '[原生 CLI](https://github.com/aikdna/kdna-cli#readme)'],
+  ['docs/core-read-current-status.md', '## Matching consumer routes', 'Native CLI'],
+  [
+    'docs/current-release-support.md',
+    '## Repository-by-repository support',
+    '[kdna-cli](https://github.com/aikdna/kdna-cli)',
+  ],
+]) {
+  test(`a second conflicting delivery row cannot coexist with the correct row in ${file}`, () => {
+    const result = changedDocument(file, (text) => {
+      const row = text.split('\n').find((line) => line.startsWith(`| ${firstCell} |`));
+      assert.ok(row);
+      return text.replace(
+        row,
+        row + `\n| ${firstCell} | Core 0.37.0 / Read 0.11.1 | Already published; current route |`,
+      );
+    });
+    assert.ok(
+      result.issues.some((issue) => issue.name === `${file}:current-table-roles:${heading}`),
+    );
+  });
+  test(`current route roles cannot be swapped in ${file}`, () => {
+    const result = changedDocument(file, (text) => text.replace(`| ${firstCell} |`, '| SDK |'));
+    assert.ok(
+      result.issues.some((issue) => issue.name === `${file}:current-table-roles:${heading}`),
+    );
+  });
+}
+for (const [file, before] of [
+  ['README.md', 'https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md'],
+  ['README.zh.md', 'https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs'],
+])
+  test(`the current source route cannot silently choose an unrelated recipe in ${file}`, () => {
+    const result = changedDocument(file, (text) => text.replace(before, before + '.retired'));
+    assert.ok(result.issues.some((issue) => issue.name.startsWith(`${file}:current:`)));
+  });
+for (const [file, before, after] of [
+  [
+    'README.md',
+    'Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20',
+    'All protected files unlocked automatically; Node >=18',
+  ],
+  [
+    'README.zh.md',
+    '普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20',
+    '无需 Host 的全部受保护浏览器 SDK；Node >=18',
+  ],
+  [
+    'docs/current-release-support.md',
+    'npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts.',
+    'npm Core `0.37.1`, Read `0.11.2`; current candidates already published.',
+  ],
+  [
+    'docs/current-release-support.md',
+    'npm native `.2` on `r2.7`; loading CLI `0.36.1` on `latest`.',
+    'npm native `.3` on `latest`; loading CLI `0.36.1` on `r2.7`.',
+  ],
+  [
+    'docs/current-release-support.md',
+    'GitHub release `v0.21.0`; candidate coordinates in its binding do not assert a public candidate tag.',
+    'GitHub release `v0.21.0`; its binding proves current JavaScript preview parity.',
+  ],
+])
+  test(`stable-only publication or base SDK capability cannot drift in ${file}: ${before}`, () => {
+    const result = changedDocument(file, (text) => {
+      assert.equal(text.split(before).length - 1, 1);
+      return text.replace(before, after);
+    });
+    assert.ok(result.issues.length);
+  });
+for (const file of ['README.md', 'README.zh.md', 'docs/current-release-support.md'])
+  test(`a native contract cannot replace the base SDK tuple in ${file}`, () => {
+    const result = changedDocument(
+      file,
+      (text) => text + '\nCurrent SDK Read `kdna.read/0.7.0-candidate`.\n',
+    );
+    assert.ok(result.issues.some((issue) => issue.name.includes('current-tuple')));
   });
 test('the current policy rejects a transport URI rollback at its own binding gate', () => {
   const result = changedDocument('specs/public-version-policy.md', (text) => {

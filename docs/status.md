@@ -1,5 +1,8 @@
 # KDNA Public Status
 
+For the current first-user entry, use the [support matrix](current-release-support.md)
+and [executed Agent task](../examples/native-team-update/README.md).
+
 > Current public status. Version-specific availability belongs in package
 > release notes; this page describes product-layer maturity.
 
@@ -37,7 +40,7 @@ an Agent-installed Skill are not protocol requirements.
 | Layer | Status | Public meaning |
 |---|---|---|
 | KDNA Asset Container | Pre-release | Versioned manifest, payload and container rules; ordinary Core admission refuses protected inputs, while explicit Node protection follows its separate contract |
-| Local public-asset runtime | Pre-release | Current CLI source: `inspect`, `validate`, `read`; published CLI 0.36.1 keeps its loading/packing contract |
+| Local public-asset runtime | Pre-release | Native CLI `.3`: `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`; no Plan/load. Published CLI 0.36.1 keeps its loading/packing contract |
 | Authoring toolchain | Pre-release | Current typed Studio session, saved-bundle verification and explicit Read; project/card APIs belong to published Studio CLI 0.11.0 |
 | Licensed access | Candidate | Explicit Node protection admits supported encrypted containers under trusted providers; production accounts and service adoption require separate evidence |
 | Remote access | Candidate | Current Read adapters require deployment-owned context and policy; published remote loading has a separate contract |

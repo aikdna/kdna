@@ -1,5 +1,7 @@
 # KDNA 公开状态
 
+首次使用按[当前支持矩阵](current-release-support.md)和[实际 Agent 合成任务](../examples/native-team-update/README.md)进入；具名 MCP Host 交付仍未验。
+
 > 当前公开状态的中文摘要。版本级命令事实见各包的 CHANGELOG 和
 > [工具状态矩阵](./tool-status-matrix.md)。
 
@@ -30,7 +32,7 @@ Core 入场建立捕获字节的技术有效性，不认证作者、不判断内
 | 层级 | 状态 | 含义 |
 |---|---|---|
 | `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前源码提供入场、snapshot 与 Read；版本化格式/加载规范不等于全部能力已实现 |
-| Runtime CLI | Pre-release | 当前源码提供 `inspect`、`validate`、`read`、静态 `plan` / `load --plan`；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
+| Runtime CLI | Pre-release | 原生 CLI `.3` 提供 `create`、`inspect`、`validate`、`read`、`source-open`、`source-pack`，Plan/load 不可用；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
 | Studio 创作工具链 | Pre-release | 当前 typed session、保存 bundle 复验与明确 Read；project/card 属于已发布 Studio CLI 0.11.0 |
 | 加密、授权、签名与撤销 | 按精确版本判断 | 普通 root/browser 入场保留保护拒绝；显式 Node 入口按单独合同处理；旧发布能力不自动继承 |
 | Remote / Activation 参考实现 | Experimental | Remote 为 HTTP Read handler；Activation 为同进程 store observer，无独立 server/CLI，不代表托管服务 |

@@ -1,0 +1,924 @@
+{
+  "manifest": {
+    "asset_id": "asset:team-update-format",
+    "asset_uid": "uid:team-update-format",
+    "asset_type": "sample",
+    "title": "Team-update preferences with an Agent-authored decision exception",
+    "summary": "Public teaching preferences adapted by an Agent for one synthetic task: a deadline decision that gates the next action goes first. No human confirmation or general quality claim.",
+    "languages": [
+      "en"
+    ],
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "Initial public teaching sample followed by an Agent-authored revision for one synthetic weekly-update task; not a record of a real team or human confirmation.",
+      "entries": [
+        {
+          "id": "history:agent-team-update-1.1.0",
+          "version": "1.1.0",
+          "judgment_version": "1.1.0",
+          "at": "2026-10-09T03:26:42.134Z",
+          "summary": "Agent task revision after first-draft feedback: when a time-sensitive teammate decision gates the next action, lead with the decision and deadline, preserve completed-first as the routine default, and keep pending status explicit. update:evidence and update:rationale are unchanged.",
+          "affected_refs": [
+            {
+              "kind": "judgment",
+              "id": "update:order"
+            }
+          ],
+          "actor_refs": [
+            "actor:synthetic-task-agent"
+          ]
+        }
+      ]
+    },
+    "version": "1.1.0",
+    "judgment_version": "1.1.0",
+    "created_at": "2026-10-04T00:00:00Z",
+    "updated_at": "2026-10-09T03:26:42.134Z",
+    "compatibility": {
+      "min_loader_version": "0.36.0",
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.5.1"
+    },
+    "runtime": {
+      "mandatory_entries": []
+    },
+    "format_version": "0.6.0",
+    "payload": {
+      "layout": "sections",
+      "encoding": "strict-cbor-frames",
+      "encrypted": false,
+      "tables": [
+        {
+          "section_id": "table:sections:0",
+          "member": "sections/pack-1.kdnab",
+          "offset_bytes": 0,
+          "length_bytes": 1875,
+          "pack_ordinal": 8,
+          "digest": "sha256:f3428cac42e0bb6869c8fd825e26a6223b5d87219b8ad81dbb317e8d2a97ec58",
+          "table": "sections",
+          "part": 0,
+          "rows": 8,
+          "first_key": "topic:update:evidence",
+          "last_key": "xref:3:0"
+        },
+        {
+          "section_id": "table:topics:0",
+          "member": "sections/pack-1.kdnab",
+          "offset_bytes": 1875,
+          "length_bytes": 189,
+          "pack_ordinal": 9,
+          "digest": "sha256:b43e1378941b58ed6fbd8d6e2e4ed83c612fd5a347cf5c92db2e3b52af4bb0e8",
+          "table": "topics",
+          "part": 0,
+          "rows": 3,
+          "first_key": "update:evidence",
+          "last_key": "update:rationale"
+        },
+        {
+          "section_id": "table:node_sections:0",
+          "member": "sections/pack-1.kdnab",
+          "offset_bytes": 2064,
+          "length_bytes": 1441,
+          "pack_ordinal": 10,
+          "digest": "sha256:5f06b59cc2a959f727c00d7e82d40873915a8ef011828c96de766034633e8604",
+          "table": "node_sections",
+          "part": 0,
+          "rows": 15,
+          "first_key": "actor:1a593cc9b23a1f93d8ee17827fdcc7137b4eca80",
+          "last_key": "result_contract:95924064e8d864491e12fa67865d3bd7ebe090e1"
+        }
+      ],
+      "xref_codec": "frame-local-ordered-scope-dictionary/1"
+    },
+    "representation_metadata": {
+      "contract": "kdna.canonical-ir/0.6.1",
+      "tuple": {
+        "container": "0.6.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.1",
+        "core": "kdna.core/0.8.2",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.7.0-candidate"
+      },
+      "asset": {
+        "asset_id": "asset:team-update-format",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "catalog": [
+        {
+          "judgment_id": "update:order",
+          "focus": "Weekly update order",
+          "node_ref": "judgment:09a6c46fd3a0f81c9ed4d38cf4b9d0c51d5f7078",
+          "parent_ref": null
+        },
+        {
+          "judgment_id": "update:evidence",
+          "focus": "Evidence in a completed-change update",
+          "node_ref": "judgment:73ceefe33aef10e17088363cd98946b860631826",
+          "parent_ref": null
+        },
+        {
+          "judgment_id": "update:rationale",
+          "focus": "Optional supporting rationale",
+          "node_ref": "judgment:80fc838430a2d4d4e8e9593a810928b12fd6537b",
+          "parent_ref": null
+        }
+      ],
+      "references": [
+        {
+          "id": "reference:15a19098c7a0171850a08ad2722fdba074499af8",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 2,
+          "target_node_index": 12
+        },
+        {
+          "id": "reference:cb65525b4caf1c6e89ddf1e74276912c2c8f5607",
+          "role": "optional_expansion",
+          "mandatory": false,
+          "source_node_index": 2,
+          "target_node_index": 3
+        },
+        {
+          "id": "reference:152619b22ec6750bfa82e0f56ec11248a33306e0",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 2,
+          "target_node_index": 11
+        },
+        {
+          "id": "reference:1bd3199c0e2617299f2b1389bbced4a86b2a77e6",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 3,
+          "target_node_index": 4
+        },
+        {
+          "id": "reference:525b38abde52fd8cbdd404600ffef36c38a5e92c",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 3,
+          "target_node_index": 5
+        },
+        {
+          "id": "reference:0bca91176c6c45414af8016f5bd0db92d67fd8fe",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 3,
+          "target_node_index": 6
+        },
+        {
+          "id": "reference:fc6c3f73105a8b3c858f775321e701df78b1056a",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 3,
+          "target_node_index": 1
+        },
+        {
+          "id": "reference:177b8af6223d0121c6a57dc2b513be762e2f6445",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 3,
+          "target_node_index": 12
+        },
+        {
+          "id": "reference:9e2d822489a428702d0faf65359789117014a8da",
+          "role": "optional_expansion",
+          "mandatory": false,
+          "source_node_index": 3,
+          "target_node_index": 2
+        },
+        {
+          "id": "reference:12262a062b321f9dfbee951da6f3c5f6b200f03e",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 5,
+          "target_node_index": 4
+        },
+        {
+          "id": "reference:775202388f538f5d79383238bf0fc013687fd6e6",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 7,
+          "target_node_index": 8
+        },
+        {
+          "id": "reference:9b6d5e417ac64f3a9a0522b01cfc5d5d26c7e5a0",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 7,
+          "target_node_index": 9
+        },
+        {
+          "id": "reference:ac6ad8d42c128e4b1768553d5800ad1ac0fe7357",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 7,
+          "target_node_index": 10
+        },
+        {
+          "id": "reference:0e691aa363303d6beb885d66129d5ec0c35ebaeb",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 7,
+          "target_node_index": 1
+        },
+        {
+          "id": "reference:faed9a448390f51617617f1a58db2cd8f32cbdc2",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 9,
+          "target_node_index": 8
+        },
+        {
+          "id": "reference:dd2f43571c498192e1d0594348e8b55156e51fcd",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 11,
+          "target_node_index": 12
+        },
+        {
+          "id": "reference:50fbec6be9842cfa5528f53cc0f67420899ed271",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 11,
+          "target_node_index": 13
+        },
+        {
+          "id": "reference:a22eb4118f00eeecfc42b7cc1328701dd6766af4",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 11,
+          "target_node_index": 14
+        },
+        {
+          "id": "reference:70d2addd62e468e5a3646efd6ba6dd6912082354",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 11,
+          "target_node_index": 1
+        },
+        {
+          "id": "reference:719147c78f116ef0952098c49a15d4d8c9b1ca88",
+          "role": "mandatory_support",
+          "mandatory": true,
+          "source_node_index": 13,
+          "target_node_index": 12
+        }
+      ],
+      "relationships": [],
+      "mandatory_closures": [
+        {
+          "selection": {
+            "asset_id": "asset:team-update-format",
+            "asset_version": "1.0.0",
+            "judgment_id": "update:order"
+          },
+          "node_indices": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            6,
+            12
+          ]
+        },
+        {
+          "selection": {
+            "asset_id": "asset:team-update-format",
+            "asset_version": "1.0.0",
+            "judgment_id": "update:evidence"
+          },
+          "node_indices": [
+            0,
+            1,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "selection": {
+            "asset_id": "asset:team-update-format",
+            "asset_version": "1.0.0",
+            "judgment_id": "update:rationale"
+          },
+          "node_indices": [
+            0,
+            1,
+            11,
+            12,
+            13,
+            14
+          ]
+        }
+      ],
+      "asset_closure": [
+        0,
+        2
+      ],
+      "asset_index": [
+        {
+          "target": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "A sample author’s team-update preferences",
+          "node_index": 0
+        },
+        {
+          "target": {
+            "kind": "actor",
+            "id": "actor:sample-team-author"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "Example team author",
+          "node_index": 1
+        },
+        {
+          "target": {
+            "kind": "dependency",
+            "id": "dependency:update-rationale"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "dependency:dependency:update-rationale",
+          "node_index": 2
+        },
+        {
+          "target": {
+            "kind": "judgment",
+            "id": "update:order"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "Weekly update order",
+          "node_index": 3
+        },
+        {
+          "target": {
+            "kind": "contract",
+            "id": "result-contract:update:order"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:order"
+          },
+          "display_name": "contract:result-contract:update:order",
+          "node_index": 4
+        },
+        {
+          "target": {
+            "kind": "result",
+            "id": "update:order"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:order"
+          },
+          "display_name": "result:update:order",
+          "node_index": 5
+        },
+        {
+          "target": {
+            "kind": "component",
+            "id": "component:update:order"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:order"
+          },
+          "display_name": "个人感受",
+          "node_index": 6
+        },
+        {
+          "target": {
+            "kind": "judgment",
+            "id": "update:evidence"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "Evidence in a completed-change update",
+          "node_index": 7
+        },
+        {
+          "target": {
+            "kind": "contract",
+            "id": "result-contract:update:evidence"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:evidence"
+          },
+          "display_name": "contract:result-contract:update:evidence",
+          "node_index": 8
+        },
+        {
+          "target": {
+            "kind": "result",
+            "id": "update:evidence"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:evidence"
+          },
+          "display_name": "result:update:evidence",
+          "node_index": 9
+        },
+        {
+          "target": {
+            "kind": "component",
+            "id": "component:update:evidence"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:evidence"
+          },
+          "display_name": "个人感受",
+          "node_index": 10
+        },
+        {
+          "target": {
+            "kind": "judgment",
+            "id": "update:rationale"
+          },
+          "owner": {
+            "kind": "asset",
+            "id": "uid:team-update-format"
+          },
+          "display_name": "Optional supporting rationale",
+          "node_index": 11
+        },
+        {
+          "target": {
+            "kind": "contract",
+            "id": "result-contract:update:rationale"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:rationale"
+          },
+          "display_name": "contract:result-contract:update:rationale",
+          "node_index": 12
+        },
+        {
+          "target": {
+            "kind": "result",
+            "id": "update:rationale"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:rationale"
+          },
+          "display_name": "result:update:rationale",
+          "node_index": 13
+        },
+        {
+          "target": {
+            "kind": "component",
+            "id": "component:update:rationale"
+          },
+          "owner": {
+            "kind": "judgment",
+            "id": "update:rationale"
+          },
+          "display_name": "个人感受",
+          "node_index": 14
+        }
+      ],
+      "unresolved_external": [],
+      "node_order": [
+        "asset_declaration:8f66c4be7f6bffc15a1ff31f0dde9faaaaed4a20",
+        "actor:1a593cc9b23a1f93d8ee17827fdcc7137b4eca80",
+        "dependency:820f8d7b4c1b266e79f179e168e1624ca18db50b",
+        "judgment:09a6c46fd3a0f81c9ed4d38cf4b9d0c51d5f7078",
+        "result_contract:037c5301a95e667566c561e7f15df692ee2c3a5e",
+        "result:6486be8b10f6d3d139e38292770a75c6f86edddb",
+        "method_component:89ffcbbc2c273b5c6f5a6afddebfb1f974c902db",
+        "judgment:73ceefe33aef10e17088363cd98946b860631826",
+        "result_contract:24e87bb20866ac66437c710cb2037efea21aebdd",
+        "result:38401698bc21cfb35a2b3766bebc7f1d765c2321",
+        "method_component:636c5f59b66ae7d3f674a88d47cfa8040ca2e93b",
+        "judgment:80fc838430a2d4d4e8e9593a810928b12fd6537b",
+        "result_contract:95924064e8d864491e12fa67865d3bd7ebe090e1",
+        "result:e70769d3421342724d77fdb9e7ffe78290486829",
+        "method_component:242533aafe42fbde1d38ca15b6fdd7776b85164e"
+      ],
+      "ir_digest_claim": "sha256:6f71dacc63634b3b3ac17288a3c95ea2a2c662c2cdd43d6f58d82a0370eab6cb",
+      "runtime_entry_names": [
+        "kdna.json",
+        "sections/pack-0.kdnab",
+        "sections/pack-1.kdnab"
+      ],
+      "codec": "node-order-index/1"
+    }
+  },
+  "payload": {
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.5.1",
+    "asset": {
+      "asset_id": "asset:team-update-format",
+      "asset_version": "1.1.0",
+      "judgment_version": "1.1.0"
+    },
+    "actors": [
+      {
+        "id": "actor:sample-team-author",
+        "kind": "person",
+        "name": "Example team author"
+      },
+      {
+        "id": "actor:synthetic-task-agent",
+        "kind": "agent",
+        "name": "Agent author of the synthetic weekly-update revision"
+      }
+    ],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [
+      {
+        "id": "dependency:update-rationale",
+        "producer": {
+          "kind": "judgment_result",
+          "judgment_ref": "update:rationale",
+          "result_contract_ref": "result-contract:update:rationale"
+        },
+        "producer_port": "output:update-rationale",
+        "consumer_judgment_ref": "update:order",
+        "consumer_port": "input:update-rationale",
+        "input_role": "context",
+        "data_type": {
+          "term": "text"
+        },
+        "required": false,
+        "purpose": "Optional detail supporting the example author’s compact update format."
+      }
+    ],
+    "contracts": [],
+    "conditions": [],
+    "shared_declarations": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "judgments": [
+      {
+        "id": "update:order",
+        "focus": "Weekly update order",
+        "subject": {
+          "actor_ids": [
+            "actor:synthetic-task-agent"
+          ],
+          "statement": "The Agent-authored ordering preference for this synthetic weekly team-update task, adapted from the public teaching sample."
+        },
+        "scope": {
+          "statement": "Routine weekly asynchronous team updates, including a time-sensitive teammate decision that gates the next action. This Agent-authored adaptation is a synthetic task preference; urgent incident response and a universal communication rule are outside its scope."
+        },
+        "answer_kind": "preference",
+        "parent_ref": null,
+        "form": "conclusion",
+        "core_expression": {
+          "kind": "authored",
+          "statement": "For a routine weekly asynchronous team update, keep completed changes first, then current blockers, then the next concrete action. If a teammate must make a time-sensitive decision before the next action can proceed, put that decision request and its deadline first, then completed changes with evidence, then the next action conditional on the decision. Keep a pending decision visibly pending.",
+          "qualification_refs": []
+        },
+        "method": {
+          "method": {
+            "term": "feedback"
+          },
+          "components": [
+            {
+              "id": "component:update:order:target",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整目标",
+              "material_refs": [],
+              "statement": "Make the pending teammate decision visible in time for action while preserving evidence for completed work and the routine completed-first default."
+            },
+            {
+              "id": "component:update:order:signal",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "反馈信号",
+              "material_refs": [],
+              "statement": "The first draft placed shipped work before the migration decision. Synthetic task feedback says the teammate decision is urgent and should lead; that decision is due Thursday and gates the next action. No real teammate or original sample author supplied or confirmed this feedback."
+            },
+            {
+              "id": "component:update:order",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整办法",
+              "material_refs": [],
+              "statement": "Apply the decision-first exception only when a time-sensitive teammate decision gates the next action; otherwise keep completed changes, blockers, next action. Retain evidence links and their limits, keep the decision pending until answered, and state both possible next actions."
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [
+          {
+            "name": "input:update-rationale",
+            "meaning": "Optional detail supporting the example author’s compact update format.",
+            "direction": "input",
+            "input_role": "context",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "result-contract:update:rationale"
+            }
+          }
+        ],
+        "inputs": [
+          {
+            "name": "context",
+            "meaning": "Optional detail supporting the example author’s compact update format.",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "result-contract:update:rationale"
+            }
+          }
+        ],
+        "boundaries": {
+          "state": "none",
+          "value": null
+        },
+        "exceptions": {
+          "state": "none",
+          "value": null
+        },
+        "misuse": {
+          "state": "none",
+          "value": null
+        },
+        "extensions": [],
+        "result_contract": {
+          "id": "result-contract:update:order",
+          "form": {
+            "term": "scalar",
+            "vocabulary": "core"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text",
+              "vocabulary": "core"
+            }
+          ]
+        },
+        "result": {
+          "contract_ref": "result-contract:update:order",
+          "result_type": {
+            "term": "text",
+            "vocabulary": "core"
+          },
+          "value": {
+            "kind": "text",
+            "value": "For a routine weekly asynchronous team update, keep completed changes first, then current blockers, then the next concrete action. If a teammate must make a time-sensitive decision before the next action can proceed, put that decision request and its deadline first, then completed changes with evidence, then the next action conditional on the decision. Keep a pending decision visibly pending."
+          }
+        }
+      },
+      {
+        "id": "update:evidence",
+        "focus": "Evidence in a completed-change update",
+        "subject": {
+          "actor_ids": [
+            "actor:sample-team-author"
+          ],
+          "statement": "The example author’s routine weekly team update"
+        },
+        "scope": {
+          "statement": "The example author’s preferences for routine weekly asynchronous updates in their team; urgent incident response is outside this scope."
+        },
+        "answer_kind": "preference",
+        "parent_ref": null,
+        "form": "conclusion",
+        "core_expression": {
+          "kind": "authored",
+          "statement": "When I describe a completed change, I prefer a link to an observable result and a brief statement of what it proves; when evidence is unavailable, I say so.",
+          "qualification_refs": []
+        },
+        "method": {
+          "method": {
+            "term": "feeling"
+          },
+          "components": [
+            {
+              "id": "component:update:evidence",
+              "method": {
+                "term": "feeling"
+              },
+              "role": "个人感受",
+              "material_refs": [],
+              "statement": "This is the example author’s stated preference, not evidence of a universal effect."
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "state": "none",
+          "value": null
+        },
+        "exceptions": {
+          "state": "none",
+          "value": null
+        },
+        "misuse": {
+          "state": "none",
+          "value": null
+        },
+        "extensions": [],
+        "result_contract": {
+          "id": "result-contract:update:evidence",
+          "form": {
+            "term": "scalar",
+            "vocabulary": "core"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text",
+              "vocabulary": "core"
+            }
+          ]
+        },
+        "result": {
+          "contract_ref": "result-contract:update:evidence",
+          "result_type": {
+            "term": "text",
+            "vocabulary": "core"
+          },
+          "value": {
+            "kind": "text",
+            "value": "When I describe a completed change, I prefer a link to an observable result and a brief statement of what it proves; when evidence is unavailable, I say so."
+          }
+        }
+      },
+      {
+        "id": "update:rationale",
+        "focus": "Optional supporting rationale",
+        "subject": {
+          "actor_ids": [
+            "actor:sample-team-author"
+          ],
+          "statement": "The example author’s routine weekly team update"
+        },
+        "scope": {
+          "statement": "The example author’s preferences for routine weekly asynchronous updates in their team; urgent incident response is outside this scope."
+        },
+        "answer_kind": "preference",
+        "parent_ref": null,
+        "form": "conclusion",
+        "core_expression": {
+          "kind": "authored",
+          "statement": "I prefer supporting rationale in an optional detail section, so teammates can expand it without making the main update longer.",
+          "qualification_refs": []
+        },
+        "method": {
+          "method": {
+            "term": "feeling"
+          },
+          "components": [
+            {
+              "id": "component:update:rationale",
+              "method": {
+                "term": "feeling"
+              },
+              "role": "个人感受",
+              "material_refs": [],
+              "statement": "This is the example author’s stated preference, not evidence of a universal effect."
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [
+          {
+            "name": "output:update-rationale",
+            "meaning": "The example author’s optional rationale.",
+            "direction": "output",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "result-contract:update:rationale"
+            },
+            "result_field": null
+          }
+        ],
+        "inputs": [],
+        "boundaries": {
+          "state": "none",
+          "value": null
+        },
+        "exceptions": {
+          "state": "none",
+          "value": null
+        },
+        "misuse": {
+          "state": "none",
+          "value": null
+        },
+        "extensions": [],
+        "result_contract": {
+          "id": "result-contract:update:rationale",
+          "form": {
+            "term": "scalar",
+            "vocabulary": "core"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text",
+              "vocabulary": "core"
+            }
+          ]
+        },
+        "result": {
+          "contract_ref": "result-contract:update:rationale",
+          "result_type": {
+            "term": "text",
+            "vocabulary": "core"
+          },
+          "value": {
+            "kind": "text",
+            "value": "I prefer supporting rationale in an optional detail section, so teammates can expand it without making the main update longer."
+          }
+        }
+      }
+    ],
+    "asset_capability": "asserted_answers",
+    "scope": {
+      "statement": "The example author’s preferences for routine weekly asynchronous updates in their team; urgent incident response is outside this scope."
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "reading_order": [
+      "update:order",
+      "update:evidence",
+      "update:rationale"
+    ],
+    "extensions": [],
+    "declarations": {
+      "highest_question": {
+        "state": "provided",
+        "value": "How does this example author prefer to structure a weekly team update?"
+      },
+      "boundaries": {
+        "state": "none",
+        "value": null
+      }
+    }
+  }
+}

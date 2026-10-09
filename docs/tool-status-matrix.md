@@ -1,5 +1,21 @@
 # KDNA Tool Status Matrix
 
+Current source entry: 2026-10-09. Use the [support matrix](current-release-support.md)
+for exact channel availability and the [actual Agent task](../examples/native-team-update/README.md)
+for selected Read, revision and reopened use.
+
+| Current entry | Commands and boundary |
+| --- | --- |
+| Native CLI `0.39.0-rc.native-sections.3`, exact Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`; explicit local permissions, container0.6, Read0.7-candidate; no Plan/load. |
+| MCP `0.8.0-rc.native-sections.1` with the same native graph | Operator-bound catalog/read/expand/cancel; named Host delivery NOT_RUN; no decryption. |
+| StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` | Separate container0.5/Read0.6.4 session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
+
+The following dated descriptions preserve the older source and published
+observations. They do not describe the current entries above. In particular,
+the historical protection CLI and material-edit Studio combinations below
+are not an installation recipe for these source candidates.
+
+
 > CLI, Studio and MCP local source descriptions reviewed: 2026-09-23. The published command inventory
 > remains the 2026-09-13 observation of `@aikdna/kdna-cli@0.36.1`.
 > `Released` means the command is present in the published package; it is not a
@@ -13,7 +29,7 @@
 > message as "this command is not in *this* published version", not as a
 > statement that the capability never existed.
 
-## Current Runtime CLI source (`@aikdna/kdna-cli@0.40.0-rc.protection.1`)
+## Preserved Runtime CLI source observation, 2026-09-23 (`@aikdna/kdna-cli@0.40.0-rc.protection.1`)
 
 The [CLI source candidate](https://github.com/aikdna/kdna-cli#readme) is **not an
 npm release**. Its [binding](https://github.com/aikdna/kdna-cli/blob/main/public-contract-binding.json)
@@ -41,7 +57,7 @@ boundary, use the CLI README. Their presence does not prove production native
 credential storage. Never mix these forms with `plan-load` or the published
 `load --profile=compact --as=json` syntax below.
 
-## Current Studio source (`@aikdna/kdna-studio-cli@0.17.0-rc.material-edit.1`)
+## Preserved Studio source observation, 2026-09-23 (`@aikdna/kdna-studio-cli@0.17.0-rc.material-edit.1`)
 
 The [Studio CLI source](https://github.com/aikdna/kdna-studio-cli#readme) binds
 Studio Core `4.5.0-rc.material-edit.1`, Core `0.35.0-rc.source.1` and Read

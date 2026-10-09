@@ -17,7 +17,7 @@ published line.
 |-------------|-----------|------|
 | **Use current Core and Read source** | [Current source entry](#current-source-entry) | 5 min |
 | **Try the published CLI 0.36.1 lifecycle** | [Published walkthrough](#5-minute-quick-start) | 5 min |
-| **Create my own KDNA** | [Current Studio CLI](https://github.com/aikdna/kdna-studio-cli#readme); [published-line authoring guide](./30-minute-authoring-guide.md) | 30 min |
+| **Create my own KDNA** | [Current native/Studio routes](#current-source-entry); [published-line authoring guide](./30-minute-authoring-guide.md) | 30 min |
 | **Preserve personal judgment or preferences** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Build a team judgment asset** | [Enterprise Pilot](./enterprise-pilot.md) | 20 min |
@@ -31,38 +31,41 @@ published line.
 
 ## Current source entry
 
-Start with the [matching-source and installation guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
-Its 2026-10-07 Core/Read browser candidate and separately bound local tool combinations are distinct:
+Use the [current support and distribution matrix](./current-release-support.md)
+and [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
+The native entry is CLI `0.39.0-rc.native-sections.3` with exact Core
+`0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`, container0.6 and
+Read0.7-candidate. Prepare the complete twelve-archive delivery using the
+[CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
+Source availability does not establish official npm publication; the registry
+recipe in the [README](../README.md#current-source-choose-the-matching-implementation)
+is conditional on those exact published versions.
 
-- This protocol repository: Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` (unpublished R2 browser candidate).
-- [Runtime CLI](https://github.com/aikdna/kdna-cli#readme): CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
-- [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme): MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
+For the first Agent task, use a Codex Agent's local tools with that exact CLI.
+Explicitly identify the task, asset and permitted Read disclosure. The
+[executed weekly-update example](../examples/native-team-update/README.md)
+supplies licensed original/revised assets, synthetic facts, before/after task
+outputs and the actual selected content's effect. Follow its Read and Source
+recipe to reopen and revise while preserving the original. It establishes this
+Agent's task use, not a real teammate's confirmation or named MCP Host adoption.
 
-Obtain the complete matching delivery and its lock/archives before installing;
-these rows do not establish npm publication or the contents of remote `main`.
-Missing inputs cannot be replaced by a global CLI or `latest`. Node >=20 is
-required by Core/Read; these CLI/MCP graphs require Node >=22. The owning
-installation guide supplies the full recipe and any narrower reproduction versions.
+The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is
+`0.8.0-rc.native-sections.1` with that same exact native CLI/SDK graph. Its npm
+publication is disabled and named Host delivery remains NOT_RUN. Installing a
+Skill or copying a process vector does not establish Host activation.
 
-Core admits captured bytes into a private snapshot and Canonical IR. Read
-exposes `read_envelope`, `admission_rejection`, `no_body_control` and
-`transport_failure`. Permission comes from the embedding's trusted providers
-and grants no action authority. The runtime CLI offers `inspect`, `validate`,
-`read`, static `plan` and `load --plan`; a supplied Plan/Capsule is not model
-execution. Ordinary root/browser admission retains protection refusals;
-explicit [Node protection](../specs/protection-admission.md) has separate inputs
-and trusted providers. Native integration and production service acceptance
-do not follow from an API being present.
+For Studio creation and local protection, use StudioCLI
+`0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` and their complete
+source graph. This separate route uses container0.5 / Read0.6.4. Saved protected
+consumption and revision use the [trusted local Host guide](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md),
+not StudioCLI's static read command or native container0.6. Credentials and
+permissions belong to the independently trusted launcher, not asset text.
 
-For Agent consumption, follow the
-[canonical Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md)
-and its exact CLI 0.39.1/MCP combination. The protocol repository's
-[bundled Skill](../skills/README.md) is a historical CLI 0.36.1 compatibility copy.
-Host delivery, semantic adoption and real human acceptance remain `not_run`;
-Skill placement and transport examples do not establish native activation.
-Old-line demos and APIs stay with their matching published implementation below.
-
-The published Core `0.37.0` / Read `0.11.1` releases retain their own artifacts and release evidence. The browser source candidate requires separate artifact and installed-consumer acceptance.
+Native CLI Plan/load is unavailable. The SDK's declared execution reference
+exports and the published CLI0.36.1 loading walkthrough below remain separate.
+Published Core `0.37.0`, Read `0.11.1`, native CLI `.2` and loading CLI `0.36.1`
+retain their own artifacts and exact dependency graphs. Never substitute
+`latest`, a global CLI or an older same-version archive for this source delivery.
 
 ## 5-Minute Quick Start
 

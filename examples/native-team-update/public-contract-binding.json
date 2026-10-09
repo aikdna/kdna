@@ -1,0 +1,57 @@
+{
+  "format": "kdna.consumer-exact-binding/1",
+  "implementation": {
+    "name": "@aikdna/kdna-cli",
+    "version": "0.39.0-rc.native-sections.3"
+  },
+  "tuple": {
+    "container": "0.6.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.5.1",
+    "core": "kdna.core/0.8.2",
+    "ir": "kdna.canonical-ir/0.6.1",
+    "runtime": "kdna.runtime-capsule/0.3.1",
+    "plan": "kdna.consumption-plan/0.3.1",
+    "host": "kdna.agent-host/0.3.1",
+    "trace": "kdna.judgment-trace/0.3.1",
+    "read": "kdna.read/0.7.0-candidate"
+  },
+  "route_contracts": [
+    {
+      "file": "sections/contract.json",
+      "bytes": 547981,
+      "sha256": "e9cf4069906c3bf30ecfda953de9d75983f3941a10695ce9546101057593c372"
+    },
+    {
+      "file": "sectionbytes/contract.json",
+      "bytes": 31759,
+      "sha256": "617c4d2e2fcbfebaa4df559fb39b61e729064ff6e4b458a24321a6284d44074a"
+    },
+    {
+      "file": "retained/contract.json",
+      "bytes": 291233,
+      "sha256": "6675e6e72c76e89785da7d75c16fd29d66e2039047f14ef8b3a5e7517e0c4ac9"
+    },
+    {
+      "file": "creation06/contract.json",
+      "bytes": 71166,
+      "sha256": "bf1bb5bf0b6f3d7d38c2a3c63c413942f377c061bd01eb9b0868a2d9fdca6f8f"
+    },
+    {
+      "file": "source06/contract.json",
+      "bytes": 76676,
+      "sha256": "0129de8550b549622d9eb2cb5c17de4776944b719e2edf7c1aca82caf293b2d4"
+    }
+  ],
+  "accepted_core": {
+    "version": "0.37.1-rc.browser.1",
+    "tar_sha256": "12a2d5f234ed3404aee1b394442251ad875c1531c01cd6a4f3c0366d55e5d773"
+  },
+  "accepted_read": {
+    "version": "0.11.2-rc.browser.1",
+    "tar_sha256": "c5c2d6b65c44dd30aeddd49d6f2a4c915e9fd4d8f2a28297d6d677564e261cb7"
+  },
+  "release_state": "RELEASE_CANDIDATE",
+  "authority_limit": "Producer observation, filesystem save, Core admission and explicit local read permission do not establish authorship, human confirmation, Creation completion, task adoption or action authorization.",
+  "source_binding_note": "This CLI native-section route binds the exact Core/Read companion archives. Native tuple and browser protection tuple remain separate contracts; package versions do not replace byte identity."
+}

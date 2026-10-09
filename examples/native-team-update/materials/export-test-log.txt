@@ -1,0 +1,5 @@
+SYNTHETIC TEST LOG — task evidence, not an executed repository test
+case: CSV export with a comma in a cell
+previous result: the cell was split into two columns
+fixed result: the comma-containing cell remains one quoted CSV field
+regression check: PASS (fictional task fact)

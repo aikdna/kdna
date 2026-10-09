@@ -1,64 +1,20 @@
 # @aikdna/kdna
 
-Compatibility package for the KDNA command line tools.
+A historical compatibility package preserving `kdna-lint` and `kdna-validate` executable names. It is outside the native CLI source candidate's supported dependency graph and does not automatically migrate to current CLI/Core exports.
 
-KDNA Core is the official KDNA judgment-asset format and runtime loading
-contract. `.kdna` assets are created, inspected, packed, validated, planned,
-and loaded through the KDNA toolchain. Compatible Agent consumption ends in a
-Runtime Capsule; it does not decode container internals directly.
+| Coordinate | CLI | Core | Node |
+| --- | --- | --- | --- |
+| Published npm `@aikdna/kdna@0.14.0` | `0.36.1` | `0.21.0` | `>=20` |
+| Current Git source, still marked `0.14.0` | `0.36.1` | `0.22.0` | `>=22` |
 
-This package only preserves older executable names. New integrations should
-depend on `@aikdna/kdna-core` and install `@aikdna/kdna-cli` directly. KDNA has
-one current Asset Container and the compatibility package does not introduce a
-second format or runtime route.
+The source metadata differs from the immutable published `0.14.0` artifact. It must not overwrite that version. The executables retain the earlier loading/validation behavior, including a historical private CLI entry dependency; changing dependency numbers alone cannot turn them into a native migration bridge.
 
-`kdna-validate` is a compatibility alias for `kdna validate` and accepts both
-current packaged `.kdna` assets and authoring source directories. It delegates
-to `@aikdna/kdna-cli`; it does not use the removed source-only validator.
+Existing users who require that historical graph can pin its published coordinate:
 
-The compatibility install path is:
-
-```bash
-npm install -g @aikdna/kdna-cli
+```sh
+npm install @aikdna/kdna@0.14.0
 ```
 
-This package remains available so older installation instructions using
-`@aikdna/kdna` resolve to the current KDNA CLI.
+New integrations should use the native `@aikdna/kdna-cli@0.39.0-rc.native-sections.3` **source candidate**, with its exact Core/Read companions and complete source installation instructions in the [CLI repository](https://github.com/aikdna/kdna-cli). This statement does not claim that the prerelease is available from npm. The alias package does not resolve to it or add a second native runtime path. A compatibility bridge would require an explicit implementation, new version and real consumer verification.
 
-Version 0.14.0 is bound to `@aikdna/kdna-cli@0.36.1` and
-`@aikdna/kdna-core@0.22.0`, requires Node.js 22 or later, and installs one
-physical Core package. It is a migration bridge, not the recommended package
-for new applications.
-
-## Current runtime path
-
-The public runtime path starts from a packaged `.kdna` asset and delegates to
-the current CLI/Core contract.
-
-Usage:
-
-```bash
-kdna pack      examples/minimal /tmp/out.kdna
-kdna validate  /tmp/out.kdna
-kdna plan-load /tmp/out.kdna
-kdna load      /tmp/out.kdna --profile=compact --as=json
-```
-
-The local invocation in this monorepo is:
-
-```bash
-node packages/kdna/bin/kdna.js <command> <args>
-```
-
-Or via the npm scripts in the repo root:
-
-```bash
-npm run kdna:pack     -- examples/minimal /tmp/out.kdna
-npm run kdna:validate -- /tmp/out.kdna
-```
-
-The runtime is content-neutral. Output never claims that an asset is
-"trusted", "recommended", "high_quality", or "officially approved". It
-reports format, schema, payload, checksums, and load-contract validity
-only. Format-valid does not mean content-good; that is a runtime policy
-decision owned by the caller.
+Format validity and technical checks do not establish content quality, authorship, human confirmation, Creation acceptance or action authorization. See [auxiliary support boundaries](../AUXILIARY-SUPPORT.md).
