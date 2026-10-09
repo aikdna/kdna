@@ -1,0 +1,98 @@
+name: Publish exact browser preview
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: browser-preview-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish-preview:
+    if: >-
+      github.repository == 'aikdna/kdna' &&
+      github.event_name == 'release' &&
+      github.event.action == 'published' &&
+      github.event.release.draft == false &&
+      github.event.release.prerelease == true &&
+      startsWith(github.event.release.tag_name, 'preview/')
+    runs-on: macos-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.22.3'
+          check-latest: false
+      - name: Select an exact preview unit and outside-repository outputs
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const authority = require('./scripts/preview-release-authority.js');
+          const unit = Object.keys(authority.POLICIES).find(unit => process.env.GITHUB_REF_NAME === 'preview/' + unit + '/' + authority.POLICIES[unit].version);
+          if (!unit) throw Error('Unsupported exact preview release tag');
+          const values = {
+            PREVIEW_UNIT: unit,
+            PREVIEW_EVIDENCE: path.join(process.env.RUNNER_TEMP, 'kdna-' + unit + '-preview-evidence.json'),
+            PREVIEW_ARTIFACT: path.join(process.env.RUNNER_TEMP, authority.filename(authority.POLICIES[unit])),
+            KDNA_TRUSTED_NPM_TARBALL: path.join(process.env.RUNNER_TEMP, 'npm-11.17.0.tgz'),
+          };
+          fs.appendFileSync(process.env.GITHUB_ENV, Object.entries(values).map(([k,v]) => k + '=' + v).join('\n') + '\n');
+          NODE
+      - name: Fetch main ancestry without modifying the selected source
+        run: git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main
+      - name: Authenticate the audited isolated npm release
+        run: node scripts/core-release-authority.js provision-npm --artifact "$KDNA_TRUSTED_NPM_TARBALL"
+      - run: node scripts/core-release-authority.js verify-npm
+      - name: Verify actual release event, source, DCO, notes and approved artifact digest
+        run: node scripts/preview-release-authority.js check --unit "$PREVIEW_UNIT"
+      - name: Install source test dependencies with isolated npm
+        run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
+      - name: Verify preview authority hostile cases and current SDK contracts
+        run: |
+          node --test scripts/preview-release-authority.test.js
+          node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-core test
+          node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-read test
+      - name: Export exact Git source twice and retain approved byte-identical artifact
+        run: >-
+          node scripts/preview-release-authority.js prepare --unit "$PREVIEW_UNIT"
+          --evidence "$PREVIEW_EVIDENCE" --artifact "$PREVIEW_ARTIFACT"
+      - name: Verify clean installed members and public exports
+        run: >-
+          node scripts/preview-release-authority.js smoke --unit "$PREVIEW_UNIT"
+          --evidence "$PREVIEW_EVIDENCE" --artifact "$PREVIEW_ARTIFACT"
+      - name: Refuse conflicting registry versions
+        run: >-
+          node scripts/preview-release-authority.js guard --unit "$PREVIEW_UNIT"
+          --evidence "$PREVIEW_EVIDENCE" --artifact "$PREVIEW_ARTIFACT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-browser-preview-release-evidence
+          path: |
+            ${{ env.PREVIEW_EVIDENCE }}
+            ${{ env.PREVIEW_ARTIFACT }}
+      - name: Rebind and publish retained bytes on browser-preview only
+        run: >-
+          node scripts/preview-release-authority.js publish --unit "$PREVIEW_UNIT"
+          --evidence "$PREVIEW_EVIDENCE" --artifact "$PREVIEW_ARTIFACT"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Observe exact public registry identity after publication
+        run: >-
+          node scripts/preview-release-authority.js verify-public --unit "$PREVIEW_UNIT"
+          --evidence "$PREVIEW_EVIDENCE" --artifact "$PREVIEW_ARTIFACT"
+      - name: Remove only this job's transient release outputs
+        if: always()
+        run: rm -f "$PREVIEW_EVIDENCE" "$PREVIEW_ARTIFACT" "$KDNA_TRUSTED_NPM_TARBALL"

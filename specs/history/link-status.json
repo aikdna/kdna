@@ -1,0 +1,142 @@
+{
+  "format": "kdna.historical-link-status/1",
+  "status": "ARCHIVED_REFERENCES_UNRESOLVED_NOT_CURRENT_NAVIGATION",
+  "scope": "Seven preserved pre-r2 documents,93 missing original relative references. The original base/time and contemporaneous targets are not established; no target substitutions or source-provenance claims are made.",
+  "currentEntry": "../../README.md",
+  "files": [
+    {
+      "path": "specs/history/pre-r2/SPEC-INDEX.md",
+      "sha256": "b3cac1bbba47c0e3463d408187dd6834753b3a1556db99da025deb828abbc231",
+      "unresolvedRelativeLinks": {
+        "SPEC.md": 4,
+        "conformance/": 1,
+        "conformance/public-contract-decision-vectors.json": 1,
+        "docs/core/load-contract.md": 1,
+        "docs/core/load-profiles.md": 1,
+        "docs/core/manifest.md": 1,
+        "docs/core/payload-profile.md": 1,
+        "packages/kdna-core/": 1,
+        "packages/kdna-core/schema/load-contract.schema.json": 1,
+        "packages/kdna-core/schema/manifest.schema.json": 1,
+        "packages/kdna-core/schema/payload-profile.schema.json": 1,
+        "packages/kdna-core/schema/runtime-capsule.schema.json": 1,
+        "rfcs/README.md": 1,
+        "rfcs/RFC-0018-envelope-aead.md": 1,
+        "rfcs/RFC-0019-account-device-external-key-grant.md": 1,
+        "schema/agent-host-receipt-0.2.schema.json": 1,
+        "schema/agent-host-request-0.2.schema.json": 1,
+        "schema/consumption-plan-0.2.schema.json": 1,
+        "schema/judgment-trace-0.2.schema.json": 1,
+        "schema/manifest-0.2.schema.json": 1,
+        "schema/payload-profile-0.2.schema.json": 1,
+        "schema/runtime-capsule-0.2.schema.json": 1,
+        "specs/agent-host-receipt.schema.json": 1,
+        "specs/agent-host-request.schema.json": 1,
+        "specs/authoring-workflow.md": 1,
+        "specs/canonical-ir.schema.json": 1,
+        "specs/checksums-document-1.schema.json": 1,
+        "specs/component-semantics.md": 1,
+        "specs/consumption-plan.schema.json": 1,
+        "specs/container.md": 1,
+        "specs/digest-evidence.schema.json": 1,
+        "specs/envelope-aead.schema.json": 1,
+        "specs/execution-contract-0.2.md": 2,
+        "specs/external-grant-envelope.schema.json": 1,
+        "specs/external-key-grant.schema.json": 1,
+        "specs/judgment-trace.schema.json": 1,
+        "specs/kdna-crypto-profiles.md": 1,
+        "specs/package-set-node.d.ts": 1,
+        "specs/package-set-node.md": 1,
+        "specs/package-set-node.schema.json": 1,
+        "specs/protection-admission.d.ts": 1,
+        "specs/protection-admission.md": 1,
+        "specs/protection-admission.schema.json": 1,
+        "specs/protection-adoption.md": 1,
+        "specs/public-contract-decisions.json": 1,
+        "specs/public-diagnostics.json": 1,
+        "specs/public-generation-manifest.json": 1,
+        "specs/public-semantic-source.json": 2,
+        "specs/public-source-map.json": 1,
+        "specs/public-version-policy.md": 3,
+        "specs/public-vocabulary.json": 1,
+        "specs/read-contract.md": 2,
+        "specs/read-contract.schema.json": 1,
+        "specs/runtime-capsule.md": 1,
+        "specs/static-policy.md": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/kdna-core-README.md",
+      "sha256": "21e3fdd333cb0940c5240e365ece31d8c880efe4f07cd68f0646e1e70d07d1c4",
+      "unresolvedRelativeLinks": {
+        "../../SPEC-INDEX.md": 1,
+        "../../docs/core-read-current-status.md": 1,
+        "../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery": 1,
+        "../../specs/authoring-workflow.md": 1,
+        "../../specs/execution-contract-0.2.md": 1,
+        "../../specs/package-set-node.md": 1,
+        "../../specs/protection-admission.md": 1,
+        "../../specs/public-generation-manifest.json": 1,
+        "package.json": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/kdna-read-README.md",
+      "sha256": "e1a61782b1ba1f16ee64448b778749df4de28c1f68c1a09cb1e149befd7c3f03",
+      "unresolvedRelativeLinks": {
+        "../../conformance/README.md": 1,
+        "../../docs/core-read-current-status.md": 1,
+        "../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery": 1,
+        "../../specs/protection-admission.md": 1,
+        "package.json": 1,
+        "src/analysis.d.ts": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/package-set-node.md",
+      "sha256": "a67d3215b379026b2b65e4240c97171d4f378a97f0943359fb0be49f82e1009a",
+      "unresolvedRelativeLinks": {
+        "package-set-node.d.ts": 1,
+        "package-set-node.schema.json": 1,
+        "public-semantic-source.json": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/protection-admission.md",
+      "sha256": "f252e60c4b1d266b4e0b12a4007ca1e0c2e21ecf606f1e38e0ecac77b5494832",
+      "unresolvedRelativeLinks": {
+        "checksums-document-1.schema.json": 1,
+        "protection-admission.d.ts": 1,
+        "protection-admission.schema.json": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/public-version-policy.md",
+      "sha256": "f09e4073a02e3afdcdbd2e35da8ffa63234c339b4856a1d55d424e089aaf518f",
+      "unresolvedRelativeLinks": {
+        "../scripts/public-contract/window-cases.json": 1,
+        "../scripts/public-contract/window-check.mjs": 1,
+        "authoring-workflow.md": 1,
+        "execution-contract-0.2.md": 1,
+        "protection-adoption.md": 1,
+        "public-contract-decisions.json": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    },
+    {
+      "path": "specs/history/pre-r2/read-contract.md",
+      "sha256": "34ab41f52669bfebe2a314649e36dda1721cafffaafccf347558470065a771af",
+      "unresolvedRelativeLinks": {
+        "component-semantics.md": 1,
+        "execution-contract-0.2.md": 1,
+        "static-policy.md": 1
+      },
+      "disposition": "Preserved historical bytes; these relative references are invalid at this archive location and are not supported current navigation."
+    }
+  ]
+}
