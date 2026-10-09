@@ -236,7 +236,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "bfcf09eac8732b67d612d970764a27df27247180",
+      "source_commit": "cc08a71554d4a7da80720f3695a78d9a6ede5cda",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],

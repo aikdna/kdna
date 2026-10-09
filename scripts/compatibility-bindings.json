@@ -133,7 +133,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "file:vendor/aikdna-kdna-core-0.37.1-rc.browser.1.tgz",
-      "source": "bfcf09eac8732b67d612d970764a27df27247180",
+      "source": "cc08a71554d4a7da80720f3695a78d9a6ede5cda",
       "manifest_sha256": "6b033fd36398114b6e837ab4e1eaf0b663021f0674087c1369ab4f3a04cb1dcd"
     },
     {
@@ -142,7 +142,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
       "declared": "file:vendor/aikdna-kdna-read-0.11.2-rc.browser.1.tgz",
-      "source": "bfcf09eac8732b67d612d970764a27df27247180",
+      "source": "cc08a71554d4a7da80720f3695a78d9a6ede5cda",
       "manifest_sha256": "6b033fd36398114b6e837ab4e1eaf0b663021f0674087c1369ab4f3a04cb1dcd"
     }
   ]
