@@ -249,23 +249,17 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
         .map((entry) => entry.repository),
     ),
     new Set([
-      'aikdna/create-kdna-web-app',
       'aikdna/kdna',
-      'aikdna/kdna-activation-server',
       'aikdna/kdna-app-shared',
       'aikdna/kdna-assets',
       'aikdna/kdna-cli',
       'aikdna/kdna-core-swift',
       'aikdna/kdna-demo-web-viewer',
-      'aikdna/kdna-react',
       'aikdna/kdna-remote-server',
       'aikdna/kdna-skills',
       'aikdna/kdna-studio-cli',
       'aikdna/kdna-studio-core',
       'aikdna/kdna-studio-swift',
-      'aikdna/kdna-vscode',
-      'aikdna/kdna-web-client',
-      'aikdna/kdna-web-server',
     ]),
   );
   assert.deepEqual(
@@ -296,8 +290,7 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
       .filter((entry) => entry.repository !== 'aikdna/kdna')
       .map((entry) => [entry.repository, entry.commit]),
   );
-  assert.equal(sourcePins.size, 15);
-  sourcePins.set('aikdna/kdna-vscode', acceptedPins.get('aikdna/kdna-vscode'));
+  assert.equal(sourcePins.size, 10);
   function assertPins(workflow, expectedPins) {
     const seen = new Set();
     for (const match of workflow.matchAll(/^\s*repository: (\S+)\s*$/gmu)) {
@@ -324,7 +317,10 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
       path.join(repoRoot, '.github/workflows', workflowName),
       'utf8',
     );
-    assert.equal(expectedPins.size, 16);
+    // Only repositories that are still on the public surface are pinned here:
+    // ten for both workflows, because the source inventory and the accepted
+    // component set now describe the same public repositories.
+    assert.equal(expectedPins.size, 10);
     assertPins(workflow, expectedPins);
     for (const commit of expectedPins.values()) {
       assert.throws(() =>
