@@ -288,8 +288,7 @@ test('core smoke verifies current source after preparing exact historical compat
   );
   const inventory = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'scripts/ecosystem-source-inventory.json'), 'utf8'));
   const sourcePins = inventory.repositories.filter((row) => row.repository !== 'aikdna/kdna').map((row) => [row.repository, row.commit]);
-  assert.equal(sourcePins.length, 15);
-  sourcePins.push(EXPECTED_COMPAT_CHECKOUTS.find(([repository]) => repository === 'aikdna/kdna-vscode'));
+  assert.equal(sourcePins.length, EXPECTED_COMPAT_CHECKOUTS.length);
   for (const [repository, smokeCommit] of sourcePins) {
     assert.match(
       workflow,
