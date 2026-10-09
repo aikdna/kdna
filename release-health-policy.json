@@ -7,6 +7,7 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-cli",
       "version": "0.36.1",
+      "candidate_version": "0.39.0-rc.native-sections.3",
       "canonical_tag": {
         "type": "natural"
       }
@@ -17,6 +18,7 @@
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
       "version": "0.5.0",
+      "candidate_version": "0.8.0-rc.native-sections.1",
       "canonical_tag": {
         "type": "prefix",
         "value": "v"
@@ -31,6 +33,7 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-cli",
       "version": "0.11.0",
+      "candidate_version": "0.13.0-rc.components.2",
       "canonical_tag": {
         "type": "natural"
       }
@@ -41,6 +44,7 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-core",
       "version": "3.0.0",
+      "candidate_version": "4.0.0-rc.components.2",
       "canonical_tag": {
         "type": "natural"
       }
