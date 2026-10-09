@@ -68,19 +68,13 @@ promise.
 | `@aikdna/kdna-conformance` | `0.2.0` | Conformance fixtures and verdicts |
 | `@aikdna/kdna-studio-core` | `3.0.0` | Published Studio creation engine |
 | `@aikdna/kdna-studio-cli` | `0.11.0` | Published Studio terminal Host |
-| `@aikdna/kdna-web-server` | `0.3.1` | Published server-side adapter layer |
-| `@aikdna/kdna-web-client` | `0.3.0` | Published browser client |
-| `@aikdna/kdna-react` | `0.4.0` | Published React bindings |
 | `@aikdna/kdna-mcp-server` | `0.5.0` | Published MCP adapter |
-| `@aikdna/kdna-remote-server` | `0.4.2` | Reference remote access server |
-| `@aikdna/kdna-activation-server` | `0.2.1` | Reference activation server |
-| `create-kdna-web-app` | `0.5.0` | Project scaffold |
 
 The repository's own declaration of this table's package set and published
 values is [`release-health-policy.json`](../release-health-policy.json); it
-lists 14 packages. That file is maintained by the release-health gate, so it can
-lag a registry observation by one release; treat the two as separate
-observations and re-read both before quoting either.
+still records the wider historical package set because the release-health gate
+maintains it as a registry observation. Treat the two as separate observations
+and re-read both before quoting either.
 
 At that 2026-09-13 observation, the following coordinates returned registry 404:
 `@aikdna/kdna-read`, `@aikdna/kdna-assets`, `@aikdna/kdna-app-shared`.
@@ -128,14 +122,8 @@ supported tuple.
 | `@aikdna/kdna-cli` | `0.38.0-rc.component-semantics.1` | Unpublished candidate (`private`) |
 | `@aikdna/kdna-studio-core` | `4.0.0-rc.components.1` | Unpublished candidate (`private`) |
 | `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.1` | Unpublished candidate |
-| `@aikdna/kdna-web-server` | `0.5.0-rc.component-semantics.1` | Unpublished candidate |
-| `@aikdna/kdna-web-client` | `0.5.0-rc.component-semantics.1` | Unpublished candidate |
-| `@aikdna/kdna-react` | `0.6.0-rc.component-semantics.1` | Unpublished candidate |
 | `@aikdna/kdna-mcp-server` | `0.7.0-rc.component-semantics.1` | Unpublished candidate (`private`) |
 | `@aikdna/kdna-assets` | `0.3.0-rc.component-semantics.1` | Unpublished source bundle (`private`) |
-| `@aikdna/kdna-remote-server` | `0.6.0-rc.component-semantics.1` | Unpublished candidate |
-| `@aikdna/kdna-activation-server` | `0.4.0-rc.component-semantics.1` | Unpublished candidate |
-| `kdna-vscode` | `0.3.0` | Unpublished local candidate |
 
 
 Rows marked `private` describe package metadata, not repository visibility.
@@ -228,10 +216,6 @@ unverified, not failing, and is not inherited from a neighboring component.
 |---|---|---|
 | Historical Core / Read candidates | Node.js on the development host; browser entry exercised separately from Node | package READMEs in `packages/kdna-core`, `packages/kdna-read` |
 | Assets adapter | macOS arm64, Node.js 26.5.0 | `aikdna/kdna-assets` README |
-| Web Host / Web Client / React | Node.js 22 or newer; React 18.3.1 for the React candidate (declared peer range `>=18 <20`) | Web Host, Web Client and React READMEs |
-| Demo viewer | Next 16.3.5, React 19.2.7, Playwright WebKit 1.61.1, loopback only | `aikdna/kdna-demo-web-viewer` README |
-| VS Code extension | VS Code 1.130.0 or newer, trusted workspace, unpublished local candidate | `aikdna/kdna-vscode` README |
-| Swift Core/Read | macOS arm64 native verification and generic iOS device compilation; iOS runtime/native Host are not established | `aikdna/kdna-core-swift` README |
 
 Node execution of a browser entry is not browser-engine evidence, and a
 successful local build is not a platform-coverage claim.
