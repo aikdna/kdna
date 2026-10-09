@@ -61,36 +61,19 @@ artifacts as current candidates.
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0-rc.components.2`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0-rc.components.2` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |
-| `kdna-web-client` | Earlier Web graph source `0.5.0-rc.component-semantics.1`, Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`. The repository is not on the current public surface and this line is not part of the supported first-user release. | npm `0.3.0`, deprecated. |
-| `kdna-web-server` | Earlier Web graph source `0.5.0-rc.component-semantics.1` on that older exact Core/Read graph. HTTP service checks do not establish a current-native consumer. The repository is not on the current public surface. | npm `0.3.1`, deprecated. |
-| `kdna-react` | Earlier Web graph source `0.6.0-rc.component-semantics.1` on that older exact Core/Read/WebClient graph. Its Read integration check is in-process, not HTTP. The repository is not on the current public surface. | npm `0.4.0`, deprecated. |
-| `kdna-activation-server` | Earlier reference activation source `0.4.0-rc.component-semantics.1` with its pinned older Core/WebServer graph; reference activation behaviour, not production identity or licensing certification. The repository is not on the current public surface. | npm `0.2.1`, deprecated. |
-| [kdna-remote-server](https://github.com/aikdna/kdna-remote-server) | Complete-source `0.6.0-rc.component-semantics.1` with its own pinned older Core/WebServer/activation graph. | npm `0.4.2`. |
-| `create-kdna-web-app` | Complete-source `0.6.0`; the Next template includes its pinned older candidate graph. Express/Next Pages templates keep their separately declared published graph. | npm `0.5.0`. Template compatibility is per template. |
-| [kdna-demo-web-viewer](https://github.com/aikdna/kdna-demo-web-viewer) | Complete app source and its pinned WebClient/Core/Read graph; use the app subdirectory's lock and instructions. | GitHub release `0.1.2`; no inferred npm app publication. |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Source/index `0.3.0-rc.component-semantics.1`, verification scope `0.1.5`, with the older pinned SDK/Studio graph. Historical assets retain their own format and may reject under a newer reader. | GitHub release `0.1.1`; source asset index, not an npm SDK. |
-| `kdna-vscode` | Source extension `0.2.0`, Core `0.21.0`; workspace attachment launches exact CLI `0.36.0`, whose schema0.3 output is incompatible with the extension's schema0.1 parser. Workspace control is currently unsupported. Native `.3` is not a replacement for that command contract. The repository is not on the current public surface. | Marketplace extension `0.1.0`; source build and Marketplace installation differ. |
-| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | SwiftPM's own pinned public contract and source revision. No current JavaScript preview parity is implied. | GitHub release `v0.21.0`; candidate coordinates in its binding do not assert a public candidate tag. |
-| [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | SwiftPM display adapter with its exact public Core Git dependency; use its binding and package resolution. | GitHub release `0.5.0`; not an npm consumer. |
-| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Swift-native Creation kernel with its own public binding and SwiftPM product. Reference SDK coordinates do not prove a JavaScript Read invocation. | GitHub release `0.4.0`; not the JavaScript StudioCLI release. |
 
-The older Web graph uses container `0.2.0` / Read `0.2.0`, with the exact
-component semantics declared in those source trees. Those repositories and
-their npm baselines are no longer on the current public surface, and the line is
-not part of the supported first-user release: an existing pinned installation
-keeps its own lock and stays outside the current preview pair. Unpublished KDNA
-dependencies that a retained earlier source route still needs were supplied as
-tracked archives in the revision that carries that route. Published third-party
-dependencies resolve through their locked registry URLs and integrity values;
-those larger graphs require registry access on a cold installation unless their
-documented acquisition step supplies a separate cache. Do not claim that every
-repository installs offline.
+This repository documents and releases the five core repositories above. Web,
+React, server, activation, editor, application-scaffold and Apple-platform lines
+are not part of this repository's release surface, are not documented here and
+are not referenced from here. An existing installation of an earlier line keeps
+its own lock and stays outside the preview pair; this repository makes no claim
+about its availability, support or public channel.
 
-This repository still declares the earlier Web client as a development
-dependency so that compatibility tests can run against the older published
-artifact. That published version now carries a deprecation notice, so a fresh
-`npm ci` prints it. The warning states the status of the deprecated baseline; it
-is not a build failure and not a statement about the preview pair above.
+Published third-party dependencies resolve through their locked registry URLs
+and integrity values. Those larger graphs require registry access on a cold
+installation unless their documented acquisition step supplies a separate
+cache. Do not claim that every repository installs offline.
 
 ## Auxiliary distribution
 

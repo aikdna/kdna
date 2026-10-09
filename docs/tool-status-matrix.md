@@ -152,15 +152,11 @@ private development status is not part of the open protocol's tool matrix.
 
 | Package | Public release | Status |
 |---|---|---|
-| `kdna-core-swift` | `0.20.0` | Historical release inputs stay separate. Current Core/Read source has macOS verification and generic iOS compilation, not device runtime or native Host acceptance. |
-| `kdna-studio-swift` | `0.4.0` | Historical release predates current Core/Read. Current authoring source has its own bound inputs and verification entry in the owning README; this does not re-certify the old release. |
-| `kdna-app-shared` | `0.5.0` | Historical release predates current Read presentation. Current source has macOS builds/tests/consumers and generic iOS compilation; that does not re-certify the old release or prove device runtime. |
 
 ## Editor and Legacy Coordinates
 
 | Component | Notes |
 |---|---|
-| `kdna-vscode` | Editor mission retained; current maturity and exact compatibility are unassessed pending owner-reviewed recertification. |
 | `@aikdna/agent` | Deprecated legacy npm coordinate. Use the explicit-file runtime path; Agent adapters require recertification. |
 | `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
 | `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |

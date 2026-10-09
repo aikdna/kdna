@@ -27,22 +27,15 @@ lockfiles, logs, and security reports.
 | Studio CLI | `aikdna/kdna-studio-cli` | `@aikdna/kdna-studio-cli` | `kdna-studio` | Current typed `session`, `verify`, `read`; published 0.11.0 retains project/card authoring |
 | Skills | `aikdna/kdna-skills` | skill repo | none | Explicit-file Agent and MCP adapters; discovery grants no authority |
 
-## Ecosystem Integrations With Independent Maturity
+## Ecosystem Integrations In This Release Wave
 
-These repositories retain their integration missions. Their exact versions may
-be pre-release, experimental, or awaiting recertification independently from
-the Core release wave:
+This table names only the integration that ships from the core repositories
+above. Adapters for other platforms and channels are outside this repository's
+release surface and are not named here:
 
 | Layer | Repository | Package | Status |
 | --- | --- | --- | --- |
 | MCP server | `aikdna/kdna-skills/tree/main/mcp-server` | `@aikdna/kdna-mcp-server` | experimental |
-| Core Swift | `aikdna/kdna-core-swift` | SwiftPM | macOS integration |
-| App Shared | `aikdna/kdna-app-shared` | SwiftPM | shared Apple application contracts |
-| Studio Swift | `aikdna/kdna-studio-swift` | SwiftPM | macOS integration |
-| VS Code | `aikdna/kdna-vscode` | VS Code extension | editor mission retained; maturity and compatibility unassessed pending recertification |
-| Web Client / Server | `aikdna/kdna-web-client`, `aikdna/kdna-web-server` | npm | browser and server integration |
-| React / Scaffolder / Demo | `aikdna/kdna-react`, `aikdna/create-kdna-web-app`, `aikdna/kdna-demo-web-viewer` | npm / source | React, onboarding, and end-to-end demonstration |
-| Activation / Remote | `aikdna/kdna-activation-server`, `aikdna/kdna-remote-server` | npm | authorization, revocation, and remote consumption |
 
 ## CLI Boundary
 

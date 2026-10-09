@@ -462,10 +462,10 @@ const nativeIdentityMutations = [
     '下面保留未发布原生线的独立历史示例。',
   ],
   [
-    'support old Web graph',
+    'support licensed-asset index status',
     'docs/current-release-support.md',
-    'Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`',
-    'Core `0.37.1-rc.browser.1` / Read `0.3.0-rc.component-semantics.2`',
+    'verification scope `0.1.5`',
+    'verification scope `0.2.0`',
   ],
   [
     'support Studio status',
@@ -474,10 +474,10 @@ const nativeIdentityMutations = [
     'npm `4.0.0`. Current source is a stable npm release.',
   ],
   [
-    'support editor compatibility',
+    'support Loader/MCP adapter status',
     'docs/current-release-support.md',
-    'Workspace control is currently unsupported.',
-    'Workspace control is currently supported.',
+    'npm MCP `0.5.0`; not the current native adapter.',
+    'npm MCP `0.5.0`; it is the current native adapter.',
   ],
 ];
 for (const label of ['原生交付说明', '作者示例', '可执行原生配方'])
@@ -708,8 +708,8 @@ for (const [file, before, after] of [
   ],
   [
     'docs/current-release-support.md',
-    'GitHub release `v0.21.0`; candidate coordinates in its binding do not assert a public candidate tag.',
-    'GitHub release `v0.21.0`; its binding proves current JavaScript preview parity.',
+    'GitHub release `0.1.1`; source asset index, not an npm SDK.',
+    'GitHub release `0.1.1`; it is the current npm SDK.',
   ],
 ])
   test(`stable-only publication or base SDK capability cannot drift in ${file}: ${before}`, () => {
