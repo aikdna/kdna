@@ -45,8 +45,8 @@ support to the environment table above.
 |---|---|
 | Terminal consumption | [CLI](https://github.com/aikdna/kdna-cli#readme): explicit-file Core admission and bounded public Read |
 | Creation engine and terminal Host | [Studio Core](https://github.com/aikdna/kdna-studio-core#readme) and [Studio CLI](https://github.com/aikdna/kdna-studio-cli#readme): live creation, saved-byte checks and static verification remain separate |
-| Web and React | [Host](https://github.com/aikdna/kdna-web-server#readme), [Web Client](https://github.com/aikdna/kdna-web-client#readme), [React](https://github.com/aikdna/kdna-react#readme): explicit public Read with each adapter's proof limits |
-| Remote and activation | [Remote](https://github.com/aikdna/kdna-remote-server#readme) supplies an HTTP Read handler; [Activation](https://github.com/aikdna/kdna-activation-server#readme) supplies a co-located store observer with no standalone server/CLI; deployment owns trust and policy |
+| Web and React | The Host, Web Client and React repositories are no longer on the public surface and are not part of the supported first-user release; each adapter's proof limits stayed bounded to its own earlier line |
+| Remote and activation | [Remote](https://github.com/aikdna/kdna-remote-server#readme) supplies an HTTP Read handler; the activation server repository is no longer on the public surface, and its co-located store observer supplied no standalone server/CLI; deployment owns trust and policy |
 | Apple libraries | [Core Swift](https://github.com/aikdna/kdna-core-swift#readme), [Studio Swift](https://github.com/aikdna/kdna-studio-swift#readme), [App Shared](https://github.com/aikdna/kdna-app-shared#readme): each source and release coordinate must be checked independently |
 | Python | [Python Core/Read](../python-sdk/README.md): its own pinned contract, standard-library implementation and measured environment |
 | Agent, MCP and browser demo | [Skills/MCP](https://github.com/aikdna/kdna-skills#readme) and [Demo](https://github.com/aikdna/kdna-demo-web-viewer#readme): explicit adapters and scoped execution evidence |

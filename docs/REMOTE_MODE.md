@@ -88,8 +88,9 @@ service.
 
 - [`@aikdna/kdna-remote-server`](https://github.com/aikdna/kdna-remote-server)
   demonstrates a self-hosted projection endpoint.
-- [`@aikdna/kdna-activation-server`](https://github.com/aikdna/kdna-activation-server)
-  demonstrates entitlement activation and synchronization.
+- The activation server package `@aikdna/kdna-activation-server` demonstrates
+  entitlement activation and synchronization. Its repository is no longer on
+  the public surface, so this document does not link to it.
 - [`@aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) provides the
   remote-mode client path.
 
