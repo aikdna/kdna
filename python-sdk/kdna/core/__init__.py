@@ -3,6 +3,7 @@ import os
 import stat
 import uuid
 import weakref
+import zlib
 from ._values import Rejection, copy_json, parse_json, jcs
 from ._container import parse_container, decode_payload, LIMITS
 from ._digests import digest, content_tree, runtime_entries, runtime_names, evidence
@@ -73,7 +74,7 @@ def admit_bytes(data):
         return {'status': 'accepted', 'snapshot': snapshot}
     except Rejection as error:
         return _rejected(error.reason, getattr(error, 'component_failure', None))
-    except (ValueError, TypeError, KeyError, IndexError, OverflowError, RecursionError, OSError):
+    except (ValueError, TypeError, KeyError, IndexError, OverflowError, RecursionError, OSError, zlib.error):
         return _rejected()
 
 
