@@ -227,7 +227,12 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   );
   const assets = canonical.components.find((entry) => entry.repository === 'aikdna/kdna-assets');
   assert.equal(assets.packages.length, 0);
-  assert.equal(assets.artifacts.length, 2);
+  // The index lists no public asset, so this component declares no artifact
+  // evidence; it is package-less and binds its release tag and commit instead.
+  assert.equal(assets.artifacts.length, 0);
+  assert.equal(assets.component_version, '0.1.1');
+  assert.equal(assets.release_tag, '0.1.1');
+  assert.match(assets.release_commit, /^[a-f0-9]{40}$/u);
   const studioCore = canonical.components.find(
     (entry) => entry.repository === 'aikdna/kdna-studio-core',
   ).packages[0];
@@ -254,8 +259,6 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
       'aikdna/kdna-assets',
       'aikdna/kdna-cli',
       'aikdna/kdna-core-swift',
-      'aikdna/kdna-demo-web-viewer',
-      'aikdna/kdna-remote-server',
       'aikdna/kdna-skills',
       'aikdna/kdna-studio-cli',
       'aikdna/kdna-studio-core',
@@ -267,6 +270,7 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
       .filter((entry) => entry.release_tag)
       .map((entry) => [entry.repository, entry.component_version, entry.release_tag]),
     [
+      ['aikdna/kdna-assets', '0.1.1', '0.1.1'],
       ['aikdna/kdna-core-swift', '0.21.0', 'v0.21.0'],
       ['aikdna/kdna-app-shared', '0.5.0', '0.5.0'],
       ['aikdna/kdna-studio-swift', '0.4.0', '0.4.0'],
@@ -290,7 +294,7 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
       .filter((entry) => entry.repository !== 'aikdna/kdna')
       .map((entry) => [entry.repository, entry.commit]),
   );
-  assert.equal(sourcePins.size, 10);
+  assert.equal(sourcePins.size, 8);
   function assertPins(workflow, expectedPins) {
     const seen = new Set();
     for (const match of workflow.matchAll(/^\s*repository: (\S+)\s*$/gmu)) {
@@ -320,7 +324,7 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
     // Only repositories that are still on the public surface are pinned here:
     // ten for both workflows, because the source inventory and the accepted
     // component set now describe the same public repositories.
-    assert.equal(expectedPins.size, 10);
+    assert.equal(expectedPins.size, 8);
     assertPins(workflow, expectedPins);
     for (const commit of expectedPins.values()) {
       assert.throws(() =>

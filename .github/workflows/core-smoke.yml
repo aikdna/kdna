@@ -45,18 +45,6 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: aikdna/kdna-demo-web-viewer
-          ref: 1bda8851ff8a2cb5fb1d399df19cf7d0fdc0628d
-          path: .ecosystem-repos/kdna-demo-web-viewer
-          fetch-depth: 0
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-remote-server
-          ref: c2813087e7e47d6f8848a4281c87612439d6dd4a
-          path: .ecosystem-repos/kdna-remote-server
-          fetch-depth: 0
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
           repository: aikdna/kdna-skills
           ref: 40e50578178b72c400bb5b90a3ed76eef8176693
           path: .ecosystem-repos/kdna-skills
