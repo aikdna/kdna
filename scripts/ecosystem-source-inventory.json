@@ -113,7 +113,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "0a0be9e0fda7022d8e9bb6e379455810704d3a42d615f6b3270f8dead6a33024",
+          "sha256": "6a4a6abdac4c5b5b7349ca8d8979ff03e15e3e8ae628b88e7f5b020ecc3f67c5",
           "local_archives": []
         }
       ],
@@ -126,7 +126,7 @@
           "name": "@aikdna/kdna-conformance",
           "version": "0.2.0",
           "member_count": 84,
-          "members_sha256": "d09fbd0edf0103b09c93c8cf1b9d7e7e04ddba37010a1d2ba871b66a8d2e28df",
+          "members_sha256": "925a81aa0552fc4e82e7cbd2c49bf54e6ca74b68bdf0b7f6390d37c81ef7ad49",
           "paths": [
             "LICENSE",
             "README.md",
@@ -220,7 +220,7 @@
           "name": "@aikdna/kdna-core",
           "version": "0.37.1-rc.browser.1",
           "member_count": 456,
-          "members_sha256": "beab3a4aa3e58d9e4070da0cb3a230c586a636e339da13b347f552e386aa7307",
+          "members_sha256": "e27136bae8a3aa19bbefc49221aeb57e2a6efed65f01d811518423dfe3ba4a17",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -841,7 +841,7 @@
           "name": "@aikdna/kdna",
           "version": "0.14.0",
           "member_count": 6,
-          "members_sha256": "a6b5a70d4bd6992803db3c23039481de7c13094ec1eefcd3a9e7fe0f1f29c8ab",
+          "members_sha256": "dd50b30d397a4f9950b03cf5760f57fe177f01b7fbd2d0bef1388ff7c4c0718b",
           "paths": [
             "CHANGELOG.md",
             "README.md",
@@ -919,9 +919,9 @@
     {
       "repository": "aikdna/kdna-assets",
       "commit": "57b7661fbf525f28272b7fa79bb86fc482877180",
-      "tree": "defc00c6413bf585892435608109c47e96953381",
+      "tree": "38e2cbe027802b89545d042b0348b409e85ee437",
       "ci": {
-        "head": "71d8eb6ddcaa2f393c155e80e2df850ad2f6e1de",
+        "head": "ee5b328a99ff29c21cd5ffd71d9672e2e7729927",
         "required": [
           {
             "name": "check",
@@ -976,7 +976,7 @@
       "locks": [
         {
           "path": "package-lock.json",
-          "sha256": "6697bf7d0ef009572462ec25df23c3993b0aadf4ccfc850a09fc3445a1065e61",
+          "sha256": "11f933523412bb946977367edef128bbab4e4a6bee9b6281a9378925da30736e",
           "local_archives": [
             {
               "path": "node_modules/@aikdna/kdna-cli",
@@ -1036,10 +1036,10 @@
             },
             {
               "path": "node_modules/fast-uri",
-              "archive": "vendor/fast-uri-3.1.7.tgz",
+              "archive": "vendor/fast-uri-3.1.8.tgz",
               "name": "fast-uri",
-              "version": "3.1.7",
-              "integrity": "sha512-aMDEVX6P8vorK2rM048F+QQCdtOTofaUyCFWTTCkhMJL8UdXuG2FsNAGqymKRqlsvZyxJrbG9gLaeHeBPBFjVg=="
+              "version": "3.1.8",
+              "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg=="
             },
             {
               "path": "node_modules/json-schema-traverse",
@@ -1144,15 +1144,15 @@
           "members_sha256": "b13ddc6d217df572005ca1d7a6098327ddc968f8944a4a860814c5a318641741"
         },
         {
-          "path": "vendor/fast-uri-3.1.7.tgz",
-          "sha256": "75d114fa009a342a4f964e099012cfc9660cab130d8df367184e01f0d0198777",
-          "integrity": "sha512-aMDEVX6P8vorK2rM048F+QQCdtOTofaUyCFWTTCkhMJL8UdXuG2FsNAGqymKRqlsvZyxJrbG9gLaeHeBPBFjVg==",
-          "bytes": 43515,
+          "path": "vendor/fast-uri-3.1.8.tgz",
+          "sha256": "86be033b406a7737c0521edc8fe3e15c7ac0cb6b5e509478cc9539a2efaa086c",
+          "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==",
+          "bytes": 44269,
           "name": "fast-uri",
-          "version": "3.1.7",
+          "version": "3.1.8",
           "format": "strict-npm-tar",
           "member_count": 44,
-          "members_sha256": "5bec21b17087c69e42387ad6f3416b7570640d0ae3e500c8b769fd0722fc7cb4"
+          "members_sha256": "22675df08635ad2cea7496420498e6b48fd3ee4229c9b1f87ad6ed343baf06bc"
         },
         {
           "path": "vendor/json-schema-traverse-1.0.0.tgz",
@@ -1206,8 +1206,8 @@
           "directory": ".",
           "name": "@aikdna/kdna-assets",
           "version": "0.3.0-rc.component-semantics.1",
-          "member_count": 121,
-          "members_sha256": "dfe1bbc603f888ff24a225e024c1b7f387d35ec11588f59cf5a48236d66f3799",
+          "member_count": 106,
+          "members_sha256": "d856626f56b4e2d8dd080acbd38c680485020fd716aebd4742ed5c86ef91b7b1",
           "paths": [
             ".github/CODEOWNERS",
             ".github/ISSUE_TEMPLATE/bug.md",
@@ -1230,6 +1230,7 @@
             "docs/collection-workspace.md",
             "docs/creating-laozi-and-epictetus-kdna.md",
             "docs/current-reception-criteria.md",
+            "evidence/README.md",
             "evidence/rebuild-receipt-2026-07-17.json",
             "evidence/rebuild-receipt-2026-07-18.json",
             "fixtures/ci-leg-registry.json",
@@ -1242,22 +1243,6 @@
             "public-contract-binding.json",
             "references/licensed/README.md",
             "references/public/README.md",
-            "references/public/epictetus-control-and-character/LICENSE",
-            "references/public/epictetus-control-and-character/README.md",
-            "references/public/epictetus-control-and-character/epictetus-control-and-character-0.1.0.kdna",
-            "references/public/epictetus-control-and-character/epictetus-control-and-character-0.1.0.kdna.sha256",
-            "references/public/epictetus-control-and-character/epictetus-control-and-character-0.1.1.kdna",
-            "references/public/epictetus-control-and-character/epictetus-control-and-character-0.1.1.kdna.sha256",
-            "references/public/laozi-wuwei/LICENSE",
-            "references/public/laozi-wuwei/README.md",
-            "references/public/laozi-wuwei/laozi-wuwei-0.1.0.kdna",
-            "references/public/laozi-wuwei/laozi-wuwei-0.1.0.kdna.sha256",
-            "references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna",
-            "references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna.sha256",
-            "references/public/verification-scope/LICENSE",
-            "references/public/verification-scope/README.md",
-            "references/public/verification-scope/verification-scope-0.1.5.kdna",
-            "references/public/verification-scope/verification-scope-0.1.5.kdna.sha256",
             "schemas/creation-acceptance-catalog.schema.json",
             "schemas/current-index.schema.json",
             "schemas/public-read-index.schema.json",
@@ -1325,7 +1310,7 @@
             "vendor/ajv-formats-3.0.1.tgz",
             "vendor/cbor-x-1.6.5.tgz",
             "vendor/fast-deep-equal-3.1.3.tgz",
-            "vendor/fast-uri-3.1.7.tgz",
+            "vendor/fast-uri-3.1.8.tgz",
             "vendor/json-schema-traverse-1.0.0.tgz",
             "vendor/noble-hashes-1.8.0.tgz",
             "vendor/pako-2.1.0.tgz",
