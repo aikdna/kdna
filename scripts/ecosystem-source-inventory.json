@@ -918,7 +918,7 @@
     },
     {
       "repository": "aikdna/kdna-assets",
-      "commit": "418b98bb3bc21a6cdc792953474ee5356aa20984",
+      "commit": "57b7661fbf525f28272b7fa79bb86fc482877180",
       "tree": "defc00c6413bf585892435608109c47e96953381",
       "ci": {
         "head": "71d8eb6ddcaa2f393c155e80e2df850ad2f6e1de",
