@@ -90,12 +90,7 @@ before(() => {
         .digest('hex');
     }
   }
-  for (const repository of [
-    'kdna-core-swift',
-    'kdna-app-shared',
-    'kdna-studio-swift',
-    'kdna-vscode',
-  ]) {
+  for (const repository of ['kdna-core-swift', 'kdna-app-shared', 'kdna-studio-swift']) {
     const root = rootFor(repository);
     fs.mkdirSync(root);
     fs.writeFileSync(path.join(root, 'README.md'), 'Synthetic compatibility fixture.\n');
@@ -358,7 +353,7 @@ test('missing manifest and missing dependency still fail complete compatibility 
   }
 });
 
-test('compatibility preparation creates nine exact detached snapshots without changing inputs', () => {
+test('compatibility preparation creates eight exact detached snapshots without changing inputs', () => {
   const before = new Map(
     fs.readdirSync(repositories).map((name) => {
       const root = path.join(repositories, name);
@@ -373,7 +368,7 @@ test('compatibility preparation creates nine exact detached snapshots without ch
     }),
   );
   const rows = prepareCompatibilityRepos(control, path.join(temporary, 'prepared'), repositories);
-  assert.equal(rows.length, 9);
+  assert.equal(rows.length, 8);
   for (const row of rows) {
     assert.equal(git(row.path, ['rev-parse', 'HEAD']), row.commit);
     assert.equal(git(row.path, ['branch', '--show-current']), '');
@@ -402,7 +397,7 @@ test('compatibility preparation refuses an existing destination and a path insid
 });
 
 test('compatibility preparation refuses missing and symlinked input checkouts', () => {
-  const source = rootFor('kdna-vscode');
+  const source = rootFor('kdna-studio-swift');
   const moved = path.join(temporary, 'held-source');
   fs.renameSync(source, moved);
   try {

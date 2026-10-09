@@ -18,12 +18,6 @@ function check(name, condition, detail = '') {
   return false;
 }
 
-// Candidate-branch repositories are outside the current release scope:
-// their package.json versions may lead the published registry version
-// while their candidate branch is developed. See the execution control
-// table (out-of-scope repo list).
-const CANDIDATE_BRANCH_REPOS = new Set(['kdna-activation-server', 'kdna-remote-server']);
-
 const REPOS_ROOT = path.resolve(__dirname, '..', '..');
 const manifest = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-manifest.json'), 'utf8'),
@@ -83,26 +77,22 @@ for (const { repo, pkg, sourceVersion, publishedVersion, candidate } of PACKAGES
 
     check(
       `${pkg} manifest=${publishedVersion} npm=${npmVersion}`,
-      npmVersion === publishedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
-      CANDIDATE_BRANCH_REPOS.has(repo)
-        ? 'registry latest may lag the manifest version for out-of-scope candidate branches'
-        : 'registry latest must equal the manifest version',
+      npmVersion === publishedVersion,
+      'registry latest must equal the manifest version',
     );
   }
   if (repoVersion) {
     check(
       `${pkg} repo=${repoVersion} manifest=${sourceVersion}`,
-      repoVersion === sourceVersion || CANDIDATE_BRANCH_REPOS.has(repo),
-      CANDIDATE_BRANCH_REPOS.has(repo)
-        ? 'repository version may lead the manifest version for out-of-scope candidate branches'
-        : 'repository package version must equal the manifest version',
+      repoVersion === sourceVersion,
+      'repository package version must equal the manifest version',
     );
   }
 
   // Pre-publish narrative gate: the in-package README and its Chinese mirror
   // must not advertise a different "latest" version than the one being
   // published. A stale "latest is X" claim misleads installers.
-  if (!candidate && !CANDIDATE_BRANCH_REPOS.has(repo)) {
+  if (!candidate) {
     for (const readmeName of ['README.md', 'README.zh.md']) {
       const readmePath = path.join(repoPath, readmeName);
       if (!fs.existsSync(readmePath)) continue;

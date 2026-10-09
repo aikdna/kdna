@@ -14,22 +14,15 @@ const {
 } = require('./core-release-authority');
 
 const REPOSITORIES = Object.freeze([
-  'create-kdna-web-app',
   'kdna',
-  'kdna-activation-server',
   'kdna-app-shared',
   'kdna-assets',
   'kdna-cli',
   'kdna-core-swift',
-  'kdna-demo-web-viewer',
-  'kdna-react',
-  'kdna-remote-server',
   'kdna-skills',
   'kdna-studio-cli',
   'kdna-studio-core',
   'kdna-studio-swift',
-  'kdna-web-client',
-  'kdna-web-server',
 ]);
 const { swiftDependencies } = require('./ecosystem-source-swift');
 const SECTIONS = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];

@@ -2814,113 +2814,6 @@
   ],
   "archive_comparisons": [
     {
-      "archive_sha256": "1a9d90fbdfab35b249da0db16fe7c1099a1b2c3443c02b737461416397367658",
-      "name": "@aikdna/kdna-web-client",
-      "version": "0.5.0-rc.component-semantics.1",
-      "producer": "aikdna/kdna-web-client",
-      "relationship": "distinct-fixed-archive-and-source-pack",
-      "differences": [
-        {
-          "path": "NOTICE",
-          "archive_sha256": "eebe1346dc4361aa40c0fe7250bc7b153ce7c97d11b25cb3a5befae046fa8ddd",
-          "source_pack_sha256": "4ce8bc64c7778f452ba169fba91a61b5b1a72a58fe5382afe25076ddc1c1f714",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "README.md",
-          "archive_sha256": "6eb543f4829f8358bf4c741e8c5d7646093dbc311ca273e0c1b7bfab923314ad",
-          "source_pack_sha256": "da87e3f56f4940d86abec4126ce1109f83c0633b7428d76b6c31c0e2e4235114",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "SECURITY.md",
-          "archive_sha256": "d4f9481c507f098388d5424c78b54adf81c66988ca131f7fb4689441a0c314a2",
-          "source_pack_sha256": "442133e6c59e29d7526e6bf5a79fb417f56911715150e4a0589e846a7e850c46",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "docs/current-core-read-binding.json",
-          "archive_sha256": "78365872ddca6536e138792a817a7a2c744df5c0954b261c4648af7e566fb38c",
-          "source_pack_sha256": "4a96ac4118b40ec6ea4fd13c9bab8a8dc95eb5d2c6ec4c1808bbabfa99719e9d",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "package.json",
-          "archive_sha256": "e79ba06e527781706a19448bdf195e36e79bca632039214929bfd216560aade6",
-          "source_pack_sha256": "c8e10062e428378f73477b8e76914d3f5aea86c9df26209657602d28b1b18762",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        }
-      ]
-    },
-    {
-      "archive_sha256": "2ee124fc6d5d5ff0747a45a52d883d8edc176385fe52bb581bbace9543e9129c",
-      "name": "@aikdna/kdna-remote-server",
-      "version": "0.6.0-rc.component-semantics.1",
-      "producer": "aikdna/kdna-remote-server",
-      "relationship": "distinct-fixed-archive-and-source-pack",
-      "differences": [
-        {
-          "path": "NOTICE",
-          "archive_sha256": "075bddda4bdc1b466e78520a58889607ae2538326b0491f68f912e77a9cc9729",
-          "source_pack_sha256": "24ba722c2724f455b0652dc4b5d974a485d2df383771f0cfb8766289c457e8fd",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "README.md",
-          "archive_sha256": "c31947fef796f0d8c1a8fa0932404edfca2920a798a6cfc25ee15b214ef51c85",
-          "source_pack_sha256": "d8bb4626ed8ecb0d6d83d922138e951bc3be1fe4182a8c24104a371ead51d074",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "package.json",
-          "archive_sha256": "0335f5c83de6dd504903b354765bed77f1f769aa43e6dcdd29e89014cc4f1ea6",
-          "source_pack_sha256": "69d3ce531ff73dd8c072a32500e26537d408f41cadf81d68c52b0263fb81fb0a",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        }
-      ]
-    },
-    {
-      "archive_sha256": "388f182f81dc26e84e4ff6988ff456cdabc5e9fcee20d55b01e4d8996024bcf4",
-      "name": "@aikdna/kdna-react",
-      "version": "0.6.0-rc.component-semantics.1",
-      "producer": "aikdna/kdna-react",
-      "relationship": "distinct-fixed-archive-and-source-pack",
-      "differences": [
-        {
-          "path": "NOTICE",
-          "archive_sha256": "7e8ddf9e662ad3ce5363753a76bae82060fd401b14e6f266c9e9c9b03ccbf931",
-          "source_pack_sha256": "ac9443589fb4e7a65bfc5040b4f31673199777fbc87bb6d5e09171ca00e24c18",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "SECURITY.md",
-          "archive_sha256": "f793810bc103ae8d30914c68cc894f4760831ef24dddd2a5edc5edc931159d84",
-          "source_pack_sha256": "54f48aed1a35c96b134e1f1b4be50fd74eec00b2867b824f4b11a97ceb483a20",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        }
-      ]
-    },
-    {
       "archive_sha256": "3e2fbdbc7dcaf07b6a8dbc17b8df7f365e4837c61d391d8d6416d951abcac3be",
       "name": "@aikdna/kdna-cli",
       "version": "0.38.0-rc.component-semantics.1",
@@ -2946,47 +2839,6 @@
       ]
     },
     {
-      "archive_sha256": "4057a84b76d173470c59f95dc0e73af81aa21d36876f6daf4226c1ceaefc7551",
-      "name": "@aikdna/kdna-web-server",
-      "version": "0.5.0-rc.component-semantics.1",
-      "producer": "aikdna/kdna-web-server",
-      "relationship": "distinct-fixed-archive-and-source-pack",
-      "differences": [
-        {
-          "path": "NOTICE",
-          "archive_sha256": "420b3a4cdc84d2c92080bd4ee308572b736e36b1e3f8d1ef24463a9d10fd2804",
-          "source_pack_sha256": "1206f1569d55639a9f7fea53bfa8a2c48b4a611c05f7ba4bc57db6d1c8a5643a",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "README.md",
-          "archive_sha256": "6af444f835129ecd499c0c646643589aa1afb0306c81247429b40f6f14268335",
-          "source_pack_sha256": "c1cfb059a56023278fb8a74a62454c8390bde70264fa9342af9ab3807070f115",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "SECURITY.md",
-          "archive_sha256": "2aea8c1808ed889ee3b7a46994d8480967d67e7ecac0db76e2ad172a69848a30",
-          "source_pack_sha256": "5ce1867c5a58dff3327005c9b69c20176d4b7997883fea0e9f946698a3f2d515",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "package.json",
-          "archive_sha256": "07435719653727d9427f0affb2628f1bdbc3ff3a2786304b154654fc60b0deac",
-          "source_pack_sha256": "13600714482840aebf92c61430330446610299ffd33ce0444f4f2d3e4b2aed0a",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        }
-      ]
-    },
-    {
       "archive_sha256": "43d0f12a1a63a88d26570bfff821919a5cd478fdbd0568bd9c819bc56078b0f0",
       "name": "@aikdna/kdna-read",
       "version": "0.3.0-rc.component-semantics.2",
@@ -2997,39 +2849,6 @@
       "name": "@aikdna/kdna-core",
       "version": "0.21.0",
       "relationship": "retained-other-coordinate"
-    },
-    {
-      "archive_sha256": "570c5b7df65ecbdd9082dc404324f77c505a4db61b8c220c0c4ec20fa559a591",
-      "name": "@aikdna/kdna-activation-server",
-      "version": "0.4.0-rc.component-semantics.1",
-      "producer": "aikdna/kdna-activation-server",
-      "relationship": "distinct-fixed-archive-and-source-pack",
-      "differences": [
-        {
-          "path": "NOTICE",
-          "archive_sha256": "bf18cae2033a5461c54f9606d9474aee03a67cc5e49696204fa790a1939623a9",
-          "source_pack_sha256": "78c476bd9ba1ce95d53e46233b941410e6dc09c24ed2a3c8d835e166670bd2f9",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        },
-        {
-          "path": "README.md",
-          "archive_sha256": "ffc1773b6f357864483d7b595ce1f796d7e740d016d1bc415ca3a43e7927bc12",
-          "source_pack_sha256": "9f78606e09b46ce19971f6fd276153064fbc1f8aa746002dd72b9705d1de01bf",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "documentation"
-        },
-        {
-          "path": "package.json",
-          "archive_sha256": "b3458d4dd516bda90b161fa7c024181ccf4b93dca96b216adb655a4426a308bb",
-          "source_pack_sha256": "cf9de9e4dd5a3e43b92a2fc26e381eb38e472a73f6490be88c3a4261d2393277",
-          "archive_mode": 420,
-          "source_pack_mode": 420,
-          "kind": "package-content"
-        }
-      ]
     },
     {
       "archive_sha256": "586bdd15184276372ed251854bb0eeb98219b1799b5beec0b3717b31735f5acb",
@@ -3047,12 +2866,6 @@
       "archive_sha256": "7e6fdb0d26f4fc9d87097bf1bdf8c1e908c4e6df6b12e466dad7e417d013996b",
       "name": "@aikdna/kdna-studio-core",
       "version": "2.0.0",
-      "relationship": "retained-other-coordinate"
-    },
-    {
-      "archive_sha256": "9fed2976da63f14a54c089aaf7ee9fecd0fe805e1302493fac2e29b88bfb6376",
-      "name": "@aikdna/kdna-activation-server",
-      "version": "0.2.1",
       "relationship": "retained-other-coordinate"
     },
     {
