@@ -17,8 +17,8 @@
       "name": "@aikdna/kdna-core",
       "version": "0.37.1-rc.browser.1",
       "archive": "aikdna-kdna-core-0.37.1-rc.browser.1.tgz",
-      "bytes": 8260414,
-      "sha256": "12a2d5f234ed3404aee1b394442251ad875c1531c01cd6a4f3c0366d55e5d773"
+      "bytes": 8260494,
+      "sha256": "81639dd57dc3a56a2d9171ce3a6ce956847f4877461b8722897e4f598aa8a8ca"
     },
     {
       "name": "@aikdna/kdna-read",
@@ -28,7 +28,7 @@
       "sha256": "c5c2d6b65c44dd30aeddd49d6f2a4c915e9fd4d8f2a28297d6d677564e261cb7"
     }
   ],
-  "binding_sha256": "ca729552115391c184dee30ca019fcd81bc223220be8df3caf85285863bbb5fc",
+  "binding_sha256": "aed38f98b14a933e4b0edb3b9951019d46625681e3c3162a96cf1cfc72db4f8c",
   "assets": [
     {
       "file": "team-update-1.0.0.kdna",
