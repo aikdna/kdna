@@ -1,16 +1,8 @@
 # KDNA Core — R2 candidate
 
-
 Source candidate (unreleased): actual source package `0.37.1-rc.browser.1`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
 
-**Published and source coordinates are separate.**
-
-`npm i @aikdna/kdna-core` resolves to the published stable
-`@aikdna/kdna-core@0.37.0`. The source in this repository is the candidate
-`@aikdna/kdna-core@0.37.1-rc.browser.1`, which is addressed by its exact version
-or by the `browser-preview` dist-tag and never carries the `latest` tag. The two
-are different coordinates with different contracts and must not be treated as
-one release.
+Published and source coordinates are separate: `npm i @aikdna/kdna-core` resolves to the published stable `0.37.0`, while this source is the candidate `0.37.1-rc.browser.1`, addressed by its exact version or the `browser-preview` dist-tag and never carrying `latest`.
 
 The published stable release remains Core `0.37.0`, paired with Read `0.11.1`; its artifacts and release evidence remain separate from this candidate. Core `0.37.0` supersedes the `0.36.0` incumbent.
 
