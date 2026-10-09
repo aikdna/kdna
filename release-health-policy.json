@@ -46,16 +46,6 @@
       }
     },
     {
-      "label": "KDNA Remote Server",
-      "repository": "aikdna/kdna-remote-server",
-      "package_json": "package.json",
-      "npm_package": "@aikdna/kdna-remote-server",
-      "version": "0.4.2",
-      "canonical_tag": {
-        "type": "natural"
-      }
-    },
-    {
       "label": "KDNA Conformance",
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-conformance/package.json",

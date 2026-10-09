@@ -184,47 +184,21 @@
       "local_path": "../kdna-assets",
       "source_commit": "4de5bb01f4216624e57ffa7ac901e982dd323d95",
       "conformance_commit": "41ac52cddaac98e6feb5855fa7f60f5bae9b16ce",
-      "component_version": null,
+      "component_version": "0.1.1",
       "packages": [],
-      "artifacts": [
-        {
-          "path": "references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna",
-          "version": "0.1.1",
-          "sha256": "4a90b91fe955ec3a563a7c2b598568f0eedbd04d3393211692490dfde2e09ffc",
-          "release_tag": "0.1.1",
-          "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "41ac52cddaac98e6feb5855fa7f60f5bae9b16ce",
-          "kind": "kdna-asset",
-          "lifecycle": "Experimental",
-          "known_limitations": [
-            "reference artifact demonstrates technical interoperability, not content endorsement"
-          ],
-          "recommended_entrypoint": "download the 0.1.1 GitHub Release artifact and run inspect, plan-load, and load"
-        },
-        {
-          "path": "references/public/epictetus-control-and-character/epictetus-control-and-character-0.1.1.kdna",
-          "version": "0.1.1",
-          "sha256": "d8513486bc033523359b8a582ca5d879d5ec01c926601d2fde34813a793c5ccf",
-          "release_tag": "0.1.1",
-          "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "41ac52cddaac98e6feb5855fa7f60f5bae9b16ce",
-          "kind": "kdna-asset",
-          "lifecycle": "Experimental",
-          "known_limitations": [
-            "reference artifact demonstrates technical interoperability, not content endorsement"
-          ],
-          "recommended_entrypoint": "download the 0.1.1 GitHub Release artifact and run inspect, plan-load, and load"
-        }
-      ],
+      "artifacts": [],
+      "release_tag": "0.1.1",
+      "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "reference assets demonstrate technical interoperability and do not establish content correctness, adoption, or outcome claims",
-        "the repository package is private validation tooling; the public coordinate is the exact GitHub Release artifact, not an npm package"
+        "no public reference asset is published from this repository: the index lists none, and the earlier reference assets - together with their directory downloads - were withdrawn from the current public surface",
+        "the withdrawn bytes remain readable from the repository's Git history and the releases that carried them still host the assets until the Owner approves withdrawing those releases; removal from the current surface is not a claim that they were never published",
+        "the repository package is private validation tooling, so this component is recorded as package-less and binds its release tag and commit instead of artifact evidence"
       ],
-      "recommended_entrypoint": "download laozi-wuwei-0.1.1.kdna from the 0.1.1 GitHub Release, then run kdna inspect, plan-load, and load",
+      "recommended_entrypoint": "no asset is offered here; the first public asset published from this repository will be the KDNA white paper",
       "legacy_replacement": null
     },
     {
@@ -327,71 +301,6 @@
         "bound to Core 0.21.0 while Core 0.22.0 is published; re-binding is declared recertification debt for the 0.22.0 wave"
       ],
       "recommended_entrypoint": "kdna-studio create/add/approve/export",
-      "legacy_replacement": null
-    },
-    {
-      "repository": "aikdna/kdna-remote-server",
-      "local_path": "../kdna-remote-server",
-      "source_commit": "81b563598ecc19da480d5191f9554a20cef19744",
-      "conformance_commit": null,
-      "component_version": null,
-      "artifacts": [],
-      "packages": [
-        {
-          "package_json": "package.json",
-          "package_name": "@aikdna/kdna-remote-server",
-          "npm_package": "@aikdna/kdna-remote-server",
-          "version": "0.4.2",
-          "lifecycle": "Experimental",
-          "release_status": "active",
-          "dependency_policy": "current",
-          "known_limitations": [],
-          "recommended_entrypoint": null,
-          "legacy_replacement": null
-        }
-      ],
-      "lifecycle": "Experimental",
-      "supported_kdna_version": "1.0",
-      "supported_access_modes": ["remote"],
-      "supported_entitlement_profiles": [],
-      "known_limitations": [
-        "self-hosted projection server only; there is no AIKDNA-hosted remote loading service",
-        "remote-mode server operation remains an experimental self-hosted reference surface",
-        "bound to Core 0.21.0 while Core 0.22.0 is published; re-binding is declared recertification debt for the 0.22.0 wave"
-      ],
-      "recommended_entrypoint": "kdna load <asset> --remote-server <self-hosted-url> --profile=compact --as=prompt",
-      "legacy_replacement": null
-    },
-    {
-      "repository": "aikdna/kdna-demo-web-viewer",
-      "local_path": "../kdna-demo-web-viewer",
-      "source_commit": "f2bb5459229c44fe0c8ef0294602797e6c9fd7e2",
-      "conformance_commit": null,
-      "component_version": null,
-      "artifacts": [],
-      "packages": [
-        {
-          "package_json": "app/package.json",
-          "package_name": "kdna-demo-web-viewer",
-          "npm_package": null,
-          "version": "0.1.1",
-          "lifecycle": "Experimental",
-          "release_status": "source-only",
-          "dependency_policy": "current",
-          "known_limitations": ["official source reference application; not an npm publication"],
-          "recommended_entrypoint": "npm --prefix app ci && npm --prefix app run dev",
-          "legacy_replacement": null
-        }
-      ],
-      "lifecycle": "Experimental",
-      "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
-      "supported_entitlement_profiles": [],
-      "known_limitations": [
-        "source-only official reference application; it is not an npm package or an AIKDNA-hosted service",
-        "the verified browser boundary covers local public and password-protected assets through the Node.js web server, not remote-mode forwarding"
-      ],
-      "recommended_entrypoint": "npm --prefix app ci && npm --prefix app run dev",
       "legacy_replacement": null
     },
     {

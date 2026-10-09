@@ -132,10 +132,10 @@ before(() => {
 });
 after(() => fs.rmSync(temporary, { recursive: true, force: true }));
 
-test('all 18 accepted declarations have verified Git blob provenance and canonical root identity', () => {
-  assert.equal(verified.size, 18);
+test('all 13 accepted declarations have verified Git blob provenance and canonical root identity', () => {
+  assert.equal(verified.size, 13);
   const consumers = discover();
-  assert.equal(consumers.length, 18);
+  assert.equal(consumers.length, 13);
   assert.equal(consumers.filter((row) => !row.ok).length, 0);
   assert.equal(
     consumers.some((row) => row.repository === 'arbitrary-control-directory'),
@@ -358,7 +358,7 @@ test('missing manifest and missing dependency still fail complete compatibility 
   }
 });
 
-test('compatibility preparation creates eleven exact detached snapshots without changing inputs', () => {
+test('compatibility preparation creates nine exact detached snapshots without changing inputs', () => {
   const before = new Map(
     fs.readdirSync(repositories).map((name) => {
       const root = path.join(repositories, name);
@@ -373,7 +373,7 @@ test('compatibility preparation creates eleven exact detached snapshots without 
     }),
   );
   const rows = prepareCompatibilityRepos(control, path.join(temporary, 'prepared'), repositories);
-  assert.equal(rows.length, 11);
+  assert.equal(rows.length, 9);
   for (const row of rows) {
     assert.equal(git(row.path, ['rev-parse', 'HEAD']), row.commit);
     assert.equal(git(row.path, ['branch', '--show-current']), '');
