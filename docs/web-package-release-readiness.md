@@ -6,6 +6,14 @@ The public web package path is:
 kdna-web-server -> kdna-web-client -> kdna-react -> create-kdna-web-app
 ```
 
+> **Status (2026-10-09).** The five web package repositories are no longer part
+> of the current public surface, so this manual gate cannot be run reproducibly
+> by an external reader against the current public tree: the checkouts it walks
+> are not published. The requirements below, the gate script and its behaviour
+> are unchanged; this note records the current status of the check only.
+> Retiring the gate, or restating it explicitly as not-yet-public, is a separate
+> decision and is not taken here.
+
 Before these packages are published, the public ecosystem must prove that each
 repository has real implementation files, tests, package locks, exported
 entrypoints, generated-template smoke scripts, and a package-level
