@@ -502,3 +502,45 @@ test('programmatic publish cannot override real release authority with a local c
     /requires real release authority/u,
   );
 });
+
+test('public channel requires exact preview tag and observes unchanged latest, never repairs tags', () => {
+  const before = { latest: '0.37.0', 'browser-preview': '0.37.0-rc.1' };
+  const after = { latest: '0.37.0', 'browser-preview': authority.POLICIES.core.version };
+  assert.equal(
+    authority.validateChannel(after, before, authority.POLICIES.core.version, true)
+      .latest_unchanged,
+    true,
+  );
+  assert.throws(
+    () => authority.validateChannel(before, before, authority.POLICIES.core.version, true),
+    /dist-tag/u,
+  );
+  assert.throws(
+    () =>
+      authority.validateChannel(
+        { ...after, latest: authority.POLICIES.core.version },
+        before,
+        authority.POLICIES.core.version,
+        true,
+      ),
+    /latest/u,
+  );
+  assert.throws(
+    () =>
+      authority.validateChannel(
+        { latest: '0.37.0' },
+        before,
+        authority.POLICIES.core.version,
+        true,
+      ),
+    /dist-tag/u,
+  );
+  for (const bad of [
+    null,
+    [],
+    {},
+    { latest: 'file:local' },
+    { latest: '0.37.0', 'browser-preview': 1 },
+  ])
+    assert.throws(() => authority.validateDistTags(bad));
+});

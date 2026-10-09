@@ -502,6 +502,7 @@ function build({
       notes_sha256: trusted.sha256(Buffer.from(context.notes)),
       approval: candidate ? null : context.approval,
       release_id: candidate ? null : context.release_id,
+      registry_before: candidate ? null : lookupDistTags(invocation, context.package.name, work),
       tooling: {
         npm: trusted.AUDITED_NPM_VERSION,
         node: process.version,
@@ -574,6 +575,7 @@ function readCandidate({
       'notes_sha256',
       'approval',
       'release_id',
+      'registry_before',
       'tooling',
       'build',
       'artifact',
@@ -630,6 +632,7 @@ function readCandidate({
       }),
     'preview evidence build claims invalid',
   );
+  if (requireRelease) validateDistTags(evidence.registry_before);
   if (requireRelease)
     assert(
       evidence.authorization === 'published-prerelease-event' &&
@@ -733,6 +736,75 @@ function lookup(invocation, expected, work) {
     },
   );
 }
+function validateDistTags(tags) {
+  assert(
+    tags && typeof tags === 'object' && !Array.isArray(tags),
+    'preview registry dist-tags invalid',
+  );
+  for (const [tag, version] of Object.entries(tags))
+    assert(
+      /^[A-Za-z0-9][A-Za-z0-9._-]*$/u.test(tag) &&
+        typeof version === 'string' &&
+        /^\d+\.\d+\.\d+(?:-[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*)?$/u.test(version),
+      'preview registry dist-tags invalid',
+    );
+  assert(typeof tags.latest === 'string', 'preview registry latest baseline missing');
+  return tags;
+}
+function lookupDistTags(invocation, name, work) {
+  const result = spawnSync(
+    invocation.command,
+    [
+      ...invocation.prefixArgs,
+      'view',
+      name,
+      'dist-tags',
+      '--json',
+      '--prefer-online',
+      '--loglevel=silent',
+      '--registry=' + trusted.OFFICIAL_REGISTRY,
+    ],
+    {
+      cwd: work,
+      encoding: 'utf8',
+      env: trusted.cleanNpmEnvironment({
+        invocation,
+        home: path.join(work, 'tag-home'),
+        cache: path.join(work, 'tag-cache'),
+      }),
+      maxBuffer: 1024 * 1024,
+      timeout: 30000,
+    },
+  );
+  assert(
+    !result.error &&
+      result.status === 0 &&
+      result.stderr === '' &&
+      typeof result.stdout === 'string',
+    'preview registry dist-tags lookup failed',
+  );
+  return validateDistTags(trusted.strictJson(result.stdout, 'preview registry dist-tags'));
+}
+function validateChannel(tags, before, version, requirePreview = false) {
+  validateDistTags(tags);
+  validateDistTags(before);
+  assert(
+    tags.latest === before.latest,
+    'preview publication changed latest or latest baseline is stale',
+  );
+  if (requirePreview)
+    assert(
+      tags[DIST_TAG] === version,
+      'preview registry dist-tag does not select exact published version',
+    );
+  return {
+    dist_tag: DIST_TAG,
+    version: tags[DIST_TAG] || null,
+    latest_before: before.latest,
+    latest_after: tags.latest,
+    latest_unchanged: true,
+  };
+}
 function expectedRegistry(candidate) {
   return {
     name: candidate.context.package.name,
@@ -758,19 +830,32 @@ function withInvocation(options, action) {
   }
 }
 function guard(options) {
-  return withInvocation(options, (candidate, invocation, work) =>
-    registryDecision(
+  return withInvocation(options, (candidate, invocation, work) => {
+    const decision = registryDecision(
       lookup(invocation, expectedRegistry(candidate), work),
       expectedRegistry(candidate),
-    ),
-  );
+    );
+    const channel = validateChannel(
+      lookupDistTags(invocation, candidate.context.package.name, work),
+      candidate.evidence.registry_before,
+      candidate.context.package.version,
+      !decision.shouldPublish,
+    );
+    return { ...decision, channel };
+  });
 }
 function publish(options) {
   assert(options.requireRelease !== false, 'preview publish requires real release authority');
   return withInvocation({ ...options, requireRelease: true }, (candidate, invocation, work) => {
     const expected = expectedRegistry(candidate);
     const decision = registryDecision(lookup(invocation, expected, work), expected);
-    if (!decision.shouldPublish) return decision;
+    const channelBefore = validateChannel(
+      lookupDistTags(invocation, expected.name, work),
+      candidate.evidence.registry_before,
+      expected.version,
+      !decision.shouldPublish,
+    );
+    if (!decision.shouldPublish) return { ...decision, channel: channelBefore };
     const rebound = readCandidate({ ...options, requireRelease: true });
     assert(rebound.bytes.equals(candidate.bytes), 'preview artifact changed before publish');
     const artifact = path.join(work, candidate.evidence.artifact.filename);
@@ -817,7 +902,13 @@ function publish(options) {
       { cwd: work, env: environment, encoding: 'utf8', maxBuffer: 1024 * 1024, timeout: 300000 },
     );
     assert(!result.error && result.status === 0, 'verified preview publisher failed');
-    return { decision: 'published', shouldPublish: true };
+    const channel = validateChannel(
+      lookupDistTags(invocation, expected.name, work),
+      candidate.evidence.registry_before,
+      expected.version,
+      true,
+    );
+    return { decision: 'published', shouldPublish: true, channel };
   });
 }
 function smoke(options) {
@@ -974,7 +1065,13 @@ function verifyPublic(options) {
     const expected = expectedRegistry(candidate);
     const decision = registryDecision(lookup(invocation, expected, work), expected);
     assert(!decision.shouldPublish, 'preview registry publication not observed');
-    return { publicRegistryIdentity: 'exact', ...decision };
+    const channel = validateChannel(
+      lookupDistTags(invocation, expected.name, work),
+      candidate.evidence.registry_before,
+      expected.version,
+      true,
+    );
+    return { publicRegistryIdentity: 'exact', ...decision, channel };
   });
   return { ...registry, publicInstall: smoke({ ...options, publicAcquisition: true }) };
 }
@@ -1051,6 +1148,8 @@ module.exports = {
   validateApproval,
   validateArtifact,
   validateContext,
+  validateChannel,
+  validateDistTags,
   validateManifest,
   verifyPublic,
 };

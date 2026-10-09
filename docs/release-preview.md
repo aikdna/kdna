@@ -124,3 +124,11 @@ Never move `latest`, overwrite/unpublish an existing version, force-update a tag
 or auto-upgrade users. Already pinned consumers keep their chosen version and
 need explicit migration or rollback instructions. Any replacement package needs
 a new version, reviewed bytes and a new release event.
+
+The retained real-release evidence also records the official registry `dist-tags`
+before publication. The duplicate guard, publisher and public verification compare
+`latest` to that baseline. An identical existing version is accepted only when
+`browser-preview` already selects it; public verification checks this exact tag
+again after registry acquisition. Missing or conflicting tags fail closed. These
+commands never repair tags, and a stale `latest` observation requires a fresh
+reviewed run.
