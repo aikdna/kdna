@@ -1,5 +1,12 @@
 # KDNA Version and Capability Matrix
 
+Current replacement: [2026-10-09 support and distribution matrix](current-release-support.md).
+It binds the native `.3`/MCP `.8` and separate Studio0.5 routes to their exact
+SDK archives and distinguishes official registry baselines from source
+candidates. The dated tables below remain historical observations, including
+superseded unpublished combinations; they are not current installation input.
+
+
 > Core/Read browser candidate source reviewed: 2026-10-07.
 > CLI, Studio and MCP local source observations remain dated 2026-09-23.
 > Other component source observations remain dated 2026-09-14;

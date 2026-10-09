@@ -165,6 +165,7 @@ const DOCUMENTS = [
   'packages/kdna-read/README.md',
   'docs/core-read-current-status.md',
   'docs/start-here.md',
+  'docs/current-release-support.md',
   'docs/status.zh.md',
   'docs/status.md',
   'docs/version-and-capability-matrix.md',
@@ -231,88 +232,7 @@ function anchors(text) {
 // These exact, bounded statements retain their independently reviewed history or
 // downstream graph. They are not version allowlists: moving a value elsewhere,
 // changing its role, or appending a current claim leaves it subject to checking.
-const NATIVE_CLI_REGISTRY_EXAMPLE = [
-  '```sh',
-  'mkdir kdna-native-example',
-  'cd kdna-native-example',
-  'npm init -y',
-  'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2',
-  'node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output',
-  '```',
-].join('\n');
 const RETAINED_IDENTITY_CONTEXTS = [
-  {
-    file: 'README.md',
-    role: 'downstream',
-    heading: '## Current source: choose the matching implementation',
-    text: '| [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | Published prerelease CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22 |\n| [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |',
-  },
-  {
-    file: 'README.md',
-    role: 'downstream',
-    heading: '## Current source: choose the matching implementation',
-    text: [
-      'The browser source candidate and the published native CLI combination retain',
-      'separate contracts. Obtain `@aikdna/kdna-cli@0.39.0-rc.native-sections.2` from',
-      'npm with its exact dependencies, `@aikdna/kdna-core@0.36.0-rc.r2.7` and',
-      '`@aikdna/kdna-read@0.11.0-rc.r2.7`. That CLI retains container `0.6.0` and',
-      'Read `0.7.0-candidate`; the browser candidate does not replace its Core/Read pair.',
-      'The packaged [native delivery guide](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md)',
-      'documents a frozen offline graph and retains prepublication wording. Registry',
-      'installation resolves a separate dependency graph; retain its generated lock.',
-    ].join('\n'),
-  },
-  {
-    file: 'README.md',
-    role: 'downstream',
-    heading: '## Current source: choose the matching implementation',
-    text: NATIVE_CLI_REGISTRY_EXAMPLE,
-  },
-  {
-    file: 'README.md',
-    role: 'downstream',
-    heading: '## Current source: choose the matching implementation',
-    text: [
-      'For native asset authoring, start with the packaged',
-      '[authored CLI example](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md)',
-      'and its [executable native recipe](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs).',
-    ].join('\n'),
-  },
-  {
-    file: 'README.zh.md',
-    role: 'downstream',
-    heading: '## 当前源码：Core 入场与 Read',
-    text: [
-      '原生资产创作可从 npm 取得公开预发布包 `@aikdna/kdna-cli@0.39.0-rc.native-sections.2`，',
-      '其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7` 与',
-      '`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合保留 container `0.6.0` / Read',
-      '`0.7.0-candidate` 的原生合同，上述浏览器候选不替换其 Core/Read。包内',
-      '[原生交付说明](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md)',
-      '记载冻结的离线依赖图，仍含发布前措辞；registry 安装解析独立依赖图，应保留其生成的 lock。',
-      '从包内[作者示例](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md)',
-      '及[可执行原生配方](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs)',
-      '开始这条原生创作路径，使用上述已发布 CLI 组合。该 CLI 包未包含专门的原生 Creator 指南，',
-      '这条路径使用包内作者示例与配方。Studio 保留独立创作路径。',
-    ].join('\n'),
-  },
-  {
-    file: 'README.zh.md',
-    role: 'downstream',
-    heading: '## 当前源码：Core 入场与 Read',
-    text: NATIVE_CLI_REGISTRY_EXAMPLE,
-  },
-  {
-    file: 'docs/core-read-current-status.md',
-    role: 'downstream',
-    heading: '## Choose and obtain one matching delivery',
-    text: '| Published native CLI | As checked on 2026-10-07, npm provides CLI `0.39.0-rc.native-sections.2` with exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7`. Its container `0.6.0` / Read `0.7.0-candidate` contract stays separate from the browser candidate. See the [packaged author example](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md) and [executable recipe](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs). The [packaged guide](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md) retains prepublication wording and an older offline graph; preserve the separate lock generated by a registry installation. |',
-  },
-  {
-    file: 'README.md',
-    role: 'downstream',
-    heading: '## Ecosystem',
-    text: '| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); local MCP `0.8.1-rc.combination.1`; historical npm MCP `0.5.0` | Agent and MCP adapter mission; not automatic judgment authority |',
-  },
   {
     file: 'packages/kdna-core/README.md',
     role: 'historical',
@@ -339,12 +259,6 @@ const RETAINED_IDENTITY_CONTEXTS = [
   },
   {
     file: 'docs/core-read-current-status.md',
-    role: 'downstream',
-    heading: '## Choose and obtain one matching delivery',
-    text: '| Runtime CLI | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [CLI README](https://github.com/aikdna/kdna-cli#readme), [binding](https://github.com/aikdna/kdna-cli/blob/main/public-contract-binding.json), [archive inventory](https://github.com/aikdna/kdna-cli/blob/main/release-surface/dependency-archives.json); Node >=22 |\n| Loader/MCP | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [MCP manifest](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/package.json), [complete local installation](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md), [canonical Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md); Node >=22 |\n| Studio creation and bounded source revision | Studio CLI `0.17.0-rc.material-edit.1` / Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1` | [Studio installation](https://github.com/aikdna/kdna-studio-cli#readme), [archive/member binding](https://github.com/aikdna/kdna-studio-cli/blob/main/src/public-bindings.json), [Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md); Node >=22; use the complete source identity below and its installation conditions |',
-  },
-  {
-    file: 'docs/core-read-current-status.md',
     role: 'historical',
     heading: '## Preserved history',
     text: "fallback. Grammar.2's proposed Core/Read labels were `0.27.0-rc.grammar.2` /\n`0.5.0-rc.grammar.2`, while its observed manifests still bore\n`0.25.0-rc.authoring.4` / `0.4.0-rc.authoring.4`. That mismatch is a historical\nobservation, not the current package state. Active 0.1 remains in force at its",
@@ -354,12 +268,6 @@ const RETAINED_IDENTITY_CONTEXTS = [
     role: 'historical',
     heading: '## Preserved history',
     text: 'The 2026-09-13 implementation observation concerned Core\n`0.24.0-rc.component-semantics.2` and Read `0.3.0-rc.component-semantics.2`.\nIt recorded static admission and projection, with Capsule/Plan admission and',
-  },
-  {
-    file: 'docs/start-here.md',
-    role: 'downstream',
-    heading: '## Current source entry',
-    text: '- [Runtime CLI](https://github.com/aikdna/kdna-cli#readme): CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.\n- [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme): MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.',
   },
   {
     file: 'docs/version-and-capability-matrix.md',
@@ -433,19 +341,285 @@ const RETAINED_IDENTITY_CONTEXTS = [
     heading: '### R2 RC5 current-navigation candidate (S12-D013)',
     text: 'The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. These fixed historical schema and package coordinates are superseded; their original bytes and identifiers remain unchanged. A complete RC5 tuple is unsupported by the current combination.',
   },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Current source: choose the matching implementation',
+    text: '| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.3` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Current source: choose the matching implementation',
+    text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Current source: choose the matching implementation',
+    text: '| [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Current source: choose the matching implementation',
+    text: 'Published Core `0.37.0` / Read `0.11.1` retain their own contracts and artifacts.\nHistorical native CLI `0.39.0-rc.native-sections.2` binds Core\n`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core\n`0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older\ninstallation. CLI `.2` is already published; new authoring/source work uses\n`.3` and must not overwrite `.2`. The separate Studio ordinary/protected guide\nsupplies its own preparation, trusted Host/credential boundary and readback\ninstructions; named Host delivery and independent acceptance remain `NOT_RUN`.\nTechnical checks and\nscripted examples do not establish human confirmation, editorial fitness or\nactual task adoption.',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Ecosystem',
+    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Source CLI `0.39.0-rc.native-sections.3`; historical npm native `.2` / loading `0.36.1` | Native authoring, explicit Read and Source revision; exact current SDK pair above |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Ecosystem',
+    text: '| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Source StudioCLI `0.13.0-rc.components.2`; historical npm `0.11.0` | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Ecosystem',
+    text: '| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Source StudioCore `4.0.0-rc.components.2`; historical npm `3.0.0` | Studio session SDK and explicit protected export; its own Host/credential boundary |',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Ecosystem',
+    text: '| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1`; historical npm MCP `0.5.0` | Matched native `.3` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 当前源码：选择匹配的实现',
+    text: '| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.3` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 当前源码：选择匹配的实现',
+    text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 当前源码：选择匹配的实现',
+    text: '| [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` 与上述精确 Core/Read | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
+    text: '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
+    text: '下面保留已发布原生线的独立历史示例。可从 npm 取得公开预发布包 `@aikdna/kdna-cli@0.39.0-rc.native-sections.2`，\n其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7` 与\n`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合保留 container `0.6.0` / Read\n`0.7.0-candidate` 的原生合同，上述浏览器候选不替换其 Core/Read。包内\n[原生交付说明](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/docs/native-delivery.md)\n记载冻结的离线依赖图，仍含发布前措辞；registry 安装解析独立依赖图，应保留其生成的 lock。\n从包内[作者示例](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/team-update/README.md)\n及[可执行原生配方](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/examples/native-workflow.cjs)\n开始这条原生创作路径，使用上述已发布 CLI 组合。该 CLI 包未包含专门的原生 Creator 指南，\n这条路径使用包内作者示例与配方。Studio 保留独立创作路径。',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
+    text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+  },
+  {
+    file: 'README.md',
+    role: 'downstream',
+    heading: '## Current source: choose the matching implementation',
+    text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+  },
+  {
+    file: 'README.zh.md',
+    role: 'downstream',
+    heading: '## 当前源码：选择匹配的实现',
+    text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+  },
+  {
+    file: 'docs/core-read-current-status.md',
+    role: 'downstream',
+    heading: '## Matching consumer routes',
+    text: '| Native CLI | CLI `0.39.0-rc.native-sections.3` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |',
+  },
+  {
+    file: 'docs/core-read-current-status.md',
+    role: 'downstream',
+    heading: '## Matching consumer routes',
+    text: '| Loader/MCP | MCP `0.8.0-rc.native-sections.1` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |',
+  },
+  {
+    file: 'docs/core-read-current-status.md',
+    role: 'downstream',
+    heading: '## Matching consumer routes',
+    text: "| Studio | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |",
+  },
+  {
+    file: 'docs/core-read-current-status.md',
+    role: 'downstream',
+    heading: '## Matching consumer routes',
+    text: 'The published history retains Core `0.37.0` / Read `0.11.1` and native CLI\n`0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read\n`0.11.0-rc.r2.7`. These are distinct installed graphs. The new preview coordinates\nare available only once the official release/registry actually supplies them.\nNo page, clean checkout, package.json version or draft PR establishes that fact.',
+  },
+  {
+    file: 'docs/core-read-current-status.md',
+    role: 'downstream',
+    heading: '## Exact SDK pair and contracts',
+    text: 'and Read `kdna.read/0.7.0-candidate`.',
+  },
+  {
+    file: 'docs/start-here.md',
+    role: 'downstream',
+    heading: '## Current source entry',
+    text: 'Use the [current support and distribution matrix](./current-release-support.md)\nand [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).\nThe native entry is CLI `0.39.0-rc.native-sections.3` with exact Core\n`0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`, container0.6 and\nRead0.7-candidate. Prepare the complete twelve-archive delivery using the\n[CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).\nSource availability does not establish official npm publication; the registry\nrecipe in the [README](../README.md#current-source-choose-the-matching-implementation)\nis conditional on those exact published versions.',
+  },
+  {
+    file: 'docs/start-here.md',
+    role: 'downstream',
+    heading: '## Current source entry',
+    text: 'The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is\n`0.8.0-rc.native-sections.1` with that same exact native CLI/SDK graph. Its npm\npublication is disabled and named Host delivery remains NOT_RUN. Installing a\nSkill or copying a process vector does not establish Host activation.',
+  },
+  {
+    file: 'docs/start-here.md',
+    role: 'downstream',
+    heading: '## Current source entry',
+    text: "For Studio creation and local protection, use StudioCLI\n`0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` and their complete\nsource graph. This separate route uses container0.5 / Read0.6.4. Saved protected\nconsumption and revision use the [trusted local Host guide](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md),\nnot StudioCLI's static read command or native container0.6. Credentials and\npermissions belong to the independently trusted launcher, not asset text.",
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Native and Studio entry points',
+    text: 'For a new native asset workflow, use CLI `0.39.0-rc.native-sections.3`, Core\n`0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1` together. The native route\nuses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery\ncontains the CLI and all eleven required companion archives, a relative-file\nlock, full member bindings and licenses. Follow the\n[CLI acquisition guide](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)\nand [public author example](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md).\nThe example creates and saves, reads exact selections, revises official Source,\nreopens and reuses the revised asset, and preserves the original.',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Native and Studio entry points',
+    text: 'The Loader/MCP source candidate `0.8.0-rc.native-sections.1` embeds that exact\nnative graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).\nIt is a local operator-bound stdio adapter; its npm publication is disabled.\nNamed Agent Host delivery and semantic adoption remain unassessed.',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Native and Studio entry points',
+    text: "StudioCLI `0.13.0-rc.components.2` and StudioCore `4.0.0-rc.components.2` use the\nsame SDK package pair with a different container `0.5.0` / Read `0.6.4` route.\nUse their [source installation and ordinary/protected session guide](https://github.com/aikdna/kdna-studio-cli#readme).\nSession authoring, role-specific adoption, revision, save/read/verify and\nexplicit protected export retain that route's source and credential contracts.\nProtected consumption and saved-file revision use the separate\n[Studio local Host adapter](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md)\nwith the same container0.5 / Read0.6.4 graph. StudioCLI's static read command\ndoes not unlock protected files. The adapter requires an independently trusted\nlauncher to bind the installation, file, exact digest, purpose, lifetime and\npermissions through a dedicated descriptor; credentials use separate pipes.\nA descriptor supplied by an Agent does not establish authorization by itself.\nThe current Studio exporter requires an explicitly complete method; a\nmethod-absent proposal is not supported by that route.\nThe native CLI does not read Studio's container. Neither route establishes real\nhuman identity, editorial acceptance, model execution or action permission.",
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0-rc.components.2`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0-rc.components.2` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-web-client](https://github.com/aikdna/kdna-web-client) | Complete-source `0.5.0-rc.component-semantics.1`, Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`. | npm `0.3.0`. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-web-server](https://github.com/aikdna/kdna-web-server) | Complete-source `0.5.0-rc.component-semantics.1` on that older exact Core/Read graph. HTTP service checks do not establish a current-native consumer. | npm `0.3.1`. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-react](https://github.com/aikdna/kdna-react) | Complete-source `0.6.0-rc.component-semantics.1` on that older exact Core/Read/WebClient graph. Its Read integration check is in-process, not HTTP. | npm `0.4.0`. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-activation-server](https://github.com/aikdna/kdna-activation-server) | Complete-source `0.4.0-rc.component-semantics.1` with its pinned older Core/WebServer graph; reference activation behavior, not production identity or licensing certification. | npm `0.2.1`. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-remote-server](https://github.com/aikdna/kdna-remote-server) | Complete-source `0.6.0-rc.component-semantics.1` with its own pinned older Core/WebServer/activation graph. | npm `0.4.2`. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-assets](https://github.com/aikdna/kdna-assets) | Source/index `0.3.0-rc.component-semantics.1`, verification scope `0.1.5`, with the older pinned SDK/Studio graph. Historical assets retain their own format and may reject under a newer reader. | GitHub release `0.1.1`; source asset index, not an npm SDK. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: "| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | Source extension `0.2.0`, Core `0.21.0`; workspace attachment launches exact CLI `0.36.0`, whose schema0.3 output is incompatible with the extension's schema0.1 parser. Workspace control is currently unsupported. Native `.3` is not a replacement for that command contract. | Marketplace/GitHub extension `0.1.0`; source build and Marketplace installation differ. |",
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna](https://github.com/aikdna/kdna) | Exact Core/Read preview pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Native `.3` source delivery above; Node >=22. Native Plan/load unavailable. | npm native `.2` on `r2.7`; loading CLI `0.36.1` on `latest`. `.2` already exists and cannot be overwritten. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [create-kdna-web-app](https://github.com/aikdna/create-kdna-web-app) | Complete-source `0.6.0`; the current Next template includes its pinned older candidate graph. Express/Next Pages templates keep their separately declared published graph. | npm `0.5.0`. Template compatibility is per template. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: "| [kdna-demo-web-viewer](https://github.com/aikdna/kdna-demo-web-viewer) | Complete app source and its pinned WebClient/Core/Read graph; use the app subdirectory's lock and instructions. | GitHub release `0.1.2`; no inferred npm app publication. |",
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: "| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | SwiftPM's own pinned public contract and source revision. No current JavaScript preview parity is implied. | GitHub release `v0.21.0`; candidate coordinates in its binding do not assert a public candidate tag. |",
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | SwiftPM display adapter with its exact public Core Git dependency; use its binding and package resolution. | GitHub release `0.5.0`; not an npm consumer. |',
+  },
+  {
+    file: 'docs/current-release-support.md',
+    role: 'downstream',
+    heading: '## Repository-by-repository support',
+    text: '| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Swift-native Creation kernel with its own public binding and SwiftPM product. Reference SDK coordinates do not prove a JavaScript Read invocation. | GitHub release `0.4.0`; not the JavaScript StudioCLI release. |',
+  },
 ];
 function maskRetainedIdentities(file, text, check) {
   let current = text;
   for (const context of RETAINED_IDENTITY_CONTEXTS.filter((item) => item.file === file)) {
     const start = text.indexOf(context.text);
     const heading =
-      start < 0
-        ? ''
-        : text
-            .slice(0, start)
-            .split('\n')
-            .filter((line) => /^#{1,6} /.test(line))
-            .at(-1);
+      context.text === context.heading && start >= 0
+        ? context.heading
+        : start < 0
+          ? ''
+          : text
+              .slice(0, start)
+              .split('\n')
+              .filter((line) => /^#{1,6} /.test(line))
+              .at(-1);
     const valid =
       start >= 0 && text.indexOf(context.text, start + 1) < 0 && heading === context.heading;
     check(
@@ -704,19 +878,20 @@ function checkCurrentNavigation(root, options = {}) {
   contains('README.md', null, '## Published CLI', [
     '**R2**',
     'native execution 0.3.1',
-    `| This repository | Core \`${versions.core}\` / Read \`${versions.read}\``,
+    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\``,
     'SPEC-INDEX.md#kdna-public-specification-index',
   ]);
   contains('README.zh.md', '## 当前源码', '## 已发布 CLI', [
     versions.core,
     versions.read,
-    'R2',
     '原生 0.3.1 Plan/Capsule',
     '普通 root/browser',
     '显式 Node',
   ]);
   contains('docs/start-here.md', '## Current source entry', '## 5-Minute Quick Start', [
-    `- This protocol repository: Core \`${versions.core}\` / Read \`${versions.read}\``,
+    `\`${versions.core}\` / Read \`${versions.read}\``,
+    'Source availability does not establish official npm publication',
+    'publication is disabled and named Host delivery remains NOT_RUN',
   ]);
   contains('docs/status.zh.md', null, '## 当前成熟度', [
     '当前 R2',
@@ -729,26 +904,124 @@ function checkCurrentNavigation(root, options = {}) {
     'execution-contract-0.3.md',
     'static 0.3.1',
   ]);
-  contains('docs/core-read-current-status.md', null, '## Choose and obtain', [
-    '**R2**',
+  contains('docs/core-read-current-status.md', null, '## Matching consumer routes', [
     versions.core,
     versions.read,
+    `Read declares Core \`${versions.core}\` as its exact peer`,
+    `container \`${tuple.container}\``,
+    `${tuple.payload_profile}/${tuple.payload_version}`,
     tuple.core,
     tuple.ir,
     tuple.read,
-    `container \`${tuple.container}\``,
-    `payload profile \`${tuple.payload_profile}\``,
-    `version \`${tuple.payload_version}\``,
-    'Trace `0.3.1`',
+    'execution coordinates `0.3.1`',
+    'Unknown critical semantics reject',
+    'denied,\ndeferred and over-budget disclosures are not absence',
+    'Ordinary root/browser\nadmission retains protection refusals',
+    'not enable Plan/load in the native asset CLI',
   ]);
-  contains('docs/core-read-current-status.md', '## Choose and obtain', '## What is implemented', [
-    `| Core/Read source | Core \`${versions.core}\` / Read \`${versions.read}\``,
+  contains('docs/core-read-current-status.md', '## Choose and obtain', '## Preserved history', [
+    'real-release event gate',
+    '`latest` remains unchanged and existing version collisions fail closed',
+    'do not fall back to plaintext or a raw parser',
   ]);
-  contains('docs/core-read-current-status.md', '## What is implemented', '## Quickstart', [
-    'reject all four modes',
-    'execution-contract-0.3.md',
-    'historical catalog-only critical fallback is not active',
+  contains('docs/current-release-support.md', null, '## Native and Studio entry points', [
+    'The candidate combinations below are not declared published',
   ]);
+  contains(
+    'docs/current-release-support.md',
+    '## Native and Studio entry points',
+    '## Repository-by-repository support',
+    [
+      'its npm publication is disabled',
+      'Named Agent Host delivery and semantic adoption remain unassessed',
+      'A descriptor supplied by an Agent does not establish authorization by itself',
+      'Core/Read use `browser-preview`',
+      '`native-preview`. These channels preserve `latest`',
+    ],
+  );
+  contains('README.md', '## Current source:', '## Published CLI', [
+    'Once official registry metadata confirms the exact preview versions',
+    'CLI `.2` is already published',
+    '`.3` and must not overwrite `.2`',
+    'Native CLI Plan/load remains unavailable',
+  ]);
+  contains('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
+    '只有官方 registry 元数据确认这三个精确预览版本后',
+    '原生 CLI 的 Plan/load 不可用',
+    '工作使用 `.3`，不能覆盖已经发布的 `.2`',
+  ]);
+  contains('README.md', '## Current source:', '## Published CLI', [
+    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |`,
+  ]);
+  contains('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
+    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |`,
+  ]);
+  // A current table has one row per named route. A correct retained row cannot
+  // excuse an appended second row with a different graph or publication claim.
+  function tableRoles(file, start, end, roles) {
+    const rows = segment(file, start, end)
+      .split('\n')
+      .filter((line) => line.startsWith('| '))
+      .map((line) => line.split('|')[1].trim());
+    check(`${file}:current-table-roles:${start}`, isDeepEqual(rows.slice(2), roles), {
+      expected: roles,
+      observed: rows.slice(2),
+    });
+  }
+  tableRoles('README.md', '## Current source:', '## Published CLI', [
+    'Core/Read',
+    '[Native CLI](https://github.com/aikdna/kdna-cli#readme)',
+    '[Loader/MCP](https://github.com/aikdna/kdna-skills#readme)',
+    '[Studio session](https://github.com/aikdna/kdna-studio-cli#readme)',
+  ]);
+  tableRoles('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
+    'Core/Read',
+    '[原生 CLI](https://github.com/aikdna/kdna-cli#readme)',
+    '[Loader/MCP](https://github.com/aikdna/kdna-skills#readme)',
+    '[Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme)',
+  ]);
+  tableRoles(
+    'docs/core-read-current-status.md',
+    '## Matching consumer routes',
+    '## Choose and obtain',
+    ['Native CLI', 'Loader/MCP', 'Studio'],
+  );
+  tableRoles(
+    'docs/current-release-support.md',
+    '## Repository-by-repository support',
+    '## Auxiliary distribution',
+    [
+      'kdna',
+      'kdna-cli',
+      'kdna-skills',
+      'kdna-studio-core',
+      'kdna-studio-cli',
+      'kdna-web-client',
+      'kdna-web-server',
+      'kdna-react',
+      'kdna-activation-server',
+      'kdna-remote-server',
+      'create-kdna-web-app',
+      'kdna-demo-web-viewer',
+      'kdna-assets',
+      'kdna-vscode',
+      'kdna-core-swift',
+      'kdna-app-shared',
+      'kdna-studio-swift',
+    ].map((name) => `[${name}](https://github.com/aikdna/${name})`),
+  );
+  for (const file of ['README.md', 'README.zh.md'])
+    contains(
+      file,
+      file === 'README.md' ? '## Current source:' : '## 当前源码',
+      file === 'README.md' ? '## Published CLI' : '## 已发布原生 CLI',
+      [
+        'https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)',
+        'https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md)',
+        'https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs)',
+        './examples/native-team-update/README.md)',
+      ],
+    );
   const matrix = 'docs/version-and-capability-matrix.md';
   contains(matrix, null, '## Why one matrix', ['**R2**']);
   contains(matrix, '## 2.', '## 3.', [

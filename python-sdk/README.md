@@ -1,6 +1,6 @@
 # KDNA Python Core and Read — aikdna 0.8.0rc2
 
-A Python implementation of the pinned public Core and Read contracts using only the standard library. Python 3.11 or later is declared; this material-reference repair is checked with CPython 3.12.13 on macOS arm64; prior release observations remain under their original scope. Other Python versions and platforms require separate verification. This is an unpublished local candidate; implementation checks do not establish independent acceptance or registry availability.
+A separate Python implementation of a historical pinned Core and Read contract using only the standard library. Python 3.11 or later is declared; this material-reference repair is checked with CPython 3.12.13 on macOS arm64; prior release observations remain under their original scope. Other Python versions and platforms require separate verification. This is the `0.8.0rc2` source candidate, not the published PyPI `aikdna==0.6.0` distribution. PyPI 0.6.0 has a different implementation and dependency graph; installing it does not install this source candidate. Implementation checks do not establish independent acceptance or registry availability.
 
 ## Core admission
 
@@ -18,7 +18,9 @@ print(component_semantics_contract())
 
 `admit_bytes(bytes)` captures bytes and performs the same bounded admission. `version_tuple()` returns the pinned tuple. Snapshots are opaque and process-local; `inspect_snapshot` returns a defensive copy. Keep the snapshot object alive while using it. Serialized objects cannot recreate snapshot authority.
 
-The public contract tuple is Core 0.3.0, Canonical IR 0.2.0 and Read 0.2.0. Container and Payload remain 0.2.0; A/C/E/P digest profiles are unchanged. Exact reference package and semantic source pins are in `kdna/public-contract-binding.json`.
+The public contract tuple is Core 0.3.0, Canonical IR 0.2.0 and Read 0.2.0. Container and Payload remain 0.2.0; A/C/E/P digest profiles are unchanged. Exact reference package and semantic source pins are in `kdna/public-contract-binding.json`: Core `0.24.0-rc.component-semantics.2` and Read `0.3.0-rc.component-semantics.2`. These pins describe the reference observations for this implementation, not installable Python dependencies.
+
+This source candidate does **not** implement native Container `0.6.0` / Read `0.7.0-candidate`, the current browser contract, or parity with the native CLI `0.39.0-rc.native-sections.3` graph. Package versions do not upgrade its protocol tuple. See [auxiliary support boundaries](../packages/AUXILIARY-SUPPORT.md).
 
 ## Finite component interpretation
 
@@ -36,15 +38,28 @@ Import `admit_read_request`, `project`, `read_file`, `read_bytes`, `read_snapsho
 
 The control callback returns `admission_response_limit_bytes`. The Host observer receives `{request, snapshot}` and returns the public Host decision with snapshot/digest identity, scope, request/decision IDs, policy and bounded timing. Scope and current policy are observed again before disclosure. The optional delivery callback confirms transport only by returning exactly `True`. Expansion requires the original live snapshot and issuing Host provider; reopening a file creates a different snapshot. Projection alone does not grant reading permission.
 
-## Build and verify
+## Build and verify from the complete source checkout
+
+Use Python 3.11 or later. CPython 3.12.13 on macOS arm64 has been checked for this source candidate; other interpreter/platform combinations need their own verification. From `python-sdk/`, build into a **new** output directory:
 
 ```sh
-python -m unittest discover -s tests -p 'test_*.py' -v
-python -m pip wheel --no-build-isolation --no-deps --wheel-dir dist .
-python -m pip install --no-index --no-deps dist/aikdna-0.8.0rc2-py3-none-any.whl
+python -B -m unittest discover -s tests -p 'test_*.py' -v
+python -I -B scripts/build-source-distribution.py --output /absolute/new-python-dist
 ```
 
-The in-tree PEP 517 backend uses only the standard library. Wheels contain current `kdna` runtime source, generated JSON, metadata and licenses. Source distributions also include the backend and current tests. Retired sources and local caches are excluded. Tests cover real containers, Node reference observations, canonical numbers, component boundaries and Host/handle/budget/delivery scenarios; they do not authenticate real editors or production Host identities.
+The standard-library builder produces `aikdna-0.8.0rc2-py3-none-any.whl`, `aikdna-0.8.0rc2.tar.gz` and `source-artifacts.json` with their byte counts and SHA-256 hashes. It refuses an existing output directory. The in-tree PEP 517 backend has no build dependencies; a standard frontend can also build the wheel with `python -m pip wheel --no-index --no-build-isolation --no-deps --wheel-dir /absolute/wheels .`.
+
+Check each artifact in a separate fresh virtual environment, from a working directory outside the source tree:
+
+```sh
+python -m venv /absolute/python-wheel-check
+/absolute/python-wheel-check/bin/python -m pip install --no-index --no-deps --no-build-isolation --no-cache-dir /absolute/new-python-dist/aikdna-0.8.0rc2-py3-none-any.whl
+/absolute/python-wheel-check/bin/python -I -B -m unittest discover -s /absolute/complete-source/python-sdk/tests -p 'test_*.py' -v
+```
+
+Repeat with another new environment and `aikdna-0.8.0rc2.tar.gz` to check source installation. Both routes use the installed runtime and the complete checkout's existing fixtures/oracles. Wheels contain `kdna` runtime source, generated JSON, metadata and licenses. Source distributions also contain the backend, source builder and tests. Retired sources and local caches are excluded. These checks cover the declared historical contract and Host/handle/budget/delivery boundaries; they do not establish native/browser parity or production Host identities.
+
+The `python-source-artifacts` workflow job responds only to a genuine published, non-draft Python prerelease whose exact `python/0.8.0rc2` tag resolves to the checked source commit. It builds unsigned source artifacts and checks both cold installations. It has read-only repository permissions and no PyPI upload step. The retired signing script is not a current build prerequisite. SHA-256 identifies bytes, not a publisher or human approval. Stable PyPI publication remains unavailable until a separate publication route, collision/identity checks and release approval are implemented; no `--skip-existing` success is treated as byte identity.
 
 ## Authority limits
 

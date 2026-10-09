@@ -1,0 +1,57 @@
+{
+  "format": "kdna.example-artifacts/1",
+  "observedAt": "2026-10-09T03:30:20.138443+00:00",
+  "source": "Exact installed public CLI teaching sample and this Agent-authored task revision; source-first candidate coordinates, without a registry-availability claim.",
+  "toolchain": {
+    "node": "22.22.3"
+  },
+  "packages": [
+    {
+      "name": "@aikdna/kdna-cli",
+      "version": "0.39.0-rc.native-sections.3",
+      "archive": "aikdna-kdna-cli-0.39.0-rc.native-sections.3.tgz",
+      "bytes": 35351,
+      "sha256": "7f9c4f0f47d104d6c4e5fad7e956bda74b84c157575980dd5875fee620118b28"
+    },
+    {
+      "name": "@aikdna/kdna-core",
+      "version": "0.37.1-rc.browser.1",
+      "archive": "aikdna-kdna-core-0.37.1-rc.browser.1.tgz",
+      "bytes": 8260414,
+      "sha256": "12a2d5f234ed3404aee1b394442251ad875c1531c01cd6a4f3c0366d55e5d773"
+    },
+    {
+      "name": "@aikdna/kdna-read",
+      "version": "0.11.2-rc.browser.1",
+      "archive": "aikdna-kdna-read-0.11.2-rc.browser.1.tgz",
+      "bytes": 3203508,
+      "sha256": "c5c2d6b65c44dd30aeddd49d6f2a4c915e9fd4d8f2a28297d6d677564e261cb7"
+    }
+  ],
+  "binding_sha256": "ca729552115391c184dee30ca019fcd81bc223220be8df3caf85285863bbb5fc",
+  "assets": [
+    {
+      "file": "team-update-1.0.0.kdna",
+      "asset_id": "asset:team-update-format",
+      "asset_version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "bytes": 37594,
+      "sha256": "1482397a3b27ebd6164b3568f2dd2de445ca399c4695771e12177b49affde47b"
+    },
+    {
+      "file": "team-update-1.1.0.kdna",
+      "asset_id": "asset:team-update-format",
+      "asset_version": "1.1.0",
+      "judgment_version": "1.1.0",
+      "bytes": 48751,
+      "sha256": "5f72c09990a2b0dfd2a61c57faf24e82d00f2ba11245c0ab76ad94fae5dc72bf"
+    }
+  ],
+  "seed": {
+    "author_input": "@aikdna/kdna-cli/examples/team-update/author.json",
+    "author_input_sha256": "2496c797766c27046f482cddcd27ad5d3eaecb8a2833cf9d8f046699ab49d5cf",
+    "recipe": "@aikdna/kdna-cli/examples/native-workflow.cjs",
+    "recipe_sha256": "bd9c3121a2aff28a782ef85a0c3b10248da8fcd5f0a85e915d584ffb477c060c",
+    "scripted_1.0.1_revision_used": false
+  }
+}

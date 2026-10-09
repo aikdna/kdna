@@ -1,0 +1,150 @@
+{
+  "format": "kdna.agent-task-example/1",
+  "executedAt": "2026-10-09T03:30:20.152624+00:00",
+  "scope": "One actual local Agent task using original synthetic facts. The initial asset came from an unchanged installed teaching recipe; its scripted revision was unused. The Agent selected preferences, wrote the initial update, authored a conditional revision after task feedback, reopened it and wrote the changed update.",
+  "sessions": {
+    "original": {
+      "exit_code": 0,
+      "catalog_status": "catalog_only",
+      "asset": {
+        "asset_id": "asset:team-update-format",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "one_session": true,
+      "snapshot_id": "section-snapshot:9dd84c73-2bbf-40af-9e34-7c39e4064a3a",
+      "host_epoch": "process:71067",
+      "selections": [
+        {
+          "judgment_id": "update:order",
+          "status": "ready",
+          "closure_nodes": 7,
+          "mandatory_references": 6,
+          "mandatory_endpoints_present": true,
+          "missing": [],
+          "states": {
+            "core": "valid",
+            "interpretation": "complete",
+            "writer": "not_evaluated",
+            "confirmation": "claimed_unverified",
+            "read_permission": "allowed",
+            "action_authorization": "not_evaluated"
+          }
+        },
+        {
+          "judgment_id": "update:evidence",
+          "status": "ready",
+          "closure_nodes": 6,
+          "mandatory_references": 5,
+          "mandatory_endpoints_present": true,
+          "missing": [],
+          "states": {
+            "core": "valid",
+            "interpretation": "complete",
+            "writer": "not_evaluated",
+            "confirmation": "claimed_unverified",
+            "read_permission": "allowed",
+            "action_authorization": "not_evaluated"
+          }
+        }
+      ],
+      "optional_rationale_expanded": false
+    },
+    "revised": {
+      "exit_code": 0,
+      "catalog_status": "catalog_only",
+      "asset": {
+        "asset_id": "asset:team-update-format",
+        "asset_version": "1.1.0",
+        "judgment_version": "1.1.0"
+      },
+      "one_session": true,
+      "snapshot_id": "section-snapshot:84aab4a2-c58f-47ed-b995-b19678bfd603",
+      "host_epoch": "process:73770",
+      "selections": [
+        {
+          "judgment_id": "update:order",
+          "status": "ready",
+          "closure_nodes": 9,
+          "mandatory_references": 8,
+          "mandatory_endpoints_present": true,
+          "missing": [],
+          "states": {
+            "core": "valid",
+            "interpretation": "complete",
+            "writer": "not_evaluated",
+            "confirmation": "claimed_unverified",
+            "read_permission": "allowed",
+            "action_authorization": "not_evaluated"
+          }
+        },
+        {
+          "judgment_id": "update:evidence",
+          "status": "ready",
+          "closure_nodes": 6,
+          "mandatory_references": 5,
+          "mandatory_endpoints_present": true,
+          "missing": [],
+          "states": {
+            "core": "valid",
+            "interpretation": "complete",
+            "writer": "not_evaluated",
+            "confirmation": "claimed_unverified",
+            "read_permission": "allowed",
+            "action_authorization": "not_evaluated"
+          }
+        }
+      ],
+      "optional_rationale_expanded": false
+    }
+  },
+  "source": {
+    "source_open_exit": 0,
+    "source_pack_exit": 0,
+    "revised_source_open_exit": 0,
+    "expected_original_A": "sha256:1482397a3b27ebd6164b3568f2dd2de445ca399c4695771e12177b49affde47b",
+    "original_unchanged": true,
+    "revision_version": "1.1.0",
+    "revision_history_id": "history:agent-team-update-1.1.0",
+    "revision_actor": "actor:synthetic-task-agent",
+    "history_timestamp": "2026-10-09T03:26:42.134Z",
+    "source_contract": {
+      "id": "kdna.source-sections/0.1.0-candidate",
+      "definition_digest": "sha256:c64a8fa0c317fb630078cebe04bac174d485a6490f199822cb5fe08d90504b2c"
+    },
+    "exact_edits_reproduction": {
+      "exit_code": 0,
+      "sha256_matches_revised_asset": true,
+      "original_unchanged": true
+    }
+  },
+  "adoption": {
+    "before": "Completed changes lead; both have evidence links and explicit proof limits; the next action depends on the pending decision.",
+    "after": "The pending Thursday decision leads because it gates the next action; evidence and proof limits remain; both possible next actions are explicit.",
+    "revised_order_disclosed": "For a routine weekly asynchronous team update, keep completed changes first, then current blockers, then the next concrete action. If a teammate must make a time-sensitive decision before the next action can proceed, put that decision request and its deadline first, then completed changes with evidence, then the next action conditional on the decision. Keep a pending decision visibly pending.",
+    "evidence_preference_unchanged": true
+  },
+  "authoring_retries": [
+    {
+      "reason": "Client transport setup assumed the catalog asset identity was nested in content; corrected to the official envelope.asset before the successful session.",
+      "client_exit_code": 1,
+      "cli_session_exit_code": -9
+    },
+    {
+      "exit_code": 1,
+      "reason": "Source-pack rejected an authored method role outside the vocabulary; no file was saved."
+    },
+    {
+      "exit_code": 1,
+      "reason": "Source-pack rejected incomplete authored feedback components; the final revision supplies all three required roles; no runtime gate was changed."
+    }
+  ],
+  "limits": {
+    "human_confirmation": "not_observed",
+    "multi_host_acceptance": "not_run",
+    "general_quality": "not_established",
+    "external_actions": "not_performed",
+    "paid_model_tool": "not_used",
+    "task_facts_and_evidence": "synthetic"
+  }
+}

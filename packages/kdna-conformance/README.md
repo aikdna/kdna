@@ -1,87 +1,30 @@
 # @aikdna/kdna-conformance
 
-KDNA conformance suite: fixtures, runner, and hostile cases for third-party
-implementations to prove the current asset-first KDNA contract.
+The published npm `0.2.0` package is a historical conformance bundle. It is already published and must not be overwritten. Its default runner exercises the earlier `validate`, `planLoad` and `load` surface, Container `0.1.0`, and Runtime Capsule `0.1.0`. Passing that suite does not establish conformance to the native Container `0.6.0` / Read `0.7.0-candidate` route or the current browser contract.
 
-> **Status:** the published npm incumbent is `0.1.0`. This source tree is the
-> `0.2.0` line, a source candidate that adds the byte-level interop vectors
-> and is not yet published to npm.
+The complete Git source also contains a public-contract dispatcher that is absent from the published `0.2.0` tarball. The source package still carries version `0.2.0`; it is not byte-identical to that registry artifact. A future independently installable dispatcher needs a new package coordinate and a complete packaged worker/vector graph. No same-version replacement is intended.
 
-## What conformance means
+## Historical npm runner
 
-- `.kdna` packaged bytes are the Runtime asset object;
-- `kdna.json` uses `format_version: "0.1.0"`;
-- `payload.kdnab` is strict CBOR with an explicit payload profile version;
-- validation verifies format, schema, payload, checksums, and load contract;
-- LoadPlan gates every Runtime projection;
-- authorized loading emits `kdna.runtime-capsule` with `contract_version: "0.1.0"`;
-- a corrupted container fails closed.
+For implementations of the historical `validate`, `planLoad`, `load` API:
 
-Conformance proves the contract. It does not certify that an asset's judgment
-is correct.
-
-## Run against the reference implementation
-
-```bash
-npm install @aikdna/kdna-conformance
-npx kdna-conformance
+```sh
+npm install @aikdna/kdna-conformance@0.2.0
+npx kdna-conformance --impl ./my-historical-core.js
 ```
 
-## Run against your own implementation
+The published package depends on Core `0.22.0` and `cbor-x ^1.6.5`. Its bundled signature, password-envelope and authorization vectors are bound by `vectors/manifest.json` byte counts and SHA-256 values. They remain historical vector sets; their presence does not add those capabilities to the current native route or certify an asset's judgments.
 
-A third-party implementer points the runner at a module exposing the same
-surface as `@aikdna/kdna-core` (`validate`, `planLoad`, `load`):
+## Complete-source frozen vector dispatcher
 
-```bash
-npx kdna-conformance --impl ./my-kdna-core.js
+Use an exact complete Git checkout, not the npm tarball alone:
+
+```sh
+node packages/kdna-conformance/bin/kdna-conformance.js --public-contract --source-root /absolute/complete-kdna-source --runtime /absolute/isolated-runtime --output /absolute/report.json
 ```
 
-The runner produces a pass/fail report:
+The source must include `scripts/public-contract/run-vectors.mjs`, `conformance/public-contract-decision-vectors.json`, `conformance/public-contract/vectors.generated.json`, and the complete `conformance/public-contract/test/` worker/fixture authority. The explicit runtime directory must contain the matching installed Core/Read implementation. The dispatcher starts fresh child processes and records their actual results; it is not another semantic implementation.
 
-```text
-KDNA conformance report — implementation: ./my-kdna-core.js
-  passed: 4
-  failed: 0
-  PASS: container: valid asset passes validation
-  PASS: loadplan: valid asset can load now
-  PASS: runtime: load emits a runtime capsule
-  PASS: hostile: corrupted container fails closed
-```
+The frozen 94-vector suite has its own tuple in the decision-vector file (Container `0.5.0`, payload `0.5.1`, Core `0.8.2`, Canonical IR `0.6.1`, Read `0.6.4`). That suite is distinct from the native Container `0.6.0` / Read `0.7.0-candidate` and browser routes. It includes real-byte checks, test-authority fixtures and explicit stage observations. Keep each recorded evidence route and execution receipt; a vector expectation or assertion projection alone is not full runtime conformance, human acceptance, authorship or action permission.
 
-## Fixtures
-
-`fixtures/valid-asset.kdna` is a valid public judgment asset. The hostile
-cases corrupt the container and assert fail-closed behavior.
-
-## Byte-level interop vectors
-
-`vectors/` packages the canonical byte-level interop vectors so a second
-implementation can verify interoperability with this artifact plus the RFCs,
-without cloning any repository:
-
-| Set | Contract |
-|-----|----------|
-| `vectors/signature/vectors.json` | `kdsig.ed25519` asset signatures (RFC-0021 M1) |
-| `vectors/envelope-aead/` | password-envelope AEAD vectors (scrypt, Argon2id) |
-| `vectors/authorization/` | authorization LoadPlan cases with fixtures and expected goldens (RFC-0014) |
-
-`vectors/manifest.json` binds every vector file by exact byte count and
-sha256, and names the vector set version. To verify interop: parse each
-vector with your implementation, reproduce the expected outputs recorded in
-the vector files, and confirm your results hash-match the manifest. Vector
-content is generated only by the canonical generators in the KDNA Core
-repository and is copied here byte-identically; a CI test proves the packaged
-bytes never drift from the canonical tree.
-
-The RFCs live at <https://github.com/aikdna/kdna/tree/main/rfcs>. Report
-your claim in the public format from
-[CONFORMANCE.md](https://github.com/aikdna/kdna/blob/main/CONFORMANCE.md):
-command, implementation version, spec version, run summary, known deviations.
-
-## License
-
-Apache-2.0
-
-## New public-contract candidate
-
-`kdna-conformance --public-contract --source-root /absolute/kdna/source --runtime /absolute/isolated/runtime --output /absolute/report.json` runs the frozen 94 vector suite in fresh child processes against the installed Core0.23/Read0.1 candidate. The existing default suite is historical and does not describe these new exports. The new route records each real bytes, test-authority or explicit stage-observation boundary and never loads the historical Core runtime. An exact source checkout containing the generated vector worker is required; this dispatcher is not a separate semantic implementation.
+See [auxiliary support boundaries](../AUXILIARY-SUPPORT.md). Apache-2.0.

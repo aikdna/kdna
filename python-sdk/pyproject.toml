@@ -6,7 +6,7 @@ backend-path = ["build_support"]
 [project]
 name = "aikdna"
 version = "0.8.0rc2"
-description = "Independent Python Core and Read for the exact KDNA public contract"
+description = "Standard-library Python Core and Read for a separately pinned historical contract"
 requires-python = ">=3.11"
 readme = "README.md"
 license = "Apache-2.0"

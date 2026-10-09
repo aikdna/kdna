@@ -80,7 +80,7 @@ def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
 def build_sdist(sdist_directory, config_settings=None):
     prefix = f'{NAME}-{VERSION}'
     files = _runtime_files()
-    for relative in ['pyproject.toml','README.md','LICENSE','NOTICE','build_support/backend.py','surface-disposition.json']:
+    for relative in ['pyproject.toml','README.md','LICENSE','NOTICE','build_support/backend.py','surface-disposition.json','scripts/build-source-distribution.py']:
         files[relative] = (ROOT / relative).read_bytes()
     for path in sorted((ROOT / 'tests').rglob('*')):
         if path.is_symlink():

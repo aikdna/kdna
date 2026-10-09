@@ -1,0 +1,21 @@
+KDNA native team-update example
+Copyright 2026 KDNA contributors
+
+Original teaching sample and contract binding:
+https://github.com/aikdna/kdna-cli
+@aikdna/kdna-cli 0.39.0-rc.native-sections.3
+examples/team-update/author.json and examples/native-workflow.cjs
+Exact source and artifact digests are recorded in artifacts.json.
+
+Changes in this adaptation: original synthetic task facts and supporting
+excerpts, Agent-written before/after weekly updates, Agent-authored conditional
+ordering preference with explicit Agent revision history, and executed-use and
+reproduction documentation. No real teammate or original sample author is
+represented as having confirmed the adaptation.
+
+Documentation, task data and .kdna examples in this directory are licensed under
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+See LICENSE-DOCS. Preserve this attribution and identify further changes.
+The copied public-contract-binding.json retains its upstream Apache-2.0
+metadata license; see LICENSE. The separately installed upstream CLI
+executable recipe is also Apache-2.0 code.
