@@ -238,14 +238,14 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   ).packages[0];
   assert.deepEqual(
     [studioCore.version, studioCore.published_version, studioCore.release_status],
-    ['3.0.0', '3.0.0', 'active'],
+    ['4.0.0-rc.components.2', '3.0.0', 'candidate'],
   );
   const studioCli = canonical.components.find(
     (entry) => entry.repository === 'aikdna/kdna-studio-cli',
   ).packages[0];
   assert.deepEqual(
     [studioCli.version, studioCli.published_version, studioCli.release_status],
-    ['0.11.0', '0.11.0', 'active'],
+    ['0.13.0-rc.components.2', '0.11.0', 'candidate'],
   );
   assert.deepEqual(
     new Set(
