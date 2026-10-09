@@ -844,71 +844,132 @@ function guard(options) {
     return { ...decision, channel };
   });
 }
+const DIAGNOSTIC_LIMIT = 4096;
+function boundedDiagnostic(value) {
+  const text = typeof value === 'string' ? value : '';
+  return text.length > DIAGNOSTIC_LIMIT ? text.slice(0, DIAGNOSTIC_LIMIT) + '...[truncated]' : text;
+}
+function spawnDetail(result) {
+  return {
+    status: result.status ?? null,
+    signal: result.signal ?? null,
+    error: result.error ? String(result.error.code || result.error.message) : null,
+  };
+}
+// A rejected publish must not hide the audited observations behind one line:
+// the workflow has no other way to see what the isolated npm reported. This
+// runs only on the failure path, changes no assertion, and records the resolved
+// tool paths instead of any credential.
+function reportPublishDiagnostics(diagnostics) {
+  const rows = [
+    ['npm-command', diagnostics.npmCommand],
+    ['npm-prefix-args', diagnostics.npmPrefixArgs && [...diagnostics.npmPrefixArgs]],
+    ['expected', diagnostics.expected],
+    ['lookup-detail', diagnostics.lookup && spawnDetail(diagnostics.lookup)],
+    ['lookup-stdout', diagnostics.lookup && diagnostics.lookup.stdout],
+    ['lookup-stderr', diagnostics.lookup && diagnostics.lookup.stderr],
+    ['decision', diagnostics.decision],
+    ['dist-tags-detail', diagnostics.distTags && spawnDetail(diagnostics.distTags)],
+    ['dist-tags-stdout', diagnostics.distTags && diagnostics.distTags.stdout],
+    ['dist-tags-stderr', diagnostics.distTags && diagnostics.distTags.stderr],
+    ['channel-before', diagnostics.channelBefore],
+    ['publisher-detail', diagnostics.publisher && spawnDetail(diagnostics.publisher)],
+    ['publisher-stdout', diagnostics.publisher && diagnostics.publisher.stdout],
+    ['publisher-stderr', diagnostics.publisher && diagnostics.publisher.stderr],
+    ['dist-tags-after-detail', diagnostics.distTagsAfter && spawnDetail(diagnostics.distTagsAfter)],
+    ['dist-tags-after-stdout', diagnostics.distTagsAfter && diagnostics.distTagsAfter.stdout],
+    ['dist-tags-after-stderr', diagnostics.distTagsAfter && diagnostics.distTagsAfter.stderr],
+  ];
+  for (const [label, value] of rows) {
+    if (value === undefined || value === null) continue;
+    const text = typeof value === 'string' ? value : JSON.stringify(value);
+    process.stderr.write(
+      'preview-publish-diagnostic:' + label + ' ' + boundedDiagnostic(text) + '\n',
+    );
+  }
+}
 function publish(options) {
   assert(options.requireRelease !== false, 'preview publish requires real release authority');
   return withInvocation({ ...options, requireRelease: true }, (candidate, invocation, work) => {
-    const expected = expectedRegistry(candidate);
-    const decision = registryDecision(lookup(invocation, expected, work), expected);
-    const channelBefore = validateChannel(
-      lookupDistTags(invocation, expected.name, work),
-      candidate.evidence.registry_before,
-      expected.version,
-      !decision.shouldPublish,
-    );
-    if (!decision.shouldPublish) return { ...decision, channel: channelBefore };
-    const rebound = readCandidate({ ...options, requireRelease: true });
-    assert(rebound.bytes.equals(candidate.bytes), 'preview artifact changed before publish');
-    const artifact = path.join(work, candidate.evidence.artifact.filename);
-    fs.writeFileSync(artifact, candidate.bytes, { flag: 'wx', mode: 0o600 });
-    const manifest = trusted.strictJson(
-      trusted
-        .parseTarFiles(candidate.bytes, { includeBytes: true })
-        .find((x) => x.path === 'package.json').bytes,
-      'preview publisher manifest',
-    );
-    const manifestPath = path.join(work, 'manifest.json');
-    fs.writeFileSync(
-      manifestPath,
-      JSON.stringify({ ...manifest, gitHead: candidate.context.commit }) + '\n',
-      { flag: 'wx', mode: 0o600 },
-    );
-    const tree = candidate.context.treeState;
-    const publisher = path.join(work, 'publisher.js');
-    fs.writeFileSync(
-      publisher,
-      readSource(tree, 'scripts/preview-release-publisher.js', options.root || ROOT),
-      { flag: 'wx', mode: 0o600 },
-    );
-    const environment = trusted.cleanNpmEnvironment({
-      invocation,
-      home: path.join(work, 'auth-home'),
-      cache: path.join(work, 'auth-cache'),
-      environment: options.env || process.env,
-      allowAuth: true,
-    });
-    assert(
-      typeof environment.NODE_AUTH_TOKEN === 'string' && environment.NODE_AUTH_TOKEN !== '',
-      'preview publication token missing',
-    );
-    const result = spawnSync(
-      invocation.command,
-      [
-        publisher,
-        invocation.publishLibraryPath,
+    const diagnostics = {};
+    try {
+      const expected = expectedRegistry(candidate);
+      diagnostics.npmCommand = invocation.command;
+      diagnostics.npmPrefixArgs = invocation.prefixArgs;
+      diagnostics.expected = expected;
+      diagnostics.lookup = lookup(invocation, expected, work);
+      const decision = registryDecision(diagnostics.lookup, expected);
+      diagnostics.decision = decision;
+      diagnostics.distTags = lookupDistTags(invocation, expected.name, work);
+      const channelBefore = validateChannel(
+        diagnostics.distTags,
+        candidate.evidence.registry_before,
+        expected.version,
+        !decision.shouldPublish,
+      );
+      diagnostics.channelBefore = channelBefore;
+      if (!decision.shouldPublish) return { ...decision, channel: channelBefore };
+      const rebound = readCandidate({ ...options, requireRelease: true });
+      assert(rebound.bytes.equals(candidate.bytes), 'preview artifact changed before publish');
+      const artifact = path.join(work, candidate.evidence.artifact.filename);
+      fs.writeFileSync(artifact, candidate.bytes, { flag: 'wx', mode: 0o600 });
+      const manifest = trusted.strictJson(
+        trusted
+          .parseTarFiles(candidate.bytes, { includeBytes: true })
+          .find((x) => x.path === 'package.json').bytes,
+        'preview publisher manifest',
+      );
+      const manifestPath = path.join(work, 'manifest.json');
+      fs.writeFileSync(
         manifestPath,
-        artifact,
-        candidate.evidence.artifact.sha256,
-      ],
-      { cwd: work, env: environment, encoding: 'utf8', maxBuffer: 1024 * 1024, timeout: 300000 },
-    );
-    assert(!result.error && result.status === 0, 'verified preview publisher failed');
-    const channel = validateChannel(
-      lookupDistTags(invocation, expected.name, work),
-      candidate.evidence.registry_before,
-      expected.version,
-      true,
-    );
-    return { decision: 'published', shouldPublish: true, channel };
+        JSON.stringify({ ...manifest, gitHead: candidate.context.commit }) + '\n',
+        { flag: 'wx', mode: 0o600 },
+      );
+      const tree = candidate.context.treeState;
+      const publisher = path.join(work, 'publisher.js');
+      fs.writeFileSync(
+        publisher,
+        readSource(tree, 'scripts/preview-release-publisher.js', options.root || ROOT),
+        { flag: 'wx', mode: 0o600 },
+      );
+      const environment = trusted.cleanNpmEnvironment({
+        invocation,
+        home: path.join(work, 'auth-home'),
+        cache: path.join(work, 'auth-cache'),
+        environment: options.env || process.env,
+        allowAuth: true,
+      });
+      assert(
+        typeof environment.NODE_AUTH_TOKEN === 'string' && environment.NODE_AUTH_TOKEN !== '',
+        'preview publication token missing',
+      );
+      diagnostics.publisher = spawnSync(
+        invocation.command,
+        [
+          publisher,
+          invocation.publishLibraryPath,
+          manifestPath,
+          artifact,
+          candidate.evidence.artifact.sha256,
+        ],
+        { cwd: work, env: environment, encoding: 'utf8', maxBuffer: 1024 * 1024, timeout: 300000 },
+      );
+      assert(
+        !diagnostics.publisher.error && diagnostics.publisher.status === 0,
+        'verified preview publisher failed',
+      );
+      diagnostics.distTagsAfter = lookupDistTags(invocation, expected.name, work);
+      const channel = validateChannel(
+        diagnostics.distTagsAfter,
+        candidate.evidence.registry_before,
+        expected.version,
+        true,
+      );
+      return { decision: 'published', shouldPublish: true, channel };
+    } catch (error) {
+      reportPublishDiagnostics(diagnostics);
+      throw error;
+    }
   });
 }
 function smoke(options) {
