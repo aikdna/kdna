@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-assets
-          ref: 4de5bb01f4216624e57ffa7ac901e982dd323d95
+          ref: 57b7661fbf525f28272b7fa79bb86fc482877180
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
