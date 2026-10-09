@@ -519,25 +519,25 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [kdna-web-client](https://github.com/aikdna/kdna-web-client) | Complete-source `0.5.0-rc.component-semantics.1`, Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`. | npm `0.3.0`. |',
+    text: '| `kdna-web-client` | Earlier Web graph source `0.5.0-rc.component-semantics.1`, Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`. The repository is not on the current public surface and this line is not part of the supported first-user release. | npm `0.3.0`, deprecated. |',
   },
   {
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [kdna-web-server](https://github.com/aikdna/kdna-web-server) | Complete-source `0.5.0-rc.component-semantics.1` on that older exact Core/Read graph. HTTP service checks do not establish a current-native consumer. | npm `0.3.1`. |',
+    text: '| `kdna-web-server` | Earlier Web graph source `0.5.0-rc.component-semantics.1` on that older exact Core/Read graph. HTTP service checks do not establish a current-native consumer. The repository is not on the current public surface. | npm `0.3.1`, deprecated. |',
   },
   {
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [kdna-react](https://github.com/aikdna/kdna-react) | Complete-source `0.6.0-rc.component-semantics.1` on that older exact Core/Read/WebClient graph. Its Read integration check is in-process, not HTTP. | npm `0.4.0`. |',
+    text: '| `kdna-react` | Earlier Web graph source `0.6.0-rc.component-semantics.1` on that older exact Core/Read/WebClient graph. Its Read integration check is in-process, not HTTP. The repository is not on the current public surface. | npm `0.4.0`, deprecated. |',
   },
   {
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [kdna-activation-server](https://github.com/aikdna/kdna-activation-server) | Complete-source `0.4.0-rc.component-semantics.1` with its pinned older Core/WebServer graph; reference activation behavior, not production identity or licensing certification. | npm `0.2.1`. |',
+    text: '| `kdna-activation-server` | Earlier reference activation source `0.4.0-rc.component-semantics.1` with its pinned older Core/WebServer graph; reference activation behaviour, not production identity or licensing certification. The repository is not on the current public surface. | npm `0.2.1`, deprecated. |',
   },
   {
     file: 'docs/current-release-support.md',
@@ -555,7 +555,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: "| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | Source extension `0.2.0`, Core `0.21.0`; workspace attachment launches exact CLI `0.36.0`, whose schema0.3 output is incompatible with the extension's schema0.1 parser. Workspace control is currently unsupported. Native `.3` is not a replacement for that command contract. | Marketplace/GitHub extension `0.1.0`; source build and Marketplace installation differ. |",
+    text: "| `kdna-vscode` | Source extension `0.2.0`, Core `0.21.0`; workspace attachment launches exact CLI `0.36.0`, whose schema0.3 output is incompatible with the extension's schema0.1 parser. Workspace control is currently unsupported. Native `.3` is not a replacement for that command contract. The repository is not on the current public surface. | Marketplace extension `0.1.0`; source build and Marketplace installation differ. |",
   },
   {
     file: 'docs/current-release-support.md',
@@ -579,7 +579,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [create-kdna-web-app](https://github.com/aikdna/create-kdna-web-app) | Complete-source `0.6.0`; the current Next template includes its pinned older candidate graph. Express/Next Pages templates keep their separately declared published graph. | npm `0.5.0`. Template compatibility is per template. |',
+    text: '| `create-kdna-web-app` | Complete-source `0.6.0`; the Next template includes its pinned older candidate graph. Express/Next Pages templates keep their separately declared published graph. | npm `0.5.0`. Template compatibility is per template. |',
   },
   {
     file: 'docs/current-release-support.md',
@@ -996,19 +996,21 @@ function checkCurrentNavigation(root, options = {}) {
       'kdna-skills',
       'kdna-studio-core',
       'kdna-studio-cli',
-      'kdna-web-client',
-      'kdna-web-server',
-      'kdna-react',
-      'kdna-activation-server',
+      '`kdna-web-client`',
+      '`kdna-web-server`',
+      '`kdna-react`',
+      '`kdna-activation-server`',
       'kdna-remote-server',
-      'create-kdna-web-app',
+      '`create-kdna-web-app`',
       'kdna-demo-web-viewer',
       'kdna-assets',
-      'kdna-vscode',
+      '`kdna-vscode`',
       'kdna-core-swift',
       'kdna-app-shared',
       'kdna-studio-swift',
-    ].map((name) => `[${name}](https://github.com/aikdna/${name})`),
+      // Names in backticks are repositories that are not on the current public
+      // surface: a public document must not carry a clickable link to them.
+    ].map((name) => name.startsWith('`') ? name : `[${name}](https://github.com/aikdna/${name})`),
   );
   for (const file of ['README.md', 'README.zh.md'])
     contains(
