@@ -54,7 +54,12 @@ def parse_container(data):
             decoded = encoded
         elif method == 8:
             inflater = zlib.decompressobj(-15)
-            decoded = inflater.decompress(encoded, LIMITS['entry'] + 1)
+            # A malformed deflate stream is a rejected container, never an
+            # exception that escapes the public admission surface.
+            try:
+                decoded = inflater.decompress(encoded, LIMITS['entry'] + 1)
+            except zlib.error:
+                reject()
             if len(decoded) > LIMITS['entry'] or not inflater.eof:
                 reject()
         else:
