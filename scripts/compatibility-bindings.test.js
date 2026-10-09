@@ -132,10 +132,10 @@ before(() => {
 });
 after(() => fs.rmSync(temporary, { recursive: true, force: true }));
 
-test('all 13 accepted declarations have verified Git blob provenance and canonical root identity', () => {
-  assert.equal(verified.size, 13);
+test('all 16 accepted declarations have verified Git blob provenance and canonical root identity', () => {
+  assert.equal(verified.size, 16);
   const consumers = discover();
-  assert.equal(consumers.length, 13);
+  assert.equal(consumers.length, 16);
   assert.equal(consumers.filter((row) => !row.ok).length, 0);
   assert.equal(
     consumers.some((row) => row.repository === 'arbitrary-control-directory'),
@@ -193,7 +193,7 @@ test('root blob provenance survives a rewritten commit in a fresh main-only clon
   git(source, ['config', 'user.name', 'Synthetic Test Fixture']);
   git(source, ['config', 'user.email', 'fixture@example.test']);
   const rows = records.filter((row) => row.source_manifest_blob).map((row) => ({ ...row }));
-  assert.equal(rows.length, 4);
+  assert.equal(rows.length, 3);
   for (const row of rows) {
     const file = path.join(source, row.manifest);
     fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -220,7 +220,7 @@ test('root blob provenance survives a rewritten commit in a fresh main-only clon
   const file = path.join(cloned, 'scripts/compatibility-bindings.json');
   json(file, { schema_version: '1.0.0', bindings: rows });
   json(path.join(cloned, 'ecosystem-manifest.json'), { components: [] });
-  assert.equal(readCompatibilityBindings(cloned, repositories, rows).size, 4);
+  assert.equal(readCompatibilityBindings(cloned, repositories, rows).size, 3);
   const acceptedDocument = fs.readFileSync(file);
   for (const mutate of [
     (changed) => (changed[0].source_manifest_blob = '0'.repeat(40)),
@@ -315,7 +315,7 @@ for (const [name, mutate] of [
 
 test('environment baseline cannot add authority or turn a changed binding green', () => {
   const policy = { baselines, candidateBaselines: new Map() };
-  validateEnvironmentBaselines(policy, verified, { KDNA_CORE_BASELINE: '0.21.0' });
+  validateEnvironmentBaselines(policy, verified, { KDNA_CORE_BASELINE: '0.22.0' });
   assert.throws(() =>
     validateEnvironmentBaselines(policy, verified, { KDNA_CORE_BASELINE: 'unreviewed-drift' }),
   );

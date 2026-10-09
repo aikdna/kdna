@@ -26,18 +26,21 @@ const EXCLUDED_LIFECYCLES = new Set(['Unassessed', 'Legacy', 'Removed']);
 const EXPECTED_BINDINGS = Object.freeze(
   [
     ['kdna', 'package.json', 'devDependencies', '@aikdna/kdna-cli'],
-    ['kdna', 'package.json', 'devDependencies', '@aikdna/kdna-web-client'],
     ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-cli'],
     ['kdna', 'packages/kdna-conformance/package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna', 'packages/kdna-read/package.json', 'peerDependencies', '@aikdna/kdna-core'],
     ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-core'],
+    ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-read'],
     ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-cli'],
     ['kdna-cli', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-cli', 'package.json', 'dependencies', '@aikdna/kdna-read'],
     ['kdna-skills', 'mcp-server/package.json', 'dependencies', '@aikdna/kdna-cli'],
     ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-read'],
     ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-studio-core'],
     ['kdna-studio-core', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-studio-core', 'package.json', 'dependencies', '@aikdna/kdna-read'],
   ].map(([repository, manifest, section, packageName]) => ({
     repository,
     manifest,

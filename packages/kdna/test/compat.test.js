@@ -72,8 +72,11 @@ function assertCurrentToolchainLock(
     candidateCore.version,
     'workspace Core lock must match current manifest',
   );
-  assert.equal(releasedCli.version, '0.36.1', 'published compatibility CLI remains pinned');
-  assert.equal(releasedCli.published_version, '0.36.1');
+  assert.deepEqual(
+    [releasedCli.version, releasedCli.published_version, releasedCli.release_status],
+    ['0.39.0-rc.native-sections.3', '0.36.1', 'candidate'],
+    'the published compatibility CLI stays pinned at 0.36.1 while the wave declares its candidate',
+  );
   assert.deepEqual(lock.packages[ROOT_CORE_LOCK_PATH], {
     resolved: 'packages/kdna-core',
     link: true,
