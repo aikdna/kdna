@@ -62,6 +62,7 @@
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
       "version": "0.37.0",
+      "candidate_version": "0.37.1-rc.browser.1",
       "canonical_tag": {
         "type": "natural"
       }
@@ -72,6 +73,7 @@
       "package_json": "packages/kdna-read/package.json",
       "npm_package": "@aikdna/kdna-read",
       "version": "0.11.1",
+      "candidate_version": "0.11.2-rc.browser.1",
       "canonical_tag": {
         "type": "prefix",
         "value": "read/"
