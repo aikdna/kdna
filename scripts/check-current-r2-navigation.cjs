@@ -10,6 +10,17 @@ const MODULES = [
   'external_grant_issuer',
   'protected_source',
 ];
+// The five published preview coordinates of this batch. The top-level entry is
+// required to name every one of them exactly, so the current-identity scan admits
+// the companion preview coordinates alongside the Core/Read pair. Membership stays
+// exact string equality: any other prerelease coordinate in a current region still
+// fails, and the stale-current negative controls below are unchanged.
+const COMPANION_PREVIEW_COORDINATES = Object.freeze([
+  '0.39.0-rc.native-sections.3', // @aikdna/kdna-cli, native-preview
+  '4.0.0-rc.components.2', // @aikdna/kdna-studio-core, components-preview
+  '0.13.0-rc.components.2', // @aikdna/kdna-studio-cli, components-preview
+  '0.8.0-rc.native-sections.1', // @aikdna/kdna-mcp-server, complete-source channel
+]);
 const SOURCE_PATH = 'specs/public-semantic-source.json';
 // Current-target vocabulary: an rc-era source identifies its line through the
 // version suffix; a promoted stable source identifies it through the unique
@@ -631,7 +642,11 @@ function checkIdentityOccurrences(file, text, source, check) {
   for (const match of current.matchAll(
     /(?<![0-9./_-])\d+\.\d+\.\d+-[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*/g,
   )) {
-    record('current-package', match, [versions.core, versions.read]);
+    record('current-package', match, [
+      versions.core,
+      versions.read,
+      ...COMPANION_PREVIEW_COORDINATES,
+    ]);
   }
   for (const match of current.matchAll(
     /kdna\.(?:core|canonical-ir|runtime-capsule|consumption-plan|agent-host|judgment-trace|read)\/\d+\.\d+\.\d+/g,
@@ -859,7 +874,7 @@ function checkCurrentNavigation(root, options = {}) {
     'do not fall back to plaintext or a raw parser',
   ]);
   contains('docs/current-release-support.md', null, '## Native and Studio entry points', [
-    'The candidate combinations below are not declared published',
+    'The combinations below are published on their own dist-tags',
   ]);
   contains(
     'docs/current-release-support.md',

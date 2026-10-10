@@ -573,10 +573,22 @@ for (const [file, heading, anchor, startAnchor] of nativeContextAnchors) {
 test('a copied native recipe is not exempt in another document or a second heading', () => {
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   const recipe = readme.match(/```sh\nmkdir kdna-native-example\n[\s\S]*?\n```/)[0];
+  // The recipe's own CLI coordinate is an admitted companion preview coordinate.
+  // Point the copy at the superseded neighbour so this control still proves that a
+  // copied recipe gains no scanning exemption.
+  const staleRecipe = recipe.replace(
+    '0.39.0-rc.native-sections.3',
+    '0.39.0-rc.native-sections.2',
+  );
+  assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
       file,
-      (text) => text + '\n## Copied native example\n\n' + recipe,
+      // The intact copy keeps the retained-downstream control (the exact retained
+      // text must not appear a second time); the stale copy keeps the
+      // current-package control for both files.
+      (text) =>
+        text + '\n## Copied native example\n\n' + recipe + '\n\n' + staleRecipe,
     );
     assert.ok(result.issues.some((issue) => issue.name.includes('current-package')));
     if (file === 'README.md')
@@ -613,8 +625,8 @@ for (const [file, before, after] of [
   ],
   [
     'docs/current-release-support.md',
-    'The candidate combinations below are not declared published',
-    'The candidate combinations below are already published',
+    'The combinations below are published on their own dist-tags',
+    'The combinations below are not published on any dist-tag',
   ],
   [
     'docs/current-release-support.md',
@@ -822,6 +834,22 @@ for (const file of DOCUMENTS)
       JSON.stringify(result.issues),
     );
   });
+test('a superseded companion preview coordinate is still refused on a current line', () => {
+  for (const stale of [
+    '0.39.0-rc.native-sections.2',
+    '0.13.0-rc.components.1',
+    '0.7.0-rc.component-semantics.1',
+  ]) {
+    const result = changedDocument(
+      'README.md',
+      (text) => text + `\nThe current CLI candidate is \`${stale}\`.\n`,
+    );
+    assert.ok(
+      result.issues.some((issue) => issue.name.includes('current-package')),
+      `${stale}: ${JSON.stringify(result.issues)}`,
+    );
+  }
+});
 test('a correct package coordinate cannot be assigned to the wrong current owner', () => {
   const result = changedDocument(
     'specs/read-contract.md',

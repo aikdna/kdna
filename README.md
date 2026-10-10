@@ -8,8 +8,9 @@
 
 # KDNA
 
-**Current state (2026-10-10).** Core, Read, the native CLI, Studio Core and
-Studio CLI all have published preview coordinates. None of the five `latest` npm
+**Current state (2026-10-10).** The current source line for Core/Read is
+**R2**. Core, Read, the native CLI, Studio Core and Studio CLI all have published
+preview coordinates. None of the five `latest` npm
 coordinates has moved in this batch, so installs and acceptance pin exact
 versions. **Targeted support** is the Node toolchain on **Linux and macOS**
 together with a named local Host (**Codex** or **OpenCode**) over the
