@@ -3,6 +3,33 @@
 **Judgment can live in many carriers. KDNA gives a selected judgment system a
 portable asset and loading contract.**
 
+## Which line are you on? Read this first
+
+There are two lines, and they install different things. The [top-level
+entry](../README.md) lists the exact combination for this batch.
+
+| Line | What to install | Status |
+|---|---|---|
+| **This batch's candidates** | Core `@aikdna/kdna-core@0.37.1-rc.browser.1` (`browser-preview`), Read `@aikdna/kdna-read@0.11.2-rc.browser.1` (`browser-preview`), native CLI `@aikdna/kdna-cli@0.39.0-rc.native-sections.3` (`native-preview`), Studio Core `@aikdna/kdna-studio-core@4.0.0-rc.components.2` (`components-preview`), Studio CLI `@aikdna/kdna-studio-cli@0.13.0-rc.components.2` (`components-preview`) | published preview coordinates |
+| **Published stable line** | native CLI `@aikdna/kdna-cli@0.36.1`, Core `0.37.0`, Read `0.11.1`, Studio CLI `0.11.0` | published; `latest` still resolves here |
+
+```sh
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
+  --registry=https://registry.npmjs.org \
+  @aikdna/kdna-cli@0.39.0-rc.native-sections.3
+```
+
+> **Do not omit `--omit=optional`.** Otherwise `cbor-extract` is installed and the
+> protection Host refuses with `HOST_OPTIONAL_PACKAGE_UNBOUND`. This is a
+> condition difference, not a broken product.
+
+**The walkthroughs below describe the published stable line (`0.36.1` and its
+pair), not this batch's candidates.** They are kept because that line is still
+installable and its commands are still accurate for it. For this batch's
+combination, use the table above and the [top-level entry](../README.md).
+
+---
+
 KDNA is an open judgment-asset protocol. Anyone can create a `.kdna` asset.
 The current source implementation uses public Core admission and Read under an
 independently trusted Host boundary. Published CLI 0.36.1 retains its separate

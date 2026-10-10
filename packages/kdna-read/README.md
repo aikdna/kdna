@@ -1,12 +1,12 @@
 # KDNA Read — R2 candidate
 
-Current unpublished browser candidate: source package `0.11.2-rc.browser.1` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.37.1-rc.browser.1` (`kdna.core/0.8.2`) and Canonical IR `0.6.1`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not establish content quality.
+Current browser candidate (**published** on the npm preview tag `browser-preview`; `latest` still resolves Read `0.11.1`): source package `0.11.2-rc.browser.1` for `kdna.read/0.6.4`, with exact peer `@aikdna/kdna-core@0.37.1-rc.browser.1` (`kdna.core/0.8.2`) and Canonical IR `0.6.1`. It consumes the private Core snapshot, preserving full authored focus, form, answer kind, method, core expression, typed Plan/policy and reference closures. It does not parse containers or recreate an IR. Local implementation and tests do not establish content quality.
 
 The published stable releases remain Read `0.11.1` with exact Core `0.37.0`; their artifacts and release evidence remain separate from this candidate.
 
 This 2026-10-07 source identity comes from [`package.json`](package.json).
 Runtime CLI 0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9
-archives; see the [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
+archives; those are **source coordinates, not installable npm coordinates** — the current installable combination is listed in the [top-level entry](../../README.md). See also the [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 A source README edit does not replace a fixed archive or renew its acceptance.
 Use the manifest and member inventory delivered with the exact installed graph.
 
