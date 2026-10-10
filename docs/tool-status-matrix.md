@@ -133,7 +133,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 | Component | Status |
 |---|---|
 | `kdna-loader` skill | **Unassessed** — mission retained; the previous broad-discovery and silent-loading model is not the current Host contract. |
-| MCP server adapter | Local unpublished MCP `0.8.1-rc.combination.1` with CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; [canonical entry](https://github.com/aikdna/kdna-skills#readme). Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
+| MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current source channel is MCP `0.8.0-rc.native-sections.1` over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
 
 ## Package Boundaries
 

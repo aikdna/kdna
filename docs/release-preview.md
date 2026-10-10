@@ -2,9 +2,10 @@
 
 Core `0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1` use the separate
 `browser-preview` npm tag. Their source, package artifacts and actual publication
-are separate facts. Until the exact release completes and registry acquisition
-is checked, these remain unpublished candidates. Stable release workflows and
-stable version gates are unchanged.
+are separate facts. The exact release has completed and registry acquisition has
+been checked: both coordinates are published on `browser-preview` and are
+installable there, while every `latest` coordinate is unchanged. Stable release
+workflows and stable version gates are unchanged.
 
 This route covers the retained ordinary and Host-unlocked protected browser SDK
 and the preserved Node reference entry points of this exact pair. Core does not

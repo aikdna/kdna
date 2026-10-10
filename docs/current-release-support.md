@@ -2,8 +2,11 @@
 
 Snapshot: 2026-10-09. Package versions in source, public Git revisions, npm
 artifacts, GitHub releases and editor Marketplace versions are separate
-coordinates. The candidate combinations below are not declared published by
-this page. Check the actual channel and exact release revision before installing.
+coordinates. The combinations below are published on their own dist-tags —
+`native-preview` for the native CLI, `browser-preview` for Core/Read,
+`components-preview` for Studio Core/CLI — or distributed as complete source for
+the MCP channel; a bare `npm install` still resolves the older `latest` release.
+Check the actual channel and exact release revision before installing.
 
 ## Native and Studio entry points
 
