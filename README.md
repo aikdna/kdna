@@ -279,6 +279,21 @@ The format is content-neutral: technical admission does not rank judgment
 quality, endorse an asset or grant permission. A successful `validate` describes
 that exact version's checks; it is not acceptance by a different implementation.
 
+That optional signature is a capability of the format contract, not of every
+route. In this batch only some routes can honour it: the published Core `0.22.0`
+line and its matching assets (see the signing example below), and the Studio
+protected-Host route described by its own package. The current **native Agent
+route** — `kdna create` in `@aikdna/kdna-cli` followed by an operator-bound
+local MCP read — is **unsigned**: `create` writes no `signature.kdsig` member
+and the Read adapter does not verify signatures, so integrity on that route
+rests on the canonical content digest computed at creation, which is not a
+signature or an endorsement. The published browser Inspector page
+(`docs/inspector/`) is narrower still: it inlines
+`@aikdna/kdna-web-client@0.3.0`, reads the published `0.2` container line
+(`payload.kdnab`) only, verifies container shape rather than signatures, and
+reports a current native asset as unreadable by that page with the CLI route to
+use instead.
+
 Core format validity and Creation Engine acceptance are separate results. The
 published Creation Output Boundary describes writer checksum and scoped
 authoring requirements under its own contract; those requirements do not enable
