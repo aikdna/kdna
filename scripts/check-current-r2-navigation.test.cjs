@@ -576,10 +576,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace(
-    '0.39.0-rc.native-sections.3',
-    '0.39.0-rc.native-sections.2',
-  );
+  const staleRecipe = recipe.replace('0.39.0-rc.native-sections.3', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
@@ -587,8 +584,7 @@ test('a copied native recipe is not exempt in another document or a second headi
       // The intact copy keeps the retained-downstream control (the exact retained
       // text must not appear a second time); the stale copy keeps the
       // current-package control for both files.
-      (text) =>
-        text + '\n## Copied native example\n\n' + recipe + '\n\n' + staleRecipe,
+      (text) => text + '\n## Copied native example\n\n' + recipe + '\n\n' + staleRecipe,
     );
     assert.ok(result.issues.some((issue) => issue.name.includes('current-package')));
     if (file === 'README.md')
