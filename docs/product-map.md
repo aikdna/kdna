@@ -32,7 +32,9 @@ and whether it can be downloaded right now.
 ## Closest entry for a first evaluation
 
 For an installable first run of the published line, start from
-[`docs/status.md`](./status.md). For the unpublished Core/Read candidates, see
+[`docs/status.md`](./status.md). For the current Core/Read preview pair — **published**
+on the `browser-preview` tag, while `latest` still resolves the earlier stable
+pair — see
 [`docs/core-read-current-status.md`](./core-read-current-status.md) and the
 coordinate split in
 [`docs/version-and-capability-matrix.md`](./version-and-capability-matrix.md).
