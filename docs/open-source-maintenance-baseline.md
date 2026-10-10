@@ -20,13 +20,35 @@ repository README; historical release coordinates do not describe current source
 | Studio Core and Studio CLI | Pre-release | Public local asset authoring/export is supported; AI-assisted authoring remains experimental. |
 | Public `.kdna` reference assets | Experimental | Current technical references require metadata, SHA sidecars, public URLs, and public-surface checks; they are not content endorsements or the default onboarding path. |
 | Agent loader skill and MCP server | Unassessed / Experimental | Loader mission retained; explicit-file/user-approved attachment, visibility, and control require independent recertification. |
-| Web packages and scaffolder | Pre-release / Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
+| `create-kdna-web-app` (scaffolder) | Not on the current public surface | npm: 8 versions, none deprecated, latest `0.5.0`, still installable and pinnable. Deprecation is a separate decision (see the dated note below). |
+| `kdna-web-server` | Not on the current public surface | npm: 8 versions, all 8 deprecated, latest `0.3.1`, still installable for existing pinned installs. |
+| `kdna-web-client` | Not on the current public surface | npm: 7 versions, all 7 deprecated, latest `0.3.0`. **This package is still a dev dependency of the `kdna` root graph at `0.3.0`, resolved from the registry.** |
+| `kdna-react` | Not on the current public surface | npm: 6 versions, all 6 deprecated, latest `0.4.0`. |
+| `kdna-activation-server` | Not on the current public surface | npm: 4 versions, all 4 deprecated, latest `0.2.1`. |
+| `kdna-remote-server` | Not on the current public surface | npm: 8 versions, all 8 deprecated, latest `0.4.2`. |
+| `kdna-demo-web-viewer` | Not on the current public surface | no npm package. |
 | Swift runtime, Studio Swift, and app-shared package | Pre-release | The recorded Swift Core 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
-| `kdna-vscode` | Unassessed integration | The editor mission remains part of the ecosystem; current source maturity and exact compatibility await owner-reviewed recertification. |
+| `kdna-vscode` | Not on the current public surface | Repository is private; no npm package. The editor mission remains part of the ecosystem, and current source maturity and exact compatibility await owner-reviewed recertification. |
 | `@aikdna/agent` | Legacy / Deprecated | Frozen source only; new integrations use explicit Core/CLI file loading while Agent adapters are recertified. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 
 The machine-readable published-line lifecycle and release-status inventory is
+
+**Entry changes (2026-10-10).** The repositories listed above as not on the
+current public surface are no longer part of it. Already-published npm packages
+are unaffected and remain installable, and the `kdna` root development graph
+still depends on `@aikdna/kdna-web-client`, as its own row records. Historical
+source remains obtainable through repository history. No defect in any of these
+repositories is fixed by this change, and none of them is declared retired by it.
+The npm figures above are per-row measurements of the registry, taken at this
+date.
+
+**Residual risks that remain open, and are not closed by the surface change:**
+`create-kdna-web-app` still distributes an older vulnerable dependency —
+deprecation states that maintenance and recommendation stop, and is not a
+vulnerability fix; `kdna-remote-server` can be exhausted; `kdna-react` can
+re-render without bound.
+
 [`ecosystem-manifest.json`](../ecosystem-manifest.json). Its schema distinguishes
 active packages, the compatibility bridge, deprecated coordinates, source-only
 applications, and exact release artifacts.
