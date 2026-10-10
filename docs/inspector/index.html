@@ -192,6 +192,18 @@
         color: var(--muted);
         min-height: 20px;
       }
+      #scope p.scope-line {
+        margin: 0 0 10px;
+        font-size: 13.5px;
+        color: var(--muted);
+      }
+      #scope p.scope-line:last-child {
+        margin-bottom: 0;
+      }
+      #scope pre.scope-code {
+        margin: 0 0 10px;
+        max-height: none;
+      }
     </style>
   </head>
   <body>
@@ -207,6 +219,30 @@
         ><b>Private by design</b> &mdash; parsing happens entirely in your browser; the file is
         never uploaded.</span
       >
+
+      <section class="card" id="scope">
+        <h2>Which containers this page reads</h2>
+        <p class="scope-line">
+          This page inlines <code>@aikdna/kdna-web-client@0.3.0</code>: it reads the published
+          <code>0.2</code> container line, which carries <code>payload.kdnab</code>. It verifies
+          container <em>shape</em> locally, and it does not verify signatures, keys or content.
+        </p>
+        <p class="scope-line">
+          Current <strong>native</strong> assets are a different container: they carry their payload
+          as <code>sections/pack-N.kdnab</code> and no <code>payload.kdnab</code>, so this page
+          rejects them with <code>KDNA_PAYLOAD_MISSING</code>. That rejection reports a range limit
+          here, not a defect in the asset. To inspect a native asset, run the official CLI locally:
+        </p>
+        <pre class="scope-code">
+npx --yes @aikdna/kdna-cli@0.39.0-rc.native-sections.3 inspect ./your-asset.kdna</pre>
+        <p class="scope-line">
+          It prints the admitted tuple and digests and uploads nothing. Agent hosts read the same
+          asset through the operator-bound local MCP adapter (<a
+            href="https://github.com/aikdna/kdna-skills/tree/main/mcp-server"
+            >kdna-skills/mcp-server</a
+          >).
+        </p>
+      </section>
 
       <div id="drop" role="button" tabindex="0" aria-label="Choose or drop a .kdna file">
         <div class="big">Drop a <strong>.kdna</strong> file here, or click to choose one</div>
@@ -1094,6 +1130,18 @@ export class JudgmentTraceViewer {
             text: error?.message ?? 'The file could not be read as a KDNA asset.',
           }),
         );
+        if (code === 'KDNA_PAYLOAD_MISSING') {
+          card.append(
+            el('div', {
+              class: 'msg',
+              text:
+                'This is the expected rejection for a current native container, which stores its ' +
+                'payload as sections/pack-N.kdnab instead of payload.kdnab. Inspect it with the ' +
+                'official CLI instead: npx --yes ' +
+                '@aikdna/kdna-cli@0.39.0-rc.native-sections.3 inspect <file>',
+            }),
+          );
+        }
         card.append(
           el('div', {
             class: 'msg',
