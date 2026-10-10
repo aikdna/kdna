@@ -33,6 +33,13 @@ and this entry does not invent one.
 | Studio creation | `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.2` | `components-preview` | Linux/macOS, Node >= 22 | published |
 | MCP server | `@aikdna/kdna-mcp-server` | no npm coordinate | — | source distribution | source candidate |
 
+> **Note on the packaged README.** The `-rc.browser.1` preview tarballs for Core
+> and Read embed the README as it stood before this correction, so the copy inside
+> those packages still describes them as unreleased or unpublished even though they
+> are published on the `browser-preview` tag. The corrected wording ships with the
+> next preview publication of those packages. The registry coordinates and tags in
+> the table above are authoritative.
+
 Every `latest` coordinate is unchanged: Core `0.37.0`, Read `0.11.1`, CLI
 `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0`. A bare `npm i` therefore
 still resolves the earlier stable line; use the exact coordinates above. The Node
@@ -205,9 +212,11 @@ published workflow; it is not a current Core/Read quickstart.
 
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
-against it on 2026-09-13. The unreleased Core/Read source candidate in this
-repository has different command forms and a different asset contract; assets
-produced by the published line are not current R2 inputs. Do not mix the two. See
+against it on 2026-09-13. The current Core/Read line in this repository is a
+separate preview pair published on `browser-preview` (Core
+`0.37.1-rc.browser.1`, Read `0.11.2-rc.browser.1`) and **not** on `latest`; it
+has different command forms and a different asset contract, so assets produced
+by this published walkthrough are not current inputs to it. Do not mix the two. See
 [tool status matrix](./docs/tool-status-matrix.md) for the per-command picture.
 
 ```bash

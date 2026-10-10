@@ -13,7 +13,8 @@ superseded unpublished combinations; they are not current installation input.
 > registry observations remain dated 2026-09-13. This
 > update is neither a new registry check nor downstream consumer acceptance.
 >
-> The current Core/Read line is **R2**, **UNPUBLISHED_CANDIDATE**, with a
+> As of this dated observation (2026-10-07), the Core/Read line recorded here was
+> **R2**, **UNPUBLISHED_CANDIDATE**, with a
 > **REFERENCE_IMPLEMENTATION**. Final acceptance is **SEPARATE_BYTE_BOUND_ACCEPTANCE**:
 > it must bind the final source, generated closure and actual artifacts independently.
 > Package versions, wire versions and API coordinates remain separate axes.
@@ -83,6 +84,12 @@ working copy exists.
 
 ## 2. Current Core/Read source and preserved component observations
 
+**Stale marker (2026-10-10).** The 2026-10-07 table below is a dated local
+observation. Its CLI, Studio Core, Studio CLI and MCP rows no longer match this
+repository's current source, and the preview coordinates that do match are
+already published on their own dist-tags. Treat it as history and use
+[current-release-support.md](./current-release-support.md) for installation.
+
 The current package labels below are read from the actual local manifests; Read
 uses the exact Core peer shown. No publication, installed acceptance or downstream
 rebinding follows from those labels.
@@ -115,7 +122,9 @@ The following table is preserved **2026-09-14 source-review history**, including
 older CLI/Studio/MCP rows superseded by the local observations above. It is not a
 second current installation matrix. Other components have not been rechecked
 by this documentation update; each component's own receipt determines its
-supported tuple.
+supported tuple. **Neither this table nor the 2026-10-07 table above is current
+installation input; the current entry is
+[current-release-support.md](./current-release-support.md).**
 
 | Package | Source candidate version | Publication state |
 |---|---:|---|
@@ -241,7 +250,7 @@ owning companion README. The versioned normative status above remains unchanged.
 
 | Surface | Reception status |
 |---|---|
-| Core / Read R2 | Reference implementation present, unpublished; final-byte independent acceptance remains separate; see [`docs/core-read-current-status.md`](./core-read-current-status.md) |
+| Core / Read R2 | Reference implementation present; recorded unpublished in this dated observation (2026-10-07), and the preview coordinates are published on `browser-preview` — see the current entry [`current-release-support.md`](./current-release-support.md); final-byte independent acceptance remains separate; see [`docs/core-read-current-status.md`](./core-read-current-status.md) |
 | CLI, Studio, Web Host, Web Client, React, MCP, VS Code, Swift | Each reports its own accepted and not-yet-accepted surface; see the reception status page inside each repository and [Component reception status](./component-reception-status.md) |
 
 ## Related documents

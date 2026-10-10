@@ -53,6 +53,19 @@ re-render without bound.
 active packages, the compatibility bridge, deprecated coordinates, source-only
 applications, and exact release artifacts.
 
+## Public compatibility limitations
+
+These are limits a public reader can meet. They are recorded differences, not
+fixes, and they do not extend any support promise.
+
+**Single-entry size limit in the historical `0.2` Python channel.** The
+historical `0.2` implementation bounds one uncompressed entry at 5 MiB
+(5,242,880 bytes); the current native coordinate bounds the same unit at 8 MiB
+(8,388,608 bytes). An asset whose single entry is larger than 5 MiB is rejected
+by the historical channel with `READ_CORE_INVALID`. Use the native `0.6` CLI/MCP
+path for such assets. This entry records a limit difference; it is not a
+statement that either implementation is retired, and it is not a fix.
+
 ## Accepted Maintenance Work
 
 Pre-release maintenance PRs should fit one or more of these categories:
