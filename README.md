@@ -8,7 +8,74 @@
 
 # KDNA
 
-The current local implementation is the unpublished **R2** candidate. Its complete static tuple, native execution 0.3.1 formats and reference APIs are linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index). Historical contracts retain their own coordinates and are not current implementation selectors. Publication and downstream rebinding remain separate.
+**Current state (2026-10-10).** Core, Read, the native CLI, Studio Core and
+Studio CLI all have published preview coordinates. None of the five `latest` npm
+coordinates has moved in this batch, so installs and acceptance pin exact
+versions. **Targeted support** is the Node toolchain on **Linux and macOS**
+together with a named local Host (**Codex** or **OpenCode**) over the
+operator-bound local stdio adapter. **Windows is not claimed in this batch.**
+Historical `0.2` packages and the Python channel remain available and are listed
+separately as historical support.
+
+*Targeted* is the platform and runtime this batch aims at. *Verified* is what was
+actually executed, and it is narrower: this batch's installs, documented native
+route and Studio protected-path suite ran on **macOS arm64 with the isolated Node
+22.22.3 runtime**, and the repository test suites run in CI on `ubuntu-latest`
+and `macos-latest`. No per-route architecture matrix exists in this repository,
+and this entry does not invent one.
+
+| Route | Package | Exact coordinate | Preview tag | Targeted platform / runtime | Status |
+|---|---|---|---|---|---|
+| Core / Read SDK | `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | `browser-preview` | Linux/macOS, Node >= 20 | published |
+| Core / Read SDK | `@aikdna/kdna-read` | `0.11.2-rc.browser.1` | `browser-preview` | Linux/macOS, Node >= 20 | published |
+| Native CLI | `@aikdna/kdna-cli` | `0.39.0-rc.native-sections.3` | `native-preview` | Linux/macOS, Node >= 22 | published |
+| Studio creation | `@aikdna/kdna-studio-core` | `4.0.0-rc.components.2` | `components-preview` | Linux/macOS, Node >= 22 | published |
+| Studio creation | `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.2` | `components-preview` | Linux/macOS, Node >= 22 | published |
+| MCP server | `@aikdna/kdna-mcp-server` | no npm coordinate | — | source distribution | source candidate |
+
+Every `latest` coordinate is unchanged: Core `0.37.0`, Read `0.11.1`, CLI
+`0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0`. A bare `npm i` therefore
+still resolves the earlier stable line; use the exact coordinates above. The Node
+floor in each row comes from that preview version's own `engines` field
+(`npm view <package>@<version> engines`). The MCP server is a **source channel,
+not a missing one**: this batch does not add an npm channel for it by decision,
+and it is obtained and installed from the source distribution following
+`mcp-server/README.md`.
+
+```sh
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
+  --registry=https://registry.npmjs.org \
+  @aikdna/kdna-cli@0.39.0-rc.native-sections.3
+```
+
+> **Do not omit `--omit=optional`.** Without it npm also installs `cbor-x`'s
+> optional native addon `cbor-extract`, and the protection Host then refuses with
+> `HOST_OPTIONAL_PACKAGE_UNBOUND`, because the accepted graph must equal the bound
+> set exactly. This is a condition difference between the CLI and the protected
+> Host, not a broken product: the CLI still runs, while the protected route needs
+> the documented command.
+
+The exact combination above is what this batch verified. Detail paths,
+prerequisites and per-route limitations live in
+[Start Here](docs/start-here.md); each package README keeps its own usage and
+points back here. The complete static tuple, native execution 0.3.1 formats and
+reference APIs are linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index).
+Historical contracts retain their own coordinates and are not current
+implementation selectors. Publication and downstream rebinding remain separate.
+
+**No new interchange promise.** This batch does not add any `0.5 ↔ 0.6`
+arbitrary cross-read or automatic conversion. Each supported route can create,
+reopen, consume and revise its own asset; a combination that is not supported is
+refused explicitly and points at the correct entry. The Studio container `0.5` /
+Read `0.6.4` line and the native `0.6` / Read `0.7.0` line remain separate.
+
+**Not claimed:** named Host delivery, semantic adoption and real human
+acceptance are `not_run` for this candidate. The targeted next step is real
+named-Host delivery with Codex and OpenCode in both directions, including reuse
+after a revision; the inheritable evidence is historical — the CHANGELOG `0.5.0`
+entry records the same approved workspace verified through real Codex `0.144.3`
+and OpenCode `1.18.4` MCP sessions, which is **0.5.0 historical verification, not
+this candidate**.
 
 > **KDNA gives reusable judgment its own identity and lifecycle.**
 >
