@@ -734,7 +734,7 @@
           "name": "@aikdna/kdna-read",
           "version": "0.11.2-rc.browser.1",
           "member_count": 97,
-          "members_sha256": "31808bfc7b7db24104fca02460d7950fff2ef1e922eeb6401c395c7a403843d0",
+          "members_sha256": "e8a449f84fc05b3102475dfd704e6ac8c9ec7144b414f67fc9084d6b34e71abd",
           "paths": [
             "LICENSE",
             "NOTICE",

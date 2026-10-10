@@ -57,3 +57,7 @@ jobs:
         run: npm run audit:public-narrative
       - name: Test public narrative boundary guard
         run: npm run test:public-narrative
+      - name: Check the current R2 navigation contract
+        run: node scripts/check-current-r2-navigation.cjs
+      - name: Test the current R2 navigation contract
+        run: node --test scripts/check-current-r2-navigation.test.cjs
