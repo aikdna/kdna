@@ -35,6 +35,8 @@ jobs:
         run: |
           node scripts/check-path-name-identifiers.cjs
           node --test scripts/check-path-name-identifiers.test.cjs
+      - name: Test the current R2 navigation contract
+        run: node --test scripts/check-current-r2-navigation.test.cjs
       - name: Verify the single-file asset inspector is fresh
         run: node scripts/core-release-authority.js trusted-npm run check:asset-inspector
       - run: node scripts/core-release-authority.js trusted-npm test
@@ -59,5 +61,3 @@ jobs:
         run: npm run test:public-narrative
       - name: Check the current R2 navigation contract
         run: node scripts/check-current-r2-navigation.cjs
-      - name: Test the current R2 navigation contract
-        run: node --test scripts/check-current-r2-navigation.test.cjs
