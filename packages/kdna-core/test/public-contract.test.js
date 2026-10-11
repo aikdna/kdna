@@ -1,6 +1,34 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
 const F=require('../../../conformance/public-contract/test/bytes-fixtures.cjs');
+// C: the public-contract view must be bound to the installed generated contract
+// - the module embeds no key data, so every readout has to match a type that the
+// contract itself declares, and both negative controls below must bite.
+test('public-contract view reads the installed contract and follows it',()=>{
+ const contract=require(path.join(coreDir,'src/public-contract/generated-contract.json'));
+ const view=req('@aikdna/kdna-core/public-contract');
+ assert.ok(view.kinds.length>0,'view declares kinds');
+ for(const kind of view.kinds){
+  const required=view.requiredKeys(kind),optional=view.optionalKeys(kind);
+  assert.ok(Array.isArray(required)&&required.length>0,kind+' has required keys');
+  const match=Object.values(contract.types).find(t=>Array.isArray(t.required)&&t.required.length===required.length&&required.every(k=>t.required.includes(k)));
+  assert.ok(match,'every readout must come from a type the contract declares: '+kind);
+  assert.deepEqual(optional,Object.keys(match.properties??{}).filter(k=>!match.required.includes(k)),kind+' optional keys come from the same type');
+ }
+ assert.deepEqual(view.contractCoordinate(),contract.versionTuple);
+ // Negative control 1: a kind whose type is absent must fail loudly, not return an empty set.
+ const missing=structuredClone(contract);
+ for(const [name,type] of Object.entries(missing.types)) if(Array.isArray(type.required)&&type.required.length===view.requiredKeys('manifest').length) delete missing.types[name];
+ assert.throws(()=>view.buildContractView(missing).requiredKeys('manifest'),/KDNA_CONTRACT_VIEW_TYPE_MISSING/);
+ // Negative control 2: a modified contract copy must change the readouts (no hardcoding).
+ const drifted=structuredClone(contract);
+ const anchor=Object.values(drifted.types).find(t=>Array.isArray(t.required)&&t.required.length===view.requiredKeys('payload').length);
+ assert.ok(anchor,'drift anchor found');
+ anchor.required=[...anchor.required,'zz_probe_key'];
+ const driftedView=view.buildContractView(drifted);
+ assert.ok(driftedView.requiredKeys('payload').includes('zz_probe_key'),'readout follows the contract');
+ assert.ok(!view.requiredKeys('payload').includes('zz_probe_key'),'installed readout unchanged');
+});
 const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir}=F.runtime(runtime);
 const core=req('@aikdna/kdna-core'),boundary=req('@aikdna/kdna-core/read-boundary'),tuple=require(path.join(coreDir,'src/public-contract/generated-contract.json')).versionTuple;
 test('public byte admission binds an immutable private snapshot',()=>{const asset=F.blank(tuple),bytes=F.encode(asset,req),result=core.admitBytes(bytes);assert.equal(result.status,'accepted');const view=boundary.inspectSnapshot(result.snapshot),A=view.digests.A.observed;bytes.fill(0);assert.equal(view.digests.A.observed,A);assert.equal(boundary.inspectSnapshot(JSON.parse(JSON.stringify(result.snapshot))),null);assert.equal(core.admitBytes(bytes).status,'rejected');});
