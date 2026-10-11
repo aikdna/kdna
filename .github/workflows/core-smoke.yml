@@ -5,6 +5,15 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      source_ref:
+        description: 'Select the current run source or the frozen stable release source'
+        type: choice
+        required: true
+        default: current
+        options:
+          - current
+          - '40aa4d8d70f2f0735069063f0b609bdef88e29b4'
 
 permissions:
   contents: read
@@ -18,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_ref == '40aa4d8d70f2f0735069063f0b609bdef88e29b4' && '40aa4d8d70f2f0735069063f0b609bdef88e29b4' || github.sha }}
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -118,6 +128,153 @@ jobs:
           if test -f "${{ runner.temp }}/current-source-result/source-gate.json"; then
             cat "${{ runner.temp }}/current-source-result/source-gate.json"
           fi
+      - name: Retain original current source evidence
+        if: always()
+        env:
+          R1_PRIOR_JOB_STATUS: ${{ job.status }}
+          R1_REQUESTED_SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          python - --source-root "$GITHUB_WORKSPACE" --work-dir "$RUNNER_TEMP/current-source-result" --output-dir "$RUNNER_TEMP/current-source-retention" <<'PY_SOURCE_RETENTION'
+          #!/usr/bin/env python3
+          """Retain original source-gate files; never run a gate or query a service."""
+          import argparse
+          import hashlib
+          import io
+          import json
+          import os
+          from pathlib import Path
+          import stat
+          import subprocess
+          import tarfile
+
+          GATE_FILES = (
+              "source-gate.json", "root-run-test:core-smoke.log", "root-test.log",
+              "root-run-validate:examples.log", "root-audit---audit-level=high.log",
+              "root-python.log", "root-python.json", "root-python.xml",
+              "root-python-execution.json", "root-pytest.ini",
+          )
+          SOURCE_FILES = (
+              ".github/workflows/core-smoke.yml", ".github/workflows/publish.yml",
+              "scripts/ecosystem-source-gate.js", "scripts/ecosystem-source-ci.js",
+              "scripts/ecosystem-source-inventory.json", "scripts/run-source-pytest.py",
+          )
+
+
+          def sha(data):
+              return hashlib.sha256(data).hexdigest()
+
+
+          def regular(root, relative):
+              current = root
+              for part in Path(relative).parts:
+                  current = current / part
+                  if current.is_symlink():
+                      raise ValueError("symbolic link in retained file path")
+              info = current.stat()
+              if not stat.S_ISREG(info.st_mode) or info.st_size > 256 * 1024 * 1024:
+                  raise ValueError("retained input must be a bounded regular file")
+              return current.read_bytes(), stat.S_IMODE(info.st_mode)
+
+
+          def git(root, *args):
+              result = subprocess.run(["git", "-C", str(root), *args],
+                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                      check=False, timeout=30)
+              if result.returncode:
+                  return None
+              return result.stdout.decode("utf-8").strip()
+
+
+          def collect(source, work, output):
+              source, work = source.resolve(), work.resolve()
+              output = output.absolute()
+              parent = output.parent.resolve(strict=True)
+              output = parent / output.name
+              if output == source or source in output.parents or output == work or work in output.parents:
+                  raise ValueError("retention output must be separate from source and gate directories")
+              output.mkdir(mode=0o700)  # Never reuse a previous run's receipts.
+              context = {
+                  "repository": os.environ.get("GITHUB_REPOSITORY"),
+                  "run_id": os.environ.get("GITHUB_RUN_ID"),
+                  "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+                  "event": os.environ.get("GITHUB_EVENT_NAME"),
+                  "requested_source_ref": os.environ.get("R1_REQUESTED_SOURCE_REF"),
+                  "ref": os.environ.get("GITHUB_REF"),
+                  "job": os.environ.get("GITHUB_JOB"),
+                  "runner_os": os.environ.get("RUNNER_OS"),
+                  "event_sha": os.environ.get("GITHUB_SHA"),
+                  "workflow_definition_commit": os.environ.get("GITHUB_WORKFLOW_SHA"),
+                  "workflow_ref": os.environ.get("GITHUB_WORKFLOW_REF"),
+                  "prior_job_status": os.environ.get("R1_PRIOR_JOB_STATUS"),
+                  "tested_source": {
+                      "commit": git(source, "rev-parse", "HEAD"),
+                      "tree": git(source, "rev-parse", "HEAD^{tree}"),
+                      "tracked_changes": git(source, "diff", "--name-only", "HEAD"),
+                  },
+              }
+              entries, missing, rejected = [], [], []
+              payload = {}
+              for prefix, root, names in (("gate", work, GATE_FILES), ("source", source, SOURCE_FILES)):
+                  for name in names:
+                      target = prefix + "/" + name
+                      try:
+                          data, mode = regular(root, name)
+                          payload[target] = (data, mode)
+                      except FileNotFoundError:
+                          missing.append(target)
+                      except (OSError, ValueError):
+                          rejected.append(target)
+              context_bytes = (json.dumps(context, indent=2) + "\n").encode()
+              payload["context.json"] = (context_bytes, 0o600)
+              with tarfile.open(output / "source-evidence.tar", "x", format=tarfile.PAX_FORMAT) as archive:
+                  for name, (data, mode) in sorted(payload.items()):
+                      item = tarfile.TarInfo(name)
+                      item.size, item.mode, item.mtime = len(data), mode, 0
+                      archive.addfile(item, io.BytesIO(data))
+                      entries.append({"path": name, "bytes": len(data), "sha256": sha(data), "mode": mode})
+              report = {
+                  "schema": "kdna-source-evidence-retention/1",
+                  "status": "RETAINED_COMPLETE_FILES" if not missing and not rejected else "RETAINED_INCOMPLETE_FILES",
+                  "context": context, "files": entries, "missing": missing, "rejected": rejected,
+                  "archive": {"path": "source-evidence.tar", "sha256": sha((output / "source-evidence.tar").read_bytes()),
+                              "bytes": (output / "source-evidence.tar").stat().st_size},
+                  "scope": "Original report/root logs/Python receipts and source identities only; no gate execution or acceptance.",
+                  "excludes": ["pack directories", "dependency installs", "environment dump", "credentials"],
+              }
+              (output / "retention.json").write_text(json.dumps(report, indent=2) + "\n")
+              print(json.dumps({"status": report["status"], "files": len(entries), "missing": missing, "rejected": rejected}))
+
+
+          if __name__ == "__main__":
+              parser = argparse.ArgumentParser(description=__doc__)
+              parser.add_argument("--source-root", type=Path, required=True)
+              parser.add_argument("--work-dir", type=Path, required=True)
+              parser.add_argument("--output-dir", type=Path, required=True)
+              args = parser.parse_args()
+              collect(args.source_root, args.work_dir, args.output_dir)
+          PY_SOURCE_RETENTION
+      - name: Upload original current source evidence
+        id: source_evidence_upload
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/current-source-retention/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Record uploaded source evidence identity
+        if: always() && steps.source_evidence_upload.outcome == 'success'
+        env:
+          R1_ARTIFACT_ID: ${{ steps.source_evidence_upload.outputs.artifact-id }}
+          R1_ARTIFACT_DIGEST: ${{ steps.source_evidence_upload.outputs.artifact-digest }}
+        run: |
+          python - <<'PY_SOURCE_UPLOAD'
+          import json, os
+          receipt = {"run_id": os.environ["GITHUB_RUN_ID"], "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+                     "artifact_id": os.environ["R1_ARTIFACT_ID"], "artifact_digest": os.environ["R1_ARTIFACT_DIGEST"]}
+          print("R1_ARTIFACT_RECEIPT_JSON=" + json.dumps(receipt, separators=(",", ":")))
+          PY_SOURCE_UPLOAD
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
