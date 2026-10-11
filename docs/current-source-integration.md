@@ -1,7 +1,7 @@
 # Current source integration
 
-The `core-smoke` workflow checks sixteen source repositories: this repository
-and fifteen external repositories at exact commits. Its input inventory is
+The `core-smoke` workflow checks nine public source repositories: this repository
+and eight external repositories at exact commits. Its input inventory is
 [`ecosystem-source-inventory.json`](../scripts/ecosystem-source-inventory.json).
 The workflow also materializes the accepted historical compatibility checkouts
 for the release-manifest and dependency-binding checks. The frozen editor
@@ -29,7 +29,7 @@ inventory; their presence does not make them current APIs.
 
 It creates real npm packs with lifecycle scripts disabled and compares their
 actual members and bytes with the reviewed inventory. The MCP pack includes its
-twelve bounded vendor archives. Four exact third-party archives use a separate,
+declared bounded vendor archives. Four exact third-party archives use a separate,
 bounded standard tar reader for their existing tar dialect or size; unknown
 digests receive no exception. That reader verifies package identity, members and
 content hashes and rejects path escapes and links without extracting files.
@@ -41,7 +41,10 @@ documentation, package metadata and executable content. A source-checkout
 consumer still uses its declared fixed archive graph. In particular, the Studio
 repositories document a local vendor installation graph and require coordinate
 migration before registry publication; inspecting their packs does not establish
-standalone registry installation.
+standalone registry installation. A root package coordinate change does not
+update a child's frozen source, dependency archive or CI identity. A successor
+child row requires its own exact source and complete CI observations; the old
+row remains a historical input until that successor passes the gate.
 
 Platform and repository-specific tests are queried from GitHub for an exact
 reviewed tree. A normal rebase may change the commit while preserving that tree.

@@ -1115,10 +1115,10 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
   const verifyNpm = job.indexOf('core-release-authority.js verify-npm');
   const check = job.indexOf('core-release-authority.js check');
   const tests = job.indexOf('scripts/core-release-authority.test.js');
-  const prepare = job.indexOf('core-release-authority.js prepare');
-  const smoke = job.indexOf('core-release-authority.js smoke');
-  const guard = job.indexOf('core-release-authority.js guard');
-  const publish = job.indexOf('core-release-authority.js publish');
+  const prepare = job.indexOf('stable-release-authority.js prepare');
+  const smoke = job.indexOf('stable-release-authority.js smoke');
+  const guard = job.indexOf('stable-release-authority.js guard');
+  const publish = job.indexOf('stable-release-authority.js publish');
   assert.ok(
     check >= 0 &&
       provision >= 0 &&
@@ -1130,7 +1130,10 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
       smoke < guard &&
       guard < publish,
   );
-  assert.match(job, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
+  assert.match(job, /stable-release-authority\.js check --unit core/u);
+  assert.match(job, /stable-release-authority\.js verify-public --unit core/u);
+  assert.match(job, /git fetch --no-tags origin refs\/heads\/main:refs\/remotes\/origin\/main/u);
+  assert.doesNotMatch(job, /if: steps\.registry\.outputs\.should_publish/u);
   assert.doesNotMatch(job, /npm install --global/u);
   assert.equal(
     job.split('\n').filter((line) => /^\s*(?:-\s*)?(?:run:\s*)?npm(?:\s|$)/u.test(line)).length,

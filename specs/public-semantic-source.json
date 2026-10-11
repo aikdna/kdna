@@ -89,8 +89,8 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 50903,
-      "sha256": "b2e954e373dcbaa6d71c36a9c5442627805a3cf8a4f5e2f09d8f6c52fac36382"
+      "bytes": 50851,
+      "sha256": "ed367a247f966989d9e1633f6349279a8aeb8a41349db7534cf67083e1bf087f"
     },
     {
       "path": "specs/public-source-map.json",
@@ -99,13 +99,13 @@
     },
     {
       "path": "specs/public-version-policy.md",
-      "bytes": 12961,
-      "sha256": "4cb53dd2da00d5e98a8197a551bf655e866fb6d3a76b759cf179a8b0b8352e83"
+      "bytes": 13074,
+      "sha256": "a3ec9acd1985ffa6814697ea181b10862833fca8a32a039539b282566ee148c0"
     },
     {
       "path": "specs/read-contract.md",
-      "bytes": 11669,
-      "sha256": "d2a53ba37feb9e0d5b99fc334e955d6c8f3e5e86e95c6cc7daeb318088c662c4"
+      "bytes": 11722,
+      "sha256": "1940f18b6f3a302af3f358844955880b1efc0417cbca315391008a4100f9b4ab"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -30431,8 +30431,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.1-rc.browser.1",
-      "read": "0.11.2-rc.browser.1"
+      "core": "0.37.2",
+      "read": "0.11.3"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -31847,7 +31847,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.11.2-rc.browser.1",
+    "package_version": "0.11.3",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -34902,8 +34902,8 @@
     ],
     "specification": {
       "path": "specs/protection-admission.md",
-      "bytes": 38180,
-      "sha256": "35180f6583ac97302096a8e2ff786f1c7a9a0c10caabc3a4fa627affd1640bef"
+      "bytes": 38233,
+      "sha256": "5b4e784aa18c3c5c42bbbdee052235096af85f354b2fb6108788024fac9051b1"
     },
     "non_schema_rules": [
       {
@@ -35255,8 +35255,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
-        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
+        "@aikdna/kdna-core": "0.37.2",
+        "@aikdna/kdna-read": "0.11.3"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -35730,8 +35730,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
-        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
+        "@aikdna/kdna-core": "0.37.2",
+        "@aikdna/kdna-read": "0.11.3"
       }
     }
   },
@@ -36552,8 +36552,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.1-rc.browser.1",
-        "@aikdna/kdna-read": "0.11.2-rc.browser.1"
+        "@aikdna/kdna-core": "0.37.2",
+        "@aikdna/kdna-read": "0.11.3"
       }
     }
   },
@@ -40978,8 +40978,8 @@
       },
       "package_versions": [
         {
-          "core": "0.37.1-rc.browser.1",
-          "read": "0.11.2-rc.browser.1"
+          "core": "0.37.2",
+          "read": "0.11.3"
         }
       ],
       "preservation": "The released Core 0.37.0 / Read 0.11.1 pair and its three binding-7 schemas remain unchanged historical coordinates. This candidate adds retained browser protected projection and independent lifecycle; registry, consumer acceptance and publication are separate evidence."
@@ -42179,8 +42179,8 @@
           "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
         },
         "package_versions": {
-          "core": "0.37.1-rc.browser.1",
-          "read": "0.11.2-rc.browser.1"
+          "core": "0.37.2",
+          "read": "0.11.3"
         }
       }
     },

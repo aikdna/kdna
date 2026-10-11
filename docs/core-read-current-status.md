@@ -1,20 +1,19 @@
 # Core and Read: current implementation status
 
-Source status: 2026-10-09. Core `0.37.1-rc.browser.1` and Read
-`0.11.2-rc.browser.1` are reference implementation candidates. Source readiness,
+Source status: 2026-10-11. Core `0.37.2` and Read
+`0.11.3` are unpublished stable distribution candidates. Source readiness,
 exact artifact acceptance and actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
-[preview procedure](release-preview.md) define acquisition and compatibility.
+[stable procedure](release-stable.md) define acquisition and compatibility.
 
 ## Exact SDK pair and contracts
 
-Read declares Core `0.37.1-rc.browser.1` as its exact peer; both declare Node >=20.
-Retain Core archive SHA256
-`81639dd57dc3a56a2d9171ce3a6ce956847f4877461b8722897e4f598aa8a8ca`
-and Read archive SHA256
-`c5c2d6b65c44dd30aeddd49d6f2a4c915e9fd4d8f2a28297d6d677564e261cb7`.
-Every source/package member, installed graph and public channel has its own
-identity. Matching version labels alone are insufficient.
+Read declares Core `0.37.2` as its exact peer; both declare Node >=20.
+The release procedure produces the exact source commit/tree, archive SHA256,
+SRI and source-member inventory for each final artifact. Those external release
+records bind the installed graph and public channel; this document does not
+embed its own enclosing archive digest. Matching version labels alone are
+insufficient, and a digest from an earlier preview cannot identify this pair.
 
 The base browser/Node contract uses container `0.5.0`, Payload
 `kdna.payload.judgment/0.5.1`, Core `kdna.core/0.8.2`, Canonical IR
@@ -45,9 +44,9 @@ production identity service or native credential store.
 
 | Consumer | Current candidate graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.39.0-rc.native-sections.3` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.39.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.1` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
-| Studio | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
+| Studio | StudioCLI `0.13.0` / StudioCore `4.0.0` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 
 Use each consumer's own manifest, lock, full archive/member binding and
 installation instructions. Older local combination/material-edit delivery
@@ -57,17 +56,19 @@ local archive or a version guessed from an earlier checkout.
 
 The published history retains Core `0.37.0` / Read `0.11.1` and native CLI
 `0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read
-`0.11.0-rc.r2.7`. These are distinct installed graphs. The new preview coordinates
+`0.11.0-rc.r2.7`. These are distinct installed graphs. The new stable coordinates
 are available only once the official release/registry actually supplies them.
 No page, clean checkout, package.json version or draft PR establishes that fact.
 
 ## Choose and obtain one matching delivery
 
-Follow [exact preview preparation](release-preview.md) to export a clean,
+Follow [exact stable preparation](release-stable.md) to export a clean,
 DCO-signed Git source twice, pack with authenticated npm, verify every source
 member and retain matching archives. Local candidate evidence cannot pass the
-real-release event gate. Publication uses a separate npm preview dist-tag;
-`latest` remains unchanged and existing version collisions fail closed.
+real-release event gate. New stable versions target `latest` in dependency order;
+existing version collisions fail closed and earlier preview bytes remain fixed.
+The [published channel history](current-release-support.md#published-channel-history)
+is separate from these unpublished source candidates.
 
 For a complete ordinary native journey, use the licensed author input and
 executable recipe in the [CLI source](https://github.com/aikdna/kdna-cli#readme).

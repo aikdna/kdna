@@ -2,6 +2,7 @@
 const knownSemanticReasons=new Set(['READ_INPUT_INVALID','READ_CORE_INVALID','READ_CORE_CAPABILITY_UNAVAILABLE','READ_UNSUPPORTED_CRITICAL','READ_INTERPRETATION_INCOMPLETE','READ_STATIC_POLICY_INVALID',...require('./generated-contract.json').types.CoreComponentFailure.properties.code.enum]);
 const {inflateRawSync}=require('node:zlib');
 const fsp=require('node:fs/promises');
+const fsFlags=require('node:fs').constants;
 const C=require('./section-common.js'),{openSectionCapture}=require('./section-capture-node.js'),{parseSectionContainer}=require('./section-container.js'),{restoreWholeFrames}=require('./section-frame-graph.js'),{reconstructPayload}=require('./section-reconstruct.js'),{observeWhole}=require('./section-digests.js');
 const {validateDecodedPayload,assertContentBindings}=require('./semantic-admission.js'),{buildIR}=require('./canonical-ir.js'),{digestCanonical,evidence}=require('./digests.js');
 const {requests,snapshots,byteOrigins}=require('./section-native-state.js'),authorities=new WeakMap();
@@ -54,12 +55,16 @@ function findBytes(buf,needle,from=0,to=buf.length){const last=Math.min(to,buf.l
 function findLastBytes(buf,needle){for(let i=buf.length-needle.length;i>=0;i--){let ok=true;for(let j=0;j<needle.length;j++)if(buf[i+j]!==needle[j]){ok=false;break;}if(ok)return i;}return -1;}
 async function pathInputClass(file){
  try{
-  const fh=await fsp.open(file,'r');
+  // Classification follows a rejected capture, so the path is still untrusted.
+  // A blocking reopen of a FIFO would wait indefinitely for a writer.
+  const fh=await fsp.open(file,fsFlags.O_RDONLY|fsFlags.O_NONBLOCK);
   try{
    const st=await fh.stat();
-   if(!st.isFile()||st.size<22)return {reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};
-   const head=Buffer.alloc(4);await fh.read(head,0,4,0);
-   const zip=head[0]===0x50&&head[1]===0x4b&&(head[2]===0x03||head[2]===0x05||head[2]===0x07);
+   if(!st.isFile()||!Number.isSafeInteger(st.size)||st.size<0)return {reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};
+   const head=Buffer.alloc(4),{bytesRead}=await fh.read(head,0,Math.min(4,st.size),0);
+   const zip=bytesRead===4&&head[0]===0x50&&head[1]===0x4b&&(head[2]===0x03||head[2]===0x05||head[2]===0x07);
+   // A recognisable ZIP shorter than an EOCD is damaged, as in both byte entries.
+   if(st.size<22)return zip?null:{reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};
    const tailLen=Math.min(st.size,INPUT_TAIL),tail=Buffer.alloc(tailLen);await fh.read(tail,0,tailLen,st.size-tailLen);
    const eocd=findLastBytes(tail,INPUT_MARKERS.eocd);
    if(eocd===-1)return zip?null:{reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};

@@ -116,14 +116,9 @@ test('generator refuses duplicate owning roots even when a lookup would overwrit
     candidate.protected_source.root = candidate.protection_admission.root;
   }));
 const mutations = [
-  ['root README current package', 'README.md', '0.37.1-rc.browser.1', '0.35.0-rc.source.1'],
+  ['root README current package', 'README.md', '0.37.2', '0.35.0-rc.source.1'],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  [
-    'Chinese README package',
-    'README.zh.md',
-    'Read `0.11.2-rc.browser.1`',
-    '0.3.0-rc.component-semantics.2',
-  ],
+  ['Chinese README package', 'README.zh.md', 'Read `0.11.3`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -133,19 +128,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'actual source package `0.37.1-rc.browser.1`',
+    'Stable distribution source candidate: package `0.37.2`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'source package `0.11.2-rc.browser.1`',
+    'Stable distribution source candidate `0.11.3`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    'peer `@aikdna/kdna-core@0.37.1-rc.browser.1`',
+    '`@aikdna/kdna-core@0.37.2`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -169,7 +164,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'Read declares Core `0.37.1-rc.browser.1` as its exact peer',
+    'Read declares Core `0.37.2` as its exact peer',
     'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
@@ -208,12 +203,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  [
-    'Start Here package',
-    'docs/start-here.md',
-    '`0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
-    '0.35.0-rc.source.1',
-  ],
+  ['Start Here package', 'docs/start-here.md', '`0.37.2` / Read `0.11.3`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -223,7 +213,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.1-rc.browser.1`',
+    '| `@aikdna/kdna-core` | `0.37.2`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -256,13 +246,13 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.1-rc.browser.1`、Read `0.11.2-rc.browser.1`',
+    'Core `0.37.2`、Read `0.11.3`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.1-rc.browser.1` and Read',
+    'Core `0.37.2` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -274,7 +264,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`',
+    'Core `0.37.2` and Read `0.11.3`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -349,7 +339,7 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.39.0-rc.native-sections.3` with the exact SDK pair above'));
+  assert.ok(guide.includes('CLI `0.39.0` with the exact SDK pair above'));
   assert.ok(
     guide.includes(
       'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent source candidates.',
@@ -398,7 +388,7 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.39.0-rc.native-sections.3` with that exact Core/Read pair',
+    'CLI `0.39.0` with that exact Core/Read pair',
     'CLI `0.39.0-rc.native-sections.2` with that exact Core/Read pair',
   ],
   [
@@ -410,44 +400,44 @@ const nativeIdentityMutations = [
   [
     'Studio candidate row',
     'README.md',
-    'StudioCore `4.0.0-rc.components.2` with that exact Core/Read pair',
+    'StudioCore `4.0.0` with that exact Core/Read pair',
     'StudioCore `4.5.0-rc.material-edit.1` with that exact Core/Read pair',
   ],
   [
     'English published Core',
     'README.md',
     '`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI',
-    '`0.37.1-rc.browser.1` / Read `0.11.0-rc.r2.7`; loading CLI',
+    '`0.37.2` / Read `0.11.0-rc.r2.7`; loading CLI',
   ],
   [
     'English published Read',
     'README.md',
     '`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI',
-    '`0.36.0-rc.r2.7` / Read `0.11.2-rc.browser.1`; loading CLI',
+    '`0.36.0-rc.r2.7` / Read `0.11.3`; loading CLI',
   ],
   [
     'Chinese published Core',
     'README.zh.md',
     '其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7`',
-    '其精确依赖为 `@aikdna/kdna-core@0.37.1-rc.browser.1`',
+    '其精确依赖为 `@aikdna/kdna-core@0.37.2`',
   ],
   [
     'Chinese published Read',
     'README.zh.md',
     '`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合',
-    '`@aikdna/kdna-read@0.11.2-rc.browser.1`。该组合',
+    '`@aikdna/kdna-read@0.11.3`。该组合',
   ],
   [
     'status published Core',
     'docs/core-read-current-status.md',
     '`0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read',
-    '`0.39.0-rc.native-sections.2` with Core `0.37.1-rc.browser.1` / Read',
+    '`0.39.0-rc.native-sections.2` with Core `0.37.2` / Read',
   ],
   [
     'status published Read',
     'docs/core-read-current-status.md',
     '`0.11.0-rc.r2.7`. These are distinct installed graphs.',
-    '`0.11.2-rc.browser.1`. These are distinct installed graphs.',
+    '`0.11.3`. These are distinct installed graphs.',
   ],
   [
     'historical publication role',
@@ -491,8 +481,8 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3',
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
   test(`the fixed published native context refuses ${label}`, () => {
@@ -576,7 +566,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.39.0-rc.native-sections.3', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.39.0', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
@@ -604,14 +594,18 @@ for (const file of ['docs/version-taxonomy.md', 'specs/read-contract.md'])
 for (const [file, before, after] of [
   [
     'README.md',
-    'Once official registry metadata confirms the exact preview versions',
+    'Once official registry metadata confirms the exact stable versions',
     'The exact preview versions are already published',
   ],
-  ['README.md', 'CLI `.2` is already published', 'CLI `.2` is not published'],
-  ['README.md', '`.3` and must not overwrite `.2`', '`.3` and may overwrite `.2`'],
+  ['README.md', 'CLI `.2` and `.3` are already published', 'CLI `.2` is not published'],
+  [
+    'README.md',
+    'targets `0.39.0` and must not overwrite either preview',
+    '`.3` and may overwrite `.2`',
+  ],
   [
     'README.zh.md',
-    '只有官方 registry 元数据确认这三个精确预览版本后',
+    '只有官方 registry 元数据确认这三个精确稳定版本后',
     '这三个精确预览版本现在已在官方 registry 发布',
   ],
   [
@@ -621,7 +615,7 @@ for (const [file, before, after] of [
   ],
   [
     'docs/current-release-support.md',
-    'The combinations below are published on their own dist-tags',
+    'All five are unpublished',
     'The combinations below are not published on any dist-tag',
   ],
   [
@@ -631,7 +625,7 @@ for (const [file, before, after] of [
   ],
   [
     'docs/core-read-current-status.md',
-    '`latest` remains unchanged and existing version collisions fail closed',
+    'existing version collisions fail closed',
     '`latest` is replaced and existing version collisions are overwritten',
   ],
   [
@@ -711,7 +705,7 @@ for (const [file, before, after] of [
   ],
   [
     'docs/current-release-support.md',
-    'npm native `.2` on `r2.7`; loading CLI `0.36.1` on `latest`.',
+    'Published native previews keep their exact graphs; loading CLI `0.36.1` on the observed `latest`.',
     'npm native `.3` on `latest`; loading CLI `0.36.1` on `r2.7`.',
   ],
   [
@@ -769,7 +763,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`',
+    'local package line is Core `0.37.2` / Read `0.11.3`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1397,20 +1391,28 @@ function promoteFixture({ source: s, decisions }) {
   return row;
 }
 test('a promoted source resolves the current line under either current status', () => {
-  const inputs = changedNavigationInputs((input) => {
-    const row = promoteFixture(input);
-    row.status = 'CURRENT_UNPUBLISHED_TARGET';
-  });
-  const result = checkInputs(inputs);
-  assert.deepEqual(
-    result.issues.filter(
-      (row) =>
-        row.name.startsWith('current-target:') ||
-        row.name === 'current-decisions:line' ||
-        row.name.startsWith('current-decisions:package:'),
-    ),
-    [],
-  );
+  for (const status of ['CURRENT_UNPUBLISHED_TARGET', 'CURRENT_RELEASED_TARGET']) {
+    const inputs = changedNavigationInputs((input) => {
+      const row = promoteFixture(input);
+      // A source may already use stable versions and the tested status. Change
+      // its line explicitly to prove resolution uses the sole current row.
+      const line = row.line + '.navigation-fixture';
+      row.line = input.decisions.version_policy.line = line;
+      for (const pkg of input.decisions.version_policy.planned_packages) pkg.line = line;
+      row.status = status;
+    });
+    const result = checkInputs(inputs);
+    assert.deepEqual(
+      result.issues.filter(
+        (row) =>
+          row.name.startsWith('current-target:') ||
+          row.name === 'current-decisions:line' ||
+          row.name.startsWith('current-decisions:package:'),
+      ),
+      [],
+      status,
+    );
+  }
 });
 for (const [label, mutate] of [
   [
@@ -1458,12 +1460,11 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker =
-    'The current exact pair is Core `0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`';
+  const marker = 'The current exact pair is Core `0.37.2` and Read `0.11.3`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
-    'The current exact pair is Core `0.36.1` and Read `0.11.2-rc.browser.1`',
+    'The current exact pair is Core `0.36.1` and Read `0.11.3`',
   );
   const result = checkCurrentNavigation(root, {
     compiled: false,
@@ -1677,4 +1678,73 @@ test('heading projection never reconstructs angle brackets across consumed segme
     assert.equal(projected.includes('<'), false);
     assert.equal(projected.includes('>'), false);
   }
+});
+
+for (const [file, before, after, issue] of [
+  [
+    'README.md',
+    'public release and registry acquisition remain pending',
+    'public release and registry acquisition are complete',
+    'README.md:current:',
+  ],
+  [
+    'README.md',
+    'the unpublished stable distribution candidate Core `0.37.2` / Read `0.11.3`',
+    'the published browser-preview pair Core `0.37.2` / Read `0.11.3`',
+    'README.md:current:',
+  ],
+  [
+    'docs/start-here.md',
+    '| Unpublished; intended `latest` |',
+    '| Published; current `latest` |',
+    'docs/start-here.md:current:',
+  ],
+  [
+    'docs/release-stable.md',
+    'published, nondraft **stable releases**',
+    'published prerelease events',
+    'docs/release-stable.md:current:',
+  ],
+  [
+    'docs/release-stable.md',
+    '`latest` may transition to the approved new version; other tags remain fixed',
+    '`latest` and preview tags may all be moved',
+    'docs/release-stable.md:current:',
+  ],
+  [
+    'docs/current-release-support.md',
+    '| `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | `browser-preview` | `0.37.0` |',
+    '| `@aikdna/kdna-core` | `0.37.2` | `latest` | `0.37.0` |',
+    'docs/current-release-support.md:retained-historical:',
+  ],
+  [
+    'docs/version-and-capability-matrix.md',
+    '| `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | Unpublished browser candidate;',
+    '| `@aikdna/kdna-core` | `0.37.2` | Unpublished browser candidate;',
+    'docs/version-and-capability-matrix.md:retained-historical:',
+  ],
+])
+  test(`stable candidate and published history keep distinct roles: ${file}: ${before}`, () => {
+    const result = changedDocument(file, (text) => {
+      assert.equal(text.split(before).length - 1, 1);
+      return text.replace(before, after);
+    });
+    assert.ok(result.issues.some((row) => row.name.startsWith(issue)));
+  });
+test('a previous archive digest cannot be attached to the current SDK pair', () => {
+  const result = changedDocument('docs/core-read-current-status.md', (text) =>
+    text.replace(
+      'Matching version labels alone are',
+      'Archive SHA256 `81639dd57dc3a56a2d9171ce3a6ce956847f4877461b8722897e4f598aa8a8ca`. Matching version labels alone are',
+    ),
+  );
+  assert.ok(result.issues.some((row) => row.name === 'current-status:no-self-artifact-digest'));
+});
+test('the stable runbook cannot suggest local Read smoke without its approved public companion', () => {
+  const result = changedDocument(
+    'docs/release-stable.md',
+    (text) =>
+      text + '\n```sh\nnode scripts/stable-release-authority.js candidate-smoke --unit read\n```\n',
+  );
+  assert.ok(result.issues.some((row) => row.name === 'stable-procedure:no-unapproved-read-smoke'));
 });

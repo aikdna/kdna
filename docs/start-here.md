@@ -5,28 +5,23 @@ portable asset and loading contract.**
 
 ## Which line are you on? Read this first
 
-There are two lines, and they install different things. The [top-level
-entry](../README.md) lists the exact combination for this batch.
+Select one exact dependency graph. The [top-level entry](../README.md) and
+[support matrix](current-release-support.md) distinguish three states:
 
-| Line | What to install | Status |
+| Line | Coordinates and acquisition | Status |
 |---|---|---|
-| **This batch's candidates** | Core `@aikdna/kdna-core@0.37.1-rc.browser.1` (`browser-preview`), Read `@aikdna/kdna-read@0.11.2-rc.browser.1` (`browser-preview`), native CLI `@aikdna/kdna-cli@0.39.0-rc.native-sections.3` (`native-preview`), Studio Core `@aikdna/kdna-studio-core@4.0.0-rc.components.2` (`components-preview`), Studio CLI `@aikdna/kdna-studio-cli@0.13.0-rc.components.2` (`components-preview`) | published preview coordinates |
-| **Published stable line** | native CLI `@aikdna/kdna-cli@0.36.1`, Core `0.37.0`, Read `0.11.1`, Studio CLI `0.11.0` | published; `latest` still resolves here |
+| Stable distribution candidates | Core `0.37.2`, Read `0.11.3`, CLI `0.39.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; use each complete source delivery until exact registry publication is verified | Unpublished; intended `latest` |
+| Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the new candidate bytes |
+| Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
-```sh
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
-  --registry=https://registry.npmjs.org \
-  @aikdna/kdna-cli@0.39.0-rc.native-sections.3
-```
+The registry recipe in the [current source entry](#current-source-entry) is
+conditional on the exact new versions actually being published. Use
+`--omit=optional` for the bound protected Host graph; otherwise npm may add
+`cbor-extract` and the Host rejects the unbound package.
 
-> **Do not omit `--omit=optional`.** Otherwise `cbor-extract` is installed and the
-> protection Host refuses with `HOST_OPTIONAL_PACKAGE_UNBOUND`. This is a
-> condition difference, not a broken product.
-
-**The walkthroughs below describe the published stable line (`0.36.1` and its
-pair), not this batch's candidates.** They are kept because that line is still
-installable and its commands are still accurate for it. For this batch's
-combination, use the table above and the [top-level entry](../README.md).
+The walkthroughs below preserve CLI `0.36.1` and its historical loading
+contract. For current native or Studio authoring, follow the current source
+entry, retain its lock, and use the reader named by the producing route.
 
 ---
 
@@ -60,8 +55,8 @@ published line.
 
 Use the [current support and distribution matrix](./current-release-support.md)
 and [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
-The native entry is CLI `0.39.0-rc.native-sections.3` with exact Core
-`0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1`, container0.6 and
+The native entry is CLI `0.39.0` with exact Core
+`0.37.2` / Read `0.11.3`, container0.6 and
 Read0.7-candidate. Prepare the complete twelve-archive delivery using the
 [CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
 Source availability does not establish official npm publication; the registry
@@ -82,7 +77,7 @@ publication is disabled and named Host delivery remains NOT_RUN. Installing a
 Skill or copying a process vector does not establish Host activation.
 
 For Studio creation and local protection, use StudioCLI
-`0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` and their complete
+`0.13.0` / StudioCore `4.0.0` and their complete
 source graph. This separate route uses container0.5 / Read0.6.4. Saved protected
 consumption and revision use the [trusted local Host guide](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md),
 not StudioCLI's static read command or native container0.6. Credentials and
@@ -182,7 +177,7 @@ using a particular API:
 | Repo | Role |
 |------|------|
 | [kdna](https://github.com/aikdna/kdna) | Official KDNA Core spec, toolchain entry, schemas, docs |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Current source: inspect, validate, Read and static Plan/Capsule; published CLI 0.36.1 retains its separate packing/loading API |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Current native source: create, inspect, validate, Read and Source revision; native Plan/load unavailable; published CLI 0.36.1 retains its separate packing/loading API |
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent and MCP adapter mission; current loader Skill is Unassessed |

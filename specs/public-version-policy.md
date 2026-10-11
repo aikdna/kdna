@@ -17,9 +17,9 @@ Status: UNPUBLISHED_CANDIDATE. This policy specifies the issued coordinates for 
 | trace | `kdna.judgment-trace/0.3.1` |
 | read | `kdna.read/0.6.4` |
 
-The local package candidates are `@aikdna/kdna-core@0.37.1-rc.browser.1` and `@aikdna/kdna-read@0.11.2-rc.browser.1`. This browser package candidate is unpublished. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
+The local package candidates are `@aikdna/kdna-core@0.37.2` and `@aikdna/kdna-read@0.11.3`. This stable distribution candidate requires exact artifact review and registry acquisition before publication is established. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
 
-The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance. Its protocol tuple remains the base combination in the table; the added browser adapter does not select the Node native-section tuple.
+The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The exact candidate pair requires its own artifact review and installed-consumer acceptance; publication is established only by matching release and registry evidence. Its protocol tuple remains the base combination in the table; the added browser adapter does not select the Node native-section tuple.
 
 The container framing remains 0.5.0. The Manifest contract is selected by the existing fields `(format_version, compatibility.profile, compatibility.profile_version)`: `(0.5.0, kdna.payload.judgment, 0.5.1)`. It maps to `urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1`, generated as `schema/manifest-container-0.5.0-judgment-0.5.1.schema.json` and mirrored in Core. No schema URI, package version, loader-minimum field, body appearance or caller assertion selects a different schema.
 

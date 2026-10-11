@@ -2,6 +2,11 @@
 
 **Status:** Current responsibility boundary
 
+The entry examples and `core.*` field requirements below describe the
+original container and payload profile `0.1.0` contract. Current combinations
+and their schema requirements are indexed in [SPEC-INDEX](../SPEC-INDEX.md);
+the original field optionality does not override a later profile's schema.
+
 ## 1. Purpose
 
 This document separates KDNA Core format validity from the stricter output

@@ -25,9 +25,10 @@ A conforming importer MUST:
 
 ## 3. Runtime Entry Checks
 
-The authoritative current entry classification is the Required/Optional table
-in [`container.md`](./container.md). Importers MUST NOT maintain a second entry
-list with different requiredness.
+The authoritative current entry classification is in
+[`container.md`](./container.md). The original `0.1.0` Required/Optional table
+is preserved in [pre-R2 container history](./history/pre-r2/container.md).
+Importers MUST NOT maintain a second entry list with different requiredness.
 
 The required Runtime entries are exactly:
 

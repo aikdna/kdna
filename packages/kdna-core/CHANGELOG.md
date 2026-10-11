@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.37.2 (2026-10-11)
+
+- Preserve the original `READ_CORE_INVALID` result for short native ZIP inputs
+  in path admission, matching the Node and browser byte entries.
+- Refuse nonregular path inputs through a nonblocking opened descriptor before
+  authorization. An actual FIFO without a writer now returns a fixed rejection.
+- Pack the generated public-contract descriptor surface with its complete
+  generated type, diagnostics and limit definitions.
+- Derive the exact Core `0.37.2` / Read `0.11.3` implementation binding from
+  frozen source preimages while retaining every generation protection check.
+  Protocol tuples and independent permission boundaries remain unchanged.
+
 ## 0.37.0 (2026-10-07)
 
 - Adds the `./protected-browser` entry: `getProtectionContract` and `admitProtectedBrowser`

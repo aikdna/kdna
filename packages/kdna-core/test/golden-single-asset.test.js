@@ -135,9 +135,16 @@ test('current manifest schemas reject every legacy asset-signature declaration',
   }
 });
 
-test('public container documents keep checksums optional under one authority', () => {
+test('original 0.1 container documents keep checksums optional under their historical authority', () => {
   const specification = fs.readFileSync(path.join(REPO_ROOT, 'SPEC.md'), 'utf8');
-  const containerSpec = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'container.md'), 'utf8');
+  const containerSpec = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'history', 'pre-r2', 'container.md'),
+    'utf8',
+  );
+  const currentContainerSpec = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'container.md'),
+    'utf8',
+  );
   const creationBoundary = fs.readFileSync(
     path.join(REPO_ROOT, 'specs', 'creation-output-boundary.md'),
     'utf8',
@@ -152,6 +159,10 @@ test('public container documents keep checksums optional under one authority', (
     'utf8',
   );
 
+  assert.match(specification, /Status: Active original 0\.1 contract/);
+  assert.equal(minimalFormatFixture.manifest.format_version, '0.1.0');
+  assert.equal(minimalFormatFixture.payload.profile_version, '0.1.0');
+  assert.match(currentContainerSpec, /\[pre-R2 container history\]\(history\/pre-r2\/container\.md\)/);
   const specificationRequired = specification.match(
     /Required protocol entries are:[\s\S]*?Optional protocol entries are:/,
   );
@@ -161,6 +172,7 @@ test('public container documents keep checksums optional under one authority', (
   assert.match(containerSpec, /### 3\.2 Optional[\s\S]*`checksums\.json`/);
   assert.match(containerSpec, /The absence of `checksums\.json` is not a format error/);
   assert.match(importSecurity, /authoritative current entry classification[\s\S]*container\.md/);
+  assert.match(importSecurity, /original `0\.1\.0` Required\/Optional table[\s\S]*history\/pre-r2\/container\.md/);
   assert.match(importSecurity, /`checksums\.json` is optional at the protocol layer/);
   assert.match(fileFormat, /`checksums\.json` is optional in the protocol/);
   assert.match(coreFileFormat, /Its absence is\s+not a Core format error/);
@@ -168,9 +180,12 @@ test('public container documents keep checksums optional under one authority', (
   assert.match(creationBoundary, /canonical four-entry baseline/);
 });
 
-test('public contracts keep highest_question optional for Core and explicit for official writers', () => {
+test('original 0.1 highest_question optionality does not weaken current authored declarations', () => {
   const specification = fs.readFileSync(path.join(REPO_ROOT, 'SPEC.md'), 'utf8');
-  const containerSpec = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'container.md'), 'utf8');
+  const containerSpec = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'history', 'pre-r2', 'container.md'),
+    'utf8',
+  );
   const creationBoundary = fs.readFileSync(
     path.join(REPO_ROOT, 'specs', 'creation-output-boundary.md'),
     'utf8',
@@ -178,10 +193,17 @@ test('public contracts keep highest_question optional for Core and explicit for 
 
   assert.match(specification, /`highest_question` is an optional authoring concept/);
   assert.match(containerSpec, /highest_question\?: string/);
+  assert.match(creationBoundary, /original container and payload profile `0\.1\.0` contract/);
   assert.match(creationBoundary, /`core\.highest_question` is also optional for Core format validity/);
   assert.match(creationBoundary, /MUST NOT derive `highest_question` from the first axiom/);
   assert.match(creationBoundary, /Core owns only Format Valid and MUST NOT report/);
   assert.match(creationBoundary, /Judgment Accepted or Application Verified/);
+  assert.ok(canonicalPayloadSchema.properties.core.properties.highest_question);
+  assert.equal(canonicalPayloadSchema.properties.core.required.includes('highest_question'), false);
+  for (const filename of ['payload-profile-0.5.schema.json', 'payload-profile-0.5.1.schema.json']) {
+    const currentSchema = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'schema', filename), 'utf8'));
+    assert.equal(currentSchema.$defs.AuthoredDeclarations.required.includes('highest_question'), true, filename);
+  }
 });
 
 test('three-entry fixture without highest_question is Core Format Valid', () => {

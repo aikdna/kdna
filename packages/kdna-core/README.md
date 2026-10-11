@@ -1,20 +1,28 @@
 # KDNA Core — R2 candidate
-> This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry states the exact versions, the preview tags and the install command.
+> This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry states the exact source versions, registry status and installation route.
 
 
-Source candidate (**published** on the npm preview tag `browser-preview`; `latest` still resolves Core `0.37.0`): actual source package `0.37.1-rc.browser.1`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
-
-Published and source coordinates are separate: `npm i @aikdna/kdna-core` resolves to the published stable `0.37.0`, while this source is the candidate `0.37.1-rc.browser.1`, addressed by its exact version or the `browser-preview` dist-tag and never carrying `latest`.
-
-The published stable release remains Core `0.37.0`, paired with Read `0.11.1`; its artifacts and release evidence remain separate from this candidate. Core `0.37.0` supersedes the `0.36.0` incumbent.
-
-This source description follows [`package.json`](package.json).
-Read source `0.11.2-rc.browser.1` declares this exact Core peer. Runtime CLI
-0.40 and MCP 0.8.1 retain their separate Core 0.34 / Read 0.9 archives; see the
+Stable distribution source candidate: package `0.37.2`, paired with exact Read
+`0.11.3`. The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
+Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
+and Capsule/Plan/Host/Trace `0.3.1`. Native section subpaths separately use
+Container `0.6.0` and Read `0.7.0-candidate`. See the
+[specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
-Editing this source README does not replace a previously fixed archive or
-renew any byte-bound acceptance. Use the manifest and member inventory shipped
-with the exact artifact; do not rebuild or substitute it merely to align prose.
+
+This source follows [`package.json`](package.json). Exact source, package bytes,
+installed dependency identity and registry publication each require their own
+checks. This source candidate does not establish that `latest` has changed;
+select the exact coordinate only after the official registry supplies it.
+The earlier published Core `0.37.1-rc.browser.1` / Read
+`0.11.2-rc.browser.1` previews retain their own byte identities and tags.
+
+The candidate includes the generated `/public-contract` descriptor exports.
+They expose the fixed public types, diagnostic schema and limits from the same
+semantic source as the runtime; they do not create a caller-defined validator.
+Native path admission preserves `READ_CORE_INVALID` for short ZIP inputs and
+rejects nonregular files through a nonblocking opened descriptor before any
+authorization callback.
 
 Core admits one immutable container, validates its Manifest and typed Payload, resolves the static graph, computes A/C/E and Canonical IR digests, and issues a private snapshot. Risk and noncritical extensions remain authored declarations, with presence and order preserved. Unsupported critical semantics fail closed. Static admission performs no condition evaluation, quality assessment or authorization. The separate execution subpath validates native 0.3.1 objects and coordinates explicitly configured external Host providers; serialized inputs cannot confer trust or permission.
 

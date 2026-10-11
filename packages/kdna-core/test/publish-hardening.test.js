@@ -512,19 +512,22 @@ test('publish workflow delegates Core only to the authoritative retained-artifac
 
   const provisionNpm = coreJob.indexOf('core-release-authority.js provision-npm');
   const verifyNpm = coreJob.indexOf('core-release-authority.js verify-npm');
+  const stableCheck = coreJob.indexOf('stable-release-authority.js check --unit core');
   const releaseCheck = coreJob.indexOf('core-release-authority.js check');
-  const evidence = coreJob.indexOf('core-release-authority.js prepare');
-  const smoke = coreJob.indexOf('core-release-authority.js smoke');
-  const duplicateGuard = coreJob.indexOf('core-release-authority.js guard');
-  const publish = coreJob.indexOf('core-release-authority.js publish');
+  const evidence = coreJob.indexOf('stable-release-authority.js prepare --unit core');
+  const smoke = coreJob.indexOf('stable-release-authority.js smoke --unit core');
+  const duplicateGuard = coreJob.indexOf('stable-release-authority.js guard --unit core');
+  const publish = coreJob.indexOf('stable-release-authority.js publish --unit core');
+  const verifyPublic = coreJob.indexOf('stable-release-authority.js verify-public --unit core');
   assert.ok(
     provisionNpm > 0 &&
       provisionNpm < verifyNpm &&
-      verifyNpm < releaseCheck &&
+      verifyNpm < stableCheck &&
+      stableCheck < releaseCheck &&
       releaseCheck < evidence,
   );
-  assert.ok(evidence < smoke && smoke < duplicateGuard && duplicateGuard < publish);
-  assert.match(coreJob, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
+  assert.ok(evidence < smoke && smoke < duplicateGuard && duplicateGuard < publish && publish < verifyPublic);
+  assert.match(coreJob, /publish approved Core bytes or verify an identical duplicate/u);
   assert.doesNotMatch(coreJob, /run:\s*>?-?\s*npm publish\b/u);
   assert.doesNotMatch(coreJob, /npm install --global/u);
   assert.doesNotMatch(coreJob, /working-directory: packages\/kdna-core/u);

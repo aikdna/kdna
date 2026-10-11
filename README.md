@@ -3,87 +3,36 @@
 > KDNA is a judgment-asset container and ecosystem. This repository owns the
 > protocol and Core runtime; companion repositories provide creation,
 > consumption, authorization, Apple, Web, Agent, editor, and developer
-> integrations. Existing packages are pre-release snapshots, not Beta, stable,
-> GA, or a reason to retire an integration's mission.
+> integrations. Component maturity is stated separately from package release
+> coordinates; a distribution version does not establish ecosystem-wide GA.
 
 # KDNA
 
-**Current state (2026-10-10).** The current source line for Core/Read is
-**R2**. Core, Read, the native CLI, Studio Core and Studio CLI all have published
-preview coordinates. None of the five `latest` npm
-coordinates has moved in this batch, so installs and acceptance pin exact
-versions. **Targeted support** is the Node toolchain on **Linux and macOS**
-together with a named local Host (**Codex** or **OpenCode**) over the
-operator-bound local stdio adapter. **Windows is not claimed in this batch.**
-Historical `0.2` packages and the Python channel remain available and are listed
-separately as historical support.
+**Current source state (2026-10-11).** The **R2** stable distribution candidates
+are Core `0.37.2`, Read `0.11.3`, native CLI `0.39.0`, Studio Core `4.0.0`
+and Studio CLI `0.13.0`. These are new package coordinates; exact artifact review,
+public release and registry acquisition remain pending. Their intended npm tag
+is `latest`. The earlier preview artifacts and the currently observed `latest`
+values remain separate in the [distribution history](docs/current-release-support.md#published-channel-history).
+MCP remains a complete Git source channel; this wave adds no MCP npm coordinate.
 
-*Targeted* is the platform and runtime this batch aims at. *Verified* is what was
-actually executed, and it is narrower: this batch's installs, documented native
-route and Studio protected-path suite ran on **macOS arm64 with the isolated Node
-22.22.3 runtime**, and the repository test suites run in CI on `ubuntu-latest`
-and `macos-latest`. No per-route architecture matrix exists in this repository,
-and this entry does not invent one.
+Targeted support is the Node toolchain on **Linux and macOS** and a named local
+Host (**Codex** or **OpenCode**) through the operator-bound stdio adapter.
+**Windows is not claimed.** Platform targets are not execution receipts: the
+previous preview's macOS arm64/Node 22.22.3 observations and repository CI do not
+establish acceptance of these new artifacts. The new exact source, retained
+archives and installed graphs each require their own checks.
 
-| Route | Package | Exact coordinate | Preview tag | Targeted platform / runtime | Status |
-|---|---|---|---|---|---|
-| Core / Read SDK | `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | `browser-preview` | Linux/macOS, Node >= 20 | published |
-| Core / Read SDK | `@aikdna/kdna-read` | `0.11.2-rc.browser.1` | `browser-preview` | Linux/macOS, Node >= 20 | published |
-| Native CLI | `@aikdna/kdna-cli` | `0.39.0-rc.native-sections.3` | `native-preview` | Linux/macOS, Node >= 22 | published |
-| Studio creation | `@aikdna/kdna-studio-core` | `4.0.0-rc.components.2` | `components-preview` | Linux/macOS, Node >= 22 | published |
-| Studio creation | `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.2` | `components-preview` | Linux/macOS, Node >= 22 | published |
-| MCP server | `@aikdna/kdna-mcp-server` | no npm coordinate | — | source distribution | source candidate |
+Follow [Start Here](docs/start-here.md) and the matching candidate table below.
+The complete static tuple, native execution 0.3.1 formats and reference APIs are
+linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index).
+Historical contracts retain their coordinates and exact dependency graphs.
 
-> **Note on the packaged README.** The `-rc.browser.1` preview tarballs for Core
-> and Read embed the README as it stood before this correction, so the copy inside
-> those packages still describes them as unreleased or unpublished even though they
-> are published on the `browser-preview` tag. The corrected wording ships with the
-> next preview publication of those packages. The registry coordinates and tags in
-> the table above are authoritative.
-
-Every `latest` coordinate is unchanged: Core `0.37.0`, Read `0.11.1`, CLI
-`0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0`. A bare `npm i` therefore
-still resolves the earlier stable line; use the exact coordinates above. The Node
-floor in each row comes from that preview version's own `engines` field
-(`npm view <package>@<version> engines`). The MCP server is a **source channel,
-not a missing one**: this batch does not add an npm channel for it by decision,
-and it is obtained and installed from the source distribution following
-`mcp-server/README.md`.
-
-```sh
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
-  --registry=https://registry.npmjs.org \
-  @aikdna/kdna-cli@0.39.0-rc.native-sections.3
-```
-
-> **Do not omit `--omit=optional`.** Without it npm also installs `cbor-x`'s
-> optional native addon `cbor-extract`, and the protection Host then refuses with
-> `HOST_OPTIONAL_PACKAGE_UNBOUND`, because the accepted graph must equal the bound
-> set exactly. This is a condition difference between the CLI and the protected
-> Host, not a broken product: the CLI still runs, while the protected route needs
-> the documented command.
-
-The exact combination above is what this batch verified. Detail paths,
-prerequisites and per-route limitations live in
-[Start Here](docs/start-here.md); each package README keeps its own usage and
-points back here. The complete static tuple, native execution 0.3.1 formats and
-reference APIs are linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index).
-Historical contracts retain their own coordinates and are not current
-implementation selectors. Publication and downstream rebinding remain separate.
-
-**No new interchange promise.** This batch does not add any `0.5 ↔ 0.6`
-arbitrary cross-read or automatic conversion. Each supported route can create,
-reopen, consume and revise its own asset; a combination that is not supported is
-refused explicitly and points at the correct entry. The Studio container `0.5` /
-Read `0.6.4` line and the native `0.6` / Read `0.7.0` line remain separate.
-
-**Not claimed:** named Host delivery, semantic adoption and real human
-acceptance are `not_run` for this candidate. The targeted next step is real
-named-Host delivery with Codex and OpenCode in both directions, including reuse
-after a revision; the inheritable evidence is historical — the CHANGELOG `0.5.0`
-entry records the same approved workspace verified through real Codex `0.144.3`
-and OpenCode `1.18.4` MCP sessions, which is **0.5.0 historical verification, not
-this candidate**.
+**No new interchange promise.** The Studio container `0.5` / Read `0.6.4`
+route and native container `0.6` / Read `0.7.0` route remain separate.
+Unsupported cross-read and automatic conversion are not added. Named Host
+delivery, semantic adoption and real human acceptance require independent
+records for the exact candidate; no historical test is promoted to that status.
 
 > **KDNA gives reusable judgment its own identity and lifecycle.**
 >
@@ -132,16 +81,17 @@ unpacking or decoding asset internals is not a compatible consumption path.
 
 The [current support and distribution matrix](./docs/current-release-support.md)
 and [Core/Read status](./docs/core-read-current-status.md) distinguish source,
-package bytes, container contracts and actual public availability. This preview
-line remains a candidate until its exact release and acquisition checks complete.
+package bytes, container contracts and actual public availability. This stable
+distribution line remains an unpublished candidate until its exact release and
+acquisition checks complete.
 An existing `latest` package or repository `main` does not identify a candidate.
 
 | Entry | Exact candidate package combination | Supported route |
 | --- | --- | --- |
-| Core/Read | Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
-| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.3` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
+| Core/Read | Core `0.37.2` / Read `0.11.3` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
+| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
-| [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
+| [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
 The two container routes have different reader and source APIs. Sharing SDK
 package versions does not make their assets interchangeable. Use the reader
@@ -169,22 +119,23 @@ create an original, disclose exact selections, make a substantive Source revisio
 reopen the revised file and check that the original remains unchanged. No private
 Reader input or author transcript is required.
 
-Once official registry metadata confirms the exact preview versions, a separate
+Once official registry metadata confirms the exact stable versions, a separate
 empty-cache registry installation can use:
 
 ```sh
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.3
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
 Keep the resulting lock and all previous files. A registry installation and an
 offline source delivery have separate locks; each must bind the same declared
-KDNA package bytes. The [preview release procedure](./docs/release-preview.md)
-uses `browser-preview` for Core/Read; the CLI uses `native-preview`. Both
-preserve `latest`.
+KDNA package bytes. The [stable release procedure](./docs/release-stable.md)
+requires new byte-bound versions and a genuine stable release event. Publication
+moves only the approved package's `latest` after its exact dependency graph is
+available. Existing preview artifacts and tags retain their own scope.
 
 The canonical [Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md)
 and [Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md)
@@ -197,8 +148,8 @@ Published Core `0.37.0` / Read `0.11.1` retain their own contracts and artifacts
 Historical native CLI `0.39.0-rc.native-sections.2` binds Core
 `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core
 `0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older
-installation. CLI `.2` is already published; new authoring/source work uses
-`.3` and must not overwrite `.2`. The separate Studio ordinary/protected guide
+installation. CLI `.2` and `.3` are already published; new authoring/source work
+targets `0.39.0` and must not overwrite either preview. The separate Studio ordinary/protected guide
 supplies its own preparation, trusted Host/credential boundary and readback
 instructions; named Host delivery and independent acceptance remain `NOT_RUN`.
 Technical checks and
@@ -213,11 +164,11 @@ published workflow; it is not a current Core/Read quickstart.
 
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
-against it on 2026-09-13. The current Core/Read line in this repository is a
-separate preview pair published on `browser-preview` (Core
-`0.37.1-rc.browser.1`, Read `0.11.2-rc.browser.1`) and **not** on `latest`; it
-has different command forms and a different asset contract, so assets produced
-by this published walkthrough are not current inputs to it. Do not mix the two. See
+against it on 2026-09-13. The current Core/Read source pair in this repository is
+the unpublished stable distribution candidate Core `0.37.2` / Read `0.11.3`.
+It has a different asset contract. The current native CLI route also has
+different command forms, so this published walkthrough does not select that
+new graph. Keep its exact historical dependencies. See
 [tool status matrix](./docs/tool-status-matrix.md) for the per-command picture.
 
 ```bash
@@ -480,10 +431,10 @@ changes require an RFC and an explicit migration path.
 
 | Repo | Package | Purpose |
 |------|---------|---------|
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Source CLI `0.39.0-rc.native-sections.3`; historical npm native `.2` / loading `0.36.1` | Native authoring, explicit Read and Source revision; exact current SDK pair above |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Source StudioCLI `0.13.0-rc.components.2`; historical npm `0.11.0` | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Source StudioCore `4.0.0-rc.components.2`; historical npm `3.0.0` | Studio session SDK and explicit protected export; its own Host/credential boundary |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1`; historical npm MCP `0.5.0` | Matched native `.3` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Candidate CLI `0.39.0`; published native previews and loading `0.36.1` | Native authoring, explicit Read and Source revision; exact current SDK pair above |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Candidate StudioCLI `0.13.0`; historical npm `0.11.0` | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
+| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Candidate StudioCore `4.0.0`; historical npm `3.0.0` | Studio session SDK and explicit protected export; its own Host/credential boundary |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1`; historical npm MCP `0.5.0` | Matched candidate native `0.39.0` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read contract with macOS validation and generic iOS compilation; no JavaScript preview parity, device runtime or native Host claim |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Historical Swift release `0.4.0`; current source has its own binding | Apple authoring kernel; historical release compatibility and current-source verification are separate, described by the owning README |

@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-read",
-  "version": "0.11.2-rc.browser.1",
+  "version": "0.11.3",
   "description": "Public KDNA Read projection and Host disclosure boundary.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -98,7 +98,7 @@
     "schema/read-contract-0.6.4.schema.json"
   ],
   "peerDependencies": {
-    "@aikdna/kdna-core": "0.37.1-rc.browser.1"
+    "@aikdna/kdna-core": "0.37.2"
   },
   "engines": {
     "node": ">=20"

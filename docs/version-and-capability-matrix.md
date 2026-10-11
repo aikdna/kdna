@@ -1,7 +1,7 @@
 # KDNA Version and Capability Matrix
 
-Current replacement: [2026-10-09 support and distribution matrix](current-release-support.md).
-It binds the native `.3`/MCP `.8` and separate Studio0.5 routes to their exact
+Current replacement: [2026-10-11 support and distribution matrix](current-release-support.md).
+It binds the native `0.39.0`/MCP source and separate Studio0.5 candidates to their exact
 SDK archives and distinguishes official registry baselines from source
 candidates. The dated tables below remain historical observations, including
 superseded unpublished combinations; they are not current installation input.
@@ -84,15 +84,23 @@ working copy exists.
 
 ## 2. Current Core/Read source and preserved component observations
 
-**Stale marker (2026-10-10).** The 2026-10-07 table below is a dated local
-observation. Its CLI, Studio Core, Studio CLI and MCP rows no longer match this
-repository's current source, and the preview coordinates that do match are
-already published on their own dist-tags. Treat it as history and use
-[current-release-support.md](./current-release-support.md) for installation.
+The current stable distribution source pair is read from the actual manifests;
+Read uses the exact Core peer shown. Registry publication, installed acceptance
+and downstream rebinding require separate artifact evidence. Use the
+[current support matrix](./current-release-support.md) for the five-package
+candidate graph, published previews and the observed earlier `latest` values.
 
-The current package labels below are read from the actual local manifests; Read
-uses the exact Core peer shown. No publication, installed acceptance or downstream
-rebinding follows from those labels.
+| Current local package (2026-10-11) | Actual source version | Bound graph and state |
+|---|---|---|
+| `@aikdna/kdna-core` | `0.37.2` | Unpublished stable distribution candidate; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.11.3` | Exact Core `0.37.2` peer; unpublished stable distribution candidate; Node >=20 |
+
+**Frozen 2026-10-07 observation.** The table below retains the source labels and
+publication descriptions recorded on that date. They do not describe the current
+source or installation path. The browser previews were subsequently published;
+the [published channel history](./current-release-support.md#published-channel-history)
+records their own immutable identities. No old record renews acceptance of a
+new artifact.
 
 | Current local package (2026-10-07) | Actual source version | Bound graph and state |
 |---|---|---|
@@ -102,21 +110,6 @@ rebinding follows from those labels.
 | `@aikdna/kdna-studio-core` | `4.5.0-rc.material-edit.1` | Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |
 | `@aikdna/kdna-studio-cli` | `0.17.0-rc.material-edit.1` | Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`; local unpublished source; Node >=22 |
 | `@aikdna/kdna-mcp-server` | `0.8.1-rc.combination.1` | CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; private candidate; Node >=22 |
-
-The published Core `0.37.0` / Read `0.11.1` releases retain their artifacts and release evidence. The browser candidate rows above do not assert publication or downstream rebinding.
-
-The [source/delivery guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery)
-links each exact manifest, binding, archive inventory and installation entry.
-These combinations are not interchangeable. Obtain the complete matching source
-delivery and lock/archives; neither remote `main` nor npm `latest` is identified
-by a local working-tree observation. CLI 0.40 is not the MCP adapter's CLI 0.39.1
-graph. Protocol equality alone is not interoperability or acceptance evidence.
-Current source-only documentation changes do not rewrite already fixed package
-archives or renew their acceptance.
-The current Studio complete source delivery and its 137-member identity are
-listed in that source/delivery guide. This local update does not update official
-remote source or npm releases, activate a global install, or broaden any native
-Host acceptance dimension.
 
 The following table is preserved **2026-09-14 source-review history**, including
 older CLI/Studio/MCP rows superseded by the local observations above. It is not a
@@ -250,7 +243,7 @@ owning companion README. The versioned normative status above remains unchanged.
 
 | Surface | Reception status |
 |---|---|
-| Core / Read R2 | Reference implementation present; recorded unpublished in this dated observation (2026-10-07), and the preview coordinates are published on `browser-preview` — see the current entry [`current-release-support.md`](./current-release-support.md); final-byte independent acceptance remains separate; see [`docs/core-read-current-status.md`](./core-read-current-status.md) |
+| Core / Read R2 | Reference implementation present; current stable distribution candidates remain unpublished, while the earlier browser previews retain their own channel — see the current entry [`current-release-support.md`](./current-release-support.md); final-byte independent acceptance remains separate; see [`docs/core-read-current-status.md`](./core-read-current-status.md) |
 | CLI, Studio, Web Host, Web Client, React, MCP, VS Code, Swift | Each reports its own accepted and not-yet-accepted surface; see the reception status page inside each repository and [Component reception status](./component-reception-status.md) |
 
 ## Related documents

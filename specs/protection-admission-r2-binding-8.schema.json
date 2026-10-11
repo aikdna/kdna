@@ -7461,7 +7461,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.1-rc.browser.1",
+              "const": "0.37.2",
               "type": "string"
             }
           },
@@ -8719,7 +8719,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.1-rc.browser.1",
+              "const": "0.37.2",
               "type": "string"
             }
           },

@@ -2665,6 +2665,46 @@ function publishRelease({ evidencePath, artifactPath, env = process.env, root = 
   }
 }
 
+function verifyInstalledCoreBoundary({
+  cwd,
+  name = PACKAGE_NAME,
+  version,
+  environment = process.env,
+}) {
+  assert(
+    name === PACKAGE_NAME && typeof version === 'string',
+    'Core installed probe identity invalid',
+  );
+  const probe = [
+    "const assert=require('node:assert/strict');",
+    "const fs=require('node:fs');",
+    "const path=require('node:path');",
+    "const core=require('@aikdna/kdna-core');",
+    "const remote=require('@aikdna/kdna-core/remote-runtime');",
+    "const manifestPath=require.resolve('@aikdna/kdna-core/package.json');",
+    'const manifest=require(manifestPath);',
+    `assert.equal(manifest.name,${JSON.stringify(name)});`,
+    `assert.equal(manifest.version,${JSON.stringify(version)});`,
+    'assert.match(manifestPath,/node_modules\\/@aikdna\\/kdna-core\\/package\\.json$/);',
+    "assert.deepEqual(Object.keys(remote),['loadRemoteRuntimeAsset']);",
+    'assert.equal(core.loadRemoteRuntimeAsset,undefined);',
+    'assert.equal(core.loadRemoteRuntimeAssetForServer,undefined);',
+    'assert.equal(core.loadAssetUnsafe,undefined);',
+    "assert.equal(fs.existsSync(path.join(path.dirname(manifestPath),manifest.exports['./remote-runtime'].types)),true);",
+    "for(const spec of ['@aikdna/kdna-core/src/container/index.js','@aikdna/kdna-core/src/remote-runtime.js']) assert.throws(()=>require(spec),e=>e&&e.code==='ERR_PACKAGE_PATH_NOT_EXPORTED');",
+    "Promise.all([import('@aikdna/kdna-core'),import('@aikdna/kdna-core/remote-runtime')]).then(([esm,resm])=>{for(const key of ['loadRemoteRuntimeAsset','loadRemoteRuntimeAssetForServer','loadAssetUnsafe']) assert.equal(esm[key],undefined);assert.deepEqual(Object.keys(resm).filter(k=>k!=='default'),['loadRemoteRuntimeAsset']);}).catch(e=>{console.error(e);process.exit(1);});",
+  ].join('\n');
+  const result = runProcess(process.execPath, ['-e', probe], {
+    cwd,
+    encoding: 'utf8',
+    env: { ...environment, NODE_OPTIONS: '', NODE_PATH: '' },
+    label: 'Core installed artifact probe',
+    timeout: 30_000,
+  });
+  assert(result.stderr === '', 'Core installed artifact probe wrote unexpected stderr');
+  return true;
+}
+
 function smokeRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
   const temp = makePrivateTemp('kdna-core-release-smoke-');
   let invocation;
@@ -2696,34 +2736,11 @@ function smokeRelease({ evidencePath, artifactPath, env = process.env, root = RE
         timeout: 120_000,
       },
     );
-    const probe = [
-      "const assert=require('node:assert/strict');",
-      "const fs=require('node:fs');",
-      "const path=require('node:path');",
-      "const core=require('@aikdna/kdna-core');",
-      "const remote=require('@aikdna/kdna-core/remote-runtime');",
-      "const manifestPath=require.resolve('@aikdna/kdna-core/package.json');",
-      'const manifest=require(manifestPath);',
-      `assert.equal(manifest.name,${JSON.stringify(candidate.evidence.package.name)});`,
-      `assert.equal(manifest.version,${JSON.stringify(candidate.evidence.package.version)});`,
-      'assert.match(manifestPath,/node_modules\\/@aikdna\\/kdna-core\\/package\\.json$/);',
-      "assert.deepEqual(Object.keys(remote),['loadRemoteRuntimeAsset']);",
-      'assert.equal(core.loadRemoteRuntimeAsset,undefined);',
-      'assert.equal(core.loadRemoteRuntimeAssetForServer,undefined);',
-      'assert.equal(core.loadAssetUnsafe,undefined);',
-      "assert.equal(fs.existsSync(path.join(path.dirname(manifestPath),manifest.exports['./remote-runtime'].types)),true);",
-      "for(const spec of ['@aikdna/kdna-core/src/container/index.js','@aikdna/kdna-core/src/remote-runtime.js']) assert.throws(()=>require(spec),e=>e&&e.code==='ERR_PACKAGE_PATH_NOT_EXPORTED');",
-      "Promise.all([import('@aikdna/kdna-core'),import('@aikdna/kdna-core/remote-runtime')]).then(([esm,resm])=>{assert.equal(esm.loadRemoteRuntimeAsset,undefined);assert.deepEqual(Object.keys(resm).filter(k=>k!=='default'),['loadRemoteRuntimeAsset']);}).catch(e=>{console.error(e);process.exit(1);});",
-    ].join('\n');
-    const result = runProcess(process.execPath, ['-e', probe], {
+    return verifyInstalledCoreBoundary({
       cwd: temp,
-      encoding: 'utf8',
-      env: { ...process.env, NODE_OPTIONS: '', NODE_PATH: '' },
-      label: 'Core installed artifact probe',
-      timeout: 30_000,
+      name: candidate.evidence.package.name,
+      version: candidate.evidence.package.version,
     });
-    assert(result.stderr === '', 'Core installed artifact probe wrote unexpected stderr');
-    return true;
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
     if (invocation) invocation.cleanup();
@@ -2943,6 +2960,7 @@ module.exports = {
   provisionTrustedNpmTarball,
   resolveTrustedNpmInvocation,
   runGit,
+  runReleaseGates,
   runNpm,
   runTrustedNpmCommand,
   sha1,
@@ -2952,6 +2970,7 @@ module.exports = {
   validatePack,
   validateReleaseContext,
   validateReleaseEvidence,
+  verifyInstalledCoreBoundary,
   verifyTrustedNpmInvocation,
   verifyTrustedNpmTarball,
   writeGithubDecision,

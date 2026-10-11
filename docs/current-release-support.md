@@ -1,17 +1,17 @@
 # Current source, supported combinations and distribution
 
-Snapshot: 2026-10-09. Package versions in source, public Git revisions, npm
-artifacts, GitHub releases and editor Marketplace versions are separate
-coordinates. The combinations below are published on their own dist-tags —
-`native-preview` for the native CLI, `browser-preview` for Core/Read,
-`components-preview` for Studio Core/CLI — or distributed as complete source for
-the MCP channel; a bare `npm install` still resolves the older `latest` release.
-Check the actual channel and exact release revision before installing.
+Snapshot: 2026-10-11. Package source versions, public Git revisions, npm bytes,
+GitHub releases and dist-tags are separate facts. This wave prepares five new
+stable coordinates for `latest`: Core `0.37.2`, Read `0.11.3`, native CLI
+`0.39.0`, Studio Core `4.0.0` and Studio CLI `0.13.0`. All five are unpublished
+source candidates until exact release and registry evidence establishes otherwise.
+No earlier preview is relabeled or overwritten. MCP/Creator/protected Host
+remain complete Git source deliveries, with no new MCP npm target.
 
 ## Native and Studio entry points
 
-For a new native asset workflow, use CLI `0.39.0-rc.native-sections.3`, Core
-`0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1` together. The native route
+For a new native asset workflow, use CLI `0.39.0`, Core
+`0.37.2` and Read `0.11.3` together. The native route
 uses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery
 contains the CLI and all eleven required companion archives, a relative-file
 lock, full member bindings and licenses. Follow the
@@ -25,7 +25,7 @@ native graph. Follow its [complete checkout instructions](https://github.com/aik
 It is a local operator-bound stdio adapter; its npm publication is disabled.
 Named Agent Host delivery and semantic adoption remain unassessed.
 
-StudioCLI `0.13.0-rc.components.2` and StudioCore `4.0.0-rc.components.2` use the
+StudioCLI `0.13.0` and StudioCore `4.0.0` use the
 same SDK package pair with a different container `0.5.0` / Read `0.6.4` route.
 Use their [source installation and ordinary/protected session guide](https://github.com/aikdna/kdna-studio-cli#readme).
 Session authoring, role-specific adoption, revision, save/read/verify and
@@ -42,12 +42,13 @@ method-absent proposal is not supported by that route.
 The native CLI does not read Studio's container. Neither route establishes real
 human identity, editorial acceptance, model execution or action permission.
 
-Core/Read's [exact artifact procedure](release-preview.md) and
-[contract status](core-read-current-status.md) specify the preview pair. Once
-published, use exact versions and verify official registry integrity and release
-source identity. Core/Read use `browser-preview`; native CLI uses
-`native-preview`. These channels preserve `latest`. An older installed graph
-must retain its own lock rather than receive an injected newer SDK pair.
+Core/Read's [exact stable artifact procedure](release-stable.md) and
+[contract status](core-read-current-status.md) specify the candidate pair.
+Publication targets `latest` only after each exact dependency is public:
+Core → Read → native CLI and Studio Core → Studio CLI. MCP's complete source
+graph is rebound separately. Every new artifact requires registry integrity,
+source identity and installed-consumer checks. An older graph retains its own
+lock; a newer SDK pair must not be injected into it.
 
 ## Repository-by-repository support
 
@@ -59,19 +60,18 @@ artifacts as current candidates.
 
 | Repository | Current source route and dependency boundary | Existing public distribution baseline |
 | --- | --- | --- |
-| [kdna](https://github.com/aikdna/kdna) | Exact Core/Read preview pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Native `.3` source delivery above; Node >=22. Native Plan/load unavailable. | npm native `.2` on `r2.7`; loading CLI `0.36.1` on `latest`. `.2` already exists and cannot be overwritten. |
+| [kdna](https://github.com/aikdna/kdna) | Exact Core/Read stable candidate pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Native `0.39.0` candidate source delivery above; Node >=22. Native Plan/load unavailable. | Published native previews keep their exact graphs; loading CLI `0.36.1` on the observed `latest`. Existing versions cannot be overwritten. |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0-rc.components.2`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0-rc.components.2` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |
+| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Source/index `0.3.0-rc.component-semantics.1`, verification scope `0.1.5`, with the older pinned SDK/Studio graph. Historical assets retain their own format and may reject under a newer reader. | GitHub release `0.1.1`; source asset index, not an npm SDK. |
 
-This repository documents and releases the five core repositories above. Web,
-React, server, activation, editor, application-scaffold and Apple-platform lines
-are not part of this repository's release surface, are not documented here and
-are not referenced from here. An existing installation of an earlier line keeps
-its own lock and stays outside the preview pair; this repository makes no claim
-about its availability, support or public channel.
+This stable wave covers the five main npm packages and the complete source
+deliveries described above. Web, React, server, activation, editor,
+application-scaffold and Apple-platform lines remain outside this wave.
+Their existing installations retain their own locks and declared scope;
+this candidate does not migrate, revive or retire those channels.
 
 Published third-party dependencies resolve through their locked registry URLs
 and integrity values. Those larger graphs require registry access on a cold
@@ -84,9 +84,10 @@ cache. Do not claim that every repository installs offline.
 Conformance, Eval and the compatibility alias:
 
 - Python source `0.8.0rc2` is a stdlib Python >=3.11 implementation of its pinned
-  older container/Core/IR/Read contract, not current preview parity. Its source
-  wheel/sdist recipe is in the [Python README](../python-sdk/README.md). PyPI
-  `aikdna` `0.6.0` is a different existing release.
+  older container/Core/IR/Read contract, not current SDK parity. Its source
+  wheel/sdist recipe is in the [Python README](../python-sdk/README.md). Published
+  PyPI `aikdna` `0.8.0rc2` retains its prerelease scope; `0.6.0` is the separate
+  latest stable release. Neither establishes current SDK parity.
 - Published Conformance `0.2.0` is preserved. The source dispatcher requires the
   complete Git worker/vector graph and its explicit runtime. It cannot be
   acquired by installing only that older npm artifact.
@@ -96,11 +97,36 @@ Conformance, Eval and the compatibility alias:
   `0.21.0`. Its same-version source manifest is a different historical graph;
   new native users should use the exact CLI entry point above.
 
+## Published channel history
+
+These official registry observations are from 2026-10-11. Re-read the exact
+package metadata before installation; a dist-tag can change, while the retained
+version's tarball and integrity remain its identity. These rows do not describe
+the new stable source candidates above.
+
+| Package | Published preview | Preview tag | Earlier `latest` observed |
+| --- | --- | --- | --- |
+| `@aikdna/kdna-core` | `0.37.1-rc.browser.1` | `browser-preview` | `0.37.0` |
+| `@aikdna/kdna-read` | `0.11.2-rc.browser.1` | `browser-preview` | `0.11.1` |
+| `@aikdna/kdna-cli` | `0.39.0-rc.native-sections.3` | `native-preview` | `0.36.1` |
+| `@aikdna/kdna-studio-core` | `4.0.0-rc.components.2` | `components-preview` | `3.0.0` |
+| `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.2` | `components-preview` | `0.11.0` |
+
+The two browser preview archives retain older README text that described them
+as unpublished. Their official registry publication and exact bytes supersede
+that wording for those two previews only. Use the [preview release record](release-preview.md)
+for their release procedure and the official metadata for
+[Core](https://registry.npmjs.org/@aikdna%2fkdna-core/0.37.1-rc.browser.1),
+[Read](https://registry.npmjs.org/@aikdna%2fkdna-read/0.11.2-rc.browser.1),
+[CLI](https://registry.npmjs.org/@aikdna%2fkdna-cli/0.39.0-rc.native-sections.3),
+[Studio Core](https://registry.npmjs.org/@aikdna%2fkdna-studio-core/4.0.0-rc.components.2)
+and [Studio CLI](https://registry.npmjs.org/@aikdna%2fkdna-studio-cli/0.13.0-rc.components.2).
+
 ## Verification and limits
 
 Preserve the exact source revision and resulting lock. Run the repository's
 declared acquisition, source-binding and product checks from a new directory.
-Stable package publication guards must reject candidate/file-dependency graphs;
+Stable package publication guards reject prerelease or file-dependency graphs;
 source distribution does not bypass them. Actual public acquisition must be
 checked after publication, independently of local source installation.
 

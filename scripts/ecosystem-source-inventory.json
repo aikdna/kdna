@@ -43,7 +43,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.1-rc.browser.1"
+          "version": "0.37.2"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -53,7 +53,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.2-rc.browser.1"
+          "version": "0.11.3"
         },
         {
           "path": "packages/kdna/package.json",
@@ -90,7 +90,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.1-rc.browser.1"
+          "declared": "0.37.2"
         },
         {
           "path": "packages/kdna/package.json",
@@ -113,7 +113,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "6a4a6abdac4c5b5b7349ca8d8979ff03e15e3e8ae628b88e7f5b020ecc3f67c5",
+          "sha256": "35787c9db716781e748fbfdc1493209538dd63d6fb3168a40a2090907a7cd79e",
           "local_archives": []
         }
       ],
@@ -218,9 +218,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.1-rc.browser.1",
+          "version": "0.37.2",
           "member_count": 459,
-          "members_sha256": "4d1fc0230cb0cf8efaccef6f82fd8caf1c2c68363ddde1c3496ee38beb06f52e",
+          "members_sha256": "b1e0642f48f05c84f755a1471fbb919d9cbf084f66447ee36ae6bb67c2430e42",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -735,9 +735,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.2-rc.browser.1",
+          "version": "0.11.3",
           "member_count": 97,
-          "members_sha256": "e8a449f84fc05b3102475dfd704e6ac8c9ec7144b414f67fc9084d6b34e71abd",
+          "members_sha256": "fdc8b84b975df63d55da2f1357afbd23b3321e1d03b4f78e65ee3fec3d71753f",
           "paths": [
             "LICENSE",
             "NOTICE",

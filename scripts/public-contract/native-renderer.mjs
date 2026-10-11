@@ -61,6 +61,33 @@ export function canonical(value) {
   return text;
 }
 export const digest = (value) => 'sha256:' + sha(canonical(value));
+// Reviewed protection layout, independent of the editable recipe. Coordinate
+// migrations may derive digest values, but cannot remove a guard or an owner.
+const PROTECTION_LAYOUT_DIGEST =
+  'sha256:80ea29ba2c9db0d53bab68bb9ad8fec384198c5108d55928f817ebdf29737de5';
+export function validateRecipeProtectionStructure(recipe) {
+  let layout;
+  try {
+    const operations = (rows) => rows.map(({ action, pointer }) => ({ action, pointer }));
+    layout = {
+      registered: recipe.registered_preimages.map((row) => row.pointer),
+      modules: recipe.module_projections.map((row) => ({
+        pointer: row.pointer,
+        output: row.output,
+        operations: operations(row.operations),
+      })),
+      base: recipe.base_json_projections.map((row) => ({
+        output: row.output,
+        operations: operations(row.operations),
+      })),
+      owners: recipe.owners.map((row) => ({ id: row.id, pointer: row.source_module_pointer })),
+    };
+    if (digest(layout) === PROTECTION_LAYOUT_DIGEST) return;
+  } catch {
+    // Missing arrays/properties also fail closed as a structural error.
+  }
+  fail('RECIPE_PROTECTION_STRUCTURE', 'Generation protection layout differs');
+}
 export function project(value, operations) {
   const result = structuredClone(value),
     seen = new Set();
@@ -108,6 +135,7 @@ export function loadRecipe() {
     recipe = JSON.parse(bytes);
   if (recipe.format !== 'kdna.native-output-recipe/1')
     fail('RECIPE_FORMAT', 'Unsupported generation recipe');
+  validateRecipeProtectionStructure(recipe);
   return {
     recipe,
     identity: byteIdentity('scripts/public-contract/native-output-recipe.json', bytes),
@@ -314,6 +342,7 @@ export function nativeOutputPaths(recipe) {
   return result;
 }
 export function buildNativeOutputs(source, sourceBytes, recipe, producer, dependencyRoot) {
+  validateRecipeProtectionStructure(recipe);
   if (sha(sourceBytes) !== recipe.input_sha256)
     fail('SOURCE_IDENTITY', 'Maintained source changed; reconcile generation recipe first');
   if (source.representation_candidate?.candidate_only !== true)

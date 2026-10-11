@@ -5,11 +5,11 @@ Its current Schema is `urn:kdna:schema:protection-admission:1.0.0:binding:r2:8`,
 [protection-admission-r2-binding-8.schema.json](protection-admission-r2-binding-8.schema.json).
 The unique source is `public-semantic-source.json#protection_admission`; its explicit
 `schema_binding` fixes the complete [R2 tuple](public-version-policy.md), Core
-`0.37.1-rc.browser.1` and Read `0.11.2-rc.browser.1`. The binding participates in the existing
+`0.37.2` and Read `0.11.3`. The binding participates in the existing
 canonical definition digest. Base id/version alone cannot identify this combination.
 Changing a bound package constant or reachable shape requires a new binding coordinate.
 
-This browser package candidate is unpublished. The published Core `0.37.0` / Read `0.11.1` releases and their binding7 schemas retain their original bytes and release evidence. Binding8 has its own artifact and installed-consumer acceptance boundary.
+This stable distribution candidate requires exact artifact review and registry acquisition before publication is established. The published Core `0.37.0` / Read `0.11.1` releases and their binding7 schemas retain their original bytes and release evidence. Binding8 has its own artifact and installed-consumer acceptance boundary.
 
 The cryptographic algorithms, grant/revocation rules, prepared delivery ownership,
 one-use tokens, and outcome-unknown rules below retain their base meaning. Decrypted

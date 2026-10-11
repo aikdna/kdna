@@ -24,7 +24,7 @@ function f2Fixtures(){
  const stored=(name,body)=>({name,method:0,body,size:body.length,crc:crc32(body)});
  const foreign=zipFixture([stored('mimetype',mimetype),stored('kdna.json',Buffer.from('{"format_version":"0.5.0"}')),stored('payload.kdnab',Buffer.from('{}'))]);
  const native=zipFixture([stored('mimetype',mimetype),stored('kdna.json',manifest),{name:'sections/pack-0.kdnab',method:8,body:Buffer.from([0,0,0,0,0xff,0xff]),size:16,crc:0}]);
- return {empty:Buffer.alloc(0),foreign,truncatedWhole:native.subarray(0,native.length-30),memberDamaged:native};
+ return {empty:Buffer.alloc(0),random:Buffer.from('not a ZIP container'),foreign,truncatedWhole:native.subarray(0,native.length-30),memberDamaged:native};
 }
 test('F2: empty, damaged and foreign-family containers classify identically on all three public read entries',async()=>{
  const {admitSectionRequest,createSectionReadAuthority,admitSectionNode}=req('@aikdna/kdna-core/sections-node');
@@ -32,9 +32,16 @@ test('F2: empty, damaged and foreign-family containers classify identically on a
  const nativeTuple={container:'0.6.0',payload_profile:'kdna.payload.judgment',payload_version:'0.5.1',core:'kdna.core/0.8.2',ir:'kdna.canonical-ir/0.6.1',runtime:'kdna.runtime-capsule/0.3.1',plan:'kdna.consumption-plan/0.3.1',host:'kdna.agent-host/0.3.1',trace:'kdna.judgment-trace/0.3.1',read:'kdna.read/0.7.0-candidate'};
  const os=require('node:os'),fs=require('node:fs');
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kdna-f2-'));
- const shape=r=>({reason:r.reason??null,stage:r.stage??null,diagnostic:r.diagnostic??null});
+ const shape=r=>{
+  assert.equal(r.status,'rejected','invalid input must not establish admission');
+  assert.ok(r.snapshot==null,'diagnostic results must not retain an accepted snapshot');
+  for(const field of ['body','payload','ir','authority','accepted'])assert.equal(r[field],undefined,'diagnostics must not expose '+field);
+  return {reason:r.reason??null,stage:r.stage??null,diagnostic:r.diagnostic??null};
+ };
  const cases=[
   ['empty.kdna',v=>v.empty,'READ_INPUT_INVALID','input',null],
+  ['random.kdna',v=>v.random,'READ_INPUT_INVALID','input',null],
+  ...[1,2,3,4,10,21].map(length=>['prefix-'+length+'.kdna',v=>v.memberDamaged.subarray(0,length),length<4?'READ_INPUT_INVALID':'READ_CORE_INVALID','input',null]),
   ['foreign.kdna',v=>v.foreign,'READ_UNSUPPORTED_VERSION','metadata',{field:'/payload.kdnab',subject:null}],
   ['truncated.kdna',v=>v.truncatedWhole,'READ_CORE_INVALID','input',null],
   ['damaged.kdna',v=>v.memberDamaged,'READ_CORE_INVALID','input',null],
@@ -43,13 +50,30 @@ test('F2: empty, damaged and foreign-family containers classify identically on a
   for(const [name,pick,reason,stage,diagnostic] of cases){
    const bytes=pick(f2Fixtures()),file=path.join(dir,name);fs.writeFileSync(file,bytes);
    const nodeReq=admitSectionRequest({request_id:'f2:'+name,tuple:nativeTuple,budget_bytes:1000000,mode:'whole_asset',selection:null,handle:null});
-   const byPath=shape(await admitSectionNode(file,nodeReq,createSectionReadAuthority(()=>true)));
+   let authorizeCalls=0;const authorize=()=>{authorizeCalls++;return true;};
+   const byPath=shape(await admitSectionNode(file,nodeReq,createSectionReadAuthority(authorize)));
    assert.deepEqual(byPath,{reason,stage,diagnostic},name+' sections-node');
-   const nodeBytes=shape(await bn.admitSectionBytesNode(new Uint8Array(bytes),nodeReq,bn.createNativeSectionByteReadAuthority(()=>true)));
+   const nodeBytes=shape(await bn.admitSectionBytesNode(new Uint8Array(bytes),nodeReq,bn.createNativeSectionByteReadAuthority(authorize)));
    assert.deepEqual(nodeBytes,byPath,name+' sections-bytes-node agrees with sections-node');
    const browserReq=bb.admitBrowserSectionRequestJson(JSON.stringify({request_id:'f2:'+name,tuple:nativeTuple,budget_bytes:1000000,mode:'whole_asset',selection:null,handle:null}));
-   const byBrowser=shape(await bb.admitSectionBytesBrowser(new Uint8Array(bytes),browserReq,bb.createNativeBrowserSectionReadAuthority(()=>true)));
+   const byBrowser=shape(await bb.admitSectionBytesBrowser(new Uint8Array(bytes),browserReq,bb.createNativeBrowserSectionReadAuthority(authorize)));
    assert.deepEqual(byBrowser,byPath,name+' sections-bytes-browser agrees with sections-node');
+   assert.equal(authorizeCalls,0,name+' must reject before authorization');
+  }
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('F2: non-file paths reject before authorization and a FIFO without a writer cannot hang',{skip:process.platform==='win32'},async()=>{
+ const fs=require('node:fs'),os=require('node:os'),{execFileSync,spawnSync}=require('node:child_process');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kdna-f2-path-'));
+ try{
+  const fifo=path.join(dir,'no-writer.fifo');execFileSync('mkfifo',[fifo]);
+  const script=`const {createRequire}=require('node:module');const req=createRequire(${JSON.stringify(path.join(coreDir,'package.json'))});const n=req('@aikdna/kdna-core/sections-node');const tuple=req('./src/public-contract/section-common.js').contract.module.versionTuple;let calls=0;const request=n.admitSectionRequest({request_id:'f2:non-file',tuple,budget_bytes:1000000,mode:'whole_asset',selection:null,handle:null});n.admitSectionNode(process.argv[1],request,n.createSectionReadAuthority(()=>{calls++;return true;})).then(r=>console.log(JSON.stringify({status:r.status,reason:r.reason,stage:r.stage,diagnostic:r.diagnostic,authorizeCalls:calls,hasAcceptedContent:r.snapshot!=null||['body','payload','ir','authority','accepted'].some(k=>r[k]!==undefined)})));`;
+  for(const file of [dir,fifo]){
+   const child=spawnSync(process.execPath,['-e',script,file],{encoding:'utf8',timeout:5000,killSignal:'SIGKILL'});
+   assert.equal(child.error,undefined,child.error?.message);
+   assert.equal(child.signal,null);assert.equal(child.status,0,child.stderr);
+   assert.deepEqual(JSON.parse(child.stdout),{status:'rejected',reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null,authorizeCalls:0,hasAcceptedContent:false});
+   assert.throws(()=>process.kill(child.pid,0),{code:'ESRCH'});
   }
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
