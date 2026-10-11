@@ -1,6 +1,7 @@
 'use strict';
 const knownSemanticReasons=new Set(['READ_INPUT_INVALID','READ_CORE_INVALID','READ_CORE_CAPABILITY_UNAVAILABLE','READ_UNSUPPORTED_CRITICAL','READ_INTERPRETATION_INCOMPLETE','READ_STATIC_POLICY_INVALID',...require('./generated-contract.json').types.CoreComponentFailure.properties.code.enum]);
 const {inflateRawSync}=require('node:zlib');
+const fsp=require('node:fs/promises');
 const C=require('./section-common.js'),{openSectionCapture}=require('./section-capture-node.js'),{parseSectionContainer}=require('./section-container.js'),{restoreWholeFrames}=require('./section-frame-graph.js'),{reconstructPayload}=require('./section-reconstruct.js'),{observeWhole}=require('./section-digests.js');
 const {validateDecodedPayload,assertContentBindings}=require('./semantic-admission.js'),{buildIR}=require('./canonical-ir.js'),{digestCanonical,evidence}=require('./digests.js');
 const {requests,snapshots,byteOrigins}=require('./section-native-state.js'),authorities=new WeakMap();
@@ -39,7 +40,36 @@ async function executeSectionNode(input,admitted,authority,operation='read',opti
   const data={digests,snapshot_id:'section-snapshot:'+globalThis.crypto.randomUUID(),tuple:structuredClone(tuple),asset:structuredClone(payload.asset),ir:derived,runtime_entry_names:observations.E.member_names,verification};C.validate('WholeSectionSnapshotData06',data);
   const view=C.strict.freeze(data),snapshot=Object.freeze({});snapshots.set(snapshot,view);expansion.retain(snapshot,view,capture);
   return Object.freeze({status:'accepted',snapshot,io:C.strict.freeze(structuredClone(capture.io)),input_byte_length:bytes.length});
- }catch(e){if(e?.result_stage)stage=e.result_stage;const nativeFailure=C.isFailure(e),semanticFailure=knownSemanticReasons.has(e?.reason);const code=nativeFailure?e.code:semanticFailure?e.reason:e?.code==='CONTAINER_COMMENT_CAPTURE_UNIMPLEMENTED'?e.code:'READ_CORE_CAPABILITY_UNAVAILABLE';return failure(classify(code),code,nativeFailure||semanticFailure?e?.diagnostic:null,structuredClone(capture?.io??e?.capture_io??[]));}finally{if(ownedSeed)ownedSeed.fill(0);if(capture)await capture.close();}
+ }catch(e){if(e?.result_stage)stage=e.result_stage;const nativeFailure=C.isFailure(e),semanticFailure=knownSemanticReasons.has(e?.reason);const code=nativeFailure?e.code:semanticFailure?e.reason:e?.code==='CONTAINER_COMMENT_CAPTURE_UNIMPLEMENTED'?e.code:'READ_CORE_CAPABILITY_UNAVAILABLE';const classified=stage==='input'&&code==='READ_CORE_INVALID'?await pathInputClass(input):null;if(classified){stage=classified.stage;return failure(classify(classified.reason),classified.reason,classified.diagnostic,structuredClone(capture?.io??e?.capture_io??[]));}return failure(classify(code),code,nativeFailure||semanticFailure?e?.diagnostic:null,structuredClone(capture?.io??e?.capture_io??[]));}finally{if(ownedSeed)ownedSeed.fill(0);if(capture)await capture.close();}
+}
+// F2: the same bounded metadata classifier as the two byte entries, expressed for
+// a file path. It reads only the head, the EOCD tail window and the central
+// directory - never content members - and it changes no shared module. Rules:
+// no container structure at all -> READ_INPUT_INVALID; recognisable but damaged
+// (including whole-file truncation) -> READ_CORE_INVALID unchanged; the central
+// directory declaring a payload-family member set -> READ_UNSUPPORTED_VERSION.
+const INPUT_MARKERS={eocd:Uint8Array.from([80,75,5,6]),payload:Uint8Array.from([112,97,121,108,111,97,100,46,107,100,110,97,98]),frames:Uint8Array.from([115,101,99,116,105,111,110,115,47,112,97,99,107,45])};
+const INPUT_TAIL=65557,DIR_SCAN_CAP=1048576;
+function findBytes(buf,needle,from=0,to=buf.length){const last=Math.min(to,buf.length)-needle.length;outer:for(let i=from;i<=last;i++){for(let j=0;j<needle.length;j++)if(buf[i+j]!==needle[j])continue outer;return i;}return -1;}
+function findLastBytes(buf,needle){for(let i=buf.length-needle.length;i>=0;i--){let ok=true;for(let j=0;j<needle.length;j++)if(buf[i+j]!==needle[j]){ok=false;break;}if(ok)return i;}return -1;}
+async function pathInputClass(file){
+ try{
+  const fh=await fsp.open(file,'r');
+  try{
+   const st=await fh.stat();
+   if(!st.isFile()||st.size<22)return {reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};
+   const head=Buffer.alloc(4);await fh.read(head,0,4,0);
+   const zip=head[0]===0x50&&head[1]===0x4b&&(head[2]===0x03||head[2]===0x05||head[2]===0x07);
+   const tailLen=Math.min(st.size,INPUT_TAIL),tail=Buffer.alloc(tailLen);await fh.read(tail,0,tailLen,st.size-tailLen);
+   const eocd=findLastBytes(tail,INPUT_MARKERS.eocd);
+   if(eocd===-1)return zip?null:{reason:'READ_INPUT_INVALID',stage:'input',diagnostic:null};
+   const cdStart=tail.readUInt32LE(eocd+16),cdSize=tail.readUInt32LE(eocd+12);
+   if(cdStart+cdSize>st.size||cdSize===0||cdSize>DIR_SCAN_CAP)return null;
+   const dir=Buffer.alloc(cdSize);await fh.read(dir,0,cdSize,cdStart);
+   const hasPayload=findBytes(dir,INPUT_MARKERS.payload)!==-1,hasFrames=findBytes(dir,INPUT_MARKERS.frames)!==-1;
+   return hasPayload&&!hasFrames?{reason:'READ_UNSUPPORTED_VERSION',stage:'metadata',diagnostic:{field:'/payload.kdnab',subject:null}}:null;
+  }finally{await fh.close();}
+ }catch{return null;}
 }
 async function admitSectionNode(input,admitted,authority){return executeSectionNode(input,admitted,authority);}
 async function createSectionChecksumsNode(input,admitted,authority){return executeSectionNode(input,admitted,authority,'produce_checksums');}

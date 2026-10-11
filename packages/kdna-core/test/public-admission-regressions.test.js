@@ -6,6 +6,53 @@ const {admitNode}=req('@aikdna/kdna-core/node'),{admitBrowser}=req('@aikdna/kdna
 const {inspectSnapshot}=req('@aikdna/kdna-core/read-boundary');
 const {versionTuple:tuple,types,component_semantics,static_policy}=require(path.join(coreDir,'src/public-contract/generated-contract.json'));
 const {digestCanonical:H}=require(path.join(coreDir,'src/public-contract/digests.js'));
+
+// F2: the three public read entries must classify the same input identically.
+// Fixtures are built here in code because adding tracked files would move the
+// repository inventory count; the entries themselves must not need a new file.
+const crcTable=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xedb88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(buf){let c=0xffffffff;for(const b of buf)c=crcTable[(c^b)&0xff]^(c>>>8);return (c^0xffffffff)>>>0;}
+function zipPart(header,name,method,crc,compressed,size,extra){const n=Buffer.from(name);const h=Buffer.alloc(extra?46:30);h.writeUInt32LE(extra?0x02014b50:0x04034b50,0);if(extra){h.writeUInt16LE(20,4);h.writeUInt16LE(20,6);}else{h.writeUInt16LE(20,4);}h.writeUInt16LE(method,extra?10:8);h.writeUInt32LE(crc,extra?16:14);h.writeUInt32LE(compressed,extra?20:18);h.writeUInt32LE(size,extra?24:22);h.writeUInt16LE(n.length,extra?28:26);return Buffer.concat([h,n]);}
+function zipFixture(rows){
+ const locals=[],centrals=[];let offset=0;
+ for(const r of rows){const body=r.body,n=Buffer.from(r.name);locals.push(zipPart(null,r.name,r.method,r.crc,body.length,r.size,false),body);const c=zipPart(null,r.name,r.method,r.crc,body.length,r.size,true);c.writeUInt32LE(((r.mode??0o100644)<<16)>>>0,38);c.writeUInt32LE(offset,42);centrals.push(c);offset+=30+n.length+body.length;}
+ const dir=Buffer.concat(centrals);const eocd=Buffer.alloc(22);eocd.writeUInt32LE(0x06054b50,0);eocd.writeUInt16LE(rows.length,8);eocd.writeUInt16LE(rows.length,10);eocd.writeUInt32LE(dir.length,12);eocd.writeUInt32LE(offset,16);
+ return Buffer.concat([...locals,dir,eocd]);
+}
+function f2Fixtures(){
+ const mimetype=Buffer.from('application/vnd.kdna.asset'),manifest=Buffer.from('{}');
+ const stored=(name,body)=>({name,method:0,body,size:body.length,crc:crc32(body)});
+ const foreign=zipFixture([stored('mimetype',mimetype),stored('kdna.json',Buffer.from('{"format_version":"0.5.0"}')),stored('payload.kdnab',Buffer.from('{}'))]);
+ const native=zipFixture([stored('mimetype',mimetype),stored('kdna.json',manifest),{name:'sections/pack-0.kdnab',method:8,body:Buffer.from([0,0,0,0,0xff,0xff]),size:16,crc:0}]);
+ return {empty:Buffer.alloc(0),foreign,truncatedWhole:native.subarray(0,native.length-30),memberDamaged:native};
+}
+test('F2: empty, damaged and foreign-family containers classify identically on all three public read entries',async()=>{
+ const {admitSectionRequest,createSectionReadAuthority,admitSectionNode}=req('@aikdna/kdna-core/sections-node');
+ const bn=req('@aikdna/kdna-core/sections-bytes-node'),bb=req('@aikdna/kdna-core/sections-bytes-browser');
+ const nativeTuple={container:'0.6.0',payload_profile:'kdna.payload.judgment',payload_version:'0.5.1',core:'kdna.core/0.8.2',ir:'kdna.canonical-ir/0.6.1',runtime:'kdna.runtime-capsule/0.3.1',plan:'kdna.consumption-plan/0.3.1',host:'kdna.agent-host/0.3.1',trace:'kdna.judgment-trace/0.3.1',read:'kdna.read/0.7.0-candidate'};
+ const os=require('node:os'),fs=require('node:fs');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kdna-f2-'));
+ const shape=r=>({reason:r.reason??null,stage:r.stage??null,diagnostic:r.diagnostic??null});
+ const cases=[
+  ['empty.kdna',v=>v.empty,'READ_INPUT_INVALID','input',null],
+  ['foreign.kdna',v=>v.foreign,'READ_UNSUPPORTED_VERSION','metadata',{field:'/payload.kdnab',subject:null}],
+  ['truncated.kdna',v=>v.truncatedWhole,'READ_CORE_INVALID','input',null],
+  ['damaged.kdna',v=>v.memberDamaged,'READ_CORE_INVALID','input',null],
+ ];
+ try{
+  for(const [name,pick,reason,stage,diagnostic] of cases){
+   const bytes=pick(f2Fixtures()),file=path.join(dir,name);fs.writeFileSync(file,bytes);
+   const nodeReq=admitSectionRequest({request_id:'f2:'+name,tuple:nativeTuple,budget_bytes:1000000,mode:'whole_asset',selection:null,handle:null});
+   const byPath=shape(await admitSectionNode(file,nodeReq,createSectionReadAuthority(()=>true)));
+   assert.deepEqual(byPath,{reason,stage,diagnostic},name+' sections-node');
+   const nodeBytes=shape(await bn.admitSectionBytesNode(new Uint8Array(bytes),nodeReq,bn.createNativeSectionByteReadAuthority(()=>true)));
+   assert.deepEqual(nodeBytes,byPath,name+' sections-bytes-node agrees with sections-node');
+   const browserReq=bb.admitBrowserSectionRequestJson(JSON.stringify({request_id:'f2:'+name,tuple:nativeTuple,budget_bytes:1000000,mode:'whole_asset',selection:null,handle:null}));
+   const byBrowser=shape(await bb.admitSectionBytesBrowser(new Uint8Array(bytes),browserReq,bb.createNativeBrowserSectionReadAuthority(()=>true)));
+   assert.deepEqual(byBrowser,byPath,name+' sections-bytes-browser agrees with sections-node');
+  }
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
 const term=name=>({term:name,vocabulary:'author'});
 function semantic(value){
  if(value===null)return {kind:'null',value:null};
