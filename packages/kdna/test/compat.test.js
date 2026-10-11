@@ -29,6 +29,23 @@ const workspaceCore = JSON.parse(
 const ecosystemManifest = JSON.parse(
   fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
 );
+const { historicalRootPackageReader } = require(
+  path.join(repoRoot, 'scripts/historical-root-package-evidence'),
+);
+// The frozen manifest binds historical package inputs; the installed workspace
+// and its lock retain their own current identity. Validate both independently.
+const historicalRootComponent = ecosystemManifest.components.find(
+  (entry) => entry.repository === 'aikdna/kdna',
+);
+const historicalCore = historicalRootPackageReader(repoRoot)(
+  historicalRootComponent,
+  manifestPackage(
+    ecosystemManifest,
+    'aikdna/kdna',
+    '@aikdna/kdna-core',
+    'packages/kdna-core/package.json',
+  ),
+);
 
 function manifestPackage(manifest, repository, packageName, packageJson) {
   const components = manifest.components.filter((entry) => entry.repository === repository);
@@ -63,14 +80,20 @@ function assertCurrentToolchainLock(
   assert.equal(corePackage.name, candidateCore.package_name);
   assert.equal(
     corePackage.version,
+    lock.packages['packages/kdna-core'].version,
+    'workspace Core must match current workspace lock',
+  );
+  assert.equal(historicalCore.name, candidateCore.package_name);
+  assert.equal(
+    historicalCore.version,
     candidateCore.version,
-    'workspace Core must match current manifest',
+    'frozen manifest Core must match exact historical package evidence',
   );
   assert.equal(lock.packages['packages/kdna-core'].name, candidateCore.package_name);
   assert.equal(
     lock.packages['packages/kdna-core'].version,
-    candidateCore.version,
-    'workspace Core lock must match current manifest',
+    corePackage.version,
+    'workspace Core lock must match current workspace package',
   );
   assert.deepEqual(
     [releasedCli.version, releasedCli.published_version, releasedCli.release_status],
