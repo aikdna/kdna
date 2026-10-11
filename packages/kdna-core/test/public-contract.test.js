@@ -1,9 +1,13 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
 const F=require('../../../conformance/public-contract/test/bytes-fixtures.cjs');
+const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir}=F.runtime(runtime);
+const core=req('@aikdna/kdna-core'),boundary=req('@aikdna/kdna-core/read-boundary'),tuple=require(path.join(coreDir,'src/public-contract/generated-contract.json')).versionTuple;
 // C: the public-contract view must be bound to the installed generated contract
 // - the module embeds no key data, so every readout has to match a type that the
-// contract itself declares, and both negative controls below must bite.
+// contract itself declares, and both negative controls below must bite. This
+// block is declared after the runtime bindings above it so the readouts can never
+// be read before {req,coreDir} exist.
 test('public-contract view reads the installed contract and follows it',()=>{
  const contract=require(path.join(coreDir,'src/public-contract/generated-contract.json'));
  const view=req('@aikdna/kdna-core/public-contract');
@@ -29,8 +33,6 @@ test('public-contract view reads the installed contract and follows it',()=>{
  assert.ok(driftedView.requiredKeys('payload').includes('zz_probe_key'),'readout follows the contract');
  assert.ok(!view.requiredKeys('payload').includes('zz_probe_key'),'installed readout unchanged');
 });
-const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir}=F.runtime(runtime);
-const core=req('@aikdna/kdna-core'),boundary=req('@aikdna/kdna-core/read-boundary'),tuple=require(path.join(coreDir,'src/public-contract/generated-contract.json')).versionTuple;
 test('public byte admission binds an immutable private snapshot',()=>{const asset=F.blank(tuple),bytes=F.encode(asset,req),result=core.admitBytes(bytes);assert.equal(result.status,'accepted');const view=boundary.inspectSnapshot(result.snapshot),A=view.digests.A.observed;bytes.fill(0);assert.equal(view.digests.A.observed,A);assert.equal(boundary.inspectSnapshot(JSON.parse(JSON.stringify(result.snapshot))),null);assert.equal(core.admitBytes(bytes).status,'rejected');});
 test('browser admission is synchronous and shares Node IR for stored and deflated bytes',async()=>{
  const {admitBrowser}=req('@aikdna/kdna-core/browser'),{admitNode}=req('@aikdna/kdna-core/node'),asset=F.blank(tuple);
