@@ -95,18 +95,23 @@ function assertCorePublishValidatorOrder(workflow) {
   const install = job.indexOf('trusted-npm ci --ignore-scripts');
   const protocol = protocolMatches[0].index;
   const runtime = runtimeMatches[0].index;
-  const prepare = job.indexOf('node scripts/core-release-authority.js prepare');
-  const smoke = job.indexOf('node scripts/core-release-authority.js smoke');
-  const guard = job.indexOf('node scripts/core-release-authority.js guard');
+  const prepare = job.indexOf('node scripts/stable-release-authority.js prepare --unit core');
+  const smoke = job.indexOf('node scripts/stable-release-authority.js smoke --unit core');
+  const guard = job.indexOf('node scripts/stable-release-authority.js guard --unit core');
   const publicationMatches = [
-    ...job.matchAll(/node scripts\/core-release-authority\.js publish/gu),
+    ...job.matchAll(/node scripts\/(?:core|stable)-release-authority\.js publish\b/gu),
   ];
   assert.equal(
     publicationMatches.length,
     1,
     'Core publish must have one authoritative publication primitive',
   );
-  const publication = publicationMatches[0].index;
+  const publication = job.indexOf('node scripts/stable-release-authority.js publish --unit core');
+  assert.equal(
+    publication,
+    publicationMatches[0].index,
+    'Core publish must use the stable authority with --unit core',
+  );
   assert.ok(protocol > install, 'protocol fixtures must run after the clean install');
   assert.ok(runtime > protocol, 'Runtime contract validation must follow manifest validation');
   assert.ok(prepare > runtime, 'authoritative packing must follow both validators');
@@ -485,10 +490,11 @@ test('Core publication cannot bypass either validator or reorder it after author
       '',
     )
     .replace(
-      '      - name: Verify the retained artifact through a clean install\n',
+      '      - name: Verify retained bytes through a clean installed consumer\n',
       '      - run: node scripts/core-release-authority.js trusted-npm run validate:runtime-contract\n' +
-        '      - name: Verify the retained artifact through a clean install\n',
+        '      - name: Verify retained bytes through a clean installed consumer\n',
     );
+  assert.notEqual(reordered, workflow, 'the validator reorder mutation must change the workflow');
   assert.throws(
     () => assertCorePublishValidatorOrder(reordered),
     /authoritative packing must follow/u,
