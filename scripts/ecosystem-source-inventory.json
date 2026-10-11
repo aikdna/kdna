@@ -219,8 +219,8 @@
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
           "version": "0.37.1-rc.browser.1",
-          "member_count": 456,
-          "members_sha256": "8f18d1a86f24db9544e0aee97a1cbeede64fade77d3ae8cd55b2b99fad4e357c",
+          "member_count": 459,
+          "members_sha256": "4d1fc0230cb0cf8efaccef6f82fd8caf1c2c68363ddde1c3496ee38beb06f52e",
           "paths": [
             "LICENSE",
             "NOTICE",

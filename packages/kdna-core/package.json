@@ -125,6 +125,11 @@
       "import": "./src/public-contract/sections-bytes-browser.mjs",
       "require": "./src/public-contract/sections-bytes-browser.js"
     },
+    "./public-contract": {
+      "types": "./src/public-contract/public-contract.d.ts",
+      "import": "./src/public-contract/public-contract.mjs",
+      "require": "./src/public-contract/public-contract.js"
+    },
     "./retained-sections-browser": {
       "types": "./src/public-contract/retained-sections-browser.d.ts",
       "import": "./src/public-contract/retained-sections-browser.mjs",
