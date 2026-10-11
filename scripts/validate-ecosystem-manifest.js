@@ -11,6 +11,7 @@ const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
 const { resolveConformanceAnchor } = require('./conformance-anchor');
 const conformanceAnchors = require('./conformance-anchors.json');
+const { historicalRootPackageReader } = require('./historical-root-package-evidence');
 const {
   compareSemver,
   currentAssetIndexInventory,
@@ -283,7 +284,26 @@ function assertCheckout(component, root) {
   }
 }
 
+let readHistoricalRootPackage;
 function assertPackage(component, packageRecord, root) {
+  if (root && component.repository === 'aikdna/kdna' && component.local_path === '.') {
+    try {
+      readHistoricalRootPackage ||= historicalRootPackageReader(repoRoot);
+      assertPackageManifest(
+        component,
+        packageRecord,
+        readHistoricalRootPackage(component, packageRecord),
+        'historical root evidence',
+      );
+    } catch (error) {
+      fail(
+        component,
+        `historical root package evidence is invalid: ${error.message}`,
+        packageRecord.package_json,
+      );
+    }
+    return;
+  }
   if (component.source_commit && root && component.local_path !== '.') {
     let bytes;
     try {

@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "historical-root-package-inputs",
+  "repository": "aikdna/kdna",
+  "manifest_sha256": "279550e27a6631c2cd2e16223d68e88de291c5064b18c1e9dc555955db3ef4eb",
+  "manifest_source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+  "package_source_commit": "d9c036661459b0588dba715a800997f1790e14f1",
+  "package_source_tree": "f1bf887204bce3879610de4d62d3e90f37bbb90e",
+  "packages": [
+    {
+      "package_json": "packages/kdna-core/package.json",
+      "package_name": "@aikdna/kdna-core",
+      "version": "0.37.1-rc.browser.1",
+      "blob": "a1ebf48f5dc8b7784cac673add0a72216f1d96a8",
+      "sha256": "99256ee79f6d65bc91b45014c0b644e973ad5edf11b7bdde1f25690a687eb7a4"
+    },
+    {
+      "package_json": "packages/kdna-read/package.json",
+      "package_name": "@aikdna/kdna-read",
+      "version": "0.11.2-rc.browser.1",
+      "blob": "86f40f194cd64d3b3acd06bfcaeeba430de26d2c",
+      "sha256": "4a7be66544648ada4c73dde605f416bd2c0766d4f57497a39be7ebe99b0f70e9"
+    },
+    {
+      "package_json": "packages/kdna-eval/package.json",
+      "package_name": "@aikdna/kdna-eval",
+      "version": "0.3.2",
+      "blob": "bc30420032b014356bbbfbb9d2bca71286f6a7eb",
+      "sha256": "9c429033d2bb0de4a729870495198e617579780f987a9b51c45106e21789ec50"
+    },
+    {
+      "package_json": "packages/kdna-conformance/package.json",
+      "package_name": "@aikdna/kdna-conformance",
+      "version": "0.2.0",
+      "blob": "a8d88f3a436cc37d685ecee02ab4f9f5b6d86bfb",
+      "sha256": "cf183b9cfaaa029b72c884de5da45464b8798e9aa961efebd01a82aa16d21a34"
+    },
+    {
+      "package_json": "packages/kdna/package.json",
+      "package_name": "@aikdna/kdna",
+      "version": "0.14.0",
+      "blob": "ed8c04f51811d97ff8009f440fade351e5fe41ff",
+      "sha256": "25e492f78417f0203bcc8282ca377716761115f737a6cf31d7b2e94d1269e2ed"
+    },
+    {
+      "package_json": "examples/typescript-agent/package.json",
+      "package_name": "@aikdna/agent",
+      "version": "0.2.1",
+      "blob": "46b40f3a5cebd0dcbf4030628d7e60a42d7b8337",
+      "sha256": "81a6bdfc6e27ff96a5ccf9fc613cf927d4eb9a53bd281809b06551ccc0055bf8"
+    },
+    {
+      "package_json": "packages/artifact-engine/package.json",
+      "package_name": "@aikdna/kdna-artifact-engine",
+      "version": "0.1.0",
+      "blob": "2f84cee8a6419f670925fa2a6b198065f3934339",
+      "sha256": "2d03f0b5eb2cb2dc2883729932eebd08e5247b0793ef8b8e856b1026f584375e"
+    },
+    {
+      "package_json": "packages/fidelity-core/package.json",
+      "package_name": "@aikdna/kdna-fidelity-core",
+      "version": "0.1.0",
+      "blob": "d73963453476fe8d4df22cd4924abdc910bf07c9",
+      "sha256": "acd3673005f7c305b3cbbfa1e370f53c1b680965914f53943d9daaac7809446a"
+    }
+  ]
+}

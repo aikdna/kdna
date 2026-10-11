@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { publishableSourcePackages } = require('./ecosystem-manifest');
+const { historicalRootPackageReader } = require('./historical-root-package-evidence');
 
 let failures = 0;
 
@@ -35,6 +36,8 @@ const PACKAGES = publishableSourcePackages(manifest).map(({ component, packageRe
       REPOS_ROOT,
       path.dirname(path.join(componentRoot, packageRecord.package_json)),
     ),
+    component,
+    packageRecord,
     pkg: packageRecord.npm_package,
     sourceVersion: packageRecord.version,
     publishedVersion: packageRecord.published_version || packageRecord.version,
@@ -44,12 +47,35 @@ const PACKAGES = publishableSourcePackages(manifest).map(({ component, packageRe
 
 console.log('── npm publish drift check\n');
 
-for (const { repo, pkg, sourceVersion, publishedVersion, candidate } of PACKAGES) {
+let readHistoricalRootPackage;
+for (const {
+  repo,
+  pkg,
+  sourceVersion,
+  publishedVersion,
+  candidate,
+  component,
+  packageRecord,
+} of PACKAGES) {
   const repoPath = path.join(REPOS_ROOT, repo);
   const pkgJsonPath = path.join(repoPath, 'package.json');
 
   let repoVersion = null;
-  if (fs.existsSync(pkgJsonPath)) {
+  const historicalRoot = component.repository === 'aikdna/kdna' && component.local_path === '.';
+  if (historicalRoot) {
+    try {
+      readHistoricalRootPackage ||= historicalRootPackageReader(path.resolve(__dirname, '..'));
+      const sourcePackage = readHistoricalRootPackage(component, packageRecord);
+      check(
+        `${pkg}: historical root package name`,
+        sourcePackage.name === packageRecord.package_name,
+      );
+      repoVersion = sourcePackage.version;
+    } catch (error) {
+      check(`${pkg}: historical root package evidence`, false, error.message);
+      continue;
+    }
+  } else if (fs.existsSync(pkgJsonPath)) {
     repoVersion = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8')).version;
   }
 
@@ -83,9 +109,9 @@ for (const { repo, pkg, sourceVersion, publishedVersion, candidate } of PACKAGES
   }
   if (repoVersion) {
     check(
-      `${pkg} repo=${repoVersion} manifest=${sourceVersion}`,
+      `${pkg} ${historicalRoot ? 'historical-root' : 'repo'}=${repoVersion} manifest=${sourceVersion}`,
       repoVersion === sourceVersion,
-      'repository package version must equal the manifest version',
+      'recorded source package version must equal the manifest version',
     );
   }
 

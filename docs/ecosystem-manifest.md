@@ -50,6 +50,16 @@ newer coordinate than the manifest records (for example a SwiftPM pin that
 tracks the producer's main), the producer's `source_commit` must be advanced
 to that consumed coordinate in the same acceptance window, so the manifest
 never contradicts what a locked consumer actually resolves.
+The frozen root record has separately named historical package evidence in
+`scripts/historical-root-package-evidence.json`. It binds all eight root package
+manifests to commit `d9c036661459b0588dba715a800997f1790e14f1`, its exact tree,
+package paths, Git blobs and SHA-256 values, and the unchanged ecosystem manifest
+SHA-256. Both manifest validation and publish-drift checks read this evidence and
+require that commit to remain an ancestor of the current HEAD. This does not
+reinterpret the frozen root `source_commit` (`32aa3ff8e633291d4bb9e01de5a70181c8415d93`),
+or certify current package sources, registry contents, or consumers. Current
+release source and artifact gates remain separate.
+
 `conformance_commit` identifies a separate fixture or contract anchor and must
 not be interpreted as that repository's release commit. A live package-less
 component records `component_version`, `release_tag`, and `release_commit`

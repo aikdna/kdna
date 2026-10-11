@@ -28,13 +28,25 @@ test('candidate packages stay outside current-published projections', () => {
   });
   assert.deepEqual(
     currentPublishedPackages(
-      manifest([component({ repository: 'aikdna/kdna', local_path: '.', packages: [candidate] })]),
+      manifest([
+        component({
+          repository: 'aikdna/kdna',
+          local_path: '.',
+          packages: [candidate],
+        }),
+      ]),
     ),
     [],
   );
   assert.equal(
     candidateIncumbentPackages(
-      manifest([component({ repository: 'aikdna/kdna', local_path: '.', packages: [candidate] })]),
+      manifest([
+        component({
+          repository: 'aikdna/kdna',
+          local_path: '.',
+          packages: [candidate],
+        }),
+      ]),
     )[0].packageRecord.version,
     '0.9.0',
   );
@@ -167,7 +179,13 @@ test('Windows repository aliases compare by canonical filesystem identity', () =
     }
     return input;
   };
-  assert.equal(sameFilesystemIdentity(shortPath, longPath, { platform: 'win32', realpath }), true);
+  assert.equal(
+    sameFilesystemIdentity(shortPath, longPath, {
+      platform: 'win32',
+      realpath,
+    }),
+    true,
+  );
 });
 
 test('Windows identity comparison does not collapse a nested repository path', () => {
@@ -197,7 +215,9 @@ test('explicit ecosystem checkout root is authoritative over a sibling checkout'
     explicitRepo,
   );
   assert.equal(
-    resolveComponentPath(controlRoot, record, { reposRoot: path.join(root, 'missing') }),
+    resolveComponentPath(controlRoot, record, {
+      reposRoot: path.join(root, 'missing'),
+    }),
     null,
   );
 });
@@ -494,13 +514,17 @@ test('registered historical fixture preserves its own Core identity without cert
       assert.match(result.stderr, diagnostic);
     });
   }
-  await t.test('historical registration cannot hide current package version drift', () => {
-    const changed = JSON.parse(JSON.stringify(core));
-    changed.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core').version = '999.0.0';
-    const result = runValidator(writeManifest(root, [changed]));
-    assert.equal(result.status, 1);
-    assert.match(result.stderr, /checkout package version mismatch/u);
-  });
+  await t.test(
+    'historical registration cannot hide historical source package version drift',
+    () => {
+      const changed = JSON.parse(JSON.stringify(core));
+      changed.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core').version =
+        '999.0.0';
+      const result = runValidator(writeManifest(root, [changed]));
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /historical root evidence package version mismatch/u);
+    },
+  );
   await t.test('active published Core still requires its exact release tag anchor', () => {
     const changed = JSON.parse(JSON.stringify(core));
     const pkg = changed.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
@@ -682,7 +706,13 @@ test('a published index entry needs a traceable coordinate and a declared state'
         assets: [
           entry(artifactPath, {
             publication_status: 'existing_reference',
-            files: [{ path: artifactPath, bytes: assetBytes.length, sha256: 'f'.repeat(64) }],
+            files: [
+              {
+                path: artifactPath,
+                bytes: assetBytes.length,
+                sha256: 'f'.repeat(64),
+              },
+            ],
           }),
           index.assets[1],
         ],
@@ -695,7 +725,10 @@ test('a published index entry needs a traceable coordinate and a declared state'
         ...index,
         assets: [
           index.assets[0],
-          { ...index.assets[1], download: { url: 'https://github.com/aikdna/kdna-assets' } },
+          {
+            ...index.assets[1],
+            download: { url: 'https://github.com/aikdna/kdna-assets' },
+          },
         ],
       },
       /must not declare a release coordinate/u,
@@ -707,7 +740,13 @@ test('a published index entry needs a traceable coordinate and a declared state'
         assets: [
           index.assets[0],
           entry(candidatePath, {
-            files: [{ path: candidatePath, bytes: assetBytes.length, sha256: assetHash }],
+            files: [
+              {
+                path: candidatePath,
+                bytes: assetBytes.length,
+                sha256: assetHash,
+              },
+            ],
           }),
         ],
       },
@@ -719,7 +758,9 @@ test('a published index entry needs a traceable coordinate and a declared state'
         ...index,
         assets: [
           {
-            ...entry(artifactPath, { publication_status: 'existing_reference' }),
+            ...entry(artifactPath, {
+              publication_status: 'existing_reference',
+            }),
             download: { url: 'https://github.com/aikdna/kdna-assets' },
           },
           index.assets[1],
@@ -832,7 +873,9 @@ test('validator rejects unavailable or unreadable current package evidence', (t)
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
 
   const missingRoot = path.join(root, 'fixture-package');
-  const missingCommit = initRepository(missingRoot, { 'README.md': 'missing package' });
+  const missingCommit = initRepository(missingRoot, {
+    'README.md': 'missing package',
+  });
   let manifestPath = writeManifest(root, [component({ source_commit: missingCommit })]);
   let result = runValidator(manifestPath, root);
   assert.equal(result.status, 1);
@@ -840,7 +883,9 @@ test('validator rejects unavailable or unreadable current package evidence', (t)
 
   fs.rmSync(missingRoot, { recursive: true, force: true });
   const brokenRoot = path.join(root, 'fixture-package');
-  const brokenCommit = initRepository(brokenRoot, { 'package.json': '{not-json' });
+  const brokenCommit = initRepository(brokenRoot, {
+    'package.json': '{not-json',
+  });
   manifestPath = writeManifest(root, [component({ source_commit: brokenCommit })]);
   result = runValidator(manifestPath, root);
   assert.equal(result.status, 1);
@@ -852,7 +897,10 @@ test('validator binds external packages to the accepted source snapshot without 
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
   const commit = initRepository(packageRoot, {
-    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
+    'package.json': JSON.stringify({
+      name: '@aikdna/fixture-package',
+      version: '1.0.0',
+    }),
   });
   const manifestPath = writeManifest(root, [component({ source_commit: commit })]);
 
@@ -883,7 +931,10 @@ test('validator requires a candidate version newer than the incumbent', (t) => {
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
   const commit = initRepository(packageRoot, {
-    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '0.13.0' }),
+    'package.json': JSON.stringify({
+      name: '@aikdna/fixture-package',
+      version: '0.13.0',
+    }),
   });
   for (const [version, publishedVersion] of [
     ['0.13.0', '0.13.1'],
@@ -957,7 +1008,10 @@ test('validator rejects manifest path escape and does not follow a current-check
   const outside = path.join(root, 'outside-package.json');
   fs.writeFileSync(outside, JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }));
   const commit = initRepository(packageRoot, {
-    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
+    'package.json': JSON.stringify({
+      name: '@aikdna/fixture-package',
+      version: '1.0.0',
+    }),
   });
 
   let manifestPath = writeManifest(root, [component({ local_path: '../../fixture-package' })]);
@@ -1069,7 +1123,9 @@ test('validator binds a live package-less component to an exact release tag and 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-component-release-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const swiftRoot = path.join(root, 'fixture-swift');
-  const commit = initRepository(swiftRoot, { 'Package.swift': '// swift fixture\n' });
+  const commit = initRepository(swiftRoot, {
+    'Package.swift': '// swift fixture\n',
+  });
   git(swiftRoot, ['tag', '0.5.0']);
   const released = component({
     repository: 'aikdna/fixture-swift',
