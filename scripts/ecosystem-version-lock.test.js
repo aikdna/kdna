@@ -275,3 +275,61 @@ test('only exact current coordinates pass', () => {
     [true, false, false, false],
   );
 });
+
+test('explicit historical root inputs preserve the default current dependency scan', (t) => {
+  const emptyRepos = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-version-lock-historical-'));
+  t.after(() => fs.rmSync(emptyRepos, { recursive: true, force: true }));
+  const controlRoot = path.resolve(__dirname, '..');
+  const policy = readBaselines(controlRoot);
+  const scan = (historicalRootPackageInputs) =>
+    findConsumers(
+      emptyRepos,
+      policy.baselines,
+      policy.lifecycleByRepository,
+      policy.manifestsByRepository,
+      { controlRoot, historicalRootPackageInputs },
+    );
+  const readPeer = (result) =>
+    result.consumers.find(
+      (row) =>
+        row.repository === 'kdna' &&
+        row.manifest.split(path.sep).join('/') === 'packages/kdna-read/package.json' &&
+        row.section === 'peerDependencies' &&
+        row.packageName === '@aikdna/kdna-core',
+    );
+  const current = readPeer(scan(undefined));
+  const explicitlyCurrent = readPeer(scan(false));
+  const historical = readPeer(scan(true));
+  assert.equal(current.declared, '0.37.2');
+  assert.deepEqual(explicitlyCurrent, current);
+  assert.equal(historical.declared, '0.37.1-rc.browser.1');
+  assert.equal(historical.expected, '0.37.0');
+
+  // The existing exact tuple shares this independently authenticated blob.
+  // It does not accept a new stable dependency or alias another version.
+  const document = JSON.parse(
+    fs.readFileSync(path.join(controlRoot, 'scripts/compatibility-bindings.json')),
+  );
+  const binding = document.bindings.find((row) => bindingKey(row) === bindingKey(historical));
+  const proof = require('./historical-root-package-evidence.json');
+  const source = proof.packages.find((row) => row.package_json === historical.manifest);
+  assert.equal(binding.source_manifest_blob, source.blob);
+  assert.equal(binding.manifest_sha256, source.sha256);
+  assert.equal(binding.declared, historical.declared);
+  const compatibility = new Map([[bindingKey(binding), binding]]);
+  assert.equal(evaluateConsumers([historical], compatibility)[0].ok, true);
+  assert.equal(evaluateConsumers([current], compatibility)[0].ok, false);
+  assert.equal(evaluateConsumers([historical])[0].ok, false);
+  const wrongTuple = { ...binding, section: 'dependencies' };
+  assert.equal(
+    evaluateConsumers([historical], new Map([[bindingKey(wrongTuple), wrongTuple]]))[0].ok,
+    false,
+  );
+  const unreviewed = { ...historical, manifest: 'packages/unreviewed/package.json' };
+  assert.equal(
+    evaluateConsumers(reconcileBindings([unreviewed], policy.baselines), compatibility).find(
+      (row) => row.manifest === unreviewed.manifest,
+    ).ok,
+    false,
+  );
+});

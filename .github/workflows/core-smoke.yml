@@ -113,7 +113,7 @@ jobs:
           KDNA_CONTROL_ROOT: ${{ github.workspace }}
         run: |
           node scripts/validate-ecosystem-manifest.js
-          node scripts/ecosystem-version-lock.js --strict
+          node scripts/ecosystem-version-lock.js --strict --historical-root-package-inputs
       - name: Verify current sources, actual packs, child CI and root execution
         env:
           KDNA_SOURCE_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos

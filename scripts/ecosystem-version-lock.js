@@ -17,6 +17,7 @@ const { createHash } = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const { packageRecords } = require('./ecosystem-manifest');
 const { TRUSTED_GIT, cleanGitEnvironment } = require('./core-release-authority');
+const { historicalRootPackageReader } = require('./historical-root-package-evidence');
 
 const EXCLUDED_LIFECYCLES = new Set(['Unassessed', 'Legacy', 'Removed']);
 
@@ -160,6 +161,15 @@ function findConsumers(
   const consumers = [];
   const skipped = [];
   const controlRoot = options.controlRoot || path.join(reposRoot, 'kdna');
+  let historicalRootPackages;
+  if (options.historicalRootPackageInputs === true) {
+    const manifest = readJson(path.join(controlRoot, 'ecosystem-manifest.json'));
+    const component = manifest.components.find((entry) => entry.repository === 'aikdna/kdna');
+    const readPackage = historicalRootPackageReader(controlRoot);
+    historicalRootPackages = new Map(
+      component.packages.map((record) => [record.package_json, readPackage(component, record)]),
+    );
+  }
 
   for (const [repository, repositoryRoot] of repositoryRoots(reposRoot, controlRoot)) {
     const rootPackagePath = path.join(repositoryRoot, 'package.json');
@@ -190,7 +200,11 @@ function findConsumers(
     for (const packagePath of [...new Set(packagePaths)].sort()) {
       let pkg;
       try {
-        pkg = readJson(packagePath);
+        const relativePath = path.relative(repositoryRoot, packagePath).split(path.sep).join('/');
+        pkg =
+          repository === 'kdna' && historicalRootPackages?.has(relativePath)
+            ? historicalRootPackages.get(relativePath)
+            : readJson(packagePath);
       } catch {
         consumers.push({
           repository,
@@ -427,6 +441,7 @@ function evaluateConsumers(consumers, compatibility = new Map()) {
 
 function main() {
   const strict = process.argv.includes('--strict');
+  const historicalRootPackageInputs = process.argv.includes('--historical-root-package-inputs');
   const reposRoot = process.env.KDNA_REPOS_ROOT || path.resolve(__dirname, '..', '..');
   const controlRoot = process.env.KDNA_CONTROL_ROOT || path.join(reposRoot, 'kdna');
   let policy;
@@ -440,6 +455,12 @@ function main() {
   }
 
   console.log('ecosystem-version-lock: exact managed coordinates');
+  if (historicalRootPackageInputs) {
+    console.log(
+      'root package scope: authenticated historical inputs; current source acceptance is separate',
+    );
+  }
+
   for (const [packageName, version] of [...policy.baselines].sort()) {
     console.log(`  MANAGED ${packageName}@${version}`);
   }
@@ -453,7 +474,7 @@ function main() {
     policy.baselines,
     policy.lifecycleByRepository,
     policy.manifestsByRepository,
-    { controlRoot },
+    { controlRoot, historicalRootPackageInputs },
   );
   for (const repository of discovered.skipped) {
     console.log(`  SKIP ${repository.repository}: ${repository.lifecycle}`);

@@ -58,7 +58,12 @@ SHA-256. Both manifest validation and publish-drift checks read this evidence an
 require that commit to remain an ancestor of the current HEAD. This does not
 reinterpret the frozen root `source_commit` (`32aa3ff8e633291d4bb9e01de5a70181c8415d93`),
 or certify current package sources, registry contents, or consumers. Current
-release source and artifact gates remain separate.
+release source and artifact gates remain separate. The historical dependency step explicitly
+selects `ecosystem-version-lock.js --strict --historical-root-package-inputs`.
+It reads those same eight authenticated root package inputs and still checks
+every dependency against the existing complete compatibility binding tuples.
+The default dependency scan continues to inspect current checkout manifests;
+neither this option nor a historical PASS accepts the current source or consumers.
 
 `conformance_commit` identifies a separate fixture or contract anchor and must
 not be interpreted as that repository's release commit. A live package-less
