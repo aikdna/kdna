@@ -10,7 +10,7 @@ Select one exact dependency graph. The [top-level entry](../README.md) and
 
 | Line | Coordinates and acquisition | Status |
 |---|---|---|
-| Stable distribution candidates | Core `0.37.2`, Read `0.11.3`, CLI `0.39.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; use each complete source delivery until exact registry publication is verified | Unpublished; intended `latest` |
+| Published stable distribution | Core `0.37.2`, Read `0.11.3`, CLI `0.39.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; use each complete source delivery until exact registry publication is verified | Published on `latest` |
 | Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the new candidate bytes |
 | Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
@@ -59,7 +59,7 @@ The native entry is CLI `0.39.0` with exact Core
 `0.37.2` / Read `0.11.3`, container0.6 and
 Read0.7-candidate. Prepare the complete twelve-archive delivery using the
 [CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
-Source availability does not establish official npm publication; the registry
+Source availability and registry publication are separate facts; the registry
 recipe in the [README](../README.md#current-source-choose-the-matching-implementation)
 is conditional on those exact published versions.
 

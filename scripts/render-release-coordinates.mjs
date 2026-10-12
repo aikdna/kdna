@@ -42,6 +42,7 @@ function renderBlock() {
     'tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);',
     'earlier `latest` values stay in the',
     '[distribution history](./docs/current-release-support.md#published-channel-history).',
+    'This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.',
   ].join('\n');
 }
 

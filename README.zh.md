@@ -34,10 +34,9 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 先读[当前支持与分发矩阵](./docs/current-release-support.md)和
 [Core/Read 源码指引](./docs/core-read-current-status.md)，区分源码版本、包字节、
-容器合同与公开渠道。当前稳定发行组合仍是未发布候选；源码、`main` 或已有 `latest` 包
-都不能证明这些精确版本已经发布。
+容器合同与公开渠道。当前稳定发行组合已在 `latest` 发布；每个包的公开制品已逐字节核验。
 
-| 入口 | 精确候选组合 | 使用边界 |
+| 入口 | 精确已发布组合 | 使用边界 |
 | --- | --- | --- |
 | Core/Read | Core `0.37.2` / Read `0.11.3` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
 | [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
@@ -78,9 +77,9 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 保留各自生成的 lock 与旧文件，每次配方使用新输出目录。源码离线交付和 registry
 安装使用不同 lock，但应绑定同一组声明的 KDNA 包字节。
 [稳定发行流程](./docs/release-stable.md)使用新的精确版本与真实稳定 Release 事件，
-按依赖顺序发布并核验后才推进各包的 `latest`。已有 preview 产物和 tag 保留原身份。
+各包已按依赖顺序发布并核验，`latest` 已推进。已有 preview 产物和 tag 保留原身份。
 [已发布渠道历史](./docs/current-release-support.md#published-channel-history)单列旧 preview 与
-当前观察到的 `latest`；本页的新组合尚未证明发布。
+发布前观察到的 `latest`；本页的稳定组合已按上表发布。
 
 规范 [Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md) 与
 [Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md)
@@ -91,7 +90,7 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 
 已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
-工作目标是 `0.39.0`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
+已发布稳定线是 `0.39.0`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
 作品适用性或实际任务采用。
 
 ## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径

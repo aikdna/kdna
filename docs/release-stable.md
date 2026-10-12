@@ -2,7 +2,7 @@
 
 Core `0.37.2` and Read `0.11.3` are new stable distribution candidates for the
 npm `latest` tag. This document describes preparation and publication gates; it
-does not establish that publication has occurred. The [channel history](current-release-support.md#published-channel-history)
+records the source and artifact evidence that publication then performed. The [channel history](current-release-support.md#published-channel-history)
 retains the earlier previews and observed `latest` values. A stable npm version
 is a distribution coordinate, not a claim that the entire ecosystem is GA.
 
