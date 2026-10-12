@@ -34,7 +34,8 @@ const ENVELOPE_VARIANTS = Object.freeze([PIPELINE_ENVELOPE_KEYS, RETAINED_ENVELO
 // body, so it projects rather than passing through as a non-answer.
 const PROJECTABLE_STATUSES = Object.freeze(['ready', 'catalog_only']);
 
-// The complete public content object, in pipeline order.
+// Every public content key, in pipeline order. A mode carries a subset: a catalog
+// answer carries the catalog and the index and no judgment body.
 const CONTENT_KEYS = Object.freeze([
   'declarations', 'catalog', 'selected', 'closure', 'references', 'relationships',
   'missing', 'provenance', 'asset_capability', 'asset_index', 'expansion_handles',
@@ -70,7 +71,11 @@ function exactShape(value, names) {
 function matchedVariant(envelope) {
   const match = ENVELOPE_VARIANTS.find(variant => exactShape(envelope, variant));
   if (!match) throw viewFailure('unexpected read envelope shape');
-  if (!exactShape(envelope.content, CONTENT_KEYS)) throw viewFailure('unexpected read content shape');
+  // Content keys must all be known, but the set is the mode's, not a fixed list:
+  // an unknown key is a shape this projection has not been taught and refuses.
+  if (!isObject(envelope.content)) throw viewFailure('unexpected read content shape');
+  if (Object.keys(envelope.content).some(key => !CONTENT_KEYS.includes(key)))
+    throw viewFailure('unexpected read content shape');
   return match;
 }
 // The observed digests only: the basis, profile and comparison records around
@@ -83,7 +88,7 @@ function observedDigests(envelope) {
     if (isObject(source[key]) && typeof source[key].observed === 'string') observed[key] = source[key].observed;
   return Object.keys(observed).length ? observed : null;
 }
-function fingerprintOf(envelope, variant, options) {
+function fingerprintOf(envelope, variant, carried, options) {
   const recovery = {view: 'full'};
   if (typeof options.mode === 'string' && options.mode) recovery.mode = options.mode;
   const fingerprint = {
@@ -92,7 +97,9 @@ function fingerprintOf(envelope, variant, options) {
     request_id: envelope.request_id,
     omitted: {
       envelope: variant.filter(k => !SURFACED_ENVELOPE_KEYS.includes(k)),
-      content: [...AUDIT_KEYS],
+      // Only what this answer actually carried can be said to have been moved:
+      // a catalog answer never held the handles in the first place.
+      content: AUDIT_KEYS.filter(k => carried.includes(k)),
     },
     recovery,
   };
@@ -111,14 +118,15 @@ function projectModelView(result, options = {}) {
   if (!isObject(envelope) || !PROJECTABLE_STATUSES.includes(envelope.status)) return result;
   const variant = matchedVariant(envelope);
   if (view === 'full') return result;
-  const content = Object.fromEntries(BODY_KEYS.map(k => [k, clone(envelope.content[k])]));
+  const carried = Object.keys(envelope.content);
+  const content = Object.fromEntries(BODY_KEYS.filter(k => carried.includes(k)).map(k => [k, clone(envelope.content[k])]));
   return freeze({
     // Named view_contract so it cannot be mistaken for the read contract
     // coordinate the full envelope carries in `contract`.
     view_contract: MODEL_VIEW_CONTRACT,
     view: 'body',
     status: envelope.status,
-    fingerprint: fingerprintOf(envelope, variant, options),
+    fingerprint: fingerprintOf(envelope, variant, carried, options),
     content,
   });
 }
