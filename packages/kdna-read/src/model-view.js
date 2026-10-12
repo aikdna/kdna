@@ -5,17 +5,35 @@
 // field in one call. The projection refuses an unrecognised shape instead of
 // dropping a field it does not know, so structural losslessness is a property
 // of the representation rather than a promise about today's field list.
-const {createHash} = require('node:crypto');
-const {clone, freeze, jcs} = require('./util.js');
+//
+// The fingerprint carries identity the reader already attested -- asset,
+// snapshot, request and the observed A/C/E digests -- rather than a hash this
+// module computes. That keeps the module free of any platform binding, which
+// the root entry requires: it is loaded in a browser sandbox with no Node
+// builtins and no WebCrypto.
+const {clone, freeze} = require('./util.js');
 
 const MODEL_VIEW_CONTRACT = 'kdna.read.model-view/0.1.0';
 const VIEWS = Object.freeze(['body', 'full']);
 
-// The complete public envelope of a ready read, in schema order.
-const ENVELOPE_KEYS = Object.freeze([
+// The public read result exists in two envelope shapes. The exact R2 pipeline
+// emits the first; the sections/retained reader the native CLI and the MCP
+// adapter consume emits the second, which also carries its mode and its
+// verification proof. Both carry the same content object.
+const PIPELINE_ENVELOPE_KEYS = Object.freeze([
   'contract', 'request_id', 'status', 'tuple', 'asset', 'snapshot_id', 'digests',
   'content', 'states', 'diagnostics', 'omissions', 'assessment', 'receipt', 'budget',
 ]);
+const RETAINED_ENVELOPE_KEYS = Object.freeze([
+  'contract', 'mode', 'request_id', 'status', 'tuple', 'asset', 'snapshot_id',
+  'digests', 'content', 'states', 'diagnostics', 'omissions', 'assessment',
+  'verification', 'receipt', 'budget',
+]);
+const ENVELOPE_VARIANTS = Object.freeze([PIPELINE_ENVELOPE_KEYS, RETAINED_ENVELOPE_KEYS]);
+// A catalog read answers with the catalog and no judgment body; that is still a
+// body, so it projects rather than passing through as a non-answer.
+const PROJECTABLE_STATUSES = Object.freeze(['ready', 'catalog_only']);
+
 // The complete public content object, in pipeline order.
 const CONTENT_KEYS = Object.freeze([
   'declarations', 'catalog', 'selected', 'closure', 'references', 'relationships',
@@ -29,10 +47,10 @@ const BODY_KEYS = Object.freeze([
 // Reachability machinery: an index of expandable targets and the handles that
 // stand for them. Arriving material, not content.
 const AUDIT_KEYS = Object.freeze(['asset_index', 'expansion_handles']);
-// Envelope fields the fingerprint stands for on the default surface.
-const OMITTED_ENVELOPE_KEYS = Object.freeze(
-  ENVELOPE_KEYS.filter(k => !['content', 'asset', 'snapshot_id', 'status'].includes(k)),
-);
+// Envelope fields restated on the default surface rather than omitted.
+const SURFACED_ENVELOPE_KEYS = Object.freeze([
+  'content', 'status', 'asset', 'snapshot_id', 'request_id',
+]);
 
 function viewFailure(message) {
   return Object.assign(new Error(message), {code: 'READ_MODEL_VIEW_UNAVAILABLE'});
@@ -49,21 +67,38 @@ function exactShape(value, names) {
     names.every(k => Object.hasOwn(value, k))
   );
 }
-function digest(value) {
-  return 'sha256:' + createHash('sha256').update(jcs(value)).digest('hex');
+function matchedVariant(envelope) {
+  const match = ENVELOPE_VARIANTS.find(variant => exactShape(envelope, variant));
+  if (!match) throw viewFailure('unexpected read envelope shape');
+  if (!exactShape(envelope.content, CONTENT_KEYS)) throw viewFailure('unexpected read content shape');
+  return match;
 }
-function fingerprintOf(envelope, options) {
+// The observed digests only: the basis, profile and comparison records around
+// them are contract material and stay on the full view.
+function observedDigests(envelope) {
+  const source = envelope.digests;
+  if (!isObject(source)) return null;
+  const observed = {};
+  for (const key of ['A', 'C', 'E'])
+    if (isObject(source[key]) && typeof source[key].observed === 'string') observed[key] = source[key].observed;
+  return Object.keys(observed).length ? observed : null;
+}
+function fingerprintOf(envelope, variant, options) {
   const recovery = {view: 'full'};
   if (typeof options.mode === 'string' && options.mode) recovery.mode = options.mode;
-  return {
+  const fingerprint = {
     asset: clone(envelope.asset),
     snapshot_id: envelope.snapshot_id,
-    // Binds the whole pre-projection result, so a consumer can tell that the
-    // body it received belongs to the read it asked for.
-    result_digest: digest(envelope),
-    omitted: {envelope: [...OMITTED_ENVELOPE_KEYS], content: [...AUDIT_KEYS]},
+    request_id: envelope.request_id,
+    omitted: {
+      envelope: variant.filter(k => !SURFACED_ENVELOPE_KEYS.includes(k)),
+      content: [...AUDIT_KEYS],
+    },
     recovery,
   };
+  const attested = observedDigests(envelope);
+  if (attested) fingerprint.attested = attested;
+  return fingerprint;
 }
 function projectModelView(result, options = {}) {
   const view = options.view ?? 'body';
@@ -73,9 +108,8 @@ function projectModelView(result, options = {}) {
   const envelope = result.envelope;
   // A rejection, a no-body control or a transport failure carries a diagnosis;
   // it reaches the caller verbatim rather than being folded into a body view.
-  if (!isObject(envelope) || envelope.status !== 'ready') return result;
-  if (!exactShape(envelope, ENVELOPE_KEYS)) throw viewFailure('unexpected read envelope shape');
-  if (!exactShape(envelope.content, CONTENT_KEYS)) throw viewFailure('unexpected read content shape');
+  if (!isObject(envelope) || !PROJECTABLE_STATUSES.includes(envelope.status)) return result;
+  const variant = matchedVariant(envelope);
   if (view === 'full') return result;
   const content = Object.fromEntries(BODY_KEYS.map(k => [k, clone(envelope.content[k])]));
   return freeze({
@@ -84,7 +118,7 @@ function projectModelView(result, options = {}) {
     view_contract: MODEL_VIEW_CONTRACT,
     view: 'body',
     status: envelope.status,
-    fingerprint: fingerprintOf(envelope, options),
+    fingerprint: fingerprintOf(envelope, variant, options),
     content,
   });
 }
@@ -92,7 +126,8 @@ module.exports = {
   projectModelView,
   MODEL_VIEW_CONTRACT,
   VIEWS,
-  ENVELOPE_KEYS,
+  PIPELINE_ENVELOPE_KEYS,
+  RETAINED_ENVELOPE_KEYS,
   CONTENT_KEYS,
   BODY_KEYS,
   AUDIT_KEYS,

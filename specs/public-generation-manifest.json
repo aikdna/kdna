@@ -823,9 +823,9 @@
       "sha256": "b9c06f411c035e26c6ef79fc8de430ea47d9986e6dbf3c5885cb16429ed57884"
     },
     {
-      "bytes": 496,
+      "bytes": 1630,
       "path": "packages/kdna-read/src/index.d.ts",
-      "sha256": "62f043a30eb38c2d7f9a0ce93a773e45cfe269e723a555d70681ff05470edb58"
+      "sha256": "e0ea00d6a779bc95cb97a667b9b7c914f1e6b5fadaf5ffee84ee17867c357ff1"
     },
     {
       "bytes": 59,
@@ -963,9 +963,9 @@
     }
   ],
   "source": {
-    "bytes": 1506715,
+    "bytes": 1507856,
     "path": "specs/public-semantic-source.json",
-    "sha256": "e1fa081ca757d8ceb2e73910024778e31debe83b16d8b4824a4c66466ec57928"
+    "sha256": "74216374a3a080eade52f09a863fa25c5464f4decf9a2087ebcbbe9be310dfb2"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -980,7 +980,7 @@
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 164001,
-      "sha256": "f5258627e45d396f9b088e76bdabe699d9ab845678ce1fa6a855b3fdaec21f22"
+      "sha256": "848a906f18e9011584d857c84e33c8eabea534763c36a2dfedd212c614e65f2a"
     },
     "base_types": 431,
     "canonical_types": 783
