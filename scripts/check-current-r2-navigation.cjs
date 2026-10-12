@@ -372,31 +372,31 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'README.md',
     role: 'downstream',
     heading: '## Current source: choose the matching implementation',
-    text: 'Published Core `0.37.0` / Read `0.11.1` retain their own contracts and artifacts.\nHistorical native CLI `0.39.0-rc.native-sections.2` binds Core\n`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core\n`0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older\ninstallation. CLI `.2` and `.3` are already published; new authoring/source work\ntargets `0.39.0` and must not overwrite either preview. The separate Studio ordinary/protected guide\nsupplies its own preparation, trusted Host/credential boundary and readback\ninstructions; named Host delivery and independent acceptance remain `NOT_RUN`.\nTechnical checks and\nscripted examples do not establish human confirmation, editorial fitness or\nactual task adoption.',
+    text: 'Published Core `0.37.0` / Read `0.11.1` retain their own contracts and artifacts.\nHistorical native CLI `0.39.0-rc.native-sections.2` binds Core\n`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core\n`0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older\ninstallation. CLI `.2` and `.3` remain published previews; the published stable\nline is `0.39.0`, which must not overwrite either preview. The separate Studio ordinary/protected guide\nsupplies its own preparation, trusted Host/credential boundary and readback\ninstructions; named Host delivery and independent acceptance remain `NOT_RUN`.\nTechnical checks and\nscripted examples do not establish human confirmation, editorial fitness or\nactual task adoption.',
   },
   {
     file: 'README.md',
     role: 'downstream',
     heading: '## Ecosystem',
-    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Candidate CLI `0.39.0`; published native previews and loading `0.36.1` | Native authoring, explicit Read and Source revision; exact current SDK pair above |',
+    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.39.0` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, explicit Read and Source revision; exact current SDK pair above |',
   },
   {
     file: 'README.md',
     role: 'downstream',
     heading: '## Ecosystem',
-    text: '| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Candidate StudioCLI `0.13.0`; historical npm `0.11.0` | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |',
+    text: '| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Published StudioCLI `0.13.0` on `latest`; historical npm `0.11.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |',
   },
   {
     file: 'README.md',
     role: 'downstream',
     heading: '## Ecosystem',
-    text: '| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Candidate StudioCore `4.0.0`; historical npm `3.0.0` | Studio session SDK and explicit protected export; its own Host/credential boundary |',
+    text: '| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Published StudioCore `4.0.0` on `latest`; historical npm `3.0.0` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |',
   },
   {
     file: 'README.md',
     role: 'downstream',
     heading: '## Ecosystem',
-    text: '| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1`; historical npm MCP `0.5.0` | Matched candidate native `0.39.0` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |',
+    text: '| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1` unpublished by policy; historical npm MCP `0.5.0` | Matched published native `0.39.0` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |',
   },
   {
     file: 'README.zh.md',
@@ -480,7 +480,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'docs/start-here.md',
     role: 'downstream',
     heading: '## Current source entry',
-    text: 'Use the [current support and distribution matrix](./current-release-support.md)\nand [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).\nThe native entry is CLI `0.39.0` with exact Core\n`0.37.2` / Read `0.11.3`, container0.6 and\nRead0.7-candidate. Prepare the complete twelve-archive delivery using the\n[CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).\nSource availability does not establish official npm publication; the registry\nrecipe in the [README](../README.md#current-source-choose-the-matching-implementation)\nis conditional on those exact published versions.',
+    text: 'Use the [current support and distribution matrix](./current-release-support.md)\nand [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).\nThe native entry is CLI `0.39.0` with exact Core\n`0.37.2` / Read `0.11.3`, container0.6 and\nRead0.7-candidate. Prepare the complete twelve-archive delivery using the\n[CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).\nSource availability and registry publication are separate facts; the registry\nrecipe in the [README](../README.md#current-source-choose-the-matching-implementation)\nis conditional on those exact published versions.',
   },
   {
     file: 'docs/start-here.md',
@@ -540,7 +540,7 @@ const RETAINED_IDENTITY_CONTEXTS = [
     file: 'docs/current-release-support.md',
     role: 'downstream',
     heading: '## Repository-by-repository support',
-    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Native `0.39.0` candidate source delivery above; Node >=22. Native Plan/load unavailable. | Published native previews keep their exact graphs; loading CLI `0.36.1` on the observed `latest`. Existing versions cannot be overwritten. |',
+    text: '| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.39.0` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |',
   },
   {
     file: 'docs/current-release-support.md',
@@ -857,23 +857,23 @@ function checkCurrentNavigation(root, options = {}) {
     );
   }
   contains('README.md', null, '> **KDNA gives reusable judgment', [
-    `Core \`${versions.core}\`, Read \`${versions.read}\``,
-    'native CLI `0.39.0`, Studio Core `4.0.0`',
-    'and Studio CLI `0.13.0`',
-    'public release and registry acquisition remain pending',
-    'this wave adds no MCP npm coordinate',
+    `| \`@aikdna/kdna-core\` | \`${versions.core}\` | \`latest\` |`,
+    '| `@aikdna/kdna-cli` | `0.39.0` | `latest` |',
+    '| `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` |',
+    'All five stable coordinates are',
+    'MCP remains a Git source channel',
   ]);
   contains('docs/start-here.md', '## Which line', '## What do you want', [
-    '| Stable distribution candidates |',
+    '| Published stable distribution |',
     `Core \`${versions.core}\`, Read \`${versions.read}\`, CLI \`0.39.0\``,
-    '| Unpublished; intended `latest` |',
+    '| Published on `latest` |',
     '| Published previews |',
     '| Earlier `latest` observation |',
   ]);
   contains('docs/release-stable.md', null, null, [
     versions.core,
     versions.read,
-    'does not establish that publication has occurred',
+    'records the source and artifact evidence that publication then performed',
     'stable-release-authority.js candidate --unit core',
     'stable-release-authority.js candidate --unit read',
     'stable-release-authority.js candidate-smoke --unit core',
@@ -902,7 +902,7 @@ function checkCurrentNavigation(root, options = {}) {
     'SPEC-INDEX.md#kdna-public-specification-index',
   ]);
   contains('README.md', '## Published CLI 0.36.1 walkthrough', '```bash', [
-    `the unpublished stable distribution candidate Core \`${versions.core}\` / Read \`${versions.read}\``,
+    `Core \`${versions.core}\` / Read \`${versions.read}\``,
     'Keep its exact historical dependencies',
   ]);
   contains('README.zh.md', '## 当前源码', '## 已发布 CLI', [
@@ -914,7 +914,7 @@ function checkCurrentNavigation(root, options = {}) {
   ]);
   contains('docs/start-here.md', '## Current source entry', '## 5-Minute Quick Start', [
     `\`${versions.core}\` / Read \`${versions.read}\``,
-    'Source availability does not establish official npm publication',
+    'Source availability and registry publication are separate facts',
     'publication is disabled and named Host delivery remains NOT_RUN',
   ]);
   contains('docs/status.zh.md', null, '## 当前成熟度', [
@@ -951,7 +951,7 @@ function checkCurrentNavigation(root, options = {}) {
   ]);
   contains('docs/current-release-support.md', null, '## Native and Studio entry points', [
     'All five are unpublished',
-    'No earlier preview is relabeled or overwritten',
+    'relabeled or overwritten',
   ]);
   contains(
     'docs/current-release-support.md',
@@ -967,14 +967,14 @@ function checkCurrentNavigation(root, options = {}) {
   );
   contains('README.md', '## Current source:', '## Published CLI', [
     'Once official registry metadata confirms the exact stable versions',
-    'CLI `.2` and `.3` are already published',
-    'targets `0.39.0` and must not overwrite either preview',
+    'CLI `.2` and `.3` remain published previews',
+    'which must not overwrite either preview',
     'Native CLI Plan/load remains unavailable',
   ]);
   contains('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
     '只有官方 registry 元数据确认这三个精确稳定版本后',
     '原生 CLI 的 Plan/load 不可用',
-    '工作目标是 `0.39.0`，不能覆盖已经发布的 `.2` 或 `.3`',
+    '已发布稳定线是 `0.39.0`，不能覆盖已经发布的 `.2` 或 `.3`',
   ]);
   contains('README.md', '## Current source:', '## Published CLI', [
     `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |`,

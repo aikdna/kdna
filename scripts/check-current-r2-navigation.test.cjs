@@ -597,12 +597,8 @@ for (const [file, before, after] of [
     'Once official registry metadata confirms the exact stable versions',
     'The exact preview versions are already published',
   ],
-  ['README.md', 'CLI `.2` and `.3` are already published', 'CLI `.2` is not published'],
-  [
-    'README.md',
-    'targets `0.39.0` and must not overwrite either preview',
-    '`.3` and may overwrite `.2`',
-  ],
+  ['README.md', 'CLI `.2` and `.3` remain published previews', 'CLI `.2` is not published'],
+  ['README.md', 'which must not overwrite either preview', '`.3` and may overwrite `.2`'],
   [
     'README.zh.md',
     '只有官方 registry 元数据确认这三个精确稳定版本后',
@@ -705,7 +701,7 @@ for (const [file, before, after] of [
   ],
   [
     'docs/current-release-support.md',
-    'Published native previews keep their exact graphs; loading CLI `0.36.1` on the observed `latest`.',
+    'Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract.',
     'npm native `.3` on `latest`; loading CLI `0.36.1` on `r2.7`.',
   ],
   [
@@ -1683,19 +1679,19 @@ test('heading projection never reconstructs angle brackets across consumed segme
 for (const [file, before, after, issue] of [
   [
     'README.md',
-    'public release and registry acquisition remain pending',
+    'All five stable coordinates are',
     'public release and registry acquisition are complete',
     'README.md:current:',
   ],
   [
     'README.md',
-    'the unpublished stable distribution candidate Core `0.37.2` / Read `0.11.3`',
-    'the published browser-preview pair Core `0.37.2` / Read `0.11.3`',
+    'published stable\nCore `0.37.2` / Read `0.11.3`',
+    'the published browser-preview pair',
     'README.md:current:',
   ],
   [
     'docs/start-here.md',
-    '| Unpublished; intended `latest` |',
+    '| Published on `latest` |',
     '| Published; current `latest` |',
     'docs/start-here.md:current:',
   ],
