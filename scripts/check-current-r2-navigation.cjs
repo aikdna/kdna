@@ -10,14 +10,62 @@ const MODULES = [
   'external_grant_issuer',
   'protected_source',
 ];
+// Published coordinates are read from the release matrix, not typed in this file.
+// A coordinate the gate pins must have exactly one source, or a matrix edit and a
+// gate edit drift apart; that drift is what this gate exists to catch, so it must
+// not be able to create it. The pinned literals are unchanged and still matched
+// exactly and still required to be present uniquely.
+const RELEASE_COORDINATES_PATH = 'docs/release-coordinates.json';
+// A coordinate the matrix does not carry becomes this value, which no document can
+// contain, so the run fails on the named issue rather than matching `undefined`.
+const MISSING_COORDINATE = '\u0000release-coordinates-missing';
+const RELEASE_UNITS = Object.freeze(['core', 'read', 'cli', 'studio-core', 'studio-cli']);
+function releaseCoordinates(read, check) {
+  const matrix = JSON.parse(read(RELEASE_COORDINATES_PATH));
+  const rows = new Map((matrix.packages ?? []).map((row) => [row.unit, row]));
+  const packages = {};
+  for (const unit of RELEASE_UNITS) {
+    const row = rows.get(unit);
+    check(
+      `release-coordinates:packages.${unit}`,
+      Boolean(row && row.name && row.version && row.npm_tag),
+      { unit },
+    );
+    packages[unit] = {
+      name: row?.name ?? MISSING_COORDINATE,
+      version: row?.version ?? MISSING_COORDINATE,
+      tag: row?.npm_tag ?? MISSING_COORDINATE,
+    };
+  }
+  const mcp = (matrix.git_only ?? [])[0];
+  check('release-coordinates:git_only', Boolean(mcp && mcp.name && mcp.mcp_version), {
+    git_only: matrix.git_only,
+  });
+  return {
+    packages,
+    // The channel the matrix publishes the stable line on, read once.
+    tag: matrix.npm_tag ?? MISSING_COORDINATE,
+    preview: matrix.preserved_preview_tags ?? {},
+    mcp: mcp
+      ? {
+          name: mcp.name,
+          version: mcp.mcp_version ?? MISSING_COORDINATE,
+          main_commit: mcp.main_commit ?? MISSING_COORDINATE,
+        }
+      : { name: MISSING_COORDINATE, version: MISSING_COORDINATE, main_commit: MISSING_COORDINATE },
+  };
+}
 // Exact companion candidates; earlier published previews are admitted only in
 // separately bounded historical statements, never as arbitrary current identities.
-const COMPANION_COORDINATES = Object.freeze([
-  '0.39.0', // native CLI stable candidate
-  '4.0.0', // Studio Core stable candidate
-  '0.13.0', // Studio CLI stable candidate
-  '0.8.0-rc.native-sections.1', // complete-source MCP, no npm target
-]);
+function companionCoordinates(coordinates) {
+  const { packages, mcp } = coordinates;
+  return Object.freeze([
+    packages.cli.version,
+    packages['studio-core'].version,
+    packages['studio-cli'].version,
+    mcp.version,
+  ]);
+}
 const SOURCE_PATH = 'specs/public-semantic-source.json';
 // Current-target vocabulary: an rc-era source identifies its line through the
 // version suffix; a promoted stable source identifies it through the unique
@@ -652,7 +700,7 @@ function markdownLinks(text) {
   }
   return links;
 }
-function checkIdentityOccurrences(file, text, source, check) {
+function checkIdentityOccurrences(file, text, source, check, companions) {
   const current = maskRetainedIdentities(file, text, check),
     versions = source.engineering.package_versions;
   const observed = [];
@@ -670,7 +718,7 @@ function checkIdentityOccurrences(file, text, source, check) {
   for (const match of current.matchAll(
     /(?<![0-9./_-])\d+\.\d+\.\d+-[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*/g,
   )) {
-    record('current-package', match, [versions.core, versions.read, ...COMPANION_COORDINATES]);
+    record('current-package', match, [versions.core, versions.read, ...companions]);
   }
   // Stable package identities also remain visible in the occurrence ledger.
   // They are not a global numeric allowlist: current owner/table checks below
@@ -759,6 +807,22 @@ function checkCurrentNavigation(root, options = {}) {
     checks.push({ name, pass: Boolean(condition) });
     if (!condition) issues.push({ name, detail });
   }
+  // Published coordinates come from the release matrix; the current package
+  // versions come from the semantic source. They describe the same releases, so a
+  // disagreement between them is a defect, not a preference: it is recorded here
+  // rather than resolved silently in either direction.
+  const coordinates = releaseCoordinates(read, check);
+  const released = coordinates.packages;
+  const channelTag = coordinates.tag;
+  for (const unit of ['core', 'read'])
+    check(
+      `release-coordinates:source-consistency.${unit}`,
+      source.engineering.package_versions[unit] === coordinates.packages[unit].version,
+      {
+        semantic_source: source.engineering.package_versions[unit],
+        release_matrix: coordinates.packages[unit].version,
+      },
+    );
   validateSourceMap(source, JSON.parse(read('specs/public-source-map.json')), check);
   validateCurrentTarget(source, decisionDocument, check);
 
@@ -857,18 +921,18 @@ function checkCurrentNavigation(root, options = {}) {
     );
   }
   contains('README.md', null, '> **KDNA gives reusable judgment', [
-    `| \`@aikdna/kdna-core\` | \`${versions.core}\` | \`latest\` |`,
-    '| `@aikdna/kdna-cli` | `0.39.0` | `latest` |',
-    '| `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` |',
+    `| \`${released.core.name}\` | \`${released.core.version}\` | \`${released.core.tag}\` |`,
+    `| \`${released.cli.name}\` | \`${released.cli.version}\` | \`${released.cli.tag}\` |`,
+    `| \`${released['studio-cli'].name}\` | \`${released['studio-cli'].version}\` | \`${released['studio-cli'].tag}\` |`,
     'All five stable coordinates are',
     'MCP remains a Git source channel',
   ]);
   contains('docs/start-here.md', '## Which line', '## What do you want', [
     '| Published stable distribution |',
-    `Core \`${versions.core}\`, Read \`${versions.read}\`, CLI \`0.39.0\``,
-    '| Published on `latest` |',
+    `Core \`${released.core.version}\`, Read \`${released.read.version}\`, CLI \`${released.cli.version}\``,
+    `| Published on \`${released.read.tag}\` |`,
     '| Published previews |',
-    '| Earlier `latest` observation |',
+    `| Earlier \`${channelTag}\` observation |`,
   ]);
   contains('docs/release-stable.md', null, null, [
     versions.core,
@@ -882,7 +946,7 @@ function checkCurrentNavigation(root, options = {}) {
     'published, nondraft **stable releases**',
     'kdna.stable-release-approval/1',
     "Only the selected package's",
-    '`latest` may transition to the approved new version; other tags remain fixed',
+    `\`${channelTag}\` may transition to the approved new version; other tags remain fixed`,
     'adds no MCP npm package',
   ]);
   check(
@@ -898,11 +962,11 @@ function checkCurrentNavigation(root, options = {}) {
   contains('README.md', null, '## Published CLI', [
     '**R2**',
     'native execution 0.3.1',
-    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\``,
+    `| Core/Read | Core \`${released.core.version}\` / Read \`${released.read.version}\``,
     'SPEC-INDEX.md#kdna-public-specification-index',
   ]);
   contains('README.md', '## Published CLI 0.36.1 walkthrough', '```bash', [
-    `Core \`${versions.core}\` / Read \`${versions.read}\``,
+    `Core \`${released.core.version}\` / Read \`${released.read.version}\``,
     'Keep its exact historical dependencies',
   ]);
   contains('README.zh.md', '## 当前源码', '## 已发布 CLI', [
@@ -913,7 +977,7 @@ function checkCurrentNavigation(root, options = {}) {
     '显式 Node',
   ]);
   contains('docs/start-here.md', '## Current source entry', '## 5-Minute Quick Start', [
-    `\`${versions.core}\` / Read \`${versions.read}\``,
+    `\`${released.core.version}\` / Read \`${released.read.version}\``,
     'Source availability and registry publication are separate facts',
     'publication is disabled and named Host delivery remains NOT_RUN',
   ]);
@@ -931,7 +995,7 @@ function checkCurrentNavigation(root, options = {}) {
   contains('docs/core-read-current-status.md', null, '## Matching consumer routes', [
     versions.core,
     versions.read,
-    `Read declares Core \`${versions.core}\` as its exact peer`,
+    `Read declares Core \`${released.core.version}\` as its exact peer`,
     `container \`${tuple.container}\``,
     `${tuple.payload_profile}/${tuple.payload_version}`,
     tuple.core,
@@ -945,7 +1009,7 @@ function checkCurrentNavigation(root, options = {}) {
   ]);
   contains('docs/core-read-current-status.md', '## Choose and obtain', '## Preserved history', [
     'real-release event gate',
-    'New stable versions target `latest` in dependency order',
+    `New stable versions target \`${channelTag}\` in dependency order`,
     'existing version collisions fail closed',
     'do not fall back to plaintext or a raw parser',
   ]);
@@ -961,7 +1025,7 @@ function checkCurrentNavigation(root, options = {}) {
       'its npm publication is disabled',
       'Named Agent Host delivery and semantic adoption remain unassessed',
       'A descriptor supplied by an Agent does not establish authorization by itself',
-      'Publication targets `latest` only after each exact dependency is public',
+      `Publication targets \`${channelTag}\` only after each exact dependency is public`,
       'Every new artifact requires registry integrity',
     ],
   );
@@ -974,13 +1038,13 @@ function checkCurrentNavigation(root, options = {}) {
   contains('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
     '只有官方 registry 元数据确认这三个精确稳定版本后',
     '原生 CLI 的 Plan/load 不可用',
-    '已发布稳定线是 `0.39.0`，不能覆盖已经发布的 `.2` 或 `.3`',
+    `已发布稳定线是 \`${released.cli.version}\`，不能覆盖已经发布的 \`.2\` 或 \`.3\``,
   ]);
   contains('README.md', '## Current source:', '## Published CLI', [
-    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |`,
+    `| Core/Read | Core \`${released.core.version}\` / Read \`${released.read.version}\` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |`,
   ]);
   contains('README.zh.md', '## 当前源码', '## 已发布原生 CLI', [
-    `| Core/Read | Core \`${versions.core}\` / Read \`${versions.read}\` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |`,
+    `| Core/Read | Core \`${released.core.version}\` / Read \`${released.read.version}\` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |`,
   ]);
   // A current table has one row per named route. A correct retained row cannot
   // excuse an appended second row with a different graph or publication claim.
@@ -1042,8 +1106,8 @@ function checkCurrentNavigation(root, options = {}) {
   const matrix = 'docs/version-and-capability-matrix.md';
   contains(matrix, null, '## Why one matrix', ['**R2**']);
   contains(matrix, '## 2.', '## 3.', [
-    `| \`@aikdna/kdna-core\` | \`${versions.core}\``,
-    `| \`@aikdna/kdna-read\` | \`${versions.read}\` | Exact Core \`${versions.core}\``,
+    `| \`@aikdna/kdna-core\` | \`${released.core.version}\``,
+    `| \`@aikdna/kdna-read\` | \`${released.read.version}\` | Exact Core \`${released.core.version}\``,
   ]);
   contains(
     matrix,
@@ -1115,8 +1179,9 @@ function checkCurrentNavigation(root, options = {}) {
       rows,
     );
   }
+  const companions = companionCoordinates(coordinates);
   const identityClaims = DOCUMENTS.flatMap((file) =>
-    checkIdentityOccurrences(file, read(file), source, check),
+    checkIdentityOccurrences(file, read(file), source, check, companions),
   );
   const readArtifact = source.artifacts.find((item) => item.root === 'ReadCallResult');
   contains('SPEC-INDEX.md', null, null, [readArtifact.path, 'specs/protected-source-r2.md']);

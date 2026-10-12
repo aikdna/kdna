@@ -1744,3 +1744,29 @@ test('the stable runbook cannot suggest local Read smoke without its approved pu
   );
   assert.ok(result.issues.some((row) => row.name === 'stable-procedure:no-unapproved-read-smoke'));
 });
+// The pinned coordinates are read from the release matrix. These two cases prove
+// the two ways that can go wrong are recorded rather than absorbed: a matrix that
+// disagrees with the semantic source, and a matrix that loses a unit the gate
+// pins. Neither may resolve silently.
+test('a release matrix that disagrees with the semantic source is recorded, not preferred', () => {
+  const result = changedDocument('docs/release-coordinates.json', (text) => {
+    const matrix = JSON.parse(text);
+    matrix.packages.find((row) => row.unit === 'core').version = '0.37.3';
+    return JSON.stringify(matrix, null, 2) + '\n';
+  });
+  assert.ok(
+    result.issues.some((issue) => issue.name === 'release-coordinates:source-consistency.core'),
+    JSON.stringify(result.issues.slice(0, 5)),
+  );
+});
+test('a release matrix that loses a pinned unit fails closed instead of pinning a coordinate', () => {
+  const result = changedDocument('docs/release-coordinates.json', (text) => {
+    const matrix = JSON.parse(text);
+    matrix.packages = matrix.packages.filter((row) => row.unit !== 'cli');
+    return JSON.stringify(matrix, null, 2) + '\n';
+  });
+  assert.ok(
+    result.issues.some((issue) => issue.name === 'release-coordinates:packages.cli'),
+    JSON.stringify(result.issues.slice(0, 5)),
+  );
+});
