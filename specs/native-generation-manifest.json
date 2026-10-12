@@ -3,14 +3,14 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1506715,
-    "sha256": "e1fa081ca757d8ceb2e73910024778e31debe83b16d8b4824a4c66466ec57928"
+    "bytes": 1507856,
+    "sha256": "74216374a3a080eade52f09a863fa25c5464f4decf9a2087ebcbbe9be310dfb2"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 164001,
-      "sha256": "f5258627e45d396f9b088e76bdabe699d9ab845678ce1fa6a855b3fdaec21f22"
+      "sha256": "848a906f18e9011584d857c84e33c8eabea534763c36a2dfedd212c614e65f2a"
     },
     "scripts": [
       {
@@ -216,7 +216,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/browser-native/sections/contract.json",
       "bytes": 547981,
-      "sha256": "f871a8be8a91105f4a1a7bd4930e712bf3b012ce8b6fd17def7cf4eaaef27379"
+      "sha256": "3c66e85c554e19949d5e5bb73d066f5116690736b4a79c4ab6346a9b73ad6708"
     },
     {
       "path": "packages/kdna-core/src/public-contract/browser-native/validators.generated.js",
@@ -236,7 +236,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/browserwhole06/contract.json",
       "bytes": 28451,
-      "sha256": "04a3d6627d4c117acc749e9c38b1af6cc06cd25f168ec983fa3fde324d1520c9"
+      "sha256": "b002c7b5b35a54823e7656331ddc90343fc4a64069d8a286dba13168b69ad376"
     },
     {
       "path": "packages/kdna-core/src/public-contract/browserwhole06/descriptor.json",
@@ -321,12 +321,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/creation06/contract.json",
       "bytes": 71166,
-      "sha256": "255a9a9eff102f96d49c660c29cc5a291244fff5365dfb251ef66ebe7aaaad0f"
+      "sha256": "e518e303cbf51c6662e7d01e3d6c8e2208b4e63ea9a791a36bcd566e24098193"
     },
     {
       "path": "packages/kdna-core/src/public-contract/creation06/generation-manifest.json",
       "bytes": 6851,
-      "sha256": "49a141cb935cbc18b1adc8134f158d52ac1231a63f76de4a8e3ce42ecdee6cfb"
+      "sha256": "978c499ec704906054ce9ebad1de61d3669c6e843208c7a7b93338bdbfc6f241"
     },
     {
       "path": "packages/kdna-core/src/public-contract/creation06/schemas/AdmittedNativeCreationRequest06.json",
@@ -541,12 +541,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/execution06/contract.json",
       "bytes": 225481,
-      "sha256": "02a62d370315d1cf0a07685b2ef8476d8fb83c1752601feb09e7cb0c4ed41477"
+      "sha256": "70ae3b918926269f9a7766079667ee764a4c0df75b382a0a6457a512255a351a"
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/generation-manifest.json",
       "bytes": 16890,
-      "sha256": "c01de73bff8a8ffe0e2a951b152c2f4ceab791d58d20031f60679b6442b729d9"
+      "sha256": "27ad310a86220f1761aba8e8b3aa28bbde742ec3c42a7f61af0069d5541da0c4"
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/types.d.ts",
@@ -616,12 +616,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/contract.json",
       "bytes": 307339,
-      "sha256": "f888a3fc9177d7d7ff45c46f34fbb66247c9a2aa805b049008ed7b58bbbd8d0d"
+      "sha256": "961b1e23678f0f2391af06dba562a2637b559538a31ed769405733082777e012"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/generation-manifest.json",
       "bytes": 19158,
-      "sha256": "69a607a32ec6f941705538f8d373e170c7a22b3ac27e68e5936c758602b4bae5"
+      "sha256": "45b4a530c445361390534f5f763639b5267eff7c68670947f2e3bf2ca2cd7ae2"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/read-api.d.ts",
@@ -761,7 +761,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/protected-browser-contract/contract.json",
       "bytes": 266345,
-      "sha256": "959749b1e9ae54e187e4a7c191ffdf6779eac8527406f12052e99b72457d94fb"
+      "sha256": "497a1c73b5c37edfb104add7ebb65be69d9df06e6e7e2f051f254ab5978c5fa7"
     },
     {
       "path": "packages/kdna-core/src/public-contract/protected-browser-contract/descriptor.json",
@@ -906,7 +906,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/retained-browser06/contract.json",
       "bytes": 272668,
-      "sha256": "e5d093326721069d29d3cd9295f2e48dd4e1c9ca593001cbe917b5f916c3bbe8"
+      "sha256": "d04f8539772a69ed73f070dcbc06b5e506cb76e6f9894702c2ecd157fdb54d91"
     },
     {
       "path": "packages/kdna-core/src/public-contract/retained-browser06/core-api.d.ts",
@@ -1146,12 +1146,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/retained/contract.json",
       "bytes": 291233,
-      "sha256": "c9ece7138801ceed528693d8277ea873e1eee874eb567ef35f0e38e72b238121"
+      "sha256": "ac4bc6c733a93c4516297ae023319be9387f821ff6a193620a7cf62c3968fef3"
     },
     {
       "path": "packages/kdna-core/src/public-contract/retained/generation-manifest.json",
       "bytes": 20539,
-      "sha256": "673c70d093adfcd37023aa92aac0d1f007177c3c2713dcd57c0a3ff019b0d56d"
+      "sha256": "6e71af8a0a7adf492744855a28c5b4a7be0bc2c2c703d7bb1707ac9cdc2c14aa"
     },
     {
       "path": "packages/kdna-core/src/public-contract/retained/read-api.d.ts",
@@ -1176,12 +1176,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/sectionbytes/contract.json",
       "bytes": 31759,
-      "sha256": "208423043515f4149dd8d0cbf270ae07dc137bf6f0b79a70bfe61f7996365f9f"
+      "sha256": "d8ef1e871c9a688a13d686badb7e3f0b843fa7c53f248fcd172974860e1f833d"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sectionbytes/generation-manifest.json",
       "bytes": 5189,
-      "sha256": "58bebeb594f68fb0300b201e48179d428ffa9f18d1cea83beccb0ea9724e51a9"
+      "sha256": "cf83df57ecbbdeb0ed84644b607be64aa0fb52672ffda64051cfee8b1b60378b"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAccepted06.json",
@@ -1236,12 +1236,12 @@
     {
       "path": "packages/kdna-core/src/public-contract/sections/contract.json",
       "bytes": 547981,
-      "sha256": "f871a8be8a91105f4a1a7bd4930e712bf3b012ce8b6fd17def7cf4eaaef27379"
+      "sha256": "3c66e85c554e19949d5e5bb73d066f5116690736b4a79c4ab6346a9b73ad6708"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/generation-manifest.json",
       "bytes": 19987,
-      "sha256": "7aae2e9ddea76a1f37d9dddf1f80fe23eb62867b6eca52c08d4789e732d0196e"
+      "sha256": "a6b2af262125317b33f97093101e8fe6ac053476199bc9d965f94a085a42add9"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/types.d.ts",
@@ -1271,7 +1271,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/source06/contract.json",
       "bytes": 76676,
-      "sha256": "f34c71dc3cc0a28864b3151e13e45bc50923ddff18e1171abec6a1d6eee91914"
+      "sha256": "99d24548d8c6ee69f87ff3c9b84c138da92dc38f50589305f0cb3fdd196f9b59"
     },
     {
       "path": "packages/kdna-core/src/public-contract/source06/types.d.ts",
@@ -1320,8 +1320,8 @@
     },
     {
       "path": "packages/kdna-read/src/index.d.ts",
-      "bytes": 496,
-      "sha256": "62f043a30eb38c2d7f9a0ce93a773e45cfe269e723a555d70681ff05470edb58"
+      "bytes": 1630,
+      "sha256": "e0ea00d6a779bc95cb97a667b9b7c914f1e6b5fadaf5ffee84ee17867c357ff1"
     },
     {
       "path": "packages/kdna-read/src/installation.generated.json",
@@ -1386,12 +1386,12 @@
     {
       "path": "packages/kdna-read/src/sections/contract.json",
       "bytes": 547981,
-      "sha256": "f871a8be8a91105f4a1a7bd4930e712bf3b012ce8b6fd17def7cf4eaaef27379"
+      "sha256": "3c66e85c554e19949d5e5bb73d066f5116690736b4a79c4ab6346a9b73ad6708"
     },
     {
       "path": "packages/kdna-read/src/sections/generation-manifest.json",
       "bytes": 19987,
-      "sha256": "7aae2e9ddea76a1f37d9dddf1f80fe23eb62867b6eca52c08d4789e732d0196e"
+      "sha256": "a6b2af262125317b33f97093101e8fe6ac053476199bc9d965f94a085a42add9"
     },
     {
       "path": "packages/kdna-read/src/sections/types.d.ts",
@@ -1530,8 +1530,8 @@
     },
     {
       "path": "specs/public-generation-manifest.json",
-      "bytes": 43423,
-      "sha256": "06546a73b57aa134f1a1536410a77351b40a7f3b66fe999c2ab1a8c2b2ca29a5"
+      "bytes": 43424,
+      "sha256": "6c21f8813e1409f85aa7b5930abc0083e214ab4aae1bbc904dc048165264bbc4"
     },
     {
       "path": "specs/public-vocabulary.json",
