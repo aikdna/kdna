@@ -736,7 +736,7 @@
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
           "version": "0.11.3",
-          "member_count": 97,
+          "member_count": 98,
           "members_sha256": "fdc8b84b975df63d55da2f1357afbd23b3321e1d03b4f78e65ee3fec3d71753f",
           "paths": [
             "LICENSE",
@@ -776,6 +776,7 @@
             "src/index.mjs",
             "src/installation.generated.json",
             "src/installation.js",
+            "src/model-view.js",
             "src/native-package-retained-observation.js",
             "src/node.d.ts",
             "src/node.js",
