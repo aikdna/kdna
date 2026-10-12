@@ -1,12 +1,21 @@
 # Current source, supported combinations and distribution
 
-Snapshot: 2026-10-11. Package source versions, public Git revisions, npm bytes,
-GitHub releases and dist-tags are separate facts. This wave prepares five new
-stable coordinates for `latest`: Core `0.37.2`, Read `0.11.3`, native CLI
-`0.39.0`, Studio Core `4.0.0` and Studio CLI `0.13.0`. All five are unpublished
-source candidates until exact release and registry evidence establishes otherwise.
-No earlier preview is relabeled or overwritten. MCP/Creator/protected Host
-remain complete Git source deliveries, with no new MCP npm target.
+Snapshot: 2026-10-12. Package source versions, public Git revisions, npm bytes,
+GitHub releases and dist-tags are separate facts. The five stable coordinates
+Core `0.37.2`, Read `0.11.3`, native CLI `0.39.0`, Studio Core `4.0.0` and
+Studio CLI `0.13.0` are published on `latest`, each from its reviewed source
+commit with a retained, byte-verified artifact; the machine-readable matrix is
+[release-coordinates.json](./release-coordinates.json). No earlier preview is
+relabeled or overwritten. MCP/Creator/protected Host remain complete Git source
+deliveries, with no MCP npm target.
+
+> **Superseded statement (kept for the record).** The 2026-10-11 snapshot read:
+> "This wave prepares five new stable coordinates for `latest`: Core `0.37.2`,
+> Read `0.11.3`, native CLI `0.39.0`, Studio Core `4.0.0` and Studio CLI
+> `0.13.0`. All five are unpublished source candidates until exact release and
+> registry evidence establishes otherwise." That statement was current on
+> 2026-10-11 and is superseded by the published results above; it is retained
+> here rather than silently rewritten.
 
 ## Native and Studio entry points
 
@@ -61,7 +70,7 @@ artifacts as current candidates.
 | Repository | Current source route and dependency boundary | Existing public distribution baseline |
 | --- | --- | --- |
 | [kdna](https://github.com/aikdna/kdna) | Exact Core/Read stable candidate pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Native `0.39.0` candidate source delivery above; Node >=22. Native Plan/load unavailable. | Published native previews keep their exact graphs; loading CLI `0.36.1` on the observed `latest`. Existing versions cannot be overwritten. |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.39.0` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |
@@ -101,8 +110,9 @@ Conformance, Eval and the compatibility alias:
 
 These official registry observations are from 2026-10-11. Re-read the exact
 package metadata before installation; a dist-tag can change, while the retained
-version's tarball and integrity remain its identity. These rows do not describe
-the new stable source candidates above.
+version's tarball and integrity remain its identity. These rows record the
+preview channels and the `latest` values observed before the stable publication
+described above.
 
 | Package | Published preview | Preview tag | Earlier `latest` observed |
 | --- | --- | --- | --- |
