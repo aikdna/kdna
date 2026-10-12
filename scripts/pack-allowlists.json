@@ -507,6 +507,7 @@
         "src/index.mjs",
         "src/installation.generated.json",
         "src/installation.js",
+        "src/model-view.js",
         "src/native-package-retained-observation.js",
         "src/node.d.ts",
         "src/node.js",
