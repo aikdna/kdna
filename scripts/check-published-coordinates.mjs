@@ -17,7 +17,7 @@ const checkBytes = process.argv.includes('--bytes');
 const failures = [];
 
 async function packument(name) {
-  const url = `${matrix.registry}${name.replace('/', '%2F')}?cachebust=${Date.now()}`;
+  const url = `${matrix.registry}${name.replaceAll('/', '%2F')}?cachebust=${Date.now()}`;
   const response = await fetch(url, { headers: { 'cache-control': 'no-cache' } });
   if (!response.ok) throw new Error(`registry read failed for ${name}: ${response.status}`);
   return response.json();
