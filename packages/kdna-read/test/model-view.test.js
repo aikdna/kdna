@@ -53,8 +53,9 @@ test('the body view keeps every author field and removes only the index and the 
       assert.equal(body.view_contract,MODEL_VIEW_CONTRACT);
       assert.equal(body.view,'body');
       assert.equal(body.status,'ready');
-      assert.deepEqual(Object.keys(body.content).sort(),[...BODY_KEYS].sort());
-      for(const key of BODY_KEYS)assert.deepEqual(body.content[key],result.envelope.content[key],`${contract}/${name}/${mode}/${key}`);
+      const carried=BODY_KEYS.filter(k=>Object.hasOwn(result.envelope.content,k));
+      assert.deepEqual(Object.keys(body.content).sort(),[...carried].sort());
+      for(const key of carried)assert.deepEqual(body.content[key],result.envelope.content[key],`${contract}/${name}/${mode}/${key}`);
       for(const key of AUDIT_KEYS)assert.equal(Object.hasOwn(body.content,key),false,`${contract}/${name}/${mode}/${key}`);
       const surfaced=['content','status','asset','snapshot_id','request_id'];
       for(const key of (contract==='retained'?RETAINED_ENVELOPE_KEYS:PIPELINE_ENVELOPE_KEYS))
@@ -72,11 +73,13 @@ test('every field of the full result is projected or named as omitted, and nothi
       const where=surfaced.includes(key)?'surfaced':'fingerprint.omitted.envelope';
       assert.ok(where==='surfaced'||body.fingerprint.omitted.envelope.includes(key),`envelope field silently dropped: ${contract}/${key}`);
     }
-    for(const key of CONTENT_KEYS)
+    const carried=Object.keys(result.envelope.content);
+    for(const key of carried)
       assert.ok(Object.hasOwn(body.content,key)||body.fingerprint.omitted.content.includes(key),`content field silently dropped: ${contract}/${key}`);
     for(const key of body.fingerprint.omitted.envelope)assert.ok(variant.includes(key),`omitted list invents an envelope field: ${contract}/${key}`);
     for(const key of body.fingerprint.omitted.content)assert.ok(AUDIT_KEYS.includes(key),`omitted list invents a content field: ${contract}/${key}`);
-    assert.deepEqual(body.fingerprint.omitted.content,[...AUDIT_KEYS]);
+    assert.deepEqual(body.fingerprint.omitted.content,AUDIT_KEYS.filter(k=>carried.includes(k)));
+    for(const key of CONTENT_KEYS)if(!carried.includes(key))assert.equal(body.fingerprint.omitted.content.includes(key),false,`a key the answer never carried cannot be named as omitted: ${key}`);
     assert.equal(body.fingerprint.recovery.view,'full');
     assert.equal(body.fingerprint.recovery.mode,'whole_asset');
     // The fingerprint restates identity the reader attested rather than hashing it here.
@@ -93,11 +96,21 @@ test('every field of the full result is projected or named as omitted, and nothi
 });
 test('a catalog answer is a body too, and the full view is one call away',async()=>{
   const {result}=await readFull('complex','exact_selection');
+  // A catalog answer carries the catalog and the index and no judgment body, so
+  // the projection must narrow to what the answer actually holds.
   const catalogOnly=asRetained(result,{mode:'catalog',status:'catalog_only'});
+  catalogOnly.envelope.content={catalog:thaw(result.envelope.content.catalog),asset_index:thaw(result.envelope.content.asset_index)};
   const body=projectModelView(catalogOnly,{mode:'catalog'});
   assert.equal(body.view,'body');
   assert.equal(body.status,'catalog_only');
-  assert.deepEqual(Object.keys(body.content).sort(),[...BODY_KEYS].sort());
+  assert.deepEqual(Object.keys(body.content),['catalog']);
+  assert.deepEqual(body.fingerprint.omitted.content,['asset_index']);
+  assert.deepEqual(body.content.catalog,result.envelope.content.catalog);
+  // The same narrowing holds for the exact pipeline, whose catalog answer carries
+  // the same two keys.
+  const pipelineCatalog=thaw(result);
+  pipelineCatalog.envelope.content={catalog:thaw(result.envelope.content.catalog),asset_index:thaw(result.envelope.content.asset_index)};
+  assert.deepEqual(Object.keys(projectModelView(pipelineCatalog,{mode:'catalog'}).content),['catalog']);
   const full=projectModelView(result,{view:'full'});
   assert.equal(full,result,'the full view must not copy, reshape or drop anything');
   assert.ok(Array.isArray(full.envelope.content.asset_index));
@@ -119,8 +132,11 @@ test('an unrecognised shape is refused instead of silently projected',async()=>{
   const extraEnvelope=thaw(result);extraEnvelope.envelope.future_field='x';refusal(extraEnvelope,'an extra envelope field must refuse');
   const missingEnvelope=thaw(result);delete missingEnvelope.envelope.receipt;refusal(missingEnvelope,'a missing envelope field must refuse');
   const extraContent=thaw(result);extraContent.envelope.content.future_field=[];refusal(extraContent,'an extra content field must refuse');
-  const missingContent=thaw(result);delete missingContent.envelope.content.asset_index;refusal(missingContent,'a missing content field must refuse');
+  const notAnObject=thaw(result);notAnObject.envelope.content=[];refusal(notAnObject,'content that is not an object must refuse');
   const bothShapes=thaw(result);bothShapes.envelope.mode='whole_asset';refusal(bothShapes,'a mixture of both envelope shapes must refuse');
+  // A subset of known content keys is legitimate: it is what a mode carries.
+  const narrowed=thaw(result);narrowed.envelope.content={catalog:narrowed.envelope.content.catalog};
+  assert.deepEqual(Object.keys(projectModelView(narrowed,{mode:'catalog'}).content),['catalog']);
   assert.throws(()=>projectModelView(result,{view:'summary'}),error=>error.code==='READ_MODEL_VIEW_UNAVAILABLE','an unknown view name must refuse');
 });
 test('a result that is not a projectable read envelope reaches the caller unchanged',()=>{
