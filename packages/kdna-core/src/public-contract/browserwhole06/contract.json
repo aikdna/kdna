@@ -3,7 +3,7 @@
   "source": {
     "path": "specs/public-semantic-source.json",
     "bytes": 1508065,
-    "sha256": "3831374540eb2b678c7849fbc26915d44284808af44892bcf710482cd758a9f4"
+    "sha256": "c724009cbde53ca87dd20b6e9fd37860bfa6e0906d2eefc7ae22fe055163c6ea"
   },
   "historical_original_source": {
     "scope": "historical_original_contract_source_identity_not_current_generator_input",

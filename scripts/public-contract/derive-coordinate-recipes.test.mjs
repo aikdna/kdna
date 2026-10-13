@@ -16,7 +16,7 @@ import { digest, pointer, project, sha } from './native-renderer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const inputs = readFrozenInputs(root);
-const options = { ...inputs, core: '0.37.3', read: '0.12.0' };
+const options = { ...inputs, core: '0.37.4', read: '0.12.1' };
 const candidate = deriveCoordinates(options);
 
 test('coordinate derivation verifies every frozen guard and is byte reproducible', () => {
@@ -96,11 +96,11 @@ test('decisions change exactly four package fields and two source observation da
   const document = candidate.documents.find((row) => row.path === name);
   const after = JSON.parse(document.bytes);
   const expected = structuredClone(before);
-  for (const [index, version] of ['0.37.3', '0.12.0'].entries()) {
+  for (const [index, version] of ['0.37.4', '0.12.1'].entries()) {
     const row = expected.version_policy.planned_packages[index];
     row.candidate_version = version;
     row.current_source_version = version;
-    row.current_source_version_observed = '2026-10-13';
+    row.current_source_version_observed = '2026-10-14';
   }
   assert.deepEqual(after, expected);
   const report = candidate.report.documents.find((row) => row.path === name);
@@ -190,9 +190,9 @@ test('derivation CLI refuses maintained paths, aliases into the repository and e
     '--root',
     root,
     '--core-version',
-    '0.37.3',
+    '0.37.4',
     '--read-version',
-    '0.12.0',
+    '0.12.1',
     '--out-dir',
     output,
   ];

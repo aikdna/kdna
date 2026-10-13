@@ -103,7 +103,7 @@ An existing `latest` package or repository `main` does not identify a candidate.
 
 | Entry | Exact candidate package combination | Supported route |
 | --- | --- | --- |
-| Core/Read | Core `0.37.3` / Read `0.12.0` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
+| Core/Read | Core `0.37.4` / Read `0.12.1` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
 | [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.0` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |

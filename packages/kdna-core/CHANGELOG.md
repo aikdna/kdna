@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 0.37.4 (2026-10-14)
+
+- Add the read-only `getMethodRoleTable()` accessor on the `./components`
+  subpath: a fresh deeply frozen copy of the current per-term method-role
+  vocabulary (`kdna.r2-semantics/1`) that admission actually checks, so an
+  authoring client can explain a method-role rejection without copying the
+  vocabulary or provoking one first. The accessor answers no admission
+  question and decides nothing.
+- Move the distribution coordinate together with its paired companion: the
+  generated package-set contract and the package manifests declare the exact
+  Read peer `0.12.1`, and Read `0.12.1` carries only its version and peer
+  move. No protocol, contract or capability changes: the compiled tuple
+  (core `kdna.core/0.8.2`, container `0.5.0`, payload `0.5.1`, canonical IR
+  `0.6.1`, Read `kdna.read/0.6.4`) keeps its identity.
+- Keep Core `0.37.2`, `0.37.3` and every published preview tag in place, so
+  an installed combination keeps working until its owner chooses to move.
+
 ## 0.37.3 (2026-10-13)
 
 - Move the distribution coordinate so Core and Read publish from one reviewed

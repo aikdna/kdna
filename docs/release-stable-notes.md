@@ -19,6 +19,31 @@ record. Registry acquisition and downstream adoption are separate observations.
   responsibility. Product acceptance and platform coverage require their own
   evidence.
 
+## Core 0.37.4
+
+- Adds the read-only `getMethodRoleTable()` accessor on the `./components`
+  subpath: a fresh deeply frozen copy of the current per-term method-role
+  vocabulary (`kdna.r2-semantics/1`) that admission checks, so an authoring
+  client can explain a method-role rejection without copying the vocabulary or
+  provoking one first. The accessor answers no admission question and decides
+  nothing.
+- Moves the distribution coordinate together with its paired companion: the
+  generated package-set contract and the package manifests declare the exact
+  Read peer `0.12.1`.
+- Changes no protocol, contract or capability: the compiled browser/Node tuple
+  keeps its identity, browser decryption remains a trusted Host responsibility
+  and no Host is activated.
+- Leaves Core `0.37.2`, `0.37.3` and every published preview tag in place: an
+  installed combination keeps working until its owner chooses to move.
+
+## Read 0.12.1
+
+- Moves the distribution coordinate only: an exact peer move to
+  `@aikdna/kdna-core@0.37.4` with no export, contract or behavior change.
+- Keeps the compiled and native-sections Read contracts `kdna.read/0.6.4` and
+  `kdna.read/0.7.0-candidate`; Read `0.12.0` and its published artifact stay
+  available, and adoption remains its own evidence.
+
 ## Core 0.37.3
 
 - Moves the distribution coordinate only, so that Core and Read are published
