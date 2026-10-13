@@ -5,9 +5,9 @@ Stable distribution `0.12.0` on `latest` declares the exact peer
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
 The current source carries the next candidate coordinate `0.12.1`, an exact
-peer move to `@aikdna/kdna-core@0.37.4` with no other change; it is
-unpublished until its own exact release and registry acquisition are
-verified.
+peer move to `@aikdna/kdna-core@0.37.4` with no other change. This source
+candidate is not yet published; its own exact release and registry
+acquisition must be verified first.
 Read consumes a genuine private Core snapshot and preserves authored focus,
 form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
