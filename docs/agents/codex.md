@@ -1,8 +1,13 @@
 # KDNA with OpenAI Codex
 
-> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
-> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
-> For current source, start with [Core/Read](../core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+> This page documents the earlier loading workflow at its last supporting published versions:
+> Runtime CLI **0.36.1** and Studio CLI **0.11.0**. The commands below need those exact versions.
+> The current published stable line is Runtime CLI **0.40.0** (exact Core `0.37.3` / Read `0.12.0`)
+> with Studio CLI **0.13.0**; the current implementation rejects these older inputs and does not
+> support this loading or project/card workflow. Its `inspect` and `validate` commands have a
+> different contract. For a current asset start with
+> [Core/Read](../core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme),
+> or `npm install -g @aikdna/kdna-cli@0.40.0` and follow the current entry guide.
 
 Use an explicitly selected `.kdna` file. No global KDNA library or automatically
 installed Skill is required.

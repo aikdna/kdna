@@ -518,13 +518,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'docs/core-read-current-status.md',
