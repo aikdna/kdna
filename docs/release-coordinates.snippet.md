@@ -1,14 +1,14 @@
 <!-- Generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand. -->
 
-**Current publication state (2026-10-12).** All five stable coordinates are
+**Current publication state (2026-10-13).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.2` | `latest` | `16234f84440252b0c449c529de71435630cc79816f88ff0d0a8a2b4d852c1274` |
-| `@aikdna/kdna-read` | `0.11.3` | `latest` | `5fd1efc5bfd28ce8c9724fefb09c1abed35dde2c16f8498b572da5c640679f4c` |
+| `@aikdna/kdna-core` | `0.37.3` | `latest` | `b4f3a6593b0fd55e8d245009835123578722f09fd71f6bc579b2e3b988a144f1` |
+| `@aikdna/kdna-read` | `0.12.0` | `latest` | `c815b4df97cc0ce844b94295df3802bf7cc5a68056c3aca587efed90251b4cbb` |
 | `@aikdna/kdna-cli` | `0.39.0` | `latest` | `436132276b96f5f3435f4883afce9805f1579d99f735d8c7e2fd1316482c06d0` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
 | `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` | `8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a` |
