@@ -1,7 +1,7 @@
 # KDNA Read — R2 candidate
 
-Stable distribution source candidate `0.11.3` declares the exact peer
-`@aikdna/kdna-core@0.37.2`. The browser/Node contract remains
+Stable distribution source candidate `0.12.0` declares the exact peer
+`@aikdna/kdna-core@0.37.3`. The browser/Node contract remains
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
 Read consumes a genuine private Core snapshot and preserves authored focus,

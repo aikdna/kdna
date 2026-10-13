@@ -4,12 +4,13 @@
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
   "updated": "2026-10-12",
-  "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions.",
+  "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
       "unit": "core",
       "name": "@aikdna/kdna-core",
       "version": "0.37.2",
+      "candidate_version": "0.37.3",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
       "release_tag": "0.37.2",
@@ -23,6 +24,7 @@
       "unit": "read",
       "name": "@aikdna/kdna-read",
       "version": "0.11.3",
+      "candidate_version": "0.12.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
       "release_tag": "read/0.11.3",
@@ -84,13 +86,23 @@
     }
   ],
   "preserved_preview_tags": {
-    "@aikdna/kdna-core": { "browser-preview": "0.37.1-rc.browser.1", "r2.7": "0.36.0-rc.r2.7" },
-    "@aikdna/kdna-read": { "browser-preview": "0.11.2-rc.browser.1", "r2.7": "0.11.0-rc.r2.7" },
+    "@aikdna/kdna-core": {
+      "browser-preview": "0.37.1-rc.browser.1",
+      "r2.7": "0.36.0-rc.r2.7"
+    },
+    "@aikdna/kdna-read": {
+      "browser-preview": "0.11.2-rc.browser.1",
+      "r2.7": "0.11.0-rc.r2.7"
+    },
     "@aikdna/kdna-cli": {
       "native-preview": "0.39.0-rc.native-sections.3",
       "r2.7": "0.39.0-rc.native-sections.2"
     },
-    "@aikdna/kdna-studio-core": { "components-preview": "4.0.0-rc.components.2" },
-    "@aikdna/kdna-studio-cli": { "components-preview": "0.13.0-rc.components.2" }
+    "@aikdna/kdna-studio-core": {
+      "components-preview": "4.0.0-rc.components.2"
+    },
+    "@aikdna/kdna-studio-cli": {
+      "components-preview": "0.13.0-rc.components.2"
+    }
   }
 }

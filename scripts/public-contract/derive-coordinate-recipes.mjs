@@ -14,39 +14,39 @@ import {
 } from './native-renderer.mjs';
 
 export const FROZEN_INPUT = Object.freeze({
-  commit: '6b26f90c692236c2af387b683725203330b24e71',
+  commit: '1bf313a2c914f7a8f9c31a088e9714549b5a601b',
   source: 'specs/public-semantic-source.json',
-  source_sha256: 'a05af27e97be03a8909375217ab353017b72a10532ad7d700b6ae278e30d1d5f',
+  source_sha256: '3d68933a660f679d1e9478330d905c1df957534004a02bc12f15208c94507c13',
   recipe: 'scripts/public-contract/native-output-recipe.json',
-  recipe_sha256: '076b8d75b26d3c675fb8f89768e7d3cdddc448f2f29b19adb28b768a0c4dfbfb',
+  recipe_sha256: 'f0106ffe2a103535cf1632bdc2324d74492c5e6709c559a3868728ad5fb6ea1d',
 });
 export const FROZEN_DOCUMENTS = Object.freeze([
   Object.freeze({
     path: 'specs/public-contract-decisions.json',
     accepted_design_index: 2,
     source_pointer: '/accepted_designs/2',
-    bytes: 50903,
-    sha256: 'b2e954e373dcbaa6d71c36a9c5442627805a3cf8a4f5e2f09d8f6c52fac36382',
+    bytes: 50851,
+    sha256: 'ed367a247f966989d9e1633f6349279a8aeb8a41349db7534cf67083e1bf087f',
   }),
   Object.freeze({
     path: 'specs/public-version-policy.md',
     accepted_design_index: 4,
     source_pointer: '/accepted_designs/4',
-    bytes: 12961,
-    sha256: '4cb53dd2da00d5e98a8197a551bf655e866fb6d3a76b759cf179a8b0b8352e83',
+    bytes: 13074,
+    sha256: 'a3ec9acd1985ffa6814697ea181b10862833fca8a32a039539b282566ee148c0',
   }),
   Object.freeze({
     path: 'specs/read-contract.md',
     accepted_design_index: 5,
     source_pointer: '/accepted_designs/5',
-    bytes: 11669,
-    sha256: 'd2a53ba37feb9e0d5b99fc334e955d6c8f3e5e86e95c6cc7daeb318088c662c4',
+    bytes: 11722,
+    sha256: '1940f18b6f3a302af3f358844955880b1efc0417cbca315391008a4100f9b4ab',
   }),
   Object.freeze({
     path: 'specs/protection-admission.md',
     source_pointer: '/protection_admission/specification',
-    bytes: 38180,
-    sha256: '35180f6583ac97302096a8e2ff786f1c7a9a0c10caabc3a4fa627affd1640bef',
+    bytes: 38233,
+    sha256: '5b4e784aa18c3c5c42bbbdee052235096af85f354b2fb6108788024fac9051b1',
   }),
 ]);
 const DOCUMENT_WORDING = Object.freeze({
@@ -57,7 +57,7 @@ const VERSION_POLICY_WORDING = Object.freeze({
   from: 'The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance.',
   to: 'The exact candidate pair requires its own artifact review and installed-consumer acceptance; publication is established only by matching release and registry evidence.',
 });
-const OLD_COORDINATES = Object.freeze({ core: '0.37.1-rc.browser.1', read: '0.11.2-rc.browser.1' });
+const OLD_COORDINATES = Object.freeze({ core: '0.37.2', read: '0.11.3' });
 function formatRecipe(recipe) {
   const require = createRequire(import.meta.url);
   const manifestPath = require.resolve('prettier/package.json');
@@ -180,6 +180,9 @@ function deriveDecisionDocument(oldText, table) {
       'DOCUMENT_TRANSFORM',
       'Frozen decisions package ownership differs',
     );
+    // A coordinate this transition does not move keeps its recorded source
+    // observation; only a moved package gets a new version and observation date.
+    if (coordinate.from === coordinate.to) continue;
     for (const field of ['candidate_version', 'current_source_version'])
       bindings.push({
         kind: 'version_coordinate',
@@ -190,8 +193,8 @@ function deriveDecisionDocument(oldText, table) {
     bindings.push({
       kind: 'source_observation_date',
       pointer: prefix + '/current_source_version_observed',
-      before: '2026-10-07',
-      after: '2026-10-11',
+      before: '2026-10-11',
+      after: '2026-10-13',
     });
   }
   const result = transform(original, [], new Map(bindings.map((row) => [row.pointer, row])));
@@ -241,14 +244,28 @@ function deriveDocuments(oldSource, documentBytes, table) {
       text = substitute(oldText, table);
       const wordings = [DOCUMENT_WORDING];
       if (frozen.path === 'specs/public-version-policy.md') wordings.push(VERSION_POLICY_WORDING);
+      const applied = [];
       for (const wording of wordings) {
+        const occurrences = text.split(wording.from).length - 1;
+        // A baseline that already carries the reviewed wording has nothing to
+        // rewrite; the sentence must then be present exactly once as the target.
+        if (occurrences === 0) {
+          equal(
+            text.split(wording.to).length - 1,
+            1,
+            'DOCUMENT_TRANSFORM',
+            'Expected exactly one reviewed publication-status sentence',
+          );
+          continue;
+        }
         equal(
-          text.split(wording.from).length - 1,
+          occurrences,
           1,
           'DOCUMENT_TRANSFORM',
           'Expected exactly one reviewed publication-status sentence',
         );
         text = text.replace(wording.from, wording.to);
+        applied.push({ ...wording, occurrences: 1 });
       }
       transformations = [
         ...table.map((row) => ({
@@ -256,7 +273,7 @@ function deriveDocuments(oldSource, documentBytes, table) {
           ...row,
           occurrences: oldText.split(row.from).length - 1,
         })),
-        ...wordings.map((wording) => ({ kind: 'wording', ...wording, occurrences: 1 })),
+        ...applied.map((wording) => ({ kind: 'wording', ...wording })),
       ];
     }
     const bytes = Buffer.from(text);

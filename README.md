@@ -108,6 +108,10 @@ An existing `latest` package or repository `main` does not identify a candidate.
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
+The maintained source currently carries the candidate pair Core `0.37.3` /
+Read `0.12.0`, which the registry does not serve yet; until it does, the table
+above lists only the published and byte-verified combination.
+
 The two container routes have different reader and source APIs. Sharing SDK
 package versions does not make their assets interchangeable. Use the reader
 named by the producing route. Native CLI Plan/load remains unavailable. Neither

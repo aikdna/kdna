@@ -1047,7 +1047,9 @@ function checkCurrentNavigation(root, options = {}) {
   contains('docs/core-read-current-status.md', null, '## Matching consumer routes', [
     versions.core,
     versions.read,
-    `Read declares Core \`${released.core.version}\` as its exact peer`,
+    // The sentence describes the peer the maintained source declares, so it
+    // follows the source coordinate rather than the last published one.
+    `Read declares Core \`${versions.core}\` as its exact peer`,
     `container \`${tuple.container}\``,
     `${tuple.payload_profile}/${tuple.payload_version}`,
     tuple.core,

@@ -3,7 +3,7 @@
 const { createPublisher } = require('./release-channel-publisher.js');
 const publisher = createPublisher({
   channel: 'stable',
-  versions: { '@aikdna/kdna-core': '0.37.2', '@aikdna/kdna-read': '0.11.3' },
+  versions: { '@aikdna/kdna-core': '0.37.3', '@aikdna/kdna-read': '0.12.0' },
 });
 if (require.main === module)
   publisher.main().catch(() => {
