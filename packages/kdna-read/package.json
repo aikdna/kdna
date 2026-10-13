@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-read",
-  "version": "0.12.0",
+  "version": "0.11.3",
   "description": "Public KDNA Read projection and Host disclosure boundary.",
   "type": "commonjs",
   "main": "src/index.js",

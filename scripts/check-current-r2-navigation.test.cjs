@@ -118,7 +118,7 @@ test('generator refuses duplicate owning roots even when a lookup would overwrit
 const mutations = [
   ['root README current package', 'README.md', '0.37.2', '0.35.0-rc.source.1'],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', 'Read `0.12.0`', '0.3.0-rc.component-semantics.2'],
+  ['Chinese README package', 'README.zh.md', 'Read `0.11.3`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -134,7 +134,7 @@ const mutations = [
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'Stable distribution source candidate `0.12.0`',
+    'Stable distribution source candidate `0.11.3`',
     '0.11.0-rc.r2.4',
   ],
   [
@@ -203,7 +203,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.2` / Read `0.12.0`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.2` / Read `0.11.3`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -246,7 +246,7 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.2`、Read `0.12.0`',
+    'Core `0.37.2`、Read `0.11.3`',
     '0.36.0-rc.r2.2',
   ],
   [
@@ -264,7 +264,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.2` and Read `0.12.0`',
+    'Core `0.37.2` and Read `0.11.3`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -413,7 +413,7 @@ const nativeIdentityMutations = [
     'English published Read',
     'README.md',
     '`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI',
-    '`0.36.0-rc.r2.7` / Read `0.12.0`; loading CLI',
+    '`0.36.0-rc.r2.7` / Read `0.11.3`; loading CLI',
   ],
   [
     'Chinese published Core',
@@ -425,7 +425,7 @@ const nativeIdentityMutations = [
     'Chinese published Read',
     'README.zh.md',
     '`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合',
-    '`@aikdna/kdna-read@0.12.0`。该组合',
+    '`@aikdna/kdna-read@0.11.3`。该组合',
   ],
   [
     'status published Core',
@@ -437,7 +437,7 @@ const nativeIdentityMutations = [
     'status published Read',
     'docs/core-read-current-status.md',
     '`0.11.0-rc.r2.7`. These are distinct installed graphs.',
-    '`0.12.0`. These are distinct installed graphs.',
+    '`0.11.3`. These are distinct installed graphs.',
   ],
   [
     'historical publication role',
@@ -759,7 +759,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.2` / Read `0.12.0`',
+    'local package line is Core `0.37.2` / Read `0.11.3`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1456,11 +1456,11 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.2` and Read `0.12.0`';
+  const marker = 'The current exact pair is Core `0.37.2` and Read `0.11.3`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
-    'The current exact pair is Core `0.36.1` and Read `0.12.0`',
+    'The current exact pair is Core `0.36.1` and Read `0.11.3`',
   );
   const result = checkCurrentNavigation(root, {
     compiled: false,
@@ -1685,7 +1685,7 @@ for (const [file, before, after, issue] of [
   ],
   [
     'README.md',
-    'published stable\nCore `0.37.2` / Read `0.12.0`',
+    'published stable\nCore `0.37.2` / Read `0.11.3`',
     'the published browser-preview pair',
     'README.md:current:',
   ],
