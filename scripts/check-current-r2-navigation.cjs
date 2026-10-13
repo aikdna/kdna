@@ -20,6 +20,25 @@ const RELEASE_COORDINATES_PATH = 'docs/release-coordinates.json';
 // contain, so the run fails on the named issue rather than matching `undefined`.
 const MISSING_COORDINATE = '\u0000release-coordinates-missing';
 const RELEASE_UNITS = Object.freeze(['core', 'read', 'cli', 'studio-core', 'studio-cli']);
+// A unit may carry a declared source candidate that leads the published
+// coordinate. The matrix keeps recording only observed publication facts; the
+// candidate is named separately so the two can differ without either side
+// silently overwriting the other.
+function numericVersion(value) {
+  if (typeof value !== 'string') return null;
+  const match = value.match(/^(\d+)\.(\d+)\.(\d+)$/u);
+  return match ? match.slice(1).map(Number) : null;
+}
+function isStrictSuccessor(candidate, published) {
+  const left = numericVersion(candidate);
+  const right = numericVersion(published);
+  if (!left || !right) return false;
+  for (let index = 0; index < 3; index += 1) {
+    if (left[index] > right[index]) return true;
+    if (left[index] < right[index]) return false;
+  }
+  return false;
+}
 function releaseCoordinates(read, check) {
   const matrix = JSON.parse(read(RELEASE_COORDINATES_PATH));
   const rows = new Map((matrix.packages ?? []).map((row) => [row.unit, row]));
@@ -31,10 +50,20 @@ function releaseCoordinates(read, check) {
       Boolean(row && row.name && row.version && row.npm_tag),
       { unit },
     );
+    // A declared candidate must strictly lead the published coordinate: it
+    // describes a source that is ahead, never a restatement of what is already
+    // published.
+    const candidate = row?.candidate_version;
+    check(
+      `release-coordinates:candidate-declared.${unit}`,
+      candidate === undefined || isStrictSuccessor(candidate, row?.version),
+      { candidate: candidate ?? null, published: row?.version ?? null },
+    );
     packages[unit] = {
       name: row?.name ?? MISSING_COORDINATE,
       version: row?.version ?? MISSING_COORDINATE,
       tag: row?.npm_tag ?? MISSING_COORDINATE,
+      candidate: candidate ?? null,
     };
   }
   const mcp = (matrix.git_only ?? [])[0];
@@ -821,12 +850,31 @@ function checkCurrentNavigation(root, options = {}) {
   for (const unit of ['core', 'read'])
     check(
       `release-coordinates:source-consistency.${unit}`,
-      source.engineering.package_versions[unit] === coordinates.packages[unit].version,
+      source.engineering.package_versions[unit] === coordinates.packages[unit].version ||
+        source.engineering.package_versions[unit] === coordinates.packages[unit].candidate,
       {
         semantic_source: source.engineering.package_versions[unit],
         release_matrix: coordinates.packages[unit].version,
+        declared_candidate: coordinates.packages[unit].candidate,
       },
     );
+  // The published block may never carry a declared candidate: the candidate is
+  // a source fact, and a reader of the published statement can only install what
+  // the registry actually serves.
+  const publishedBlock = (() => {
+    const text = read('README.md');
+    const start = text.indexOf('<!-- release-coordinates:begin');
+    const end = text.indexOf('<!-- release-coordinates:end -->');
+    return start >= 0 && end > start ? text.slice(start, end) : '';
+  })();
+  const declaredCandidates = Object.entries(coordinates.packages)
+    .filter(([, row]) => typeof row.candidate === 'string')
+    .map(([unit, row]) => ({ unit, candidate: row.candidate }));
+  check(
+    'release-coordinates:candidate-not-published',
+    declaredCandidates.every((row) => !publishedBlock.includes(row.candidate)),
+    { declared_candidates: declaredCandidates, block_chars: publishedBlock.length },
+  );
   validateSourceMap(source, JSON.parse(read('specs/public-source-map.json')), check);
   validateCurrentTarget(source, decisionDocument, check);
 
