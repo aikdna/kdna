@@ -1,6 +1,6 @@
 # Exact stable Core and Read release
 
-Core `0.37.2` and Read `0.11.3` are new stable distribution candidates for the
+Core `0.37.2` and Read `0.12.0` are new stable distribution candidates for the
 npm `latest` tag. This document describes preparation and publication gates; it
 records the source and artifact evidence that publication then performed. The [channel history](current-release-support.md#published-channel-history)
 retains the earlier previews and observed `latest` values. A stable npm version
@@ -29,7 +29,7 @@ node scripts/stable-release-authority.js candidate --unit core \
   --artifact "$OUTPUT/aikdna-kdna-core-0.37.2.tgz"
 node scripts/stable-release-authority.js candidate --unit read \
   --evidence "$OUTPUT/read.json" \
-  --artifact "$OUTPUT/aikdna-kdna-read-0.11.3.tgz"
+  --artifact "$OUTPUT/aikdna-kdna-read-0.12.0.tgz"
 node scripts/stable-release-authority.js candidate-smoke --unit core \
   --evidence "$OUTPUT/core.json" \
   --artifact "$OUTPUT/aikdna-kdna-core-0.37.2.tgz"
@@ -57,7 +57,7 @@ hash cannot be attached to a new stable coordinate.
 
 After the reviewed source is integrated on `origin/main`, select that same
 accepted commit for both tags. Publish Core tag `0.37.2` first, then Read tag
-`read/0.11.3` after the exact Core artifact is available from the registry.
+`read/0.12.0` after the exact Core artifact is available from the registry.
 Both GitHub releases must be published, nondraft **stable releases**. A local
 command, prerelease event, branch ref or fabricated event cannot substitute.
 
@@ -81,7 +81,7 @@ followed by one final `kdna-stable-release` fenced JSON block. The Core shape is
 ```
 
 These placeholders are a schema example, not runnable approval metadata.
-For Read, change `unit` to `read` and `version` to `0.11.3`; `companion` contains
+For Read, change `unit` to `read` and `version` to `0.12.0`; `companion` contains
 exactly `name`, `version`, `sha256`, `integrity`, `shasum` and `gitHead` for the
 approved Core `0.37.2` artifact. Its `gitHead` must equal the same reviewed source
 commit. Public notes and attachments contain only public release facts.
@@ -110,7 +110,7 @@ empty user config and the exact package pair:
 ```sh
 npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
   --registry=https://registry.npmjs.org \
-  @aikdna/kdna-core@0.37.2 @aikdna/kdna-read@0.11.3
+  @aikdna/kdna-core@0.37.2 @aikdna/kdna-read@0.12.0
 ```
 
 Verify downloaded archive SHA256/SRI and `gitHead` against the approved evidence,

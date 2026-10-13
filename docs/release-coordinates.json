@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-10-12",
+  "updated": "2026-10-13",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions.",
   "packages": [
     {
@@ -22,15 +22,15 @@
     {
       "unit": "read",
       "name": "@aikdna/kdna-read",
-      "version": "0.11.3",
+      "version": "0.12.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "read/0.11.3",
-      "source_commit": "87d412724d8a379190045a0b19cef3b2c79174ae",
-      "artifact_sha256": "5fd1efc5bfd28ce8c9724fefb09c1abed35dde2c16f8498b572da5c640679f4c",
-      "publish_run": 38178334970,
-      "release_id": 409945882,
-      "release_published_at": "2026-10-11T21:55:20Z"
+      "release_tag": "read/0.12.0",
+      "source_commit": null,
+      "artifact_sha256": "0bc7160d8c8ce2673c58a6d274f8d0a62ee377cb57e2f4f779e98787f0aec9f5",
+      "publish_run": null,
+      "release_id": null,
+      "release_published_at": null
     },
     {
       "unit": "cli",

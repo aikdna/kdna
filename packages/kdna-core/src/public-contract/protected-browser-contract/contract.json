@@ -3,7 +3,7 @@
   "source": {
     "path": "specs/public-semantic-source.json",
     "bytes": 1507864,
-    "sha256": "3d68933a660f679d1e9478330d905c1df957534004a02bc12f15208c94507c13"
+    "sha256": "7cb375ad496617ea9a67f9a204d2c3067ca351e4196a65f7068ed6e667a0dc9b"
   },
   "historical_original_source": {
     "scope": "new_browser_adapter_has_no_historical_original_contract",
@@ -82,7 +82,7 @@
     },
     "package_versions": {
       "core": "0.37.2",
-      "read": "0.11.3"
+      "read": "0.12.0"
     }
   },
   "types": {
