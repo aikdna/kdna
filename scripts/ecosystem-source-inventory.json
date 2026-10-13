@@ -220,7 +220,7 @@
           "name": "@aikdna/kdna-core",
           "version": "0.37.3",
           "member_count": 459,
-          "members_sha256": "c96d456d47093c17ce77c5dda5e2bd46e428cc482a3c367370c1be5a7620a7f2",
+          "members_sha256": "8f44c22f1e95c5c1b0d683e9926b64a07dfad4225f07bd539870f600d5da2585",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -737,7 +737,7 @@
           "name": "@aikdna/kdna-read",
           "version": "0.12.0",
           "member_count": 98,
-          "members_sha256": "2997b10c14a7ba9ba773b95625b12f27aa9869de9474710c562026c079b61179",
+          "members_sha256": "b7681b4b96e92d53ff4a94257fb1bfa767cd44cb7dca13bfa995d08fbb97c50f",
           "paths": [
             "LICENSE",
             "NOTICE",
