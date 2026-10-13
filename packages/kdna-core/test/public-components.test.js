@@ -136,3 +136,17 @@ test('CS2 removed opt-in cannot leave an own-judgment string binding behind',asy
  asset.payload.judgments[0].extensions=[];asset.payload.extensions=[];
  await rejected(asset,'READ_COMPONENT_BINDING_INVALID');
 });
+
+test('the method role table is the exact registry, freshly copied and deeply frozen',()=>{
+ const {getMethodRoleTable}=req('@aikdna/kdna-core/components');
+ const contract=require(path.join(coreDir,'src/public-contract/generated-contract.json'));
+ const table=getMethodRoleTable();
+ assert.equal(table.contract_id,'kdna.r2-semantics/1');
+ assert.deepEqual(table.roles,contract.r2_semantics.method_roles);
+ assert.equal(Object.keys(table.roles).length,16);
+ assert.deepEqual(table.roles.feeling,{required:['个人感受'],optional:['体验说明','偏好变化']});
+ assert.ok(Object.isFrozen(table)&&Object.isFrozen(table.roles)&&Object.isFrozen(table.roles.feeling)&&Object.isFrozen(table.roles.feeling.required));
+ assert.throws(()=>{table.roles.feeling.required.push('注入');},TypeError);
+ const second=getMethodRoleTable();
+ assert.notEqual(second,table);assert.deepEqual(second,table);
+});
