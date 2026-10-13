@@ -8,8 +8,8 @@ Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`.
 The current source carries the next candidate pair -- package `0.37.4` with
 exact Read `0.12.1`, whose only content change is the read-only
-`getMethodRoleTable()` accessor -- and it is unpublished until its own exact
-release and registry acquisition are verified. Native section subpaths separately use
+`getMethodRoleTable()` accessor. This source candidate is not yet published;
+its own exact release and registry acquisition must be verified first. Native section subpaths separately use
 Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).

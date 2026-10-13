@@ -3,8 +3,8 @@
 The base contract remains `kdna.protected-source/1`, version `1.0.0`.
 The current Schema is `urn:kdna:schema:protected-source:1.0.0:binding:r2:8`, at
 [protected-source-r2-binding-8.schema.json](protected-source-r2-binding-8.schema.json).
-The unique [public source](public-semantic-source.json) binds Core `0.37.3`
-and Read `0.12.0` to the complete [current tuple](public-version-policy.md),
+The unique [public source](public-semantic-source.json) binds Core `0.37.4`
+and Read `0.12.1` to the complete [current tuple](public-version-policy.md),
 including Core `kdna.core/0.8.2` and Read `kdna.read/0.6.4`.
 
 `protected_source.schema_binding` participates in the normal definition digest.
