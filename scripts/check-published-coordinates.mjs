@@ -36,6 +36,18 @@ for (const entry of matrix.packages) {
     failures.push(`${entry.name}@${entry.version}: version is not published`);
     continue;
   }
+  // A declared source candidate is a version the source produces but the
+  // registry has not published. Once it appears on the registry it must be
+  // promoted to `version`, so a candidate can never stay declared while already
+  // being served, and a published coordinate can never be a candidate restated.
+  if (typeof entry.candidate_version === 'string') {
+    const candidate = document.versions?.[entry.candidate_version];
+    if (candidate) {
+      failures.push(
+        `${entry.name}@${entry.candidate_version}: declared as an unpublished candidate but the registry serves it; promote it to version`,
+      );
+    }
+  }
   const tag = document['dist-tags']?.[entry.npm_tag];
   if (tag !== entry.version) {
     failures.push(

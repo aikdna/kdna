@@ -1770,3 +1770,49 @@ test('a release matrix that loses a pinned unit fails closed instead of pinning 
     JSON.stringify(result.issues.slice(0, 5)),
   );
 });
+// A source candidate may lead the published coordinate, but it is a source
+// fact: it must strictly lead, and it may never be presented as published.
+test('a declared source candidate that does not lead the published coordinate is refused', () => {
+  const result = changedDocument('docs/release-coordinates.json', (text) => {
+    const matrix = JSON.parse(text);
+    matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.11.3';
+    return JSON.stringify(matrix, null, 2) + '\n';
+  });
+  assert.ok(
+    result.issues.some((issue) => issue.name === 'release-coordinates:candidate-declared.read'),
+    JSON.stringify(result.issues.slice(0, 5)),
+  );
+});
+test('declaring a leading source candidate leaves the published statement unchanged', () => {
+  const result = changedDocument('docs/release-coordinates.json', (text) => {
+    const matrix = JSON.parse(text);
+    matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.12.0';
+    return JSON.stringify(matrix, null, 2) + '\n';
+  });
+  assert.deepEqual(result.issues, []);
+});
+test('a declared source candidate may not be rendered as the published artifact', () => {
+  const matrixPath = 'docs/release-coordinates.json';
+  const matrix = JSON.parse(fs.readFileSync(path.join(root, matrixPath), 'utf8'));
+  matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.12.0';
+  const matrixText = JSON.stringify(matrix, null, 2) + '\n';
+  const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+  const promoted = readme.replace(
+    '| `@aikdna/kdna-read` | `0.11.3` |',
+    '| `@aikdna/kdna-read` | `0.12.0` |',
+  );
+  assert.notEqual(promoted, readme, 'Counterexample must alter the published block');
+  const result = checkCurrentNavigation(root, {
+    compiled: false,
+    readText: (rel) =>
+      rel === matrixPath
+        ? matrixText
+        : rel === 'README.md'
+          ? promoted
+          : fs.readFileSync(path.join(root, rel), 'utf8'),
+  });
+  assert.ok(
+    result.issues.some((issue) => issue.name === 'release-coordinates:candidate-not-published'),
+    JSON.stringify(result.issues.slice(0, 5)),
+  );
+});
