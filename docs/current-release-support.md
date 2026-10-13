@@ -2,7 +2,7 @@
 
 Snapshot: 2026-10-12. Package source versions, public Git revisions, npm bytes,
 GitHub releases and dist-tags are separate facts. The five stable coordinates
-Core `0.37.2`, Read `0.11.3`, native CLI `0.39.0`, Studio Core `4.0.0` and
+Core `0.37.2`, Read `0.12.0`, native CLI `0.39.0`, Studio Core `4.0.0` and
 Studio CLI `0.13.0` are published on `latest`, each from its reviewed source
 commit with a retained, byte-verified artifact; the machine-readable matrix is
 [release-coordinates.json](./release-coordinates.json). No earlier preview is
@@ -20,7 +20,7 @@ deliveries, with no MCP npm target.
 ## Native and Studio entry points
 
 For a new native asset workflow, use CLI `0.39.0`, Core
-`0.37.2` and Read `0.11.3` together. The native route
+`0.37.2` and Read `0.12.0` together. The native route
 uses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery
 contains the CLI and all eleven required companion archives, a relative-file
 lock, full member bindings and licenses. Follow the
