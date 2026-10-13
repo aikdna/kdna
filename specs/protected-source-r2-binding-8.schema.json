@@ -1419,7 +1419,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.3",
+              "const": "0.37.4",
               "type": "string"
             }
           },

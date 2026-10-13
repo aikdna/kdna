@@ -218,9 +218,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.3",
+          "version": "0.37.4",
           "member_count": 459,
-          "members_sha256": "bea61bee385de97efc43ea206c90647cea825dd26c3ea296c1788584b1840779",
+          "members_sha256": "14d7e8ff178e21050ec018896f10e6b0d28cfdce123cfd53cfd3c06c95ba3629",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -735,9 +735,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.12.0",
+          "version": "0.12.1",
           "member_count": 98,
-          "members_sha256": "4661771a0468572a23544d548192013baaa2162ba2ed5597e02a9b393526852b",
+          "members_sha256": "0c2fadfd0c5e8b8a9f530e337456d3625f5e80c2a0e40e265ff3b2cb09108d42",
           "paths": [
             "LICENSE",
             "NOTICE",

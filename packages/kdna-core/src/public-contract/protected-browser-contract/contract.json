@@ -3,7 +3,7 @@
   "source": {
     "path": "specs/public-semantic-source.json",
     "bytes": 1508065,
-    "sha256": "3831374540eb2b678c7849fbc26915d44284808af44892bcf710482cd758a9f4"
+    "sha256": "c724009cbde53ca87dd20b6e9fd37860bfa6e0906d2eefc7ae22fe055163c6ea"
   },
   "historical_original_source": {
     "scope": "new_browser_adapter_has_no_historical_original_contract",
@@ -81,8 +81,8 @@
       "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
     },
     "package_versions": {
-      "core": "0.37.3",
-      "read": "0.12.0"
+      "core": "0.37.4",
+      "read": "0.12.1"
     }
   },
   "types": {

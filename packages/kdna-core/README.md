@@ -5,7 +5,11 @@
 Stable distribution: package `0.37.3` on `latest`, paired with exact Read
 `0.12.0`. The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
-and Capsule/Plan/Host/Trace `0.3.1`. Native section subpaths separately use
+and Capsule/Plan/Host/Trace `0.3.1`.
+The current source carries the next candidate pair -- package `0.37.4` with
+exact Read `0.12.1`, whose only content change is the read-only
+`getMethodRoleTable()` accessor -- and it is unpublished until its own exact
+release and registry acquisition are verified. Native section subpaths separately use
 Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
