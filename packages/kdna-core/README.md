@@ -12,9 +12,10 @@ Container `0.6.0` and Read `0.7.0-candidate`. See the
 
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. This source candidate does not establish that `latest` has changed;
-select the exact coordinate only after the official registry supplies it.
-Core `0.37.0` and Read `0.11.1` remain earlier published stable coordinates.
+checks. The published coordinate remains Core `0.37.2` paired with Read
+`0.11.3`, and this source candidate does not establish that `latest` has
+changed; select the exact coordinate only after the official registry supplies
+it. Core `0.37.0` and Read `0.11.1` remain earlier published stable coordinates.
 The earlier published Core `0.37.1-rc.browser.1` / Read
 `0.11.2-rc.browser.1` previews retain their own byte identities and tags.
 

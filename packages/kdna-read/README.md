@@ -9,7 +9,10 @@ form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
 and local tests do not establish registry publication or content quality.
 
-The 2026-10-11 registry observation records `latest` at Read `0.11.1` with exact Core `0.37.0`. Those artifacts remain separate from this unpublished candidate; a new source version does not move a dist-tag.
+The published coordinate remains Read `0.11.3` with exact Core `0.37.2`. Those
+artifacts remain separate from this unreleased source candidate; a new source
+version does not move a dist-tag. The 2026-10-11 registry observation recorded
+`latest` at Read `0.11.1` with exact Core `0.37.0`.
 
 The current source identity comes from [`package.json`](package.json).
 The exact native and Studio candidate graphs and separately published historical

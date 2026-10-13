@@ -447,7 +447,7 @@ test(
           const local = createAuthority({
             channel: 'stable',
             base_commit: baseline,
-            versions: { core: '0.37.2', read: '0.11.3' },
+            versions: { core: '0.37.3', read: '0.12.0' },
           });
           fs.mkdirSync(path.join(source, 'scripts'));
           fs.mkdirSync(path.join(source, 'docs'));
