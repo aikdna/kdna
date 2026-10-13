@@ -16,7 +16,7 @@ import { digest, pointer, project, sha } from './native-renderer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const inputs = readFrozenInputs(root);
-const options = { ...inputs, core: '0.37.2', read: '0.11.3' };
+const options = { ...inputs, core: '0.37.3', read: '0.12.0' };
 const candidate = deriveCoordinates(options);
 
 test('coordinate derivation verifies every frozen guard and is byte reproducible', () => {
@@ -33,7 +33,7 @@ test('coordinate derivation verifies every frozen guard and is byte reproducible
     candidate.report.coordinates.map((row) => row.occurrences),
     [6, 7],
   );
-  assert.equal(candidate.report.source_changes.length, 21);
+  assert.equal(candidate.report.source_changes.length, 17);
   assert.equal(candidate.report.documents.length, 4);
   assert.equal(candidate.report.document_bindings.length, 8);
   const source = JSON.parse(candidate.sourceBytes),
@@ -41,13 +41,20 @@ test('coordinate derivation verifies every frozen guard and is byte reproducible
   assert.equal(recipe.input_sha256, sha(candidate.sourceBytes));
   const oldSource = JSON.parse(inputs.sourceBytes);
   assert.deepEqual(source.protection_admission_legacy, oldSource.protection_admission_legacy);
-  assert.deepEqual(
-    candidate.report.source_changes
-      .filter((row) => row.classification === 'generated_metadata')
-      .map((row) => row.pointer)
-      .sort(),
-    candidate.report.document_bindings.map((row) => row.pointer).sort(),
+  // A document whose bytes are unchanged still has a byte binding, so the
+  // source metadata leaves are the generated-metadata rows the transition moved.
+  const metadataChanges = candidate.report.source_changes.filter(
+    (row) => row.classification === 'generated_metadata',
   );
+  assert.ok(metadataChanges.length > 0);
+  for (const row of metadataChanges) {
+    const binding = candidate.report.document_bindings.find(
+      (entry) => entry.pointer === row.pointer,
+    );
+    assert.ok(binding, 'unbound generated metadata: ' + row.pointer);
+    assert.equal(binding.before, row.before);
+    assert.equal(binding.after, row.after);
+  }
   const protectionDocument = candidate.documents.find(
     (row) => row.path === 'specs/protection-admission.md',
   );
@@ -89,11 +96,11 @@ test('decisions change exactly four package fields and two source observation da
   const document = candidate.documents.find((row) => row.path === name);
   const after = JSON.parse(document.bytes);
   const expected = structuredClone(before);
-  for (const [index, version] of ['0.37.2', '0.11.3'].entries()) {
+  for (const [index, version] of ['0.37.3', '0.12.0'].entries()) {
     const row = expected.version_policy.planned_packages[index];
     row.candidate_version = version;
     row.current_source_version = version;
-    row.current_source_version_observed = '2026-10-11';
+    row.current_source_version_observed = '2026-10-13';
   }
   assert.deepEqual(after, expected);
   const report = candidate.report.documents.find((row) => row.path === name);
@@ -183,9 +190,9 @@ test('derivation CLI refuses maintained paths, aliases into the repository and e
     '--root',
     root,
     '--core-version',
-    '0.37.2',
+    '0.37.3',
     '--read-version',
-    '0.11.3',
+    '0.12.0',
     '--out-dir',
     output,
   ];

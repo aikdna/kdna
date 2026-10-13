@@ -17,7 +17,7 @@ Status: UNPUBLISHED_CANDIDATE. This policy specifies the issued coordinates for 
 | trace | `kdna.judgment-trace/0.3.1` |
 | read | `kdna.read/0.6.4` |
 
-The local package candidates are `@aikdna/kdna-core@0.37.2` and `@aikdna/kdna-read@0.11.3`. This stable distribution candidate requires exact artifact review and registry acquisition before publication is established. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
+The local package candidates are `@aikdna/kdna-core@0.37.3` and `@aikdna/kdna-read@0.12.0`. This stable distribution candidate requires exact artifact review and registry acquisition before publication is established. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
 
 The published Core `0.37.0` / Read `0.11.1` releases retain their original artifacts and release evidence. The exact candidate pair requires its own artifact review and installed-consumer acceptance; publication is established only by matching release and registry evidence. Its protocol tuple remains the base combination in the table; the added browser adapter does not select the Node native-section tuple.
 

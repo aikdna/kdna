@@ -4,13 +4,13 @@
   "source": {
     "path": "specs/public-semantic-source.json",
     "bytes": 1507864,
-    "sha256": "3d68933a660f679d1e9478330d905c1df957534004a02bc12f15208c94507c13"
+    "sha256": "6318afbd1eb78c3c0f236e14c155f5915ad6ec93c3c044d71acef613494ebb37"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 164001,
-      "sha256": "f0106ffe2a103535cf1632bdc2324d74492c5e6709c559a3868728ad5fb6ea1d"
+      "sha256": "fb6cc18d9cf903da65c6d27ae2918c0258a7f3efd804df0c76c2a63570607578"
     },
     "scripts": [
       {
@@ -181,7 +181,7 @@
     {
       "path": "packages/kdna-core/src/public-contract/creation06/contract.json",
       "bytes": 71166,
-      "sha256": "f9430680933897a224f3c88faa8cf269575cef8660265b96223560f7003ad197"
+      "sha256": "cef6435e4cced9cd8756d6bdc1d0e6bab20b2e124f0fdd9f4dd0638857c2b3c3"
     },
     {
       "path": "packages/kdna-core/src/public-contract/creation06/api.d.ts",
