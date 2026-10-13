@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 0.37.3 (2026-10-13)
+
+- Move the distribution coordinate so Core and Read publish from one reviewed
+  commit and one exact pair. The generated package-set contract and the package
+  README declare the exact Read peer `0.12.0`; Read `0.12.0` adds the model view
+  projection that answers the default surface with the author body plus one
+  fingerprint while the full view keeps every field.
+- Change no protocol, contract or capability: the compiled browser/Node tuple
+  (core `kdna.core/0.8.2`, container `0.5.0`, payload `0.5.1`, canonical IR
+  `0.6.1`, Read `kdna.read/0.6.4`) and the native section tuple (container
+  `0.6.0`, Read `kdna.read/0.7.0-candidate`) keep their identities, and browser
+  decryption stays a trusted Host responsibility.
+- Keep Core `0.37.2`, Read `0.11.3` and every published preview tag in place, so
+  an installed combination keeps working until its owner chooses to move.
+
 ## 0.37.2 (2026-10-11)
 
 - Preserve the original `READ_CORE_INVALID` result for short native ZIP inputs
