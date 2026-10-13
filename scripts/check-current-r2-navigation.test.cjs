@@ -169,7 +169,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'Read declares Core `0.37.3` as its exact peer',
+    'Read declares Core `0.37.4` as its exact peer',
     'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
@@ -251,13 +251,13 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.3`、Read `0.12.0`',
+    'Core `0.37.4`、Read `0.12.1`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.3` and Read',
+    'Core `0.37.4` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -269,7 +269,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.3` and Read `0.12.0`',
+    'Core `0.37.4` and Read `0.12.1`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -764,7 +764,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.3` / Read `0.12.0`',
+    'local package line is Core `0.37.4` / Read `0.12.1`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1461,7 +1461,7 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.3` and Read `0.12.0`';
+  const marker = 'The current exact pair is Core `0.37.4` and Read `0.12.1`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
@@ -1757,7 +1757,7 @@ test('a release matrix that disagrees with the semantic source is recorded, not 
   const result = changedDocument('docs/release-coordinates.json', (text) => {
     const matrix = JSON.parse(text);
     const row = matrix.packages.find((entry) => entry.unit === 'core');
-    row.version = '0.37.4';
+    row.version = '0.37.5';
     delete row.candidate_version;
     return JSON.stringify(matrix, null, 2) + '\n';
   });
