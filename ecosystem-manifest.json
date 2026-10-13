@@ -149,7 +149,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "513a6a08ca26877281c35df267ec210fba1140ec",
+      "source_commit": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -158,14 +158,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.39.0-rc.native-sections.3",
+          "version": "0.40.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.36.1"
+          "published_version": "0.40.0"
         }
       ],
       "lifecycle": "Pre-release",
@@ -174,9 +174,9 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline",
-        "bound to Core 0.21.0 while Core 0.22.0 is published; the 0.37.0 re-bind is declared recertification debt for the 0.22.0 wave"
+        "native previews keep their own exact graphs; the earlier 0.36.1 loading line keeps its own loading/packing contract"
       ],
-      "recommended_entrypoint": "kdna plan-load <asset> && kdna load <asset>",
+      "recommended_entrypoint": "npm install -g @aikdna/kdna-cli ; kdna create|inspect|validate|read|source-open|source-pack with explicit permission flags",
       "legacy_replacement": null
     },
     {
@@ -204,7 +204,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "9c3fa00128d87a7146e353c9cfde202a5f391f99",
+      "source_commit": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -212,15 +212,14 @@
         {
           "package_json": "mcp-server/package.json",
           "package_name": "@aikdna/kdna-mcp-server",
-          "npm_package": "@aikdna/kdna-mcp-server",
-          "version": "0.5.0",
+          "npm_package": null,
+          "version": "0.8.0-rc.native-sections.1",
           "lifecycle": "Experimental",
-          "release_status": "active",
+          "release_status": "source-only",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npx @aikdna/kdna-mcp-server",
-          "legacy_replacement": null,
-          "published_version": "0.5.0"
+          "legacy_replacement": null
         }
       ],
       "lifecycle": "Experimental",
@@ -230,13 +229,13 @@
       "known_limitations": [
         "MCP is an experimental structured bridge; the loader Skill is Unassessed and neither discovery nor matching creates user authority"
       ],
-      "recommended_entrypoint": "pass one explicit .kdna file or exact user-approved Host attachment through plan-load before load",
+      "recommended_entrypoint": "node mcp-server/bin/kdna-mcp.mjs --asset <selected.kdna> --allow-read (operator-bound local stdio; npm publication disabled)",
       "legacy_replacement": null
     },
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "bfcf09eac8732b67d612d970764a27df27247180",
+      "source_commit": "fbd6a22d889f28de5eefbef091ef212fa61a7fc5",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -245,10 +244,10 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-studio-core",
           "npm_package": "@aikdna/kdna-studio-core",
-          "version": "4.0.0-rc.components.2",
-          "published_version": "3.0.0",
+          "version": "4.0.0",
+          "published_version": "4.0.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
             "3.0.0 is a breaking candidate: published 2.x root exports and deep-import paths are not silently preserved"
@@ -263,7 +262,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Studio export is pre-release and treats review, Human Lock, signatures, and release evidence as optional provenance layers",
-        "bound to Core 0.21.0 while Core 0.22.0 is published; re-binding is declared recertification debt for the 0.22.0 wave"
+        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native CLI line"
       ],
       "recommended_entrypoint": "Studio project export followed by Core validate and plan-load",
       "legacy_replacement": null
@@ -271,7 +270,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "e0caf6de1a7dec39b5b7be6bc5292d67750515ce",
+      "source_commit": "470c2a086674a4e7c2b28fbecca9dd5050eb9ea5",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -280,10 +279,10 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-studio-cli",
           "npm_package": "@aikdna/kdna-studio-cli",
-          "version": "0.13.0-rc.components.2",
-          "published_version": "0.11.0",
+          "version": "0.13.0",
+          "published_version": "0.13.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
             "0.11.0 is bound to the unpublished Studio Core 3.0.0 breaking candidate"
@@ -298,7 +297,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "remote authoring delivery is outside the local Studio CLI baseline",
-        "bound to Core 0.21.0 while Core 0.22.0 is published; re-binding is declared recertification debt for the 0.22.0 wave"
+        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native CLI line"
       ],
       "recommended_entrypoint": "kdna-studio create/add/approve/export",
       "legacy_replacement": null

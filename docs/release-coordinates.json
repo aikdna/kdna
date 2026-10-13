@@ -35,15 +35,15 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.39.0",
+      "version": "0.40.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.39.0",
-      "source_commit": "291bd229859a5661988a19d3da4376807828bd1c",
-      "artifact_sha256": "436132276b96f5f3435f4883afce9805f1579d99f735d8c7e2fd1316482c06d0",
-      "publish_run": 38179227402,
-      "release_id": 409951996,
-      "release_published_at": "2026-10-11T22:08:36Z"
+      "release_tag": "0.40.0",
+      "source_commit": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
+      "artifact_sha256": "0b2642c1e5141a8ba32f37aba04e9997dc5da7c7fc6dc9f0e43f673d5d1c1b17",
+      "publish_run": 38422476160,
+      "release_id": 411831076,
+      "release_published_at": "2026-10-13T15:29:13Z"
     },
     {
       "unit": "studio-core",
@@ -76,7 +76,7 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "48fbdb4308b0fe6c2f7598795084a375ef17b90c",
+      "main_commit": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
       "mcp_package": "@aikdna/kdna-mcp-server",
       "mcp_version": "0.8.0-rc.native-sections.1",
       "npm_coordinate": null,

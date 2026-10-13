@@ -344,7 +344,7 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.39.0` with the exact SDK pair above'));
+  assert.ok(guide.includes('CLI `0.40.0` with the exact SDK pair above'));
   assert.ok(
     guide.includes(
       'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent source candidates.',
@@ -393,7 +393,7 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.39.0` with that exact Core/Read pair',
+    'CLI `0.40.0` with that exact Core/Read pair',
     'CLI `0.39.0-rc.native-sections.2` with that exact Core/Read pair',
   ],
   [
@@ -486,7 +486,7 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.0\n',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
@@ -571,7 +571,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.39.0', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.40.0', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(

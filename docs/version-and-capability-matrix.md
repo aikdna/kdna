@@ -1,7 +1,7 @@
 # KDNA Version and Capability Matrix
 
 Current replacement: [2026-10-11 support and distribution matrix](current-release-support.md).
-It binds the native `0.39.0`/MCP source and separate Studio0.5 candidates to their exact
+It binds the native `0.40.0`/MCP source and separate Studio0.5 candidates to their exact
 SDK archives and distinguishes official registry baselines from source
 candidates. The dated tables below remain historical observations, including
 superseded unpublished combinations; they are not current installation input.

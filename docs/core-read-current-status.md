@@ -44,7 +44,7 @@ production identity service or native credential store.
 
 | Consumer | Current candidate graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.39.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.40.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.1` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
 | Studio | StudioCLI `0.13.0` / StudioCore `4.0.0` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 

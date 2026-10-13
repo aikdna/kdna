@@ -78,72 +78,90 @@
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "0.37.1-rc.browser.1",
-      "source": "513a6a08ca26877281c35df267ec210fba1140ec",
-      "manifest_sha256": "14d3d45887da8db0dcddc59ae26ce1def0b853a70453e01ea988ce066823d1d7"
+      "declared": "0.37.3",
+      "source": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
+      "manifest_sha256": "d92fb7738502c808bd9a9bbf85f67fac37e2e0e51b92a0cdfcbb20a67702e47b"
     },
     {
       "repository": "kdna-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
-      "declared": "0.11.2-rc.browser.1",
-      "source": "513a6a08ca26877281c35df267ec210fba1140ec",
-      "manifest_sha256": "14d3d45887da8db0dcddc59ae26ce1def0b853a70453e01ea988ce066823d1d7"
+      "declared": "0.12.0",
+      "source": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
+      "manifest_sha256": "d92fb7738502c808bd9a9bbf85f67fac37e2e0e51b92a0cdfcbb20a67702e47b"
     },
     {
       "repository": "kdna-skills",
       "manifest": "mcp-server/package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-cli",
-      "declared": "0.36.0",
-      "source": "9c3fa00128d87a7146e353c9cfde202a5f391f99",
-      "manifest_sha256": "bc5887854741afe7aa5d32aefe78a77bf1976f35a854eca50ecc1eae7cb94a66"
+      "declared": "0.40.0",
+      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
+    },
+    {
+      "repository": "kdna-skills",
+      "manifest": "mcp-server/package.json",
+      "section": "dependencies",
+      "packageName": "@aikdna/kdna-core",
+      "declared": "0.37.3",
+      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
+    },
+    {
+      "repository": "kdna-skills",
+      "manifest": "mcp-server/package.json",
+      "section": "dependencies",
+      "packageName": "@aikdna/kdna-read",
+      "declared": "0.12.0",
+      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
     },
     {
       "repository": "kdna-studio-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "file:vendor/aikdna-kdna-core-0.37.1-rc.browser.1.tgz",
-      "source": "e0caf6de1a7dec39b5b7be6bc5292d67750515ce",
-      "manifest_sha256": "b62e69c5c5e161199f13a704e9d12b8d16f6b16b03c44a7f95aa2dbb80acd2bb"
+      "declared": "0.37.2",
+      "source": "470c2a086674a4e7c2b28fbecca9dd5050eb9ea5",
+      "manifest_sha256": "1be320859e5ee1dc25588a4325fe630e3dca75fa452f5bb051e69720b41d4b3d"
     },
     {
       "repository": "kdna-studio-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
-      "declared": "file:vendor/aikdna-kdna-read-0.11.2-rc.browser.1.tgz",
-      "source": "e0caf6de1a7dec39b5b7be6bc5292d67750515ce",
-      "manifest_sha256": "b62e69c5c5e161199f13a704e9d12b8d16f6b16b03c44a7f95aa2dbb80acd2bb"
+      "declared": "0.11.3",
+      "source": "470c2a086674a4e7c2b28fbecca9dd5050eb9ea5",
+      "manifest_sha256": "1be320859e5ee1dc25588a4325fe630e3dca75fa452f5bb051e69720b41d4b3d"
     },
     {
       "repository": "kdna-studio-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-studio-core",
-      "declared": "file:vendor/aikdna-kdna-studio-core-4.0.0-rc.components.2.tgz",
-      "source": "e0caf6de1a7dec39b5b7be6bc5292d67750515ce",
-      "manifest_sha256": "b62e69c5c5e161199f13a704e9d12b8d16f6b16b03c44a7f95aa2dbb80acd2bb"
+      "declared": "4.0.0",
+      "source": "470c2a086674a4e7c2b28fbecca9dd5050eb9ea5",
+      "manifest_sha256": "1be320859e5ee1dc25588a4325fe630e3dca75fa452f5bb051e69720b41d4b3d"
     },
     {
       "repository": "kdna-studio-core",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "file:vendor/aikdna-kdna-core-0.37.1-rc.browser.1.tgz",
-      "source": "bfcf09eac8732b67d612d970764a27df27247180",
-      "manifest_sha256": "6b033fd36398114b6e837ab4e1eaf0b663021f0674087c1369ab4f3a04cb1dcd"
+      "declared": "0.37.2",
+      "source": "fbd6a22d889f28de5eefbef091ef212fa61a7fc5",
+      "manifest_sha256": "8840cd60ec17e0fd9e99aeffb72f3ec01b065c6e339603cf00c40a079278cdc6"
     },
     {
       "repository": "kdna-studio-core",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
-      "declared": "file:vendor/aikdna-kdna-read-0.11.2-rc.browser.1.tgz",
-      "source": "bfcf09eac8732b67d612d970764a27df27247180",
-      "manifest_sha256": "6b033fd36398114b6e837ab4e1eaf0b663021f0674087c1369ab4f3a04cb1dcd"
+      "declared": "0.11.3",
+      "source": "fbd6a22d889f28de5eefbef091ef212fa61a7fc5",
+      "manifest_sha256": "8840cd60ec17e0fd9e99aeffb72f3ec01b065c6e339603cf00c40a079278cdc6"
     }
   ]
 }

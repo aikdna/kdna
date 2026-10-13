@@ -97,8 +97,8 @@ function assertCurrentToolchainLock(
   );
   assert.deepEqual(
     [releasedCli.version, releasedCli.published_version, releasedCli.release_status],
-    ['0.39.0-rc.native-sections.3', '0.36.1', 'candidate'],
-    'the published compatibility CLI stays pinned at 0.36.1 while the wave declares its candidate',
+    ['0.40.0', '0.40.0', 'active'],
+    'the CLI record follows its own publication while the compatibility package keeps its independent 0.36.1 pin',
   );
   assert.deepEqual(lock.packages[ROOT_CORE_LOCK_PATH], {
     resolved: 'packages/kdna-core',

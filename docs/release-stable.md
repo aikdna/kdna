@@ -119,7 +119,7 @@ acquisition and installed exports. The complete create/save/read/meaningful
 revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
-The companion candidate order is Core → Read, then native CLI `0.39.0` and
+The companion candidate order is Core → Read, then native CLI `0.40.0` and
 Studio Core `4.0.0`, then Studio CLI `0.13.0`, following their actual exact
 dependencies and their own repository release gates. Complete MCP/Creator and
 protected Host source deliveries bind those new archives separately; this wave

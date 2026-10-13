@@ -127,10 +127,10 @@ before(() => {
 });
 after(() => fs.rmSync(temporary, { recursive: true, force: true }));
 
-test('all 16 accepted declarations have verified Git blob provenance and canonical root identity', () => {
-  assert.equal(verified.size, 16);
+test('all 18 accepted declarations have verified Git blob provenance and canonical root identity', () => {
+  assert.equal(verified.size, 18);
   const consumers = discover();
-  assert.equal(consumers.length, 16);
+  assert.equal(consumers.length, 18);
   assert.equal(consumers.filter((row) => !row.ok).length, 0);
   assert.equal(
     consumers.some((row) => row.repository === 'arbitrary-control-directory'),
