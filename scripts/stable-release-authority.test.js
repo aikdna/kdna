@@ -124,7 +124,7 @@ test('Core and Read require their own exact final published event and stable app
     const value = fixture(unit),
       context = authority.validateContext(value);
     assert.equal(context.authorization, 'published-stable-release-event');
-    assert.equal(context.tag, unit === 'core' ? '0.37.2' : 'read/0.12.0');
+    assert.equal(context.tag, unit === 'core' ? '0.37.2' : 'read/0.11.3');
     assert.throws(() => preview.validateContext(value));
     for (const [name, change] of [
       ['prerelease', (f) => (f.event.release.prerelease = true)],

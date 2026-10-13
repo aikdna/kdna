@@ -76,7 +76,7 @@ test('the generated module descriptor is self-consistent and its 12 local codes 
   const contract = P.getPackageSetContract();
   assert.equal(contract.contract, 'kdna.package-set-node/0.2.1');
   assert.equal(contract.core_version, '0.37.2');
-  assert.equal(contract.read_version, '0.12.0');
+  assert.equal(contract.read_version, '0.11.3');
   assert.equal(contract.claims, 'claims_not_authenticated');
   assert.equal(contract.core_callables.length, 7);
   assert.equal(contract.read_callables.length, 5);

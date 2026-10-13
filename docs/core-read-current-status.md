@@ -1,7 +1,7 @@
 # Core and Read: current implementation status
 
 Source status: 2026-10-11. Core `0.37.2` and Read
-`0.12.0` are unpublished stable distribution candidates. Source readiness,
+`0.11.3` are unpublished stable distribution candidates. Source readiness,
 exact artifact acceptance and actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.

@@ -13,7 +13,7 @@
     {
       "bytes": 50851,
       "path": "specs/public-contract-decisions.json",
-      "sha256": "1757779c226d351c4c198bdd210d02c20e4101c6e556228f7a60f27ee45d6bd4"
+      "sha256": "ed367a247f966989d9e1633f6349279a8aeb8a41349db7534cf67083e1bf087f"
     },
     {
       "bytes": 17230,
@@ -23,12 +23,12 @@
     {
       "bytes": 13074,
       "path": "specs/public-version-policy.md",
-      "sha256": "db7bf73346f73609a55de47539bd29c71a640331daeae968c7f5fd619fadf2d6"
+      "sha256": "a3ec9acd1985ffa6814697ea181b10862833fca8a32a039539b282566ee148c0"
     },
     {
       "bytes": 11722,
       "path": "specs/read-contract.md",
-      "sha256": "76e3a602b3a25ac852aae8e4c438e3661cd927b8268766a3751f82aa07778bec"
+      "sha256": "1940f18b6f3a302af3f358844955880b1efc0417cbca315391008a4100f9b4ab"
     },
     {
       "bytes": 19907,
@@ -710,7 +710,7 @@
     {
       "bytes": 28490,
       "path": "packages/kdna-core/src/public-contract/issuer-contract.generated.json",
-      "sha256": "a014cd694d36aed85b47ba12827be643128783d1284e9a0c59972145ceef69c2"
+      "sha256": "0da7767ebce4ebc7374813ae4850672a10254c474794c704e87099f204f2339f"
     },
     {
       "bytes": 129280,
@@ -730,17 +730,17 @@
     {
       "bytes": 19786,
       "path": "packages/kdna-core/src/public-contract/package-set-contract.generated.json",
-      "sha256": "2a541af8e29bec36d4e8b13c68b07963dbbf76d184040c6fc60e7f2e85d0dbdd"
+      "sha256": "3bad0f8c7f02657948972b677f266d5f520e3573a87dfcf9b420033b918a8c38"
     },
     {
       "bytes": 5623,
       "path": "packages/kdna-core/src/public-contract/package-set-node.d.ts",
-      "sha256": "09e560cb53ff82e810e2419e22e8ef1d709e010fb0ea97e3846d09c7551b629e"
+      "sha256": "7d4d49b6c8fcc9ec5a92de039dc38360e88f34e55b5f3f9d58b30a6b690f235e"
     },
     {
       "bytes": 174791,
       "path": "packages/kdna-core/src/public-contract/package-set-validators.generated.js",
-      "sha256": "fe6ea7c001a38e9ae68d063a6d3bfdc371a6e3c4c44c68640d2f4d3ac92a0bb5"
+      "sha256": "dcdaa863445667c04b834a84a7233a350c904a4504daa7f367ec9f0a62b7f54a"
     },
     {
       "bytes": 2670,
@@ -750,7 +750,7 @@
     {
       "bytes": 349367,
       "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
-      "sha256": "0635f9bd7ffefa1e3af02bc20c846318dbbc959b2c1f92f19eca1188f6782ece"
+      "sha256": "20b9c68841fb1be148b0c9d42c348e88c222cc18e0a81e68bf6ce73f69df025a"
     },
     {
       "bytes": 10225,
@@ -760,7 +760,7 @@
     {
       "bytes": 89249,
       "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
-      "sha256": "5a4a1f6497c9bfbf141949d3d2ec526ad55d3c769dcc5e12f7fcbf770823ff6c"
+      "sha256": "71918234d0f8ac5fa76e494b9f85846f15f4bcc24f6fa7fd3fd51bf5f2047a5d"
     },
     {
       "bytes": 15820,
@@ -830,7 +830,7 @@
     {
       "bytes": 59,
       "path": "packages/kdna-read/src/installation.generated.json",
-      "sha256": "cf9837f2831ffc0ef5f4f902ae321f524140252235d1ddc83be85d61b7f34d9c"
+      "sha256": "aa847abb9db3d385b1240f03260281e72bb60b942bac9b23089156838401392f"
     },
     {
       "bytes": 359,
@@ -840,7 +840,7 @@
     {
       "bytes": 7534,
       "path": "packages/kdna-read/src/package-set-contract.generated.json",
-      "sha256": "d9e32b8cb18214ddabbf028ceab19c04cfb81b16125c0a2736ed36af5c0bb112"
+      "sha256": "7459682aaff8ba27f0b454ff280129352c7e53bc1c4ca24ec9ed4984126d7865"
     },
     {
       "bytes": 2267,
@@ -855,7 +855,7 @@
     {
       "bytes": 6338,
       "path": "packages/kdna-read/src/protection-node.js",
-      "sha256": "8dd7d9815f4b10b850120127ff7e2fa1ec4fa7637799783045a1462ce05ef941"
+      "sha256": "1c61b354d460fe5b1edd71d7708985e9ed5ebb94ced263631b2b913a1295b3f0"
     },
     {
       "bytes": 2445,
@@ -895,12 +895,12 @@
     {
       "bytes": 12738,
       "path": "specs/package-set-node-0.2.1.schema.json",
-      "sha256": "9ecf24d51b00e7c81583e35b3a1dbde34581bf01ad57f8a20f6e1c503b93f6d5"
+      "sha256": "233200832d15db61c1b0ab297c96a5091eac085414a493701c40cbc4e395b596"
     },
     {
       "bytes": 2303,
       "path": "specs/package-set-node.d.ts",
-      "sha256": "40409d51124bf309062b48739b9f72ac3a4905d0f0edf674f09671b59369c1a6"
+      "sha256": "4df493386d502a539d9ea8b7136d262f5fa412d5c46ebc44b32ee192a3cc65e7"
     },
     {
       "bytes": 2750,
@@ -965,7 +965,7 @@
   "source": {
     "bytes": 1507864,
     "path": "specs/public-semantic-source.json",
-    "sha256": "7cb375ad496617ea9a67f9a204d2c3067ca351e4196a65f7068ed6e667a0dc9b"
+    "sha256": "3d68933a660f679d1e9478330d905c1df957534004a02bc12f15208c94507c13"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -980,7 +980,7 @@
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 164001,
-      "sha256": "b2c33a2cb58487071eb0e9e27963b91d731f0d9f8c745a3f577e971f02c08bcb"
+      "sha256": "f0106ffe2a103535cf1632bdc2324d74492c5e6709c559a3868728ad5fb6ea1d"
     },
     "base_types": 431,
     "canonical_types": 783
