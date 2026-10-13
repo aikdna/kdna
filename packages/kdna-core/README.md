@@ -2,7 +2,7 @@
 > This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry states the exact source versions, registry status and installation route.
 
 
-Stable distribution source candidate: package `0.37.3`, paired with exact Read
+Stable distribution: package `0.37.3` on `latest`, paired with exact Read
 `0.12.0`. The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`. Native section subpaths separately use
@@ -12,10 +12,9 @@ Container `0.6.0` and Read `0.7.0-candidate`. See the
 
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. The published coordinate remains Core `0.37.2` paired with Read
-`0.11.3`, and this source candidate does not establish that `latest` has
-changed; select the exact coordinate only after the official registry supplies
-it. Core `0.37.0` and Read `0.11.1` remain earlier published stable coordinates.
+checks. The published coordinate is Core `0.37.3` paired with Read `0.12.0` on
+`latest`; Core `0.37.2`, Read `0.11.3`, Core `0.37.0` and Read `0.11.1` remain
+earlier published stable coordinates.
 The earlier published Core `0.37.1-rc.browser.1` / Read
 `0.11.2-rc.browser.1` previews retain their own byte identities and tags.
 

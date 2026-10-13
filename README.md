@@ -9,15 +9,15 @@
 # KDNA
 
 <!-- release-coordinates:begin (generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand) -->
-**Current publication state (2026-10-12).** All five stable coordinates are
+**Current publication state (2026-10-13).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.2` | `latest` | `16234f84440252b0c449c529de71435630cc79816f88ff0d0a8a2b4d852c1274` |
-| `@aikdna/kdna-read` | `0.11.3` | `latest` | `5fd1efc5bfd28ce8c9724fefb09c1abed35dde2c16f8498b572da5c640679f4c` |
+| `@aikdna/kdna-core` | `0.37.3` | `latest` | `b4f3a6593b0fd55e8d245009835123578722f09fd71f6bc579b2e3b988a144f1` |
+| `@aikdna/kdna-read` | `0.12.0` | `latest` | `c815b4df97cc0ce844b94295df3802bf7cc5a68056c3aca587efed90251b4cbb` |
 | `@aikdna/kdna-cli` | `0.39.0` | `latest` | `436132276b96f5f3435f4883afce9805f1579d99f735d8c7e2fd1316482c06d0` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
 | `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` | `8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a` |
@@ -103,14 +103,10 @@ An existing `latest` package or repository `main` does not identify a candidate.
 
 | Entry | Exact candidate package combination | Supported route |
 | --- | --- | --- |
-| Core/Read | Core `0.37.2` / Read `0.11.3` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
+| Core/Read | Core `0.37.3` / Read `0.12.0` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
 | [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
-
-The maintained source currently carries the candidate pair Core `0.37.3` /
-Read `0.12.0`, which the registry does not serve yet; until it does, the table
-above lists only the published and byte-verified combination.
 
 The two container routes have different reader and source APIs. Sharing SDK
 package versions does not make their assets interchangeable. Use the reader
@@ -184,7 +180,7 @@ published workflow; it is not a current Core/Read quickstart.
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
 against it on 2026-09-13. The current Core/Read pair is the published stable
-Core `0.37.2` / Read `0.11.3`.
+Core `0.37.3` / Read `0.12.0`.
 It has a different asset contract. The current native CLI route also has
 different command forms, so this published walkthrough does not select that
 new graph. Keep its exact historical dependencies. See

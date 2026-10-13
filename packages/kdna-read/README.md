@@ -1,6 +1,6 @@
 # KDNA Read — R2 candidate
 
-Stable distribution source candidate `0.12.0` declares the exact peer
+Stable distribution `0.12.0` on `latest` declares the exact peer
 `@aikdna/kdna-core@0.37.3`. The browser/Node contract remains
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
@@ -9,10 +9,10 @@ form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
 and local tests do not establish registry publication or content quality.
 
-The published coordinate remains Read `0.11.3` with exact Core `0.37.2`. Those
-artifacts remain separate from this unreleased source candidate; a new source
-version does not move a dist-tag. The 2026-10-11 registry observation recorded
-`latest` at Read `0.11.1` with exact Core `0.37.0`.
+The published coordinate is Read `0.12.0` with exact Core `0.37.3`. Read
+`0.11.3` with exact Core `0.37.2` remains an earlier published coordinate, and
+the 2026-10-11 registry observation recorded `latest` at Read `0.11.1` with
+exact Core `0.37.0`.
 
 The current source identity comes from [`package.json`](package.json).
 The exact native and Studio candidate graphs and separately published historical
