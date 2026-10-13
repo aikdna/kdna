@@ -116,9 +116,14 @@ test('generator refuses duplicate owning roots even when a lookup would overwrit
     candidate.protected_source.root = candidate.protection_admission.root;
   }));
 const mutations = [
-  ['root README current package', 'README.md', '0.37.2', '0.35.0-rc.source.1'],
+  [
+    'root README current package',
+    'README.md',
+    '| `@aikdna/kdna-core` | `0.37.3` |',
+    '0.35.0-rc.source.1',
+  ],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', 'Read `0.11.3`', '0.3.0-rc.component-semantics.2'],
+  ['Chinese README package', 'README.zh.md', 'Read `0.12.0`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -128,13 +133,13 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'Stable distribution source candidate: package `0.37.3`',
+    'Stable distribution: package `0.37.3` on `latest`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'Stable distribution source candidate `0.12.0`',
+    'Stable distribution `0.12.0` on `latest`',
     '0.11.0-rc.r2.4',
   ],
   [
@@ -203,7 +208,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.2` / Read `0.11.3`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.3` / Read `0.12.0`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -213,7 +218,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.2`',
+    '| `@aikdna/kdna-core` | `0.37.3`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -1685,7 +1690,7 @@ for (const [file, before, after, issue] of [
   ],
   [
     'README.md',
-    'published stable\nCore `0.37.2` / Read `0.11.3`',
+    'published stable\nCore `0.37.3` / Read `0.12.0`',
     'the published browser-preview pair',
     'README.md:current:',
   ],
@@ -1800,7 +1805,7 @@ test('a declared source candidate may not be rendered as the published artifact'
   const matrixText = JSON.stringify(matrix, null, 2) + '\n';
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   const promoted = readme.replace(
-    '| `@aikdna/kdna-read` | `0.11.3` |',
+    '| `@aikdna/kdna-read` | `0.12.0` |',
     '| `@aikdna/kdna-read` | `0.12.1` |',
   );
   assert.notEqual(promoted, readme, 'Counterexample must alter the published block');
