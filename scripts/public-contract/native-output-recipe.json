@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "c8b210b4d56c71a33fafb194f209c4ac01b60dec8265f2a5d5ebbc337f9d562d",
+  "input_sha256": "f60589a8bd3146ca0250ba1043e2463093b064780d5f5d9cf8dd6950f658050f",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -2393,7 +2393,7 @@
     {
       "pointer": "/representation_candidate",
       "output": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "input_digest": "sha256:25a308df21368af1ec30b0dee2625c7d878a6cd981341cac6fc6097d9129d821",
+      "input_digest": "sha256:54fb03b9979c76be5538b347695d25fa2c5b5a1732481bce2f45ee2f1ae71dd6",
       "operations": [
         {
           "action": "replace",
@@ -2653,7 +2653,7 @@
         {
           "action": "delete",
           "pointer": "/a15_protection/browser_adapter",
-          "expected_before_sha256": "sha256:c2c906208045f590b7d77e4e104ae54c3d25fb86d668753d5c37f4f30b9de7cc"
+          "expected_before_sha256": "sha256:a0e887e659ce845c4f63e3ec49d996de9db8779c40269d68d13b2925572ce2a7"
         }
       ],
       "output_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f",
@@ -3025,9 +3025,9 @@
     {
       "pointer": "/representation_candidate/a15_protection/browser_adapter",
       "output": "packages/kdna-core/src/public-contract/protected-browser-contract/contract.json",
-      "input_digest": "sha256:c2c906208045f590b7d77e4e104ae54c3d25fb86d668753d5c37f4f30b9de7cc",
+      "input_digest": "sha256:a0e887e659ce845c4f63e3ec49d996de9db8779c40269d68d13b2925572ce2a7",
       "operations": [],
-      "output_digest": "sha256:c2c906208045f590b7d77e4e104ae54c3d25fb86d668753d5c37f4f30b9de7cc",
+      "output_digest": "sha256:a0e887e659ce845c4f63e3ec49d996de9db8779c40269d68d13b2925572ce2a7",
       "historical_original_source": {
         "scope": "new_browser_adapter_has_no_historical_original_contract",
         "coordinate": "urn:kdna:source:browser-protected-adapter"
@@ -3045,15 +3045,15 @@
     },
     {
       "pointer": "/protected_source",
-      "digest": "sha256:be0e0cfb01c4b65688ed10b6bb47595aaa067a547622d9349c19058237c00bd2"
+      "digest": "sha256:2d6c45a7c9a85d7ee2794f1b44d5e918e1fb49622f1b1ee3b9fbe0718f1abdf9"
     },
     {
       "pointer": "/protection_admission",
-      "digest": "sha256:6010065386d92ae3091c338ceb018b954557eb5efbc13dd11b9de507bf7ca485"
+      "digest": "sha256:6d6b789277c5239539b53ce4a78e4e6950898fe28ea7d99a510bdc79ea563fc9"
     },
     {
       "pointer": "/external_grant_issuer",
-      "digest": "sha256:eb00d24b4728853089f4b4f6d38284f6a22d5e9694470371ffae8b57dfdece12"
+      "digest": "sha256:1d4edecae6aab6d90178aa243fcb21641c97c1e73b0e952376c4522c74313a9a"
     }
   ],
   "base_json_projections": [
