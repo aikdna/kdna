@@ -501,6 +501,7 @@
         "src/embedding.d.ts",
         "src/embedding.js",
         "src/embedding.mjs",
+        "src/expansion-handles.js",
         "src/host-gate.js",
         "src/index.d.ts",
         "src/index.js",
