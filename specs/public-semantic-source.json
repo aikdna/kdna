@@ -90,7 +90,7 @@
     {
       "path": "specs/public-contract-decisions.json",
       "bytes": 50851,
-      "sha256": "378375ba0a316e4fe2e17191e2992082ff8770ab8373c39b4037795190c98844"
+      "sha256": "6e1fe1b53aff61dee61e242d10d1efb141dc5536bea3adbe46a6968aa89c5dfd"
     },
     {
       "path": "specs/public-source-map.json",
@@ -100,12 +100,12 @@
     {
       "path": "specs/public-version-policy.md",
       "bytes": 13074,
-      "sha256": "52d89826151d3b9308214552aaa835b013952a5cef39e021899458da279624c8"
+      "sha256": "3d6b563658f0bea6085b26f49d7b62227a91e28cdc7e4ff7f227c2bd11a8ac45"
     },
     {
       "path": "specs/read-contract.md",
       "bytes": 11722,
-      "sha256": "0dadef023d8c482bacd618aeef2a69dec9d628834ba34ca998565f2ce1d4f09c"
+      "sha256": "d269f41cbb1dd434f61e0aa19d2d276218e42926f2167b63f1a5574aa6922147"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -30431,7 +30431,7 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.5",
+      "core": "0.37.6",
       "read": "0.13.0"
     },
     "adapter_bindings": {
@@ -34903,7 +34903,7 @@
     "specification": {
       "path": "specs/protection-admission.md",
       "bytes": 38233,
-      "sha256": "496a8f4ff3e96fe9c7ae0071becfc5657415d2bc26d58c47358f4bc8873e7162"
+      "sha256": "96147d8d7ddfb28635d0a97a1ff94f34b7175d549d1447c3fdce97f5abc7ff41"
     },
     "non_schema_rules": [
       {
@@ -35255,7 +35255,7 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.5",
+        "@aikdna/kdna-core": "0.37.6",
         "@aikdna/kdna-read": "0.13.0"
       }
     },
@@ -35730,7 +35730,7 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.5",
+        "@aikdna/kdna-core": "0.37.6",
         "@aikdna/kdna-read": "0.13.0"
       }
     }
@@ -36552,7 +36552,7 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.5",
+        "@aikdna/kdna-core": "0.37.6",
         "@aikdna/kdna-read": "0.13.0"
       }
     }
@@ -40978,7 +40978,7 @@
       },
       "package_versions": [
         {
-          "core": "0.37.5",
+          "core": "0.37.6",
           "read": "0.13.0"
         }
       ],
@@ -42179,7 +42179,7 @@
           "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
         },
         "package_versions": {
-          "core": "0.37.5",
+          "core": "0.37.6",
           "read": "0.13.0"
         }
       }

@@ -16,7 +16,7 @@ artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.4` | `latest` | `b8517580fb3fb92798fef12109a232612b8503a5431b30818a2cbb4c73b18ba5` |
+| `@aikdna/kdna-core` | `0.37.5` | `latest` | `e8e07a6040c7c88f2d85046497e6a03872051ed76fd46eb4fe1034e4d9650477` |
 | `@aikdna/kdna-read` | `0.12.1` | `latest` | `f1f1572e70076a5d2c1b6b027c4480e536ef617b53075670824327af93838cd1` |
 | `@aikdna/kdna-cli` | `0.40.1` | `latest` | `13b92fb5fe48f99b6db17836d3ff2a48fc93a4917bec6124fa7c0f0395215bf0` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
@@ -103,12 +103,12 @@ An existing `latest` package or repository `main` does not identify a candidate.
 
 | Entry | Exact candidate package combination | Supported route |
 | --- | --- | --- |
-| Core/Read | Core `0.37.4` / Read `0.12.1` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
+| Core/Read | Core `0.37.5` / Read `0.12.1` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
 | [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.1` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
-The maintained source currently carries the candidate pair Core `0.37.5` /
+The maintained source currently carries the candidate pair Core `0.37.6` /
 Read `0.13.0`, which the registry does not serve yet; until it does, the table
 above lists only the published and byte-verified combination.
 
@@ -184,7 +184,7 @@ published workflow; it is not a current Core/Read quickstart.
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
 against it on 2026-09-13. The current Core/Read pair is the published stable
-Core `0.37.4` / Read `0.12.1`.
+Core `0.37.5` / Read `0.12.1`.
 It has a different asset contract. The current native CLI route also has
 different command forms, so this published walkthrough does not select that
 new graph. Keep its exact historical dependencies. See

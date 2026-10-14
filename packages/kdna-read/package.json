@@ -98,7 +98,7 @@
     "schema/read-contract-0.6.4.schema.json"
   ],
   "peerDependencies": {
-    "@aikdna/kdna-core": "0.37.5"
+    "@aikdna/kdna-core": "0.37.6"
   },
   "engines": {
     "node": ">=20"

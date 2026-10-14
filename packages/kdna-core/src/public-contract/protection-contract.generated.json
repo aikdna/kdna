@@ -14,7 +14,7 @@
     "schema_path": "specs/checksums-document-1.schema.json",
     "version": "1.0.0"
   },
-  "definition_digest": "sha256:6d6b789277c5239539b53ce4a78e4e6950898fe28ea7d99a510bdc79ea563fc9",
+  "definition_digest": "sha256:58f756bc4d081e90d5916994197e2c6eb6668949dbaad319b1d33ab5c5f5feda",
   "delivery_history": {
     "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
     "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
@@ -802,7 +802,7 @@
   "runtime_not_implemented": [],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.37.5",
+      "@aikdna/kdna-core": "0.37.6",
       "@aikdna/kdna-read": "0.13.0"
     },
     "version_tuple": {
@@ -823,7 +823,7 @@
   "specification": {
     "bytes": 38233,
     "path": "specs/protection-admission.md",
-    "sha256": "496a8f4ff3e96fe9c7ae0071becfc5657415d2bc26d58c47358f4bc8873e7162"
+    "sha256": "96147d8d7ddfb28635d0a97a1ff94f34b7175d549d1447c3fdce97f5abc7ff41"
   },
   "types": {
     "ChecksumsDocument1": {
@@ -1060,7 +1060,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.5",
+              "const": "0.37.6",
               "type": "string"
             }
           },
@@ -2295,7 +2295,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.5",
+              "const": "0.37.6",
               "type": "string"
             }
           },

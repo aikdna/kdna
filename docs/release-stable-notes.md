@@ -4,6 +4,17 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.6
+
+- Re-publishes the same Core content from the corrected reviewed source commit
+  so that the paired Read `0.13.0` release can be published from the same
+  commit. Apart from the version coordinate itself nothing moves: the generated
+  package-set contract and package manifests declare the exact Read peer
+  `0.13.0`, and the compiled browser/Node tuple keeps its identity.
+- New installations pairing with Read `0.13.0` should use this coordinate;
+  `0.37.5` remains published and valid on its own, and every earlier published
+  coordinate and preview tag stays in place.
+
 ## Core 0.37.2
 
 - Includes the current public contract exports and generated native-sections
@@ -51,7 +62,7 @@ record. Registry acquisition and downstream adoption are separate observations.
   instead of being used, and resolution grants nothing by itself — using a
   handle still passes the reader's complete admission.
 - Keeps the compiled and native-sections Read contracts `kdna.read/0.6.4` and
-  `kdna.read/0.7.0-candidate`, and declares the exact Core peer `0.37.5`. Read
+  `kdna.read/0.7.0-candidate`, and declares the exact Core peer `0.37.6`. Read
   `0.12.0` and `0.12.1` and their published artifacts stay available, and
   adoption remains its own evidence.
 

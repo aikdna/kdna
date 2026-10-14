@@ -5,7 +5,7 @@ Stable distribution `0.12.1` on `latest` declares the exact peer
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
 The current source carries the next candidate coordinate `0.13.0`, an exact
-peer move to `@aikdna/kdna-core@0.37.5`, together with the model-view 0.2.0
+peer move to `@aikdna/kdna-core@0.37.6`, together with the model-view 0.2.0
 selection reduction (non-selected closure members fold to focus, core
 expression and meaning markers behind their own expansion handles) and the
 session-scoped handle resolution. This source candidate is not yet published;
