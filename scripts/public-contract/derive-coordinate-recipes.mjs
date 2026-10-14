@@ -11,6 +11,7 @@ import {
   sha,
   jsonBytes,
   validateRecipeProtectionStructure,
+  FROZEN_PROTECTION_LAYOUT_DIGEST,
 } from './native-renderer.mjs';
 
 export const FROZEN_INPUT = Object.freeze({
@@ -411,7 +412,7 @@ export function deriveCoordinates({ sourceBytes, recipeBytes, documentBytes, cor
   );
   const oldSource = JSON.parse(sourceBytes),
     oldRecipe = JSON.parse(recipeBytes);
-  validateRecipeProtectionStructure(oldRecipe);
+  validateRecipeProtectionStructure(oldRecipe, FROZEN_PROTECTION_LAYOUT_DIGEST);
   equal(
     oldRecipe.input_sha256,
     sha(sourceBytes),
@@ -516,7 +517,7 @@ export function deriveCoordinates({ sourceBytes, recipeBytes, documentBytes, cor
       rows,
     ).operations;
   }
-  validateRecipeProtectionStructure(recipe);
+  validateRecipeProtectionStructure(recipe, FROZEN_PROTECTION_LAYOUT_DIGEST);
   const recipeResult = formatRecipe(recipe);
   return {
     sourceBytes: sourceResult,

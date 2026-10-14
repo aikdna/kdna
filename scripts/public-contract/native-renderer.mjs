@@ -65,7 +65,23 @@ export const digest = (value) => 'sha256:' + sha(canonical(value));
 // migrations may derive digest values, but cannot remove a guard or an owner.
 const PROTECTION_LAYOUT_DIGEST =
   'sha256:9b82e167c4086472f99b5ed90ddb7989f3d33b6c347499289f77d183eeebaed9';
-export function validateRecipeProtectionStructure(recipe) {
+// The historical layout frozen at the coordinate-derivation baseline commit.
+// The derivation counterexample tool validates its frozen inputs against this
+// value; the live recipe stays guarded by PROTECTION_LAYOUT_DIGEST above. A
+// deliberate owner addition updates the live constant and leaves this one
+// frozen.
+export const FROZEN_PROTECTION_LAYOUT_DIGEST =
+  'sha256:80ea29ba2c9db0d53bab68bb9ad8fec384198c5108d55928f817ebdf29737de5';
+// The maintained path validates strictly against the reviewed live layout. The
+// explicit frozen-replay channel (KDNA_NATIVE_RECIPE, used only by the
+// coordinate-derivation counterexample replay) also accepts the historical
+// frozen layout, so its tamper cases reach their named guards on frozen bytes.
+function expectedProtectionLayouts() {
+  return process.env.KDNA_NATIVE_RECIPE
+    ? [PROTECTION_LAYOUT_DIGEST, FROZEN_PROTECTION_LAYOUT_DIGEST]
+    : PROTECTION_LAYOUT_DIGEST;
+}
+export function validateRecipeProtectionStructure(recipe, expected = expectedProtectionLayouts()) {
   let layout;
   try {
     const operations = (rows) => rows.map(({ action, pointer }) => ({ action, pointer }));
@@ -82,7 +98,7 @@ export function validateRecipeProtectionStructure(recipe) {
       })),
       owners: recipe.owners.map((row) => ({ id: row.id, pointer: row.source_module_pointer })),
     };
-    if (digest(layout) === PROTECTION_LAYOUT_DIGEST) return;
+    if ((Array.isArray(expected) ? expected : [expected]).includes(digest(layout))) return;
   } catch {
     // Missing arrays/properties also fail closed as a structural error.
   }
@@ -341,8 +357,8 @@ export function nativeOutputPaths(recipe) {
     fail('RECIPE_DUPLICATE', 'Duplicate native output declaration');
   return result;
 }
-export function buildNativeOutputs(source, sourceBytes, recipe, producer, dependencyRoot) {
-  validateRecipeProtectionStructure(recipe);
+export function buildNativeOutputs(source, sourceBytes, recipe, producer, dependencyRoot, expectedLayout = expectedProtectionLayouts()) {
+  validateRecipeProtectionStructure(recipe, expectedLayout);
   if (sha(sourceBytes) !== recipe.input_sha256)
     fail('SOURCE_IDENTITY', 'Maintained source changed; reconcile generation recipe first');
   if (source.representation_candidate?.candidate_only !== true)
