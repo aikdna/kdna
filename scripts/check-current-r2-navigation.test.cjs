@@ -119,7 +119,7 @@ const mutations = [
   [
     'root README current package',
     'README.md',
-    '| `@aikdna/kdna-core` | `0.37.4` |',
+    '| `@aikdna/kdna-core` | `0.37.5` |',
     '0.35.0-rc.source.1',
   ],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
@@ -133,7 +133,7 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'Stable distribution: package `0.37.4` on `latest`',
+    'Stable distribution: package `0.37.5` on `latest`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -169,7 +169,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'Read declares Core `0.37.5` as its exact peer',
+    'Read declares Core `0.37.6` as its exact peer',
     'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
@@ -208,7 +208,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.4` / Read `0.12.1`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.5` / Read `0.12.1`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -218,7 +218,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.4`',
+    '| `@aikdna/kdna-core` | `0.37.5`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -251,13 +251,13 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.5`、Read `0.13.0`',
+    'Core `0.37.6`、Read `0.13.0`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.5` and Read',
+    'Core `0.37.6` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -269,7 +269,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.5` and Read `0.13.0`',
+    'Core `0.37.6` and Read `0.13.0`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -764,7 +764,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.5` / Read `0.13.0`',
+    'local package line is Core `0.37.6` / Read `0.13.0`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1461,7 +1461,7 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.5` and Read `0.13.0`';
+  const marker = 'The current exact pair is Core `0.37.6` and Read `0.13.0`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
@@ -1690,7 +1690,7 @@ for (const [file, before, after, issue] of [
   ],
   [
     'README.md',
-    'published stable\nCore `0.37.4` / Read `0.12.1`',
+    'published stable\nCore `0.37.5` / Read `0.12.1`',
     'the published browser-preview pair',
     'README.md:current:',
   ],
@@ -1757,7 +1757,7 @@ test('a release matrix that disagrees with the semantic source is recorded, not 
   const result = changedDocument('docs/release-coordinates.json', (text) => {
     const matrix = JSON.parse(text);
     const row = matrix.packages.find((entry) => entry.unit === 'core');
-    row.version = '0.37.6';
+    row.version = '0.37.7';
     delete row.candidate_version;
     return JSON.stringify(matrix, null, 2) + '\n';
   });

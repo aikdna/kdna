@@ -75,7 +75,7 @@ async function admit(input, providerValue) {
 test('the generated module descriptor is self-consistent and its 12 local codes stay off the wire', () => {
   const contract = P.getPackageSetContract();
   assert.equal(contract.contract, 'kdna.package-set-node/0.2.1');
-  assert.equal(contract.core_version, '0.37.5');
+  assert.equal(contract.core_version, '0.37.6');
   assert.equal(contract.read_version, '0.13.0');
   assert.equal(contract.claims, 'claims_not_authenticated');
   assert.equal(contract.core_callables.length, 7);

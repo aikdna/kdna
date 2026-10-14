@@ -1,5 +1,5 @@
 {
-  "core_contract_digest": "sha256:685d96bafba57730842d09aca1e83458862061f0a7111f10603cc70fb48c59e3",
+  "core_contract_digest": "sha256:eddc96cd80347b69f5d554ee359972ba3ef9858db7d98980e5642ecca0a5051b",
   "descriptor": {
     "claims": "claims_not_authenticated",
     "contract": "kdna.package-set-node/0.2.1",
@@ -12,8 +12,8 @@
       "inspectAdmittedPackageSet",
       "verifyPackageSetHandoff"
     ],
-    "core_version": "0.37.5",
-    "definition_digest": "sha256:63c3bd7ebf02a2be8a633862c4aa80ac164037a4dce9444d68be7c5ed53dd3fe",
+    "core_version": "0.37.6",
+    "definition_digest": "sha256:3ee424f96d79436eded0da66f2ee2a4868763201e705fa5f3c9ea51006dcd193",
     "limits": {
       "maxMembers": 10000,
       "maxTotalSourceBytes": 104857600

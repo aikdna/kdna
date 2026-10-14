@@ -16,7 +16,7 @@ import { digest, pointer, project, sha } from './native-renderer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const inputs = readFrozenInputs(root);
-const options = { ...inputs, core: '0.37.5', read: '0.13.0' };
+const options = { ...inputs, core: '0.37.6', read: '0.13.0' };
 const candidate = deriveCoordinates(options);
 
 test('coordinate derivation verifies every frozen guard and is byte reproducible', () => {
@@ -33,7 +33,7 @@ test('coordinate derivation verifies every frozen guard and is byte reproducible
     candidate.report.coordinates.map((row) => row.occurrences),
     [6, 7],
   );
-  assert.equal(candidate.report.source_changes.length, 17);
+  assert.equal(candidate.report.source_changes.length, 10);
   assert.equal(candidate.report.documents.length, 4);
   assert.equal(candidate.report.document_bindings.length, 8);
   const source = JSON.parse(candidate.sourceBytes),
@@ -90,23 +90,23 @@ test('coordinate derivation verifies every frozen guard and is byte reproducible
   }
 });
 
-test('decisions change exactly four package fields and two source observation dates', () => {
+test('decisions change exactly the two fields of the moved coordinate', () => {
   const name = 'specs/public-contract-decisions.json';
   const before = JSON.parse(inputs.documentBytes[name]);
   const document = candidate.documents.find((row) => row.path === name);
   const after = JSON.parse(document.bytes);
   const expected = structuredClone(before);
-  for (const [index, version] of ['0.37.5', '0.13.0'].entries()) {
-    const row = expected.version_policy.planned_packages[index];
-    row.candidate_version = version;
-    row.current_source_version = version;
-    // Same-day re-observation keeps the recorded date.
-    row.current_source_version_observed = '2026-10-14';
-  }
+  // Only the moved coordinate is rewritten; the same-version coordinate keeps
+  // its recorded source observation untouched.
+  const row = expected.version_policy.planned_packages[0];
+  row.candidate_version = '0.37.6';
+  row.current_source_version = '0.37.6';
+  // Same-day re-observation keeps the recorded date.
+  row.current_source_version_observed = '2026-10-14';
   assert.deepEqual(after, expected);
   const report = candidate.report.documents.find((row) => row.path === name);
-  assert.equal(report.transformations.length, 4);
-  assert.equal(report.transformations.filter((row) => row.kind === 'version_coordinate').length, 4);
+  assert.equal(report.transformations.length, 2);
+  assert.equal(report.transformations.filter((row) => row.kind === 'version_coordinate').length, 2);
   assert.equal(
     // Same-day re-observation keeps the recorded date, so no date row moves.
     report.transformations.filter((row) => row.kind === 'source_observation_date').length,
@@ -192,7 +192,7 @@ test('derivation CLI refuses maintained paths, aliases into the repository and e
     '--root',
     root,
     '--core-version',
-    '0.37.5',
+    '0.37.6',
     '--read-version',
     '0.13.0',
     '--out-dir',

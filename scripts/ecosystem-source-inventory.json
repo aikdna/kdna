@@ -43,7 +43,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.5"
+          "version": "0.37.6"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -90,7 +90,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.5"
+          "declared": "0.37.6"
         },
         {
           "path": "packages/kdna/package.json",
@@ -113,7 +113,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "c15bb66833a5b96e44ebbf854a2ffd760bfd1036d4e9169335c94c67d9bf4265",
+          "sha256": "f3dcc4980d0ea486b0b45fd5fb297bb479d981b808b9f6a211a8877eb79196e9",
           "local_archives": []
         }
       ],
@@ -218,9 +218,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.5",
+          "version": "0.37.6",
           "member_count": 459,
-          "members_sha256": "f260ebae7d9120263306513ff40a7c67deeb54d900365fc75be9cd9811158431",
+          "members_sha256": "4ac9758d297166888d3b40589a1ea8b11fcaa628898a7c08551ba6c4cd86d902",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -737,7 +737,7 @@
           "name": "@aikdna/kdna-read",
           "version": "0.13.0",
           "member_count": 99,
-          "members_sha256": "acc07744421471447ee4404d9624456d60b490b70a34133b04cd9d6059ab0b8f",
+          "members_sha256": "d6a04ddb88728d7605622b086f4af6d88d60e66652b6c8902459e9d214e059da",
           "paths": [
             "LICENSE",
             "NOTICE",

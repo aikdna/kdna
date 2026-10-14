@@ -376,7 +376,7 @@
           "type": "array"
         },
         "core_version": {
-          "const": "0.37.5",
+          "const": "0.37.6",
           "type": "string"
         },
         "definition_digest": {

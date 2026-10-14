@@ -7,7 +7,7 @@ artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.4` | `latest` | `b8517580fb3fb92798fef12109a232612b8503a5431b30818a2cbb4c73b18ba5` |
+| `@aikdna/kdna-core` | `0.37.5` | `latest` | `e8e07a6040c7c88f2d85046497e6a03872051ed76fd46eb4fe1034e4d9650477` |
 | `@aikdna/kdna-read` | `0.12.1` | `latest` | `f1f1572e70076a5d2c1b6b027c4480e536ef617b53075670824327af93838cd1` |
 | `@aikdna/kdna-cli` | `0.40.1` | `latest` | `13b92fb5fe48f99b6db17836d3ff2a48fc93a4917bec6124fa7c0f0395215bf0` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 0.37.6 (2026-10-14)
+
+- Re-publishes the same Core content from the corrected reviewed source commit
+  so that the paired Read `0.13.0` release can be published from the same
+  commit. Apart from the version coordinate itself nothing moves: the generated
+  package-set contract and package manifests declare the exact Read peer
+  `0.13.0`, and the compiled browser/Node tuple keeps its identity.
+- New installations pairing with Read `0.13.0` should use this coordinate;
+  `0.37.5` remains published and valid on its own, and every earlier published
+  coordinate and preview tag stays in place.
+
 ## 0.37.5 (2026-10-14)
 
 - Issues the deferred retained-plan target for every selection-closure member

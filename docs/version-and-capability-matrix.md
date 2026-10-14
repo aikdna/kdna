@@ -92,8 +92,8 @@ candidate graph, published previews and the observed earlier `latest` values.
 
 | Current local package (2026-10-11) | Actual source version | Bound graph and state |
 |---|---|---|
-| `@aikdna/kdna-core` | `0.37.4` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
-| `@aikdna/kdna-read` | `0.12.1` | Exact Core `0.37.4` peer; stable distribution on `latest`; Node >=20 |
+| `@aikdna/kdna-core` | `0.37.5` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.12.1` | Exact Core `0.37.5` peer; stable distribution on `latest`; Node >=20 |
 
 **Frozen 2026-10-07 observation.** The table below retains the source labels and
 publication descriptions recorded on that date. They do not describe the current

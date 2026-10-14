@@ -2,11 +2,11 @@
 > This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry states the exact source versions, registry status and installation route.
 
 
-Stable distribution: package `0.37.4` on `latest`, paired with exact Read
+Stable distribution: package `0.37.5` on `latest`, paired with exact Read
 `0.12.1`. The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`.
-The current source carries the next candidate pair -- package `0.37.5` with
+The current source carries the next candidate pair -- package `0.37.6` with
 exact Read `0.13.0`. The Core change is additive: the retained selection plan
 issues an expansion target for each selection-closure member the read side
 delivers through its own handle. This source candidate is not yet published;
@@ -17,9 +17,10 @@ Container `0.6.0` and Read `0.7.0-candidate`. See the
 
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. The published coordinate is Core `0.37.4` paired with Read `0.12.1` on
-`latest`; Core `0.37.3`, Read `0.12.0`, Core `0.37.2`, Read `0.11.3`, Core
-`0.37.0` and Read `0.11.1` remain earlier published stable coordinates.
+checks. The published coordinate is Core `0.37.5` paired with Read `0.12.1` on
+`latest`; Core `0.37.4`, Core `0.37.3`, Read `0.12.0`, Core `0.37.2`, Read
+`0.11.3`, Core `0.37.0` and Read `0.11.1` remain earlier published stable
+coordinates.
 The earlier published Core `0.37.1-rc.browser.1` / Read
 `0.11.2-rc.browser.1` previews retain their own byte identities and tags.
 

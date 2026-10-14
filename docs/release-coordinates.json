@@ -9,16 +9,16 @@
     {
       "unit": "core",
       "name": "@aikdna/kdna-core",
-      "version": "0.37.4",
-      "candidate_version": "0.37.5",
+      "version": "0.37.5",
+      "candidate_version": "0.37.6",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "0.37.4",
-      "source_commit": "352ec18928618c224fbf4be1379685c26e33aa06",
-      "artifact_sha256": "b8517580fb3fb92798fef12109a232612b8503a5431b30818a2cbb4c73b18ba5",
-      "publish_run": 38490372137,
-      "release_id": 412222303,
-      "release_published_at": "2026-10-14T00:28:25Z"
+      "release_tag": "0.37.5",
+      "source_commit": "666b4233ac24cc623a421b1baf1538f032019068",
+      "artifact_sha256": "e8e07a6040c7c88f2d85046497e6a03872051ed76fd46eb4fe1034e4d9650477",
+      "publish_run": 38514563792,
+      "release_id": 412353491,
+      "release_published_at": "2026-10-14T05:02:57Z"
     },
     {
       "unit": "read",
