@@ -52,7 +52,7 @@ async function prepareRead(admit,input,candidate,controlProvider,host,protection
     if(protection)await protection.check("host_observation");
     if(first.error){if(first.error==='READ_HOST_DENIED')state.read_permission='denied';return freeze(failure(first.error));}
     const unavailable=projectionFailure(request,view);if(unavailable)return freeze(failure(unavailable));
-    let body=bodyFor(request,view);if(!body)return freeze(failure('READ_PROJECTION_INVALID'));body=clone(body);
+    let body=bodyFor(request,view,{mintHandles:true});if(!body)return freeze(failure('READ_PROJECTION_INVALID'));body=clone(body);
     if(!scopeBody(body,request,first.value,view))return freeze(failure('READ_SCOPE_DENIED'));
     const fresh=await observe(host,request,snapshot,view);
     if(protection)await protection.check("host_observation");

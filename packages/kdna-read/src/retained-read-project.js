@@ -14,8 +14,16 @@ function project(record) {
   const catalog=scoped?.catalog??ir.catalog;
   const omissions=clone(scoped?.omissions??[]);
   if (!scoped) for (const row of catalog) if (!supplied.has(row.node_ref)) omissions.push({state:'explicitly_omitted',target:row.node_ref,field:'judgment',reason:'outside_selection',expandable:false,handle_id:null});
+  const selectedIds=new Set();
+  if(request.mode==='exact_selection'){
+    const selection=request.selection??{};
+    if(typeof selection.judgment_id==='string')selectedIds.add(selection.judgment_id);
+    for(const id of selection.judgment_ids??[])selectedIds.add(id);
+  }
   const index=plan.index.map(row=>{
-    const out={target:row.target,owner:row.owner,display_name:row.display_name,body_delivery:supplied.has(row.node_ref)?'inline':'deferred'};
+    const reducibleMember=selectedIds.size>0&&supplied.has(row.node_ref)&&
+      row.target.kind==='judgment'&&!selectedIds.has(row.target.id);
+    const out={target:row.target,owner:row.owner,display_name:row.display_name,body_delivery:supplied.has(row.node_ref)&&!reducibleMember?'inline':'deferred'};
     if (selected) out.node_ref=row.node_ref;
     return out;
   });

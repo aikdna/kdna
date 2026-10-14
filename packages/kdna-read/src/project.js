@@ -66,7 +66,7 @@ function projectionFailure(request,view){
   if((view.ir.unresolved_external??[]).some(ref=>ref.mandatory&&supplied.has(jcs(ref.source))))return 'READ_UNRESOLVED_EXTERNAL';
   return null;
 }
-function bodyFor(request,view){
+function bodyFor(request,view,options={}){
   const ir=view.ir,nodes=new Map(ir.nodes.map(x=>[x.id,x]));
   const capability=assetCapability(view),mandatory=closureFor(request,view);
   if(capability===null||!mandatory||projectionFailure(request,view)||!Array.isArray(mandatory.node_ids)||mandatory.node_ids.some(id=>!nodes.has(id)))return null;
@@ -79,6 +79,19 @@ function bodyFor(request,view){
   const omissions=scoped?scoped.omissions:[];
   const anchor=anchorFor(request),targets=view.expansion_targets.filter(x=>same(x.anchor,anchor));
   const available=new Map(targets.map(x=>[jcs(x.target),x]));
+  // Members of a selection closure that were not selected are delivered through
+  // their own expansion handles: the body projection reduces them, and a
+  // reduced entry must be able to name the handle that expands it back. Only a
+  // route that mints handles marks them deferred; the pure projection route
+  // answers with the full member bodies and never fabricates a credential.
+  // The R2 request shape names one selection judgment; the retained shape
+  // carries a list.
+  const selectedIds=new Set();
+  if(options.mintHandles&&request.mode==='exact_selection'){
+    const selection=request.selection??{};
+    if(typeof selection.judgment_id==='string')selectedIds.add(selection.judgment_id);
+    for(const id of selection.judgment_ids??[])selectedIds.add(id);
+  }
   let index=[];
   if(request.mode!=='catalog'){
     for(const descriptor of ir.asset_index){
@@ -93,7 +106,9 @@ function bodyFor(request,view){
       // That role never requests its entire body, even under a broad Host grant.
       if(request.mode!=='whole_asset'&&node.role==='judgment'&&!supplied.has(node.id))continue;
       if(request.mode!=='whole_asset'&&!supplied.has(node.id)&&!target)continue;
-      const body_delivery=supplied.has(node.id)?'inline':'deferred';
+      const reducibleMember=selectedIds.size>0&&supplied.has(node.id)&&
+        descriptor.target.kind==='judgment'&&!selectedIds.has(descriptor.target.id);
+      const body_delivery=supplied.has(node.id)&&!reducibleMember?'inline':'deferred';
       if(body_delivery==='deferred'&&!target)return null;
       index.push({target:descriptor.target,owner:descriptor.owner,display_name:descriptor.display_name,body_delivery});
     }

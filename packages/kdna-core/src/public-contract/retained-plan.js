@@ -80,7 +80,13 @@ function plan(request, view) {
     index.push(descriptor);
   }
   const catalog=scoped?.catalog??ir.catalog;
-  const deferred=index.filter(x=>!supplied.has(x.node_ref));
+  // A selection closure member that is not the selection is delivered through
+  // its own expansion handle, so its target is issued like any other deferred
+  // descriptor. The read side marks exactly this set deferred.
+  const selectedIds=new Set(request.mode==='exact_selection'?(request.selection?.judgment_ids??[]):[]);
+  const reducibleMember=x=>request.mode==='exact_selection'&&supplied.has(x.node_ref)&&
+    x.target.kind==='judgment'&&!selectedIds.has(x.target.id);
+  const deferred=index.filter(x=>!supplied.has(x.node_ref)||reducibleMember(x));
   const issued=deferred.map(x=>byTarget.get(C.strict.canonicalJson(x.target)));
   const typed = new Set(ir.nodes.filter(n=>supplied.has(n.id)).map(n=>C.strict.canonicalJson(n.target)));
   return {node_ids:ids,descriptor_ids:[...new Set([...catalog,...index].map(x=>x.node_ref))],targets:issued,

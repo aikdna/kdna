@@ -55,7 +55,13 @@ test('the body view keeps every author field and removes only the index and the 
       assert.equal(body.status,'ready');
       const carried=BODY_KEYS.filter(k=>Object.hasOwn(result.envelope.content,k));
       assert.deepEqual(Object.keys(body.content).sort(),[...carried].sort());
-      for(const key of carried)assert.deepEqual(body.content[key],result.envelope.content[key],`${contract}/${name}/${mode}/${key}`);
+      for(const key of carried){
+        // The 0.2.0 exact_selection body closes relationship entries into
+        // references and folds non-selected members; those two keys are pinned
+        // by the reduction tests below instead of this equality.
+        if(mode==='exact_selection'&&(key==='closure'||key==='references'))continue;
+        assert.deepEqual(body.content[key],result.envelope.content[key],`${contract}/${name}/${mode}/${key}`);
+      }
       for(const key of AUDIT_KEYS)assert.equal(Object.hasOwn(body.content,key),false,`${contract}/${name}/${mode}/${key}`);
       const surfaced=['content','status','asset','snapshot_id','request_id'];
       for(const key of (contract==='retained'?RETAINED_ENVELOPE_KEYS:PIPELINE_ENVELOPE_KEYS))
@@ -150,4 +156,147 @@ test('a result that is not a projectable read envelope reaches the caller unchan
     assert.equal(projectModelView(value,{mode:'whole_asset'}),value,JSON.stringify(value.channel));
     assert.equal(projectModelView(value,{view:'full'}),value,JSON.stringify(value.channel));
   }
+});
+// ----- 0.2.0 reduction: selection members fold behind their own handles -----
+const ATTACHED=['method_component','result_contract','result'];
+function selectedIdSet(selected){
+  const ids=new Set(selected?.judgment_ids??[]);
+  if(typeof selected?.judgment_id==='string')ids.add(selected.judgment_id);
+  return ids;
+}
+// Two authored relations bring qB (support upstream) and qC (conflict side)
+// into qA's mandatory closure, so the selection has non-selected members.
+function addMemberGraph(asset){
+  asset.payload.relationships.push(
+    {id:'rel-support-qb',kind:{term:'support'},direction:'directed',
+     participants:[{judgment_ref:'qB',role:{term:'supporter'}},{judgment_ref:'qA',role:{term:'claim'}}],
+     operator:{term:'supports'},effect:{term:'offers_support'},
+     statement:'合成测试关系：qB 支撑 qA。'},
+    {id:'rel-conflict-qc',kind:{term:'conflict'},direction:'undirected',
+     participants:[{judgment_ref:'qA',role:{term:'side_a'}},{judgment_ref:'qC',role:{term:'side_b'}}],
+     operator:{term:'conflicts_with'},effect:{term:'preserves_disagreement'},
+     statement:'合成测试关系：qA 与 qC 相抵。'});
+}
+async function readMembers({retainedShape=false,edit=addMemberGraph}={}){
+  const {asset,admitted}=prepared('complex',edit);
+  assert.equal(admitted.status,'accepted',JSON.stringify(admitted));
+  const host=countingHost();
+  const result=await readBrowser(admitted.snapshot,request(asset,'exact_selection','qA'),control,host.provider);
+  assert.equal(result.channel,'read_envelope',JSON.stringify(result));
+  assert.equal(result.envelope.status,'ready',JSON.stringify(result));
+  return {asset,admitted,host,result:retainedShape?asRetained(result,{mode:'exact_selection'}):result};
+}
+function sameTarget(left,right){return JSON.stringify(left)===JSON.stringify(right);}
+test('an exact_selection body reduces non-selected members and names their recovery',async()=>{
+  for(const retainedShape of [false,true]){
+    const {result}=await readMembers({retainedShape});
+    const v0=thaw(result.envelope.content);
+    const body=projectModelView(result,{mode:'exact_selection'});
+    assert.equal(body.view_contract,'kdna.read.model-view/0.2.0');
+    const selected=selectedIdSet(v0.selected);
+    assert.deepEqual([...selected],['qA']);
+    const memberIds=v0.closure.filter(e=>e.role==='judgment'&&!selected.has(e.target.id)).map(e=>e.target.id);
+    assert.deepEqual(memberIds,['qB','qC'],`members (retained=${retainedShape})`);
+    const selEntry=v0.closure.find(e=>e.role==='judgment'&&selected.has(e.target.id));
+    assert.deepEqual(body.content.closure.find(e=>e.id===selEntry.id),selEntry,'the selection keeps its full body');
+    const reduced=body.content.closure.filter(e=>e.state==='reduced');
+    assert.equal(reduced.length,2);
+    for(const entry of reduced){
+      assert.equal(entry.body_delivery,'deferred');
+      assert.equal(typeof entry.handle_id,'string');
+      assert.deepEqual(Object.keys(entry.value).sort(),['core_expression','focus','id','markers']);
+      assert.deepEqual(Object.keys(entry.value.markers).sort(),['answer_kind','boundaries','exceptions','form','method_term','undecided']);
+      const descriptor=v0.asset_index.find(d=>sameTarget(d.target,entry.target));
+      assert.ok(descriptor&&descriptor.body_delivery==='deferred'&&descriptor.handle_id===entry.handle_id,'the reduced entry names the issued handle');
+    }
+    const memberSet=new Set(memberIds);
+    const attachedIds=v0.closure.filter(e=>ATTACHED.includes(e.role)&&memberSet.has(e.owner_judgment_id)).map(e=>e.id);
+    assert.ok(attachedIds.length>0,'the fixture members own attached entries');
+    assert.ok(!body.content.closure.some(e=>attachedIds.includes(e.id)),'attached entries leave with their member');
+    for(const entry of body.content.closure.filter(e=>e.role==='relationship')){
+      assert.equal(Object.hasOwn(entry,'value'),false,'relationship entries carry no second body');
+      assert.ok(body.content.relationships.some(r=>r.id===entry.value_ref),'the reference names a carried relation');
+    }
+    assert.ok(!body.content.references.some(r=>attachedIds.includes(r.source_node)||attachedIds.includes(r.target_node)),'edges to folded nodes are gone');
+    for(const row of body.content.references)
+      assert.ok(v0.references.some(x=>x.id===row.id),'every kept edge was in the full answer');
+    for(const key of BODY_KEYS)
+      if(key!=='closure'&&key!=='references')assert.deepEqual(body.content[key],v0[key],`${key} (retained=${retainedShape})`);
+  }
+});
+test('every reduced member expands back; body plus expansions equals the full answer',async()=>{
+  const {asset,admitted,host,result}=await readMembers();
+  const v0=thaw(result.envelope.content);
+  const body=projectModelView(result,{mode:'exact_selection'});
+  const replies=new Map();
+  for(const entry of body.content.closure.filter(e=>e.state==='reduced')){
+    const handle=v0.expansion_handles.find(h=>h.handle_id===entry.handle_id);
+    assert.ok(handle,'the reduced entry names a handle the reader issued');
+    // The handle's anchor is the original selection, so the expand request carries it back.
+    const expandRequest={...F.candidate(tuple,asset,'whole_asset','x',8000000),mode:'expand',selection:v0.selected,handle};
+    const reply=await readBrowser(admitted.snapshot,expandRequest,control,host.provider);
+    assert.equal(reply.envelope.status,'ready',JSON.stringify(reply));
+    replies.set(entry.handle_id,thaw(reply.envelope.content));
+  }
+  const byId=new Map();
+  for(const entry of body.content.closure){
+    if(entry.role==='relationship'){
+      const {value_ref,...rest}=entry;
+      const value=body.content.relationships.find(r=>r.id===value_ref);
+      assert.ok(value,`the relation body is carried once: ${value_ref}`);
+      byId.set(entry.id,{...rest,value});
+      continue;
+    }
+    if(entry.state!=='reduced'){byId.set(entry.id,entry);continue;}
+    const reply=replies.get(entry.handle_id);
+    const member=reply.closure.find(e=>e.id===entry.id);
+    assert.ok(member,`the expansion returns the member entry: ${entry.id}`);
+    byId.set(entry.id,member);
+    for(const attached of reply.closure.filter(e=>ATTACHED.includes(e.role)&&e.owner_judgment_id===entry.target.id))
+      byId.set(attached.id,attached);
+  }
+  const rebuilt=v0.closure.map(e=>byId.get(e.id));
+  assert.ok(rebuilt.every(Boolean),'every full-closure entry is rebuilt');
+  assert.deepEqual(rebuilt,v0.closure,'the rebuilt closure equals the full answer entry by entry');
+  const bodyRefIds=body.content.references.map(r=>r.id),v0RefIds=v0.references.map(r=>r.id);
+  let cursor=0;
+  for(const id of bodyRefIds){cursor=v0RefIds.indexOf(id,cursor);assert.ok(cursor>=0,'body edges keep the full answer order');cursor++;}
+  const recovered=new Map(body.content.references.map(r=>[r.id,r]));
+  for(const reply of replies.values())for(const row of reply.references)recovered.set(row.id,row);
+  assert.deepEqual(v0.references.map(r=>recovered.get(r.id)),v0.references,'every full edge is recovered from the body or an expansion');
+});
+test('the markers keep condition, exception and undecided meaning visible',async()=>{
+  const {result}=await readMembers({edit:asset=>{
+    addMemberGraph(asset);
+    const qb=asset.payload.judgments.find(j=>j.id==='qB');
+    qb.answer_kind='other';
+    qb.answer_other={name:'合成未决',definition:'合成测试：作者尚未决定这一问题。',exclusion_reason:'未决而非领域外。'};
+    qb.boundaries={state:'provided',value:[{id:'b-qb',effect:'limit',statement:'合成测试边界。',declared_by:qb.subject.actor_ids[0],applies_to:{kind:'judgments',judgment_refs:['qB']},exception_refs:[]}]};
+  }});
+  const body=projectModelView(result,{mode:'exact_selection'});
+  const qb=body.content.closure.find(e=>e.target.id==='qB');
+  assert.equal(qb.state,'reduced');
+  assert.equal(qb.value.markers.undecided,true);
+  assert.equal(qb.value.markers.answer_kind,'other');
+  assert.equal(qb.value.markers.boundaries,'provided');
+  const qc=body.content.closure.find(e=>e.target.id==='qC');
+  assert.equal(qc.value.markers.undecided,false);
+  assert.equal(qc.value.markers.boundaries,'none');
+});
+test('a consumer that pins the previous model-view contract is refused with guidance',async()=>{
+  const {result}=await readMembers();
+  assert.throws(
+    ()=>projectModelView(result,{mode:'exact_selection',accept:'kdna.read.model-view/0.1.0'}),
+    error=>error.code==='READ_MODEL_VIEW_UNSUPPORTED_VERSION'&&error.guidance?.requires==='kdna.read.model-view/0.2.0',
+    'the previous contract must be refused explicitly');
+  assert.equal(
+    projectModelView(result,{mode:'exact_selection',accept:'kdna.read.model-view/0.2.0'}).view_contract,
+    'kdna.read.model-view/0.2.0');
+});
+test('a mixture of reduced and inline members is refused, not half-projected',async()=>{
+  const {result}=await readMembers();
+  const mixed=thaw(result);
+  mixed.envelope.content.asset_index=mixed.envelope.content.asset_index.filter(
+    d=>!(d.target.kind==='judgment'&&d.target.id==='qC'));
+  assert.throws(()=>projectModelView(mixed,{mode:'exact_selection'}),error=>error.code==='READ_MODEL_VIEW_UNAVAILABLE');
 });
