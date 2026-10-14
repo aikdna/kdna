@@ -13,3 +13,7 @@ export interface ModelViewRelationshipReference { readonly value_ref: string; }
 export interface ModelViewFingerprint { readonly asset: AssetIdentity; readonly snapshot_id: Identifier; readonly request_id: Identifier; readonly attested?: { readonly A?: string; readonly C?: string; readonly E?: string }; readonly omitted: { readonly envelope: ReadonlyArray<string>; readonly content: ReadonlyArray<string> }; readonly recovery: { readonly view: 'full'; readonly mode?: string }; }
 export interface ModelViewBody { readonly view_contract: 'kdna.read.model-view/0.2.0'; readonly view: 'body'; readonly status: 'ready' | 'catalog_only'; readonly fingerprint: ModelViewFingerprint; readonly content: ModelViewContent; }
 export declare function projectModelView<T>(result: T, options?: ModelViewOptions): T | ModelViewBody;
+export declare function collectExpansionHandles(target: unknown, into?: Map<string, unknown>): Map<string, unknown>;
+export interface ExpansionHandleResolution { readonly status: 'ready' | 'unavailable'; readonly code?: 'READ_HANDLE_UNKNOWN' | 'READ_HANDLE_ASSET_MISMATCH' | 'READ_HANDLE_STALE' | 'READ_HANDLE_EXPIRED'; readonly message?: string; readonly guidance?: { readonly action: string }; readonly handle?: unknown; }
+export declare function resolveExpansionHandle(handles: Map<string, unknown>, handle_id: string, options?: { readonly current_ms?: number; readonly snapshot_id?: string; readonly asset_id?: string; readonly asset_version?: string }): ExpansionHandleResolution;
+

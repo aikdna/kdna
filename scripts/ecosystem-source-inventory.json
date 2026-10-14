@@ -220,7 +220,7 @@
           "name": "@aikdna/kdna-core",
           "version": "0.37.4",
           "member_count": 459,
-          "members_sha256": "925e1426b243ea2c88f7d3c31cdfe30cb20f456a0de754c7d7917d005b09b74b",
+          "members_sha256": "a5c36d12c728069e6d514e598b3f726b6802d105b3b26bddabb25a02506ee25d",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -736,8 +736,8 @@
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
           "version": "0.12.1",
-          "member_count": 98,
-          "members_sha256": "2170895ac633df159270590845c8b90e79146117c731009841dfd58af5ef1eb6",
+          "member_count": 99,
+          "members_sha256": "786bd10a91133e0179c81a20d3400897e17cf2899d2beb8d66aafb63150bc788",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -770,6 +770,7 @@
             "src/embedding.d.ts",
             "src/embedding.js",
             "src/embedding.mjs",
+            "src/expansion-handles.js",
             "src/host-gate.js",
             "src/index.d.ts",
             "src/index.js",
@@ -837,6 +838,7 @@
             "src/transport.mjs",
             "src/types.d.ts",
             "src/util.js"
+          
           ],
           "install_scope": "source-package-member-inspection"
         },
