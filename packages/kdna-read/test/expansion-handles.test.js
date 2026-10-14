@@ -62,6 +62,32 @@ test('a kept answer resolves its own handles and refuses every misuse explicitly
   assert.equal(collectExpansionHandles({envelope:{content:{}}}).size,0);
   assert.equal(collectExpansionHandles(null).size,0);
 });
+test('the retained handle shape resolves on its nested origin snapshot',async()=>{
+  // The retained route issues handles with `origin` holding the snapshot and no
+  // top-level snapshot_id; the flat R2 handles carry it at the top. A correct
+  // snapshot from either shape resolves; a stale one is refused either way.
+  const collected=new Map();
+  const retainedShape={
+    binding_kind:'retained_section_snapshot',handle_id:'retained-handle:fixture-retained',
+    asset:{asset_id:'asset:retained-fixture',asset_version:'1.0.0',judgment_version:'1.0.0'},
+    tuple:tuple,
+    origin:{snapshot_id:'section-snapshot:retained-fixture',kind:'whole',capture_id:'capture:fixture',
+      admission_request_digest:'sha256:'+'1'.repeat(64),verification_digest:'sha256:'+'2'.repeat(64),
+      checked_sections_digest:'sha256:'+'3'.repeat(64)},
+    anchor:{kind:'asset'},target:{kind:'judgment',id:'qA'},scope:['judgment:fixture'],
+    issued_at:1000,expires_at:1900,host_id:'host:fixture',host_epoch:'epoch:1',
+  };
+  collectExpansionHandles({envelope:{content:{expansion_handles:[retainedShape]}}},collected);
+  const ok=resolveExpansionHandle(collected,retainedShape.handle_id,
+    {current_ms:1000,snapshot_id:'section-snapshot:retained-fixture',asset_id:'asset:retained-fixture',asset_version:'1.0.0'});
+  assert.equal(ok.status,'ready','a retained-shape handle resolves against its origin snapshot');
+  const stale=resolveExpansionHandle(collected,retainedShape.handle_id,{snapshot_id:'section-snapshot:elsewhere'});
+  assert.equal(stale.code,'READ_HANDLE_STALE','a different snapshot is still refused');
+  const expired=resolveExpansionHandle(collected,retainedShape.handle_id,{current_ms:retainedShape.expires_at});
+  assert.equal(expired.code,'READ_HANDLE_EXPIRED');
+  const foreign=resolveExpansionHandle(collected,retainedShape.handle_id,{asset_id:'asset:elsewhere',asset_version:'1.0.0'});
+  assert.equal(foreign.code,'READ_HANDLE_ASSET_MISMATCH');
+});
 test('a resolved handle expands through the reader, which still checks it fully',async()=>{
   const {asset,admitted,host,result}=await readWithMembers();
   const handles=collectExpansionHandles(result);

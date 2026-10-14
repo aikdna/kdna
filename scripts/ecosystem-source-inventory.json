@@ -737,7 +737,7 @@
           "name": "@aikdna/kdna-read",
           "version": "0.12.1",
           "member_count": 99,
-          "members_sha256": "786bd10a91133e0179c81a20d3400897e17cf2899d2beb8d66aafb63150bc788",
+          "members_sha256": "62bd4b08c23c9560b694056c34fde9145c8d67c250928fb2961e6dd75c0cacc2",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -838,7 +838,6 @@
             "src/transport.mjs",
             "src/types.d.ts",
             "src/util.js"
-          
           ],
           "install_scope": "source-package-member-inspection"
         },
