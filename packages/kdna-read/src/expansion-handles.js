@@ -47,7 +47,10 @@ function resolveExpansionHandle(handles, handleId, options = {}) {
   if (isText(options.asset_id) && (assetId !== options.asset_id || assetVersion !== options.asset_version))
     return unavailable('READ_HANDLE_ASSET_MISMATCH', 'the handle was issued for a different asset or version',
       'resolve the handle against the asset it was issued for, or request a fresh read of this asset');
-  if (isText(options.snapshot_id) && handle.snapshot_id !== options.snapshot_id)
+  // The retained route nests the issuing snapshot under `origin`; the R2
+  // pipeline carries it at the top level. Both name the same thing.
+  const snapshotId = handle.origin?.snapshot_id ?? handle.snapshot_id;
+  if (isText(options.snapshot_id) && snapshotId !== options.snapshot_id)
     return unavailable('READ_HANDLE_STALE', 'the handle was issued for a different snapshot of this asset',
       'request a fresh read; handles only expand the snapshot that issued them');
   if (typeof options.current_ms === 'number' && options.current_ms >= handle.expires_at)

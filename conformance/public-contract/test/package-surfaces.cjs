@@ -76,7 +76,14 @@ const surfaces = {
     'inspectAdmittedPackageSet',
     'verifyPackageSetHandoff',
   ],
-  '@aikdna/kdna-read': ['MODEL_VIEW_CONTRACT', 'admitReadRequest', 'collectExpansionHandles', 'project', 'projectModelView', 'resolveExpansionHandle'],
+  '@aikdna/kdna-read': [
+    'MODEL_VIEW_CONTRACT',
+    'admitReadRequest',
+    'collectExpansionHandles',
+    'project',
+    'projectModelView',
+    'resolveExpansionHandle',
+  ],
   '@aikdna/kdna-read/node': ['readNode'],
   '@aikdna/kdna-read/browser': ['readBrowser'],
   '@aikdna/kdna-read/protected-sections-browser': [
