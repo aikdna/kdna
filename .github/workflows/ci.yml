@@ -44,6 +44,10 @@ jobs:
       - name: Verify the single-file asset inspector is fresh
         run: node scripts/core-release-authority.js trusted-npm run check:asset-inspector
       - run: node scripts/core-release-authority.js trusted-npm test
+      - name: Test the Read workspace suite against the current pair
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          --workspace @aikdna/kdna-read test
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
