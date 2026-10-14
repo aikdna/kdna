@@ -20,8 +20,8 @@
       },
       {
         "path": "scripts/public-contract/native-renderer.mjs",
-        "bytes": 22503,
-        "sha256": "7c98e27dc4ce7af1ed800383e25c3f753c26a9e6f7b9abb5188459e005da8c22"
+        "bytes": 22518,
+        "sha256": "7ea1a71b1a115b470ac6a21bda258bffc88cfe08da04c97c859044de0f20ca5d"
       },
       {
         "path": "scripts/public-contract/generation-writer.mjs",
