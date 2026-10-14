@@ -1,14 +1,15 @@
 # Core and Read: current implementation status
 
-Source status: 2026-10-11. Core `0.37.4` and Read
-`0.12.1` are unpublished stable distribution candidates. Source readiness,
-exact artifact acceptance and actual public publication are separate facts.
+Source status: 2026-10-14. Core `0.37.4` and Read `0.12.1` are published
+stable coordinates; Core `0.37.5` and Read `0.13.0` are the current
+unpublished stable distribution candidates. Source readiness, exact artifact
+acceptance and actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
 
 ## Exact SDK pair and contracts
 
-Read declares Core `0.37.4` as its exact peer; both declare Node >=20.
+Read declares Core `0.37.5` as its exact peer; both declare Node >=20.
 The release procedure produces the exact source commit/tree, archive SHA256,
 SRI and source-member inventory for each final artifact. Those external release
 records bind the installed graph and public channel; this document does not
@@ -44,7 +45,7 @@ production identity service or native credential store.
 
 | Consumer | Current candidate graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.40.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.40.1` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.1` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
 | Studio | StudioCLI `0.13.0` / StudioCore `4.0.0` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 

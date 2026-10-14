@@ -300,7 +300,7 @@ test('explicit historical root inputs preserve the default current dependency sc
   const current = readPeer(scan(undefined));
   const explicitlyCurrent = readPeer(scan(false));
   const historical = readPeer(scan(true));
-  assert.equal(current.declared, '0.37.4');
+  assert.equal(current.declared, '0.37.5');
   assert.deepEqual(explicitlyCurrent, current);
   assert.equal(historical.declared, '0.37.1-rc.browser.1');
   assert.equal(historical.expected, '0.37.0');

@@ -518,13 +518,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'docs/core-read-current-status.md',
@@ -867,12 +867,17 @@ function checkCurrentNavigation(root, options = {}) {
     const end = text.indexOf('<!-- release-coordinates:end -->');
     return start >= 0 && end > start ? text.slice(start, end) : '';
   })();
+  // The comparison is package-scoped: a different package may legitimately
+  // publish the same number (read 0.13.0 beside studio-cli 0.13.0), and only
+  // THIS package's row may not render the candidate as its published artifact.
   const declaredCandidates = Object.entries(coordinates.packages)
     .filter(([, row]) => typeof row.candidate === 'string')
-    .map(([unit, row]) => ({ unit, candidate: row.candidate }));
+    .map(([unit, row]) => ({ unit, name: row.name, candidate: row.candidate }));
   check(
     'release-coordinates:candidate-not-published',
-    declaredCandidates.every((row) => !publishedBlock.includes(row.candidate)),
+    declaredCandidates.every(
+      (row) => !publishedBlock.includes('`' + row.name + '` | `' + row.candidate + '`'),
+    ),
     { declared_candidates: declaredCandidates, block_chars: publishedBlock.length },
   );
   validateSourceMap(source, JSON.parse(read('specs/public-source-map.json')), check);
@@ -1530,6 +1535,11 @@ module.exports = {
   checkCurrentNavigation,
   markdownLinks,
   DOCUMENTS,
+  // Tooling surface: the retained-identity expectations and the loaded
+  // release matrix, so a maintenance script can reconcile the documents the
+  // check audits instead of transcribing the templates by hand.
+  retainedIdentityContexts,
+  releaseCoordinates,
 };
 if (require.main === module) {
   try {

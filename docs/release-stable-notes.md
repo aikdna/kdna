@@ -19,6 +19,42 @@ record. Registry acquisition and downstream adoption are separate observations.
   responsibility. Product acceptance and platform coverage require their own
   evidence.
 
+## Core 0.37.5
+
+- Issues the deferred retained-plan target for every selection-closure member
+  the paired Read reduction may deliver as a reduced entry behind its own
+  expansion handle, so one session can resolve and expand the member under the
+  reader's complete admission. The change is additive: existing request
+  semantics, the plan tuple and admission behavior are unchanged, and a plan
+  that mints no handles is untouched.
+- Moves the distribution coordinate together with its paired companion: the
+  generated package-set contract and the package manifests declare the exact
+  Read peer `0.13.0`.
+- Changes no protocol, contract or capability: the compiled browser/Node tuple
+  keeps its identity, browser decryption remains a trusted Host responsibility
+  and no Host is activated.
+- Leaves Core `0.37.2`, `0.37.3`, `0.37.4` and every published preview tag in
+  place: an installed combination keeps working until its owner chooses to move.
+
+## Read 0.13.0
+
+- Reduces the exact-selection body surface with `kdna.read.model-view/0.2.0`:
+  non-selected judgment members the closure reaches fold to their focus, core
+  expression and meaning markers behind the reader's own expansion handles;
+  selected judgments keep their full body, and relationship bodies are carried
+  once with reference entries naming them. A member with no issued handle keeps
+  its full body, a mixed delivery refuses rather than guessing, and the full
+  printed view carries no reduction machinery and no field-level difference
+  from the previous surface.
+- Resolves expansion handles by id within the session that issued them: an
+  unknown, stale, expired or foreign-snapshot handle is refused explicitly
+  instead of being used, and resolution grants nothing by itself — using a
+  handle still passes the reader's complete admission.
+- Keeps the compiled and native-sections Read contracts `kdna.read/0.6.4` and
+  `kdna.read/0.7.0-candidate`, and declares the exact Core peer `0.37.5`. Read
+  `0.12.0` and `0.12.1` and their published artifacts stay available, and
+  adoption remains its own evidence.
+
 ## Core 0.37.4
 
 - Adds the read-only `getMethodRoleTable()` accessor on the `./components`

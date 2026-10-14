@@ -78,18 +78,18 @@
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "0.37.3",
-      "source": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
-      "manifest_sha256": "d92fb7738502c808bd9a9bbf85f67fac37e2e0e51b92a0cdfcbb20a67702e47b"
+      "declared": "0.37.4",
+      "source": "bb77c75acf3cda458f961066727dad64aac55007",
+      "manifest_sha256": "d3241dc89d9a89e83784d523753d9c5a9f33561ec2ee6d06957abb3513fb9517"
     },
     {
       "repository": "kdna-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
-      "declared": "0.12.0",
-      "source": "987a7da2da2d0359e6ba937b2571d083dc75e7bd",
-      "manifest_sha256": "d92fb7738502c808bd9a9bbf85f67fac37e2e0e51b92a0cdfcbb20a67702e47b"
+      "declared": "0.12.1",
+      "source": "bb77c75acf3cda458f961066727dad64aac55007",
+      "manifest_sha256": "d3241dc89d9a89e83784d523753d9c5a9f33561ec2ee6d06957abb3513fb9517"
     },
     {
       "repository": "kdna-skills",
@@ -97,7 +97,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-cli",
       "declared": "0.40.0",
-      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "source": "a1acd14fee9d4e5d0ba7b00c8fe9596e75cc2fd1",
       "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
     },
     {
@@ -106,7 +106,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.37.3",
-      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "source": "a1acd14fee9d4e5d0ba7b00c8fe9596e75cc2fd1",
       "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
     },
     {
@@ -115,7 +115,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
       "declared": "0.12.0",
-      "source": "338f80e8ed86d2e5e99ac6c32dec5184dee46b2f",
+      "source": "a1acd14fee9d4e5d0ba7b00c8fe9596e75cc2fd1",
       "manifest_sha256": "b77700f8e6bcd7252303c876760560ca3218769a0cd5eab4196f9c030fda823d"
     },
     {

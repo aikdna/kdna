@@ -14,11 +14,11 @@ import {
 } from './native-renderer.mjs';
 
 export const FROZEN_INPUT = Object.freeze({
-  commit: '444629956de7b2a7e2c76e82f74d4587abaaeb55',
+  commit: 'aed8591fec579f9b099a8b7079bfc74b2c1a4f39',
   source: 'specs/public-semantic-source.json',
-  source_sha256: '3831374540eb2b678c7849fbc26915d44284808af44892bcf710482cd758a9f4',
+  source_sha256: 'c8b210b4d56c71a33fafb194f209c4ac01b60dec8265f2a5d5ebbc337f9d562d',
   recipe: 'scripts/public-contract/native-output-recipe.json',
-  recipe_sha256: 'f8febc9e81766584a7c3592399e780ea9fcafbfd6891c208b36bc5a368a8ea9c',
+  recipe_sha256: '9121907645aeab437e8611e70e007f51a0fabea95dc8796c7a3fcd0bc77af9eb',
 });
 export const FROZEN_DOCUMENTS = Object.freeze([
   Object.freeze({
@@ -26,27 +26,27 @@ export const FROZEN_DOCUMENTS = Object.freeze([
     accepted_design_index: 2,
     source_pointer: '/accepted_designs/2',
     bytes: 50851,
-    sha256: 'b8ebafa8feef3c7f92b0c3294d29a61c3f6971a317fd91e1ee6efe48a6b0f009',
+    sha256: '0fbab77ad8bc5a4f50db574b985152b78a0b16bb7cf8b15361aaede67e247914',
   }),
   Object.freeze({
     path: 'specs/public-version-policy.md',
     accepted_design_index: 4,
     source_pointer: '/accepted_designs/4',
     bytes: 13074,
-    sha256: 'bc4baf8b208ff60e7a9f6c592d4fa9f4ba030597e68f9571d473cb6cc36249e7',
+    sha256: '31ede121666111e300d8f0e69d5d11d16a29d5a002a7288dc8526eab60c9dc87',
   }),
   Object.freeze({
     path: 'specs/read-contract.md',
     accepted_design_index: 5,
     source_pointer: '/accepted_designs/5',
     bytes: 11722,
-    sha256: 'f678db12b06ac06ed007355764781ec08ab463c97cd9f43690c05f553e415f15',
+    sha256: '85b466eaf62a40a5979b8e50b48dae7e4dbc7953af11b65c28a82ba0c390d2c4',
   }),
   Object.freeze({
     path: 'specs/protection-admission.md',
     source_pointer: '/protection_admission/specification',
     bytes: 38233,
-    sha256: '3e3af17020c7123cf8921d93cbdb7d0fef62ed173e10e51b200fb0f270d4c976',
+    sha256: 'b8c64d74fa750cf067af29c98cbe6564a0dc71d90feb20aae411e755704b10af',
   }),
 ]);
 const DOCUMENT_WORDING = Object.freeze({
@@ -57,7 +57,8 @@ const VERSION_POLICY_WORDING = Object.freeze({
   from: 'The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance.',
   to: 'The exact candidate pair requires its own artifact review and installed-consumer acceptance; publication is established only by matching release and registry evidence.',
 });
-const OLD_COORDINATES = Object.freeze({ core: '0.37.3', read: '0.12.0' });
+const OBSERVATION_DATE = Object.freeze({ before: '2026-10-14', after: '2026-10-14' });
+const OLD_COORDINATES = Object.freeze({ core: '0.37.4', read: '0.12.1' });
 function formatRecipe(recipe) {
   const require = createRequire(import.meta.url);
   const manifestPath = require.resolve('prettier/package.json');
@@ -190,12 +191,15 @@ function deriveDecisionDocument(oldText, table) {
         before: coordinate.from,
         after: coordinate.to,
       });
-    bindings.push({
-      kind: 'source_observation_date',
-      pointer: prefix + '/current_source_version_observed',
-      before: '2026-10-13',
-      after: '2026-10-14',
-    });
+    // A same-day re-observation keeps the recorded date: the row is only
+    // rewritten when the observation date genuinely moves.
+    if (OBSERVATION_DATE.before !== OBSERVATION_DATE.after)
+      bindings.push({
+        kind: 'source_observation_date',
+        pointer: prefix + '/current_source_version_observed',
+        before: OBSERVATION_DATE.before,
+        after: OBSERVATION_DATE.after,
+      });
   }
   const result = transform(original, [], new Map(bindings.map((row) => [row.pointer, row])));
   equal(

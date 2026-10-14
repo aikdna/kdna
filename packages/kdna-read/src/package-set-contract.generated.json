@@ -1,5 +1,5 @@
 {
-  "core_contract_digest": "sha256:bba8ab7e77e5545d3f7d9d313d67183a23b09ca4be97f191640891b1e7e39ea6",
+  "core_contract_digest": "sha256:685d96bafba57730842d09aca1e83458862061f0a7111f10603cc70fb48c59e3",
   "descriptor": {
     "claims": "claims_not_authenticated",
     "contract": "kdna.package-set-node/0.2.1",
@@ -12,8 +12,8 @@
       "inspectAdmittedPackageSet",
       "verifyPackageSetHandoff"
     ],
-    "core_version": "0.37.4",
-    "definition_digest": "sha256:ef90fcdaec76d84970111e91dd6019c5b6dc15fda783855befa473e3a8ca24f0",
+    "core_version": "0.37.5",
+    "definition_digest": "sha256:63c3bd7ebf02a2be8a633862c4aa80ac164037a4dce9444d68be7c5ed53dd3fe",
     "limits": {
       "maxMembers": 10000,
       "maxTotalSourceBytes": 104857600
@@ -40,7 +40,7 @@
       "sealPackageSetHandoff",
       "admitPackageSetHandoff"
     ],
-    "read_version": "0.12.1"
+    "read_version": "0.13.0"
   },
   "key_sets": {
     "HandoffMember": {

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.37.5 (2026-10-14)
+
+- Issues the deferred retained-plan target for every selection-closure member
+  the paired Read reduction may deliver as a reduced entry behind its own
+  expansion handle, so one session can resolve and expand the member under the
+  reader's complete admission. The change is additive: existing request
+  semantics, the plan tuple and admission behavior are unchanged, and a plan
+  that mints no handles is untouched.
+- Moves the distribution coordinate together with its paired companion: the
+  generated package-set contract and the package manifests declare the exact
+  Read peer `0.13.0`.
+- Keeps the compiled browser/Node tuple and the native-sections contracts
+  unchanged and activates no Host.
+
 ## 0.37.4 (2026-10-14)
 
 - Add the read-only `getMethodRoleTable()` accessor on the `./components`

@@ -1,22 +1,24 @@
 # KDNA Read — R2 candidate
 
-Stable distribution `0.12.0` on `latest` declares the exact peer
-`@aikdna/kdna-core@0.37.3`. The browser/Node contract remains
+Stable distribution `0.12.1` on `latest` declares the exact peer
+`@aikdna/kdna-core@0.37.4`. The browser/Node contract remains
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
-The current source carries the next candidate coordinate `0.12.1`, an exact
-peer move to `@aikdna/kdna-core@0.37.4` with no other change. This source
-candidate is not yet published; its own exact release and registry
-acquisition must be verified first.
+The current source carries the next candidate coordinate `0.13.0`, an exact
+peer move to `@aikdna/kdna-core@0.37.5`, together with the model-view 0.2.0
+selection reduction (non-selected closure members fold to focus, core
+expression and meaning markers behind their own expansion handles) and the
+session-scoped handle resolution. This source candidate is not yet published;
+its own exact release and registry acquisition must be verified first.
 Read consumes a genuine private Core snapshot and preserves authored focus,
 form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
 and local tests do not establish registry publication or content quality.
 
-The published coordinate is Read `0.12.0` with exact Core `0.37.3`. Read
-`0.11.3` with exact Core `0.37.2` remains an earlier published coordinate, and
-the 2026-10-11 registry observation recorded `latest` at Read `0.11.1` with
-exact Core `0.37.0`.
+The published coordinate is Read `0.12.1` with exact Core `0.37.4`. Read
+`0.12.0` with exact Core `0.37.3` and Read `0.11.3` with exact Core `0.37.2`
+remain earlier published coordinates, and the 2026-10-11 registry observation
+recorded `latest` at Read `0.11.1` with exact Core `0.37.0`.
 
 The current source identity comes from [`package.json`](package.json).
 The exact native and Studio candidate graphs and separately published historical

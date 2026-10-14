@@ -16,7 +16,7 @@ import { digest, pointer, project, sha } from './native-renderer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const inputs = readFrozenInputs(root);
-const options = { ...inputs, core: '0.37.4', read: '0.12.1' };
+const options = { ...inputs, core: '0.37.5', read: '0.13.0' };
 const candidate = deriveCoordinates(options);
 
 test('coordinate derivation verifies every frozen guard and is byte reproducible', () => {
@@ -96,19 +96,21 @@ test('decisions change exactly four package fields and two source observation da
   const document = candidate.documents.find((row) => row.path === name);
   const after = JSON.parse(document.bytes);
   const expected = structuredClone(before);
-  for (const [index, version] of ['0.37.4', '0.12.1'].entries()) {
+  for (const [index, version] of ['0.37.5', '0.13.0'].entries()) {
     const row = expected.version_policy.planned_packages[index];
     row.candidate_version = version;
     row.current_source_version = version;
+    // Same-day re-observation keeps the recorded date.
     row.current_source_version_observed = '2026-10-14';
   }
   assert.deepEqual(after, expected);
   const report = candidate.report.documents.find((row) => row.path === name);
-  assert.equal(report.transformations.length, 6);
+  assert.equal(report.transformations.length, 4);
   assert.equal(report.transformations.filter((row) => row.kind === 'version_coordinate').length, 4);
   assert.equal(
+    // Same-day re-observation keeps the recorded date, so no date row moves.
     report.transformations.filter((row) => row.kind === 'source_observation_date').length,
-    2,
+    0,
   );
   for (const row of report.transformations) {
     assert.equal(pointer(before, row.pointer), row.before);
@@ -190,9 +192,9 @@ test('derivation CLI refuses maintained paths, aliases into the repository and e
     '--root',
     root,
     '--core-version',
-    '0.37.4',
+    '0.37.5',
     '--read-version',
-    '0.12.1',
+    '0.13.0',
     '--out-dir',
     output,
   ];
