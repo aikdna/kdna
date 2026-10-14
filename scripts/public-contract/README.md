@@ -28,7 +28,7 @@ Generated structural schemas and declarations do not establish runtime
 admission, Host authority, human acceptance or release status. Native module
 outputs require their corresponding source definitions and generation recipes.
 
-`generate-native.mjs` composes the base and nine native owners in one run. It
+`generate-native.mjs` composes the base and ten native owners in one run. It
 requires a cumulative source matching `native-output-recipe.json` and an
 explicit `--dependency-root`. The recipe contains type ownership, output paths
 and guarded metadata projections; semantic type values come from the source.

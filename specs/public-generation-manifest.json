@@ -963,9 +963,9 @@
     }
   ],
   "source": {
-    "bytes": 1509417,
+    "bytes": 1537337,
     "path": "specs/public-semantic-source.json",
-    "sha256": "63393386af28f33b19d88fa3acdc98e825e91ee78c3e850a95427a32b6087623"
+    "sha256": "b68c9f795dc4ba0d13fcd35f4838320f5efb718134d1794bdbb4a75538cd4e04"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -979,10 +979,10 @@
   "type_ownership": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
-      "bytes": 164001,
-      "sha256": "22ffb30bdd7a5498913ac041405b3d109f22f6fc79b3972b8ae2a8cf3a83f478"
+      "bytes": 168167,
+      "sha256": "2966a48db7565f735f91aaaac6bbbb431f442d36126179a8697ae4ed64fbdcd3"
     },
     "base_types": 431,
-    "canonical_types": 783
+    "canonical_types": 793
   }
 }

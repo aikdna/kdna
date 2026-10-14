@@ -64,7 +64,7 @@ export const digest = (value) => 'sha256:' + sha(canonical(value));
 // Reviewed protection layout, independent of the editable recipe. Coordinate
 // migrations may derive digest values, but cannot remove a guard or an owner.
 const PROTECTION_LAYOUT_DIGEST =
-  'sha256:80ea29ba2c9db0d53bab68bb9ad8fec384198c5108d55928f817ebdf29737de5';
+  'sha256:9b82e167c4086472f99b5ed90ddb7989f3d33b6c347499289f77d183eeebaed9';
 export function validateRecipeProtectionStructure(recipe) {
   let layout;
   try {
