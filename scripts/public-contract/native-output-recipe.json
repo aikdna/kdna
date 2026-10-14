@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "63393386af28f33b19d88fa3acdc98e825e91ee78c3e850a95427a32b6087623",
+  "input_sha256": "b68c9f795dc4ba0d13fcd35f4838320f5efb718134d1794bdbb4a75538cd4e04",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -2387,13 +2387,108 @@
         }
       ],
       "validator_final_newline": "single"
+    },
+    {
+      "id": "migration",
+      "source_module_pointer": "/representation_candidate/a22_source_migration",
+      "roots_pointer": "/representation_candidate/a22_source_migration/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Candidate source-migration API structural data; opaque authorities are native-only.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "AdmittedSourceMigrationRequest06",
+          "schema_id": "urn:kdna:candidate:migration06:AdmittedSourceMigrationRequest06",
+          "package_target": null
+        },
+        {
+          "name": "NativeSourceMigrationAuthority06",
+          "schema_id": "urn:kdna:candidate:migration06:NativeSourceMigrationAuthority06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationAuthorityContext06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationCaptureRow06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationCaptureRow06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationDiagnostic06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationDiagnostic06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationFailure06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationFailure06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationObservation06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationObservation06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationRequest06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationRequest06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationRequestAdmission06",
+          "package_target": null
+        },
+        {
+          "name": "SourceMigrationRouteContract06",
+          "schema_id": "urn:kdna:candidate:migration06:SourceMigrationRouteContract06",
+          "package_target": null
+        }
+      ],
+      "root_count": 10,
+      "type_closure_count": 38,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedSourceMigrationRequest06",
+          "NativeSourceMigrationAuthority06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Candidate source-migration route types. Opaque brands require native creation."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/migration06/validators.cjs",
+        "packages/kdna-core/src/public-contract/migration06/types.d.ts",
+        "packages/kdna-core/src/public-contract/migration06/contract.json"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a22_source_migration/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/source-migration-node.d.ts"
+        }
+      ]
     }
   ],
   "module_projections": [
     {
       "pointer": "/representation_candidate",
       "output": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "input_digest": "sha256:895a4ec00f6066a71ad2cf8912f3f795512294448ae433c4daa67c97f7047398",
+      "input_digest": "sha256:0df2f697a4de8d1b1154030bda886dba92251162460ddf5ce124043dc2f1a12c",
       "operations": [
         {
           "action": "replace",
@@ -2656,7 +2751,7 @@
           "expected_before_sha256": "sha256:ca613d558fe0dad1547acf40a2ad818237a4586b2d91b272606e3d83a7329dfc"
         }
       ],
-      "output_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f",
+      "output_digest": "sha256:38373dc9112c9701cb20d4df23ab9d10e0e47d7ffb0859bf8205f346d0b81fed",
       "historical_original_source": {
         "scope": "historical_original_contract_source_identity_not_current_generator_input",
         "bytes": 1137319,
@@ -3032,6 +3127,19 @@
         "scope": "new_browser_adapter_has_no_historical_original_contract",
         "coordinate": "urn:kdna:source:browser-protected-adapter"
       }
+    },
+    {
+      "pointer": "/representation_candidate/a22_source_migration",
+      "output": "packages/kdna-core/src/public-contract/migration06/contract.json",
+      "input_digest": "sha256:89ee008ec6937650a7260be905c5e9273eb8105d418b5483bc93e1790e465438",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/candidate_only",
+          "expected_before_sha256": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        }
+      ],
+      "output_digest": "sha256:b98f9e5065cd83e8518a60ef73463ec0192750c11e3ee9b1db932f8978a3cf63"
     }
   ],
   "registered_preimages": [

@@ -1,0 +1,14 @@
+import type { CandidateVersionTuple06, RepresentationOrigin06 } from './sections/types.js';
+import type { Payload } from './types.js';
+import type { SourceOuterCapture06, SourceRouteCoreRejected06, SourceRouteMemberInventory06 } from './types.js';
+export type SourceMigrationRequest06 = Readonly<{ request_id: string; tuple: CandidateVersionTuple06; operation: 'migrate_public_source'; source_expected_A: string; timeout_ms: number; signature_policy: Readonly<{ requireSignature: false; expectedPublicKeyHex: null }> }>;
+export type SourceMigrationCaptureRow06 = Readonly<{ name: string; type: 'file'; mode: number; size: number }>;
+export type SourceMigrationAuthorityContext06 = Readonly<{ contract: SourceMigrationRouteContract06; request: SourceMigrationRequest06; request_digest: string; capture: SourceOuterCapture06; source_inventory: ReadonlyArray<SourceMigrationCaptureRow06>; output_intent: Readonly<{ container: '0.6.0'; read: 'kdna.read/0.7.0-candidate'; adoption: 'not_observed' }> }>;
+export type SourceMigrationObservation06 = Readonly<{ contract: SourceMigrationRouteContract06; request_digest: string; capture_id: string; tuple: CandidateVersionTuple06; source_A: string; source_content_digest: string; source_inventory: ReadonlyArray<SourceRouteMemberInventory06>; output: Readonly<{ A: string; C: string; E: string }>; E_profile: 'kdna.digest-basis.runtime-entry-set/0.3.0-candidate'; output_ir_digest: string; member_actions: ReadonlyArray<Readonly<{ name: string; action: 'added' | 'removed' | 'replaced' | 'preserved' }>>; origin: RepresentationOrigin06; body_bytes: number }>;
+export type SourceMigrationFailure06 = Readonly<{ status: 'source_failed'; diagnostic: Readonly<{ code: string; stage: string }>; disclosure: unknown; body: null; body_bytes: 0 }>;
+export type NativeSourceMigrationProduced06 = Readonly<{ status: 'migrated'; bytes: Uint8Array; observation: SourceMigrationObservation06 }> | SourceMigrationFailure06 | SourceRouteCoreRejected06;
+export declare function admitSourceMigrationRequest(candidate: unknown): SourceMigrationRequestAdmission06;
+export declare function inspectSourceMigrationRequest(request: AdmittedSourceMigrationRequest06): Readonly<SourceMigrationRequest06> | null;
+export declare function createNativeSourceMigrationAuthority(callback: (context: Readonly<SourceMigrationAuthorityContext06>) => boolean | Promise<boolean>): NativeSourceMigrationAuthority06;
+export declare function migratePublicSourceNode(input: string | Uint8Array, request: AdmittedSourceMigrationRequest06, authority: NativeSourceMigrationAuthority06): Promise<NativeSourceMigrationProduced06>;
+export type SourceMigrationRouteContract06 = Readonly<{ id: 'kdna.source-migration/0.1.0-candidate'; version: '0.1.0-candidate'; definition_digest: string }>;

@@ -139,6 +139,11 @@
       "types": "./src/public-contract/protected-sections-browser.d.ts",
       "import": "./src/public-contract/protected-sections-browser.mjs",
       "require": "./src/public-contract/protected-sections-browser.js"
+    },
+    "./source-migration-node": {
+      "types": "./src/public-contract/source-migration-node.d.ts",
+      "import": "./src/public-contract/source-migration-node.mjs",
+      "require": "./src/public-contract/source-migration-node.js"
     }
   },
   "types": "src/public-contract/types.d.ts",

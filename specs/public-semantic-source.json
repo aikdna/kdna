@@ -29564,7 +29564,17 @@
           "$ref": "#/$defs/BrowserProtectedAdmissionFailed"
         }
       ]
-    }
+    },
+    "AdmittedSourceMigrationRequest06": {"$opaque":true},
+    "NativeSourceMigrationAuthority06": {"$opaque":true},
+    "SourceMigrationAuthorityContext06": {"type":"object","properties":{"contract":{"$ref":"#/$defs/SourceMigrationRouteContract06"},"request":{"$ref":"#/$defs/SourceMigrationRequest06"},"request_digest":{"$ref":"#/$defs/Digest"},"capture":{"$ref":"#/$defs/SourceOuterCapture06"},"source_inventory":{"type":"array","items":{"$ref":"#/$defs/SourceMigrationCaptureRow06"},"minItems":3,"maxItems":128},"output_intent":{"type":"object","properties":{"container":{"type":"string","const":"0.6.0"},"read":{"type":"string","const":"kdna.read/0.7.0-candidate"},"adoption":{"type":"string","const":"not_observed"}},"required":["container","read","adoption"],"additionalProperties":false}},"required":["contract","request","request_digest","capture","source_inventory","output_intent"],"additionalProperties":false},
+    "SourceMigrationCaptureRow06": {"type":"object","properties":{"name":{"$ref":"#/$defs/EntryName"},"type":{"type":"string","const":"file"},"mode":{"$ref":"#/$defs/UInt"},"size":{"$ref":"#/$defs/UInt"}},"required":["name","type","mode","size"],"additionalProperties":false},
+    "SourceMigrationDiagnostic06": {"type":"object","properties":{"code":{"type":"string","enum":["SOURCE_INPUT_INVALID","SOURCE_EXPECTED_ASSET_MISMATCH","SOURCE_PERMISSION_REJECTED","SOURCE_DEADLINE_EXCEEDED","SOURCE_CAPABILITY_UNAVAILABLE","MIGRATION_SOURCE_UNSUPPORTED_VERSION","MIGRATION_SOURCE_PROTECTED_UNSUPPORTED","MIGRATION_SOURCE_EXTENSION_UNSUPPORTED","MIGRATION_PAYLOAD_MISMATCH","MIGRATION_MANIFEST_MISMATCH","MIGRATION_ORIGIN_MISSING"]},"stage":{"type":"string","enum":["input","capture","admission","authorization","semantic","output","return"]}},"required":["code","stage"],"additionalProperties":false},
+    "SourceMigrationFailure06": {"type":"object","properties":{"status":{"type":"string","const":"source_failed"},"diagnostic":{"$ref":"#/$defs/SourceMigrationDiagnostic06"},"disclosure":{"$ref":"#/$defs/OriginalProtectionDisclosureFor06"},"body":{"type":"null"},"body_bytes":{"type":"integer","const":0}},"required":["status","diagnostic","disclosure","body","body_bytes"],"additionalProperties":false},
+    "SourceMigrationObservation06": {"type":"object","properties":{"contract":{"$ref":"#/$defs/SourceMigrationRouteContract06"},"request_digest":{"$ref":"#/$defs/Digest"},"capture_id":{"$ref":"#/$defs/Identifier"},"tuple":{"$ref":"#/$defs/CandidateVersionTuple06"},"source_A":{"$ref":"#/$defs/Digest"},"source_content_digest":{"$ref":"#/$defs/Digest"},"source_inventory":{"type":"array","items":{"$ref":"#/$defs/SourceRouteMemberInventory06"},"minItems":3,"maxItems":128},"output":{"type":"object","properties":{"A":{"$ref":"#/$defs/Digest"},"C":{"$ref":"#/$defs/Digest"},"E":{"$ref":"#/$defs/Digest"}},"required":["A","C","E"],"additionalProperties":false},"E_profile":{"type":"string","enum":["kdna.digest-basis.runtime-entry-set/0.3.0-candidate"]},"output_ir_digest":{"$ref":"#/$defs/Digest"},"member_actions":{"type":"array","items":{"type":"object","properties":{"name":{"$ref":"#/$defs/EntryName"},"action":{"type":"string","enum":["added","removed","replaced","preserved"]}},"required":["name","action"],"additionalProperties":false},"minItems":3,"maxItems":128},"origin":{"$ref":"#/$defs/RepresentationOrigin06"},"body_bytes":{"$ref":"#/$defs/UInt"},"proof":{"type":"string","const":"produced_bytes_with_confirmed_source_observation_not_consumer_read_or_adoption"}},"required":["contract","request_digest","capture_id","tuple","source_A","source_content_digest","source_inventory","output","E_profile","output_ir_digest","member_actions","origin","body_bytes","proof"],"additionalProperties":false},
+    "SourceMigrationRequest06": {"type":"object","properties":{"request_id":{"$ref":"#/$defs/Identifier"},"tuple":{"$ref":"#/$defs/CandidateVersionTuple06"},"operation":{"type":"string","const":"migrate_public_source"},"source_expected_A":{"$ref":"#/$defs/Digest"},"timeout_ms":{"$ref":"#/$defs/UInt"},"signature_policy":{"type":"object","properties":{"requireSignature":{"type":"boolean","const":false},"expectedPublicKeyHex":{"type":"null"}},"required":["requireSignature","expectedPublicKeyHex"],"additionalProperties":false}},"required":["request_id","tuple","operation","source_expected_A","timeout_ms","signature_policy"],"additionalProperties":false},
+    "SourceMigrationRequestAdmission06": {"oneOf":[{"type":"object","properties":{"status":{"type":"string","const":"admitted_request"},"request":{"$ref":"#/$defs/AdmittedSourceMigrationRequest06"}},"required":["status","request"],"additionalProperties":false},{"$ref":"#/$defs/SourceMigrationFailure06"},{"$ref":"#/$defs/SourceRouteCoreRejected06"}]},
+    "SourceMigrationRouteContract06": {"type":"object","properties":{"id":{"type":"string","const":"kdna.source-migration/0.1.0-candidate"},"version":{"type":"string","const":"0.1.0-candidate"},"definition_digest":{"$ref":"#/$defs/Digest"}},"required":["id","version","definition_digest"],"additionalProperties":false}
   },
   "non_schema_rules": [
     {
@@ -43254,6 +43264,143 @@
           "product acceptance"
         ]
       }
+    },
+    "a22_source_migration": {
+      "candidate_only": true,
+      "counterexample": "A 0.5 payload.kdnab container and a 0.6 sections container are separate generations. Neither admission path converts, dual-reads or falls back for the other; an explicit migration operation is the only bridge, and it must never be produced by an implicit rewrite inside any admission.",
+      "versions": {
+        "migration_route": "kdna.source-migration/0.1.0-candidate",
+        "source_generation": {
+          "container": "0.5.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.5.1",
+          "core": "kdna.core/0.8.2",
+          "ir": "kdna.canonical-ir/0.6.1",
+          "runtime": "kdna.runtime-capsule/0.3.1",
+          "plan": "kdna.consumption-plan/0.3.1",
+          "host": "kdna.agent-host/0.3.1",
+          "trace": "kdna.judgment-trace/0.3.1",
+          "read": "kdna.read/0.6.4"
+        },
+        "output_tuple": {
+          "container": "0.6.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.5.1",
+          "core": "kdna.core/0.8.2",
+          "ir": "kdna.canonical-ir/0.6.1",
+          "runtime": "kdna.runtime-capsule/0.3.1",
+          "plan": "kdna.consumption-plan/0.3.1",
+          "host": "kdna.agent-host/0.3.1",
+          "trace": "kdna.judgment-trace/0.3.1",
+          "read": "kdna.read/0.7.0-candidate"
+        },
+        "unchanged": [
+          "Payload profile, payload_version, core, ir, runtime, plan, host and trace keep their existing definitions; only the container representation coordinate and the reading-contract coordinate move, per version_decisions.",
+          "authoring_workflow/2 and the classic 0.5 admission path stay exact and are reused, never re-branded.",
+          "This route never converts the nine historical tuples and never touches protected or encrypted sources; those are named capability refusals here and, if ever wanted, separate later units."
+        ]
+      },
+      "precedence": "This adds an explicit migration operation on its own subpath only. It does not add a decoder, fallback or dual-read to any admission path, does not change 0.5 or 0.6 admission/Read behavior, does not manufacture old-format brands, does not reinterpret field_retention or version_decisions, and does not make representation_origin valid input for other routes. The creation route's rule that it must not manufacture representation_origin stays exact; this route is the declared producer of that slot.",
+      "native_exports": {
+        "@aikdna/kdna-core/source-migration-node": [
+          "admitSourceMigrationRequest",
+          "inspectSourceMigrationRequest",
+          "createNativeSourceMigrationAuthority",
+          "migratePublicSourceNode"
+        ]
+      },
+      "api_typescript": "import type { CandidateVersionTuple06, RepresentationOrigin06 } from './sections/types.js';\nimport type { Payload } from './types.js';\nimport type { SourceOuterCapture06, SourceRouteCoreRejected06, SourceRouteMemberInventory06 } from './types.js';\nexport type SourceMigrationRequest06 = Readonly<{ request_id: string; tuple: CandidateVersionTuple06; operation: 'migrate_public_source'; source_expected_A: string; timeout_ms: number; signature_policy: Readonly<{ requireSignature: false; expectedPublicKeyHex: null }> }>;\nexport type SourceMigrationCaptureRow06 = Readonly<{ name: string; type: 'file'; mode: number; size: number }>;\nexport type SourceMigrationAuthorityContext06 = Readonly<{ contract: SourceMigrationRouteContract06; request: SourceMigrationRequest06; request_digest: string; capture: SourceOuterCapture06; source_inventory: ReadonlyArray<SourceMigrationCaptureRow06>; output_intent: Readonly<{ container: '0.6.0'; read: 'kdna.read/0.7.0-candidate'; adoption: 'not_observed' }> }>;\nexport type SourceMigrationObservation06 = Readonly<{ contract: SourceMigrationRouteContract06; request_digest: string; capture_id: string; tuple: CandidateVersionTuple06; source_A: string; source_content_digest: string; source_inventory: ReadonlyArray<SourceRouteMemberInventory06>; output: Readonly<{ A: string; C: string; E: string }>; E_profile: 'kdna.digest-basis.runtime-entry-set/0.3.0-candidate'; output_ir_digest: string; member_actions: ReadonlyArray<Readonly<{ name: string; action: 'added' | 'removed' | 'replaced' | 'preserved' }>>; origin: RepresentationOrigin06; body_bytes: number }>;\nexport type SourceMigrationFailure06 = Readonly<{ status: 'source_failed'; diagnostic: Readonly<{ code: string; stage: string }>; disclosure: unknown; body: null; body_bytes: 0 }>;\nexport type NativeSourceMigrationProduced06 = Readonly<{ status: 'migrated'; bytes: Uint8Array; observation: SourceMigrationObservation06 }> | SourceMigrationFailure06 | SourceRouteCoreRejected06;\nexport declare function admitSourceMigrationRequest(candidate: unknown): SourceMigrationRequestAdmission06;\nexport declare function inspectSourceMigrationRequest(request: AdmittedSourceMigrationRequest06): Readonly<SourceMigrationRequest06> | null;\nexport declare function createNativeSourceMigrationAuthority(callback: (context: Readonly<SourceMigrationAuthorityContext06>) => boolean | Promise<boolean>): NativeSourceMigrationAuthority06;\nexport declare function migratePublicSourceNode(input: string | Uint8Array, request: AdmittedSourceMigrationRequest06, authority: NativeSourceMigrationAuthority06): Promise<NativeSourceMigrationProduced06>;\nexport type SourceMigrationRouteContract06 = Readonly<{ id: 'kdna.source-migration/0.1.0-candidate'; version: '0.1.0-candidate'; definition_digest: string }>;\n",
+      "generation_roots": {
+        "AdmittedSourceMigrationRequest06": "candidate/migration06/AdmittedSourceMigrationRequest06.schema.json",
+        "NativeSourceMigrationAuthority06": "candidate/migration06/NativeSourceMigrationAuthority06.schema.json",
+        "SourceMigrationAuthorityContext06": "candidate/migration06/SourceMigrationAuthorityContext06.schema.json",
+        "SourceMigrationCaptureRow06": "candidate/migration06/SourceMigrationCaptureRow06.schema.json",
+        "SourceMigrationDiagnostic06": "candidate/migration06/SourceMigrationDiagnostic06.schema.json",
+        "SourceMigrationFailure06": "candidate/migration06/SourceMigrationFailure06.schema.json",
+        "SourceMigrationObservation06": "candidate/migration06/SourceMigrationObservation06.schema.json",
+        "SourceMigrationRequest06": "candidate/migration06/SourceMigrationRequest06.schema.json",
+        "SourceMigrationRequestAdmission06": "candidate/migration06/SourceMigrationRequestAdmission06.schema.json",
+        "SourceMigrationRouteContract06": "candidate/migration06/SourceMigrationRouteContract06.schema.json"
+      },
+      "binary_runtime_carriers": {
+        "validation": "NativeSourceMigrationProduced06 carries actual output bytes as a runtime value, not JSON and not an opaque authority brand. JSON observations are separately validated by the named closed schemas; no generated schema claims to validate a byte-vector carrier.",
+        "ownership": "Input and output byte arrays are owned copies; caller mutation after invocation cannot change the authorized source or the produced result. All binary inputs obey the original accessor/prototype/ownership checks. No filesystem path is opened after the source bytes are owned; a caller-supplied path is read once under the same bounded capture rules as the source route."
+      },
+      "request_and_authority": {
+        "admission": "Closed request shape with the exact output tuple (CandidateVersionTuple06). Malformed request maps SOURCE_INPUT_INVALID/input; a recognized mixed or unsupported tuple maps the original Core rejection arm and produces no authority. operation must equal 'migrate_public_source'. source_expected_A is a required Digest on this route: migration is always bound to one exact source container A. signature_policy on this route is exactly {requireSignature:false,expectedPublicKeyHex:null}; any other value is SOURCE_CAPABILITY_UNAVAILABLE/input, because the current 0.5 generation carries no verified signature policy meaning here.",
+        "capture": "Reuse the approved bounded ZIP metadata probes to observe the outer directory and Manifest of the source only. The full source A is confirmed on the owned bytes after the grant, mirroring the source route; a mismatch is the named SOURCE_EXPECTED_ASSET_MISMATCH refusal with no output. Before the grant the callback sees only the outer capture identity and the mode/type/size member inventory. checksums.json or signature.kdsig members in the source are observed and reported, never verified as authority for migration and never silently dropped: their presence refuses this first slice by name (see refusals).",
+        "grant": "One closed authority callback receives the exact contract, admitted request, request_digest, the outer capture identity (SourceOuterCapture06), the mode/type/size member inventory and the explicit output intent. Only literal true permits production. false maps SOURCE_PERMISSION_REJECTED/authorization; throw/unknown internal failure maps SOURCE_CAPABILITY_UNAVAILABLE at the observed stage. The callback is the native caller's consent to read this exact source and emit the converted representation; it is not an asset entitlement, not a Read grant and not editorial adoption.",
+        "timeout": "request.timeout_ms is required 1..60000, a per-invocation wall-clock deadline using Date.now() capture and the original comparison rule (now > deadline rejects; equality allowed). Checked after capture, after the authority await, before and after output construction, and before returning bytes. Expiry maps SOURCE_DEADLINE_EXCEEDED at the observed checkpoint. A late true cannot start production.",
+        "adoption": "The result is technical bytes plus producer observation. Neither the source nor the output carries adopted identity, ownership or acceptance; the migration neither invents nor transfers adoption, and a successful migration is not a consumer read, publication or endorsement."
+      },
+      "source_verification": {
+        "generation": "Exactly the current 0.5 generation listed in versions.source_generation: Manifest (format_version, compatibility.profile, compatibility.profile_version) equals (0.5.0, kdna.payload.judgment, 0.5.1), the payload's own profile/profile_version equal the Manifest compatibility, and the container validates against the exact 0.5.1 combined Manifest contract already present in this package's schema set. Any other complete old tuple maps the named MIGRATION_SOURCE_UNSUPPORTED_VERSION/input refusal; a mixed tuple maps SOURCE_INPUT_INVALID/input.",
+        "semantic": "Run the original classic 0.5 semantics without weakening: Manifest schema/domain validation, CBOR payload decode, and the original complete payload/interpretation validation the classic admission performs. A genuine original validation failure maps the original Core rejection reason and diagnostics with stage input, body null and no output. Never declare an invalid 0.5 payload valid by stripping declarations or by validating only the reconstructed 0.6 side.",
+        "refusals": [
+          "MIGRATION_SOURCE_UNSUPPORTED_VERSION/input: a complete historical tuple other than the exact current 0.5 generation (including container 0.5.0 with payload 0.5.0 / read 0.6.0-0.6.3 and every older container coordinate). This slice proves the refusal only; migrating historical generations would be its own declared unit.",
+          "MIGRATION_SOURCE_PROTECTED_UNSUPPORTED/input: payload.encrypted true, an encryption/entitlement declaration or a protected logical payload. Protected migration is reserved for a separate unit; the refusal is by name and never degrades to converting the encrypted bytes as if they were plaintext.",
+          "MIGRATION_SOURCE_EXTENSION_UNSUPPORTED/input: checksums.json or signature.kdsig members, or any member outside the exact 0.5 permitted set for this route (mimetype, kdna.json, payload.kdnab plus ordinary attachments that the 0.5 schema permits). Nothing is dropped, rewritten or re-signed silently.",
+          "MIGRATION_SOURCE_CAPABILITY_UNSUPPORTED/input: an unsupported compression or a structure the bounded capture cannot observe exactly."
+        ]
+      },
+      "output_mapping": {
+        "format_version": "Rebind to the exact '0.6.0' coordinate. No 0.5 byte or descriptor is copied through as a predecessor claim; the source remains an external input, not an embedded asset.",
+        "identity": "Copy asset_id, asset_uid, asset_type, title, version, judgment_version, created_at, updated_at, summary, languages, lineage, history, creator, access, license, description, keywords, runtime.mandatory_entries and every other authored field exactly, preserving optional absence and array order. Never regenerate IDs, timestamps or default objects.",
+        "payload": "Replace the whole PayloadDescriptor with the exact SectionPayloadDescriptor06 produced from this build's real frames, tables and pack members, using the current source-route-frame-writer and metadata codec rules. The logical Payload is reconstructed from the verified 0.5 payload and must deep-equal it (see construction gate 3); the shape of the output is never derived from a fabricated old-side encode.",
+        "representation_metadata": "Add the existing metadata codec projection derived from the complete canonical IR of the migrated payload with the real output member routing, exactly as the creation route derives it, including contract, tuple (this route's output tuple), node_order, catalog, references, relationships, mandatory_closures, asset_index, asset_closure, unresolved_external, ir_digest_claim and runtime_entry_names.",
+        "representation_origin": "This route is the declared producer of RepresentationOrigin06 and always writes it: source_format_version is the exact '0.5.0'; source_container_digest is the confirmed source A; source_content_digest is the source content-tree digest computed under the original 0.5 C profile exactly as the classic side derives it (never a new or guessed digest); payload is the source's exact PayloadDescriptor; runtime is the source's exact runtime object; declared_content_digest and declared_authoring_content_digest are copied present-only from the source Manifest's content_digest and authoring.content_digest. The origin is a provenance record, not authority: downstream routes treat it as untrusted claim, exactly as the sections snapshot rules state.",
+        "content_digest": "If the source Manifest declared content_digest, refresh it to the actual output C under the original canonical-content exclusion profile and disclose the refresh; if absent, keep it absent. Same present-only rule for authoring.content_digest. Never invent a claim that the source did not carry.",
+        "runtime": "Map the source runtime mandatory entries: representation-format-dependent entries that named the replaced payload member are mapped to the actual generated pack members; every non-representation entry is preserved exactly in order; duplicates are never silently introduced or removed beyond the declared representation mapping. The exact before/after mapping is disclosed."
+      },
+      "construction_and_validation": {
+        "order": [
+          "Closed request admission, deadlined capture of the exact source bytes, source A confirmation against source_expected_A and the full member inventory.",
+          "Native authority true with the closed context; false/throw/expiry leave no output and no downstream effect.",
+          "Complete 0.5 source verification (generation classification, schema, CBOR decode, original semantics) with the named refusals above.",
+          "Field-mapping construction: identity and authored fields copied exactly; payload rebuilt to real frames/tables/packs; format_version rebound; representation_metadata derived from the complete canonical IR; representation_origin written from confirmed source observations; C claims refreshed present-only.",
+          "Serialize the actual container, then admit the output through the complete native 0.6 source admission on the produced bytes, which re-derives the full Payload and IR and enforces SECTION_DERIVED_IR_MISMATCH and all physical/frame/table rules. Output re-admission refusal returns no bytes.",
+          "Final gates before return: the reconstructed Payload deep-equals the verified source Payload (MIGRATION_PAYLOAD_MISMATCH/semantic, hard, no output); every retained authored Manifest path equals the source exactly and the origin fields equal the confirmed observations (MIGRATION_MANIFEST_MISMATCH/semantic); the source bytes are unchanged and no partial artifact exists on any failure. Recheck the deadline and return owned bytes with the closed observation."
+        ],
+        "fail_delete": "All failures return no bytes (body null, body_bytes 0). The operation is atomic from the caller's view: a failed migration never yields a partial or best-effort container, and never mutates the source bytes or the caller's arguments.",
+        "bootstrap": "Internal adapters may reuse the original classic 0.5 validation algorithms and the current 0.6 construction algorithms in the same instance; no intermediate branded container is admitted or minted, and an internal semantic view is never an admitted snapshot.",
+        "integrity": "The initial output has no checksums.json or signature.kdsig; those may later be added by their own accepted operations on the saved bytes. A/C/E in the observation are actual observations of the produced bytes and their member set under the current profiles (E06 runtime-entry-set), not authorizations."
+      },
+      "evidence": {
+        "bindings": "request_digest is SHA256JCS of the actual admitted request. source_A and source_content_digest are confirmed observations of the exact captured source; output.A/C/E and output_ir_digest come from the complete actual output re-admission. member_actions list every physical member of the output relative to the source with exactly one of added/removed/replaced/preserved, in physical order. No fabricated capture or snapshot IDs.",
+        "claim": "Migrated means technical bytes plus producer observation only: it is not a transferable admitted token, consumer read result, publication, ownership, editorial adoption or an assertion that every consumer can read container 0.6. The reading-route separation remains external truth."
+      },
+      "diagnostics": {
+        "boundary": "This route defines its own closed failure arm, SourceMigrationFailure06 with SourceMigrationDiagnostic06, instead of extending the shared source diagnostic enum: the SOURCE_* codes keep their source meanings and the named MIGRATION_* refusals are this route's own codes, never re-classifications of an original validation failure. Core rejections reuse SourceRouteCoreRejected06 unchanged. No catch-all converts unknown exceptions into authored-invalid or into a successful conversion.",
+        "original_validation": "A genuine 0.5 original schema/domain/interpretation failure keeps the original CoreAdmissionRejected reason/diagnostics in core_rejected with disclosure none and body null; a failure of the internally constructed 0.6 output shape is an internal capability failure (SOURCE_CAPABILITY_UNAVAILABLE/output), not invalid caller data."
+      },
+      "limits": {
+        "physical": {
+          "member": 8388608,
+          "total_decoded": 12582912,
+          "container": 26214400,
+          "entries": 128
+        },
+        "scope": "The four original06 physical limits apply to the actual completed output including generated Manifest, metadata, packs, tables, mimetype and copied attachments. The source is validated under its own original 0.5 bounds; a source that cannot produce a compliant output within these bounds refuses rather than truncating content."
+      },
+      "contract_observation": {
+        "value": "SourceMigrationRouteContract06 is {id:versions.migration_route,version:\"0.1.0-candidate\",definition_digest:computed}.",
+        "definition_digest_preimage": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value, using the same convention as source/creation route contracts. The field states the rule and does not embed a self-referential digest.",
+        "meaning": "The digest identifies the exact route definition of this receipt. It is an observation, not native authority, migration permission, a release or an acceptance decision."
+      },
+      "prospective_runtime_controls": [
+        "Exact current-generation positives: a delivered 0.5 container migrates to an admitted 0.6 container whose reconstructed Payload and IR deep-equal the verified source, whose retained authored Manifest paths equal the source byte-for-byte at the JSON value level, and whose representation_origin carries the confirmed source A/C and prior claims present-only.",
+        "Refusal controls, each by name with its own fixture: historical tuple, protected/encrypted source, checksums/signature members or out-of-set members, unsupported structure, authority false, expired deadline, tampered source (A mismatch and post-capture mutation), and output re-admission constructed-failure.",
+        "No-admission-change controls: the classic 0.5 admission and Read behavior and the native 0.6 admission and Read behavior are byte-for-byte unchanged by this route's presence, including their refusals of the other generation.",
+        "Origin controls: a migrated output passes source-open and complete 0.6 admission with origin present; an existing 0.6 container without origin remains admissible exactly as before; a tampered origin claim never overrides current observations.",
+        "Determinism control: migrating the same source twice in isolated invocations yields byte-identical output containers."
+      ],
+      "not_claimed": [
+        "No legacy decoder, dual read, fallback or automatic conversion inside any admission path; explicit tool discipline is preserved.",
+        "No historical-generation migration, no protected-source migration, no checksum/signature-member migration and no change to the source asset's own bytes or identity.",
+        "No consumer readback of the output by any specific stack is asserted by producing bytes; the reading-route separation remains a separate, externally evidenced matter.",
+        "No publication, release, stable coordinate for container 0.6 or kdna.read/0.7.0-candidate, real adoption or asset-acceptance claim follows from this route.",
+        "No change to field_retention, version_decisions, representation_metadata semantics or any accepted A08-A21 receipt."
+      ]
     }
   }
 }

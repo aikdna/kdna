@@ -114,7 +114,7 @@ async function openSourceRouteCapture(input) {
             if (i === 0)
                 need(name === 'mimetype' && local === 0 && method === 0);
             rows.push({
-                name, flags, method, crc, size, compressed, local, start, end: start + compressed
+                name, flags, method, crc, size, compressed, mode, local, start, end: start + compressed
             });
             at += 46 + nl + xl + cl;
         }

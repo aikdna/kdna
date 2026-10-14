@@ -3,14 +3,14 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1509417,
-    "sha256": "63393386af28f33b19d88fa3acdc98e825e91ee78c3e850a95427a32b6087623"
+    "bytes": 1537337,
+    "sha256": "b68c9f795dc4ba0d13fcd35f4838320f5efb718134d1794bdbb4a75538cd4e04"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
-      "bytes": 164001,
-      "sha256": "22ffb30bdd7a5498913ac041405b3d109f22f6fc79b3972b8ae2a8cf3a83f478"
+      "bytes": 168167,
+      "sha256": "2966a48db7565f735f91aaaac6bbbb431f442d36126179a8697ae4ed64fbdcd3"
     },
     "scripts": [
       {
@@ -21,7 +21,7 @@
       {
         "path": "scripts/public-contract/native-renderer.mjs",
         "bytes": 21439,
-        "sha256": "750e968d0d88908f7c6b6b3d017039919049e22060203a7c721c3204522c211e"
+        "sha256": "1ffdf035a9b8b9b0a72e5bcae2995e5c58cd11f8046df2bf7c8e3d736056790f"
       },
       {
         "path": "scripts/public-contract/generation-writer.mjs",
@@ -36,7 +36,7 @@
     ]
   },
   "owner": "sections",
-  "module_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f",
+  "module_digest": "sha256:38373dc9112c9701cb20d4df23ab9d10e0e47d7ffb0859bf8205f346d0b81fed",
   "roots": [
     "Manifest06Candidate",
     "RepresentationMetadata06",
@@ -657,8 +657,8 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "bytes": 547981,
-      "sha256": "fcaea073a9d3ae14011a1f849d0508170a79f78dccd7c25d9969eb57d18aec9a"
+      "bytes": 570835,
+      "sha256": "a0e8fd4f738798613aafa1b8a6de8f635401f0af5221f56a1b0787135e68116a"
     },
     {
       "path": "packages/kdna-core/src/public-contract/protected-sections-node.d.ts",
