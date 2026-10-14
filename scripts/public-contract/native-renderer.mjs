@@ -357,7 +357,14 @@ export function nativeOutputPaths(recipe) {
     fail('RECIPE_DUPLICATE', 'Duplicate native output declaration');
   return result;
 }
-export function buildNativeOutputs(source, sourceBytes, recipe, producer, dependencyRoot, expectedLayout = expectedProtectionLayouts()) {
+export function buildNativeOutputs(
+  source,
+  sourceBytes,
+  recipe,
+  producer,
+  dependencyRoot,
+  expectedLayout = expectedProtectionLayouts(),
+) {
   validateRecipeProtectionStructure(recipe, expectedLayout);
   if (sha(sourceBytes) !== recipe.input_sha256)
     fail('SOURCE_IDENTITY', 'Maintained source changed; reconcile generation recipe first');
