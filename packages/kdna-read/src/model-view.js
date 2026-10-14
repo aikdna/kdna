@@ -12,6 +12,7 @@
 // the root entry requires: it is loaded in a browser sandbox with no Node
 // builtins and no WebCrypto.
 const {clone, freeze, jcs} = require('./util.js');
+const {measure} = require('./budget.js');
 
 const MODEL_VIEW_CONTRACT = 'kdna.read.model-view/0.2.0';
 const VIEWS = Object.freeze(['body', 'full']);
@@ -74,6 +75,9 @@ function viewFailure(message) {
 // An old contract is not served with new semantics: the caller that pins a
 // different model-view contract gets an explicit refusal with the upgrade
 // guidance instead of a best-effort answer.
+function frozen(value) {
+  return freeze(value);
+}
 function unsupportedAccept(accept) {
   return Object.assign(new Error('model view contract is not served: ' + String(accept)), {
     code: 'READ_MODEL_VIEW_UNSUPPORTED_VERSION',
@@ -152,6 +156,43 @@ function reducedValue(value) {
       undecided: value.answer_kind === 'other',
     },
   };
+}
+// The handles this version issued for folded members. Only the body surface
+// uses them; the full surface predates them, so it prints without them.
+function reductionHandleIds(content) {
+  if (!isObject(content.selected) || content.selected === null) return new Set();
+  const selected = new Set(content.selected?.judgment_ids ?? []);
+  if (isText(content.selected?.judgment_id)) selected.add(content.selected.judgment_id);
+  const memberTargets = content.closure
+    .filter(e => e.role === 'judgment' && !selected.has(e.target.id))
+    .map(e => jcs(e.target));
+  const ids = new Set();
+  for (const descriptor of content.asset_index ?? [])
+    if (memberTargets.includes(jcs(descriptor.target)) && isText(descriptor.handle_id))
+      ids.add(descriptor.handle_id);
+  return ids;
+}
+// The full surface a 0.2.0 exact_selection answers with is the reader's raw
+// result minus the machinery this version added for the body surface: the
+// folded members' descriptors print inline again (their bodies are present in
+// this surface) and their handles leave the handle list. Everything else is
+// the raw answer unchanged.
+function filterReductionMachinery(envelope) {
+  const handles = reductionHandleIds(envelope.content);
+  if (!handles.size) return envelope;
+  const content = clone(envelope.content);
+  content.asset_index = content.asset_index.map(descriptor => {
+    if (!isText(descriptor.handle_id) || !handles.has(descriptor.handle_id)) return descriptor;
+    const {handle_id, ...rest} = descriptor;
+    return {...rest, body_delivery: 'inline'};
+  });
+  content.expansion_handles = content.expansion_handles.filter(h => !handles.has(h.handle_id));
+  // The budget byte counters describe the answer being printed; recompute them
+  // over the filtered copy so the surface stays self-consistent. The raw
+  // envelope the reader delivered keeps its own counters untouched.
+  const filtered = {...envelope, content, budget: {...envelope.budget}};
+  measure(filtered);
+  return filtered;
 }
 function expansionHandleFor(content, target) {
   const descriptor = content.asset_index.find(
@@ -232,7 +273,12 @@ function projectModelView(result, options = {}) {
   // it reaches the caller verbatim rather than being folded into a body view.
   if (!isObject(envelope) || !PROJECTABLE_STATUSES.includes(envelope.status)) return result;
   const variant = matchedVariant(envelope);
-  if (view === 'full') return result;
+  if (view === 'full') {
+    const mode = isText(options.mode) ? options.mode : isText(envelope.mode) ? envelope.mode : undefined;
+    if (mode !== 'exact_selection') return result;
+    const filtered = filterReductionMachinery(envelope);
+    return filtered === envelope ? result : freeze({...result, envelope: frozen(filtered)});
+  }
   const carried = Object.keys(envelope.content);
   // The R2 pipeline shape carries no mode; the caller that issued the request
   // states it, and the retained shape carries its own.
