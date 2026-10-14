@@ -283,6 +283,41 @@ test('the markers keep condition, exception and undecided meaning visible',async
   assert.equal(qc.value.markers.undecided,false);
   assert.equal(qc.value.markers.boundaries,'none');
 });
+test('the full surface prints without the reduction machinery this version added',async()=>{
+  const {result}=await readMembers();
+  const raw=thaw(result);
+  const full=thaw(projectModelView(result,{view:'full',mode:'exact_selection'}));
+  const memberHandles=new Set(
+    raw.envelope.content.asset_index
+      .filter(d=>d.target.kind==='judgment'&&!selectedIdSet(raw.envelope.content.selected).has(d.target.id))
+      .map(d=>d.handle_id).filter(Boolean));
+  assert.equal(memberHandles.size,2,'the fixture issues one handle per folded member');
+  // The machinery leaves: handles and their descriptor references are gone and
+  // the members print inline again, because this surface carries their bodies.
+  assert.deepEqual(full.envelope.content.expansion_handles.map(h=>h.handle_id).filter(id=>memberHandles.has(id)),[]);
+  for(const descriptor of full.envelope.content.asset_index){
+    if(descriptor.target.kind!=='judgment')continue;
+    if(!selectedIdSet(raw.envelope.content.selected).has(descriptor.target.id)){
+      assert.equal(Object.hasOwn(descriptor,'handle_id'),false);
+      assert.equal(descriptor.body_delivery,'inline');
+    }
+  }
+  // Everything an author wrote is identical; only the machinery differs.
+  const rawIndex=raw.envelope.content.asset_index.map(d=>{
+    if(!memberHandles.has(d.handle_id))return d;
+    const {handle_id,...rest}=d;return {...rest,body_delivery:'inline'};
+  });
+  assert.deepEqual(full.envelope.content.asset_index,rawIndex);
+  assert.deepEqual(full.envelope.content.closure,raw.envelope.content.closure);
+  assert.deepEqual(full.envelope.content.references,raw.envelope.content.references);
+  assert.deepEqual(full.envelope.content.relationships,raw.envelope.content.relationships);
+  assert.deepEqual(
+    full.envelope.content.expansion_handles,
+    raw.envelope.content.expansion_handles.filter(h=>!memberHandles.has(h.handle_id)));
+  // Other modes keep the verbatim pass-through.
+  const whole=await readFull('complex','whole_asset');
+  assert.equal(projectModelView(whole.result,{view:'full'}),whole.result);
+});
 test('a consumer that pins the previous model-view contract is refused with guidance',async()=>{
   const {result}=await readMembers();
   assert.throws(
