@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "scope": "historical-root-package-inputs",
   "repository": "aikdna/kdna",
-  "manifest_sha256": "21df7586f0e5e2f848db05f5e57190ff4cf7839fb47bccf2a16a57149d449eb3",
+  "manifest_sha256": "b15dee87125d483bed1cc41a1513476a22f9539a6b1b34b9da385a00cff28be6",
   "manifest_source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
   "package_source_commit": "d9c036661459b0588dba715a800997f1790e14f1",
   "package_source_tree": "f1bf887204bce3879610de4d62d3e90f37bbb90e",
