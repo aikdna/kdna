@@ -1,6 +1,6 @@
 {
   "api_typescript": "export type IssuerSecrets = { readonly issuerRootKey: Uint8Array; readonly issuerSigningPrivateKeyPkcs8: Uint8Array; readonly signaturePolicy: IssuerSignaturePolicy };\nexport type IssuanceResult = (IssuerIssuedObservation & { readonly grantBytes: Uint8Array }) | IssuerCoreRejectedObservation | IssuerFailedObservation;\nexport declare function getExternalGrantIssuerContract(): IssuerDescriptor;\nexport declare function issueExternalKeyGrantForAsset(input: string | Uint8Array, options: IssuerOptions, secrets: IssuerSecrets): Promise<IssuanceResult>;\n",
-  "definition_digest": "sha256:cd38a6c311e76c7d8511890655f54a0246879f3e287edeb5236b84ea72b78e6a",
+  "definition_digest": "sha256:be64a692bbb212b2f180be30340a3802b9bd0058f74c33cfdcc34486edc18fb1",
   "derived_runtime_enforcement": {
     "ISSUER-AUTHENTICATION": {
       "generator_machine_check": "none",
@@ -384,8 +384,8 @@
   "runtime_not_implemented": [],
   "schema_binding": {
     "package_versions": {
-      "@aikdna/kdna-core": "0.37.6",
-      "@aikdna/kdna-read": "0.13.0"
+      "@aikdna/kdna-core": "0.37.7",
+      "@aikdna/kdna-read": "0.13.1"
     },
     "version_tuple": {
       "container": "0.5.0",
@@ -543,7 +543,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.6",
+              "const": "0.37.7",
               "type": "string"
             }
           },

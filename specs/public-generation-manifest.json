@@ -13,7 +13,7 @@
     {
       "bytes": 50851,
       "path": "specs/public-contract-decisions.json",
-      "sha256": "6e1fe1b53aff61dee61e242d10d1efb141dc5536bea3adbe46a6968aa89c5dfd"
+      "sha256": "61834cb80f670fe9ce3b23164542648058b8140d18b3d79ba6bf4ab0e068cd6c"
     },
     {
       "bytes": 17230,
@@ -23,12 +23,12 @@
     {
       "bytes": 13074,
       "path": "specs/public-version-policy.md",
-      "sha256": "3d6b563658f0bea6085b26f49d7b62227a91e28cdc7e4ff7f227c2bd11a8ac45"
+      "sha256": "93ad38caa1a4fe72437071837ddedbe08c40590fda91f54a83d1e06dcc59e736"
     },
     {
       "bytes": 11722,
       "path": "specs/read-contract.md",
-      "sha256": "d269f41cbb1dd434f61e0aa19d2d276218e42926f2167b63f1a5574aa6922147"
+      "sha256": "4010c20d82d478dcb829aaf405ba86fa1c88c963b1a44c2e84c9c4d52a806e7e"
     },
     {
       "bytes": 19907,
@@ -89,17 +89,17 @@
     {
       "bytes": 15358,
       "path": "specs/external-grant-issuer-r2-binding-8.schema.json",
-      "sha256": "351a0bfdded8232537f2f563cb7f4363d3933689cef3be1681cb1b48310ca25c"
+      "sha256": "5a7cd1a66659434d3c7289238a725699e98d5637f566a915808cbaa47a34aee1"
     },
     {
       "bytes": 34572,
       "path": "specs/protected-source-r2-binding-8.schema.json",
-      "sha256": "9df96d0ebc86b9d277cc3edc04e5b666471369acef09ba92f3268deab522a22e"
+      "sha256": "b26521629b321ae735b2c4bd21e2c0c33ce88e7e9353faa5de529a3ede3eb777"
     },
     {
       "bytes": 249023,
       "path": "specs/protection-admission-r2-binding-8.schema.json",
-      "sha256": "a4e95f08521332662523ee128183bc04f0769987a0304772f394bbad7f3e9efe"
+      "sha256": "63aeaf1e0255d8ea7b0b5d40055e796084b6de70a455f8b85f6308609ab1f7b9"
     },
     {
       "bytes": 44065,
@@ -122,7 +122,7 @@
       "sha256": "7fcb513a9769f221b792a4a95e3644d4ec88f17f3e04a4948b5be8bc0dea4dbd"
     }
   ],
-  "derived_aggregate_sha256": "ce9347693624d7bfd8041608c62651e54686b7ca003e6f3c93b6c36b7243642f",
+  "derived_aggregate_sha256": "f36adbb6725e2cc888577e40b810853a38346f18c21827cbca7a4949760a7242",
   "excluded": [
     "specs/public-generation-manifest.json",
     "docs/audits/2026-09-06-open-wave1-machine-source-implementation.json",
@@ -710,17 +710,17 @@
     {
       "bytes": 28490,
       "path": "packages/kdna-core/src/public-contract/issuer-contract.generated.json",
-      "sha256": "3d91dd623644269df62242b044a7a2fd29d7e597acc7df191d77b054e4482785"
+      "sha256": "50e2d3b3ee2b32802956139fbbb54a31ef921ff04d873a1bc37ad51adf0c8a45"
     },
     {
       "bytes": 129280,
       "path": "packages/kdna-core/src/public-contract/issuer-validators.generated.js",
-      "sha256": "4c5d66b94739bf13febac7b16cf1ec0958f329b0a7ca93cb43b3a23f44bf3458"
+      "sha256": "ff13eed79b9c0560b856f71b0713ab58b1cc1a36cb31a56cd60aa644c91c2949"
     },
     {
       "bytes": 4050,
       "path": "packages/kdna-core/src/public-contract/key-grant-issuer-node.d.ts",
-      "sha256": "5c4800644b81adb2a7850202d8b0af2b9a383ca8db61ef6c52fd491db8921db9"
+      "sha256": "47379a8fdfd50d5f27ae58bd72bc968a2477341ee2d93c79fa82a9d8a9f28e09"
     },
     {
       "bytes": 214,
@@ -730,17 +730,17 @@
     {
       "bytes": 19786,
       "path": "packages/kdna-core/src/public-contract/package-set-contract.generated.json",
-      "sha256": "eddc96cd80347b69f5d554ee359972ba3ef9858db7d98980e5642ecca0a5051b"
+      "sha256": "87592d4faba8982d878dae278abb16082150b5772f00202b18aa3baad210e447"
     },
     {
       "bytes": 5623,
       "path": "packages/kdna-core/src/public-contract/package-set-node.d.ts",
-      "sha256": "f7814fd6e80ba1cf0aeecc5defed5d92c497219b4fe930de63292fe73a561ba4"
+      "sha256": "bae3ad942168da6d91e755d01ed3fcb2fd3bc2d6792045cf1bb37d5b105a1c2b"
     },
     {
       "bytes": 174791,
       "path": "packages/kdna-core/src/public-contract/package-set-validators.generated.js",
-      "sha256": "cc14eda9a9d83b3f61f3b41cc906054b37586c2bfcd9485f25a04020404b127e"
+      "sha256": "e8e7947aaecbe6e152b55a55aace14ce2ed95ff36d4cd231e45425804bfe22ac"
     },
     {
       "bytes": 2670,
@@ -750,27 +750,27 @@
     {
       "bytes": 349367,
       "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
-      "sha256": "5388002febca63e9890810f177c0649d8b000b2c8b879b5f152476cc948c61aa"
+      "sha256": "4693331a37ab2e7475b335a6a19c977192b162c04f902b4b58dcdb51a2f1b728"
     },
     {
       "bytes": 10225,
       "path": "packages/kdna-core/src/public-contract/protected-source-node.d.ts",
-      "sha256": "503ee6fe851f47f042749fba91dc3313f50a9fba3d1e20ffe0f3f532ae430831"
+      "sha256": "3e89481f4c08f4c2b89b208f0e7778b99d7524b6dbd8333060b0df47ff9e34da"
     },
     {
       "bytes": 89249,
       "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
-      "sha256": "06339ab650a639e5e935aaaa1974ded2e7deaa349f316d5d1b5c4230dcc1a45f"
+      "sha256": "fd280edfa92bc5b47855baaa312f0fa66ff7453840c0ded82e283092db4ecd58"
     },
     {
       "bytes": 15820,
       "path": "packages/kdna-core/src/public-contract/protection-node.d.ts",
-      "sha256": "a848aa0211df226ab6d20958dc5405e112322ed1637c63a0ce61083247d0452f"
+      "sha256": "633de4e712e7fdfdfdd5942429daa3a1603a4b46a0f04a2f271fd6a0932f87aa"
     },
     {
       "bytes": 4243794,
       "path": "packages/kdna-core/src/public-contract/protection-validators.generated.js",
-      "sha256": "796648e688e98a2882e4a40d3afc8eed409aeee8b43ea403c5e371ffd0a19997"
+      "sha256": "d8782b8a60778cd09e8700cda435f2f6f0e7a0b94a864623685f36e23857fd54"
     },
     {
       "bytes": 294,
@@ -785,7 +785,7 @@
     {
       "bytes": 318976,
       "path": "packages/kdna-core/src/public-contract/source-validators.generated.js",
-      "sha256": "3ad2c40f06f194af5d8631cf93d01fa1630d64c5094e496bb18cbe7cb0ae17e8"
+      "sha256": "7c6a22da4a4000102ee4220d6a784b89fdd2871d8116aa25991156d4c8315f95"
     },
     {
       "bytes": 515,
@@ -830,7 +830,7 @@
     {
       "bytes": 59,
       "path": "packages/kdna-read/src/installation.generated.json",
-      "sha256": "14b0cef1b19b0845b401c6fec7c1955f5ea97edb6096e806b6c6bb399e900d3c"
+      "sha256": "8b4030be8b8816c6eac9638c0a084f33fdc30f954e1bec5e7520472aafc62341"
     },
     {
       "bytes": 359,
@@ -840,7 +840,7 @@
     {
       "bytes": 7534,
       "path": "packages/kdna-read/src/package-set-contract.generated.json",
-      "sha256": "82cbaf4539410fdefe3bcade217f80e6f1ca48fd3c4ae9e40071d42b729f3076"
+      "sha256": "c1c9ccd558dd1918966508af92595490eee8411793c7ed622f39e586f74e08cf"
     },
     {
       "bytes": 2267,
@@ -855,7 +855,7 @@
     {
       "bytes": 6338,
       "path": "packages/kdna-read/src/protection-node.js",
-      "sha256": "3c38d14e7afc8871ace84e0d45f2e3934d34df60a921b7b91caca8aa59b41e05"
+      "sha256": "15e4096abfb5824626eff7079ffd8bd7f0be6c8d386a29bb093a36abaf385862"
     },
     {
       "bytes": 2445,
@@ -890,17 +890,17 @@
     {
       "bytes": 4090,
       "path": "specs/external-grant-issuer.d.ts",
-      "sha256": "8731e9f9de05757becd47536938ea0d7b7a59394f11eb9b2e41f9eb44a59007a"
+      "sha256": "6098ac7b65a1ae5c6c680712c153501601910b929b0ebf81e3a21d9db3fe1e54"
     },
     {
       "bytes": 12738,
       "path": "specs/package-set-node-0.2.1.schema.json",
-      "sha256": "02011e1aa4d7a040cd7f534e34c11056c5f12f6324d894bd535f08db2d43e033"
+      "sha256": "c2d8c9de81382ca84f959052ba0ba62ae5d0eb0e00d88a52fffa6feed14021f1"
     },
     {
       "bytes": 2303,
       "path": "specs/package-set-node.d.ts",
-      "sha256": "05ce31074dc09df1743403e1aa67d2ecb0f2efdccbb12725e0ef8257bd5efa45"
+      "sha256": "cc92075e432596c0b4810f55ed8b3d46e7a522eb9bc0d95eb76f7ecda70e059d"
     },
     {
       "bytes": 2750,
@@ -910,12 +910,12 @@
     {
       "bytes": 10465,
       "path": "specs/protected-source.d.ts",
-      "sha256": "7aba57c1c5b1c2d3521a55922ab0932880f017d007a8d40dbee79c604a247bfa"
+      "sha256": "7fb9fe85fa2bca7f163457cdeff9add5c54f963c94233898a0fd52454d1cd761"
     },
     {
       "bytes": 15860,
       "path": "specs/protection-admission.d.ts",
-      "sha256": "b3e16d044f94b4fe0f3b18554d783857e2fbb764d0f3d95dce906493210243f9"
+      "sha256": "890a04fe7e6d58f339cfb0426c4dfd96fa1c1d5fbc0d9d7f80fe3f05186978a2"
     },
     {
       "bytes": 6219,
@@ -965,7 +965,7 @@
   "source": {
     "bytes": 1541192,
     "path": "specs/public-semantic-source.json",
-    "sha256": "c7588958ba0504dde7d30b49f4b684d4bdc2bdfac4d2c0e1d2829289f7349974"
+    "sha256": "194e2bef38a5c4871076eb6c04cb6475793f7920abba5d8ad2afc8198edf64c5"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -980,7 +980,7 @@
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 168167,
-      "sha256": "0e466a4b00530cdfa432c4ce068e19b3f5602873a125a15f8adbaa82a4c22c2f"
+      "sha256": "f411d019d05b3a82886c48a89fe6bc81701fc5abe80716f988eb3d81da5d1dfd"
     },
     "base_types": 431,
     "canonical_types": 793

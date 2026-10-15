@@ -3,7 +3,7 @@
   "source": {
     "path": "specs/public-semantic-source.json",
     "bytes": 1541192,
-    "sha256": "c7588958ba0504dde7d30b49f4b684d4bdc2bdfac4d2c0e1d2829289f7349974"
+    "sha256": "194e2bef38a5c4871076eb6c04cb6475793f7920abba5d8ad2afc8198edf64c5"
   },
   "module": {
     "counterexample": "A 0.5 payload.kdnab container and a 0.6 sections container are separate generations. Neither admission path converts, dual-reads or falls back for the other; an explicit migration operation is the only bridge, and it must never be produced by an implicit rewrite inside any admission.",

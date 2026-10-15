@@ -9,20 +9,20 @@
 # KDNA
 
 <!-- release-coordinates:begin (generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand) -->
-**Current publication state (2026-10-14).** All five stable coordinates are
+**Current publication state (2026-10-15).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.5` | `latest` | `e8e07a6040c7c88f2d85046497e6a03872051ed76fd46eb4fe1034e4d9650477` |
-| `@aikdna/kdna-read` | `0.12.1` | `latest` | `f1f1572e70076a5d2c1b6b027c4480e536ef617b53075670824327af93838cd1` |
-| `@aikdna/kdna-cli` | `0.40.1` | `latest` | `13b92fb5fe48f99b6db17836d3ff2a48fc93a4917bec6124fa7c0f0395215bf0` |
+| `@aikdna/kdna-core` | `0.37.6` | `latest` | `17137ebdd316f5e44b64c6164d6fca07b0e8486b42b5eb6e85347d92ad25087f` |
+| `@aikdna/kdna-read` | `0.13.0` | `latest` | `26f62bb703c7ad92acdfa02e44b3b981f73ec2e9c20bec29e1412937968170a7` |
+| `@aikdna/kdna-cli` | `0.42.0` | `latest` | `8edc544208af12aa44e731a733aedc7ad6af0a4507e3d34ac6e5c5c5a1c08d00` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
 | `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` | `8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a` |
 
-MCP remains a Git source channel (main `a1acd14fee9d4e5d0ba7b00c8fe9596e75cc2fd1`) and adds no
+MCP remains a Git source channel (main `195be98b8e19c6173c60c06927b01a6930e1a90e`) and adds no
 npm coordinate in this wave. Exact source commits, release runs, preserved preview
 tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);
 earlier `latest` values stay in the
@@ -103,13 +103,13 @@ An existing `latest` package or repository `main` does not identify a candidate.
 
 | Entry | Exact candidate package combination | Supported route |
 | --- | --- | --- |
-| Core/Read | Core `0.37.5` / Read `0.12.1` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
-| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.1` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
+| Core/Read | Core `0.37.6` / Read `0.13.0` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
+| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.42.0` with that exact Core/Read pair | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.2` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` with that exact Core/Read pair | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
-The maintained source currently carries the candidate pair Core `0.37.6` /
-Read `0.13.0`, which the registry does not serve yet; until it does, the table
+The maintained source currently carries the candidate pair Core `0.37.7` /
+Read `0.13.1`, which the registry does not serve yet; until it does, the table
 above lists only the published and byte-verified combination.
 
 The two container routes have different reader and source APIs. Sharing SDK
@@ -145,7 +145,7 @@ empty-cache registry installation can use:
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
@@ -168,7 +168,7 @@ Historical native CLI `0.39.0-rc.native-sections.2` binds Core
 `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core
 `0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older
 installation. CLI `.2` and `.3` remain published previews; the published stable
-line is `0.40.1`, which must not overwrite either preview. The separate Studio ordinary/protected guide
+line is `0.42.0`, which must not overwrite either preview. The separate Studio ordinary/protected guide
 supplies its own preparation, trusted Host/credential boundary and readback
 instructions; named Host delivery and independent acceptance remain `NOT_RUN`.
 Technical checks and
@@ -184,7 +184,7 @@ published workflow; it is not a current Core/Read quickstart.
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
 against it on 2026-09-13. The current Core/Read pair is the published stable
-Core `0.37.5` / Read `0.12.1`.
+Core `0.37.6` / Read `0.13.0`.
 It has a different asset contract. The current native CLI route also has
 different command forms, so this published walkthrough does not select that
 new graph. Keep its exact historical dependencies. See
@@ -450,10 +450,10 @@ changes require an RFC and an explicit migration path.
 
 | Repo | Package | Purpose |
 |------|---------|---------|
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.40.1` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, explicit Read and Source revision; exact current SDK pair above |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.42.0` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, explicit Read and Source revision; exact current SDK pair above |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Published StudioCLI `0.13.0` on `latest`; historical npm `0.11.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Published StudioCore `4.0.0` on `latest`; historical npm `3.0.0` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.1` unpublished by policy; historical npm MCP `0.5.0` | Matched published native `0.40.1` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.2` unpublished by policy; historical npm MCP `0.5.0` | Matched published native `0.42.0` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read contract with macOS validation and generic iOS compilation; no JavaScript preview parity, device runtime or native Host claim |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Historical Swift release `0.4.0`; current source has its own binding | Apple authoring kernel; historical release compatibility and current-source verification are separate, described by the owning README |

@@ -2,7 +2,7 @@
 
 Snapshot: 2026-10-12. Package source versions, public Git revisions, npm bytes,
 GitHub releases and dist-tags are separate facts. The five stable coordinates
-Core `0.37.5`, Read `0.12.1`, native CLI `0.40.1`, Studio Core `4.0.0` and
+Core `0.37.6`, Read `0.13.0`, native CLI `0.42.0`, Studio Core `4.0.0` and
 Studio CLI `0.13.0` are published on `latest`, each from its reviewed source
 commit with a retained, byte-verified artifact; the machine-readable matrix is
 [release-coordinates.json](./release-coordinates.json). No earlier preview is
@@ -19,8 +19,8 @@ deliveries, with no MCP npm target.
 
 ## Native and Studio entry points
 
-For a new native asset workflow, use CLI `0.40.1`, Core
-`0.37.5` and Read `0.12.1` together. The native route
+For a new native asset workflow, use CLI `0.42.0`, Core
+`0.37.6` and Read `0.13.0` together. The native route
 uses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery
 contains the CLI and all eleven required companion archives, a relative-file
 lock, full member bindings and licenses. Follow the
@@ -29,7 +29,7 @@ and [public author example](https://github.com/aikdna/kdna-cli/blob/main/example
 The example creates and saves, reads exact selections, revises official Source,
 reopens and reuses the revised asset, and preserves the original.
 
-The Loader/MCP source candidate `0.8.0-rc.native-sections.1` embeds that exact
+The Loader/MCP source candidate `0.8.0-rc.native-sections.2` embeds that exact
 native graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).
 It is a local operator-bound stdio adapter; its npm publication is disabled.
 Named Agent Host delivery and semantic adoption remain unassessed.
@@ -70,7 +70,7 @@ artifacts as current candidates.
 | Repository | Current source route and dependency boundary | Existing public distribution baseline |
 | --- | --- | --- |
 | [kdna](https://github.com/aikdna/kdna) | Exact Core/Read stable candidate pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.40.1` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.42.0` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |

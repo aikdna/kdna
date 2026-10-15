@@ -38,12 +38,12 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 | 入口 | 精确已发布组合 | 使用边界 |
 | --- | --- | --- |
-| Core/Read | Core `0.37.5` / Read `0.12.1` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
-| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.1` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
+| Core/Read | Core `0.37.6` / Read `0.13.0` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
+| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.42.0` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.2` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
 | [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` 与上述精确 Core/Read | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
-本仓源码当前携带的候选是 Core `0.37.6` / Read `0.13.0`，尚未发布；在它通过正式发布与取得检查前，
+本仓源码当前携带的候选是 Core `0.37.7` / Read `0.13.1`，尚未发布；在它通过正式发布与取得检查前，
 上表只列出已发布并逐字节核验的组合。
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
@@ -73,7 +73,7 @@ registry 安装路径：
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
@@ -93,7 +93,7 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 
 已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
-已发布稳定线是 `0.40.1`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
+已发布稳定线是 `0.42.0`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
 作品适用性或实际任务采用。
 
 ## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径
