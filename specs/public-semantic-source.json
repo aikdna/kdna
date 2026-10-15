@@ -29565,16 +29565,372 @@
         }
       ]
     },
-    "AdmittedSourceMigrationRequest06": {"$opaque":true},
-    "NativeSourceMigrationAuthority06": {"$opaque":true},
-    "SourceMigrationAuthorityContext06": {"type":"object","properties":{"contract":{"$ref":"#/$defs/SourceMigrationRouteContract06"},"request":{"$ref":"#/$defs/SourceMigrationRequest06"},"request_digest":{"$ref":"#/$defs/Digest"},"capture":{"$ref":"#/$defs/SourceOuterCapture06"},"source_inventory":{"type":"array","items":{"$ref":"#/$defs/SourceMigrationCaptureRow06"},"minItems":3,"maxItems":128},"output_intent":{"type":"object","properties":{"container":{"type":"string","const":"0.6.0"},"read":{"type":"string","const":"kdna.read/0.7.0-candidate"},"adoption":{"type":"string","const":"not_observed"}},"required":["container","read","adoption"],"additionalProperties":false}},"required":["contract","request","request_digest","capture","source_inventory","output_intent"],"additionalProperties":false},
-    "SourceMigrationCaptureRow06": {"type":"object","properties":{"name":{"$ref":"#/$defs/EntryName"},"type":{"type":"string","const":"file"},"mode":{"$ref":"#/$defs/UInt"},"size":{"$ref":"#/$defs/UInt"}},"required":["name","type","mode","size"],"additionalProperties":false},
-    "SourceMigrationDiagnostic06": {"type":"object","properties":{"code":{"type":"string","enum":["SOURCE_INPUT_INVALID","SOURCE_EXPECTED_ASSET_MISMATCH","SOURCE_PERMISSION_REJECTED","SOURCE_DEADLINE_EXCEEDED","SOURCE_CAPABILITY_UNAVAILABLE","MIGRATION_SOURCE_UNSUPPORTED_VERSION","MIGRATION_SOURCE_PROTECTED_UNSUPPORTED","MIGRATION_SOURCE_EXTENSION_UNSUPPORTED","MIGRATION_PAYLOAD_MISMATCH","MIGRATION_MANIFEST_MISMATCH","MIGRATION_ORIGIN_MISSING"]},"stage":{"type":"string","enum":["input","capture","admission","authorization","semantic","output","return"]}},"required":["code","stage"],"additionalProperties":false},
-    "SourceMigrationFailure06": {"type":"object","properties":{"status":{"type":"string","const":"source_failed"},"diagnostic":{"$ref":"#/$defs/SourceMigrationDiagnostic06"},"disclosure":{"$ref":"#/$defs/OriginalProtectionDisclosureFor06"},"body":{"type":"null"},"body_bytes":{"type":"integer","const":0}},"required":["status","diagnostic","disclosure","body","body_bytes"],"additionalProperties":false},
-    "SourceMigrationObservation06": {"type":"object","properties":{"contract":{"$ref":"#/$defs/SourceMigrationRouteContract06"},"request_digest":{"$ref":"#/$defs/Digest"},"capture_id":{"$ref":"#/$defs/Identifier"},"tuple":{"$ref":"#/$defs/CandidateVersionTuple06"},"source_A":{"$ref":"#/$defs/Digest"},"source_content_digest":{"$ref":"#/$defs/Digest"},"source_inventory":{"type":"array","items":{"$ref":"#/$defs/SourceRouteMemberInventory06"},"minItems":3,"maxItems":128},"output":{"type":"object","properties":{"A":{"$ref":"#/$defs/Digest"},"C":{"$ref":"#/$defs/Digest"},"E":{"$ref":"#/$defs/Digest"}},"required":["A","C","E"],"additionalProperties":false},"E_profile":{"type":"string","enum":["kdna.digest-basis.runtime-entry-set/0.3.0-candidate"]},"output_ir_digest":{"$ref":"#/$defs/Digest"},"member_actions":{"type":"array","items":{"type":"object","properties":{"name":{"$ref":"#/$defs/EntryName"},"action":{"type":"string","enum":["added","removed","replaced","preserved"]}},"required":["name","action"],"additionalProperties":false},"minItems":3,"maxItems":128},"origin":{"$ref":"#/$defs/RepresentationOrigin06"},"body_bytes":{"$ref":"#/$defs/UInt"},"proof":{"type":"string","const":"produced_bytes_with_confirmed_source_observation_not_consumer_read_or_adoption"}},"required":["contract","request_digest","capture_id","tuple","source_A","source_content_digest","source_inventory","output","E_profile","output_ir_digest","member_actions","origin","body_bytes","proof"],"additionalProperties":false},
-    "SourceMigrationRequest06": {"type":"object","properties":{"request_id":{"$ref":"#/$defs/Identifier"},"tuple":{"$ref":"#/$defs/CandidateVersionTuple06"},"operation":{"type":"string","const":"migrate_public_source"},"source_expected_A":{"$ref":"#/$defs/Digest"},"timeout_ms":{"$ref":"#/$defs/UInt"},"signature_policy":{"type":"object","properties":{"requireSignature":{"type":"boolean","const":false},"expectedPublicKeyHex":{"type":"null"}},"required":["requireSignature","expectedPublicKeyHex"],"additionalProperties":false}},"required":["request_id","tuple","operation","source_expected_A","timeout_ms","signature_policy"],"additionalProperties":false},
-    "SourceMigrationRequestAdmission06": {"oneOf":[{"type":"object","properties":{"status":{"type":"string","const":"admitted_request"},"request":{"$ref":"#/$defs/AdmittedSourceMigrationRequest06"}},"required":["status","request"],"additionalProperties":false},{"$ref":"#/$defs/SourceMigrationFailure06"},{"$ref":"#/$defs/SourceRouteCoreRejected06"}]},
-    "SourceMigrationRouteContract06": {"type":"object","properties":{"id":{"type":"string","const":"kdna.source-migration/0.1.0-candidate"},"version":{"type":"string","const":"0.1.0-candidate"},"definition_digest":{"$ref":"#/$defs/Digest"}},"required":["id","version","definition_digest"],"additionalProperties":false}
+    "AdmittedSourceMigrationRequest06": {
+      "$opaque": true
+    },
+    "NativeSourceMigrationAuthority06": {
+      "$opaque": true
+    },
+    "SourceMigrationAuthorityContext06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/SourceMigrationRouteContract06"
+        },
+        "request": {
+          "$ref": "#/$defs/SourceMigrationRequest06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capture": {
+          "$ref": "#/$defs/SourceOuterCapture06"
+        },
+        "source_inventory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceMigrationCaptureRow06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "output_intent": {
+          "type": "object",
+          "properties": {
+            "container": {
+              "type": "string",
+              "const": "0.6.0"
+            },
+            "read": {
+              "type": "string",
+              "const": "kdna.read/0.7.0-candidate"
+            },
+            "adoption": {
+              "type": "string",
+              "const": "not_observed"
+            }
+          },
+          "required": [
+            "container",
+            "read",
+            "adoption"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "contract",
+        "request",
+        "request_digest",
+        "capture",
+        "source_inventory",
+        "output_intent"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationCaptureRow06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "type": {
+          "type": "string",
+          "const": "file"
+        },
+        "mode": {
+          "$ref": "#/$defs/UInt"
+        },
+        "size": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "mode",
+        "size"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationDiagnostic06": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "SOURCE_INPUT_INVALID",
+            "SOURCE_EXPECTED_ASSET_MISMATCH",
+            "SOURCE_PERMISSION_REJECTED",
+            "SOURCE_DEADLINE_EXCEEDED",
+            "SOURCE_CAPABILITY_UNAVAILABLE",
+            "MIGRATION_SOURCE_UNSUPPORTED_VERSION",
+            "MIGRATION_SOURCE_PROTECTED_UNSUPPORTED",
+            "MIGRATION_SOURCE_EXTENSION_UNSUPPORTED",
+            "MIGRATION_PAYLOAD_MISMATCH",
+            "MIGRATION_MANIFEST_MISMATCH",
+            "MIGRATION_ORIGIN_MISSING"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "capture",
+            "admission",
+            "authorization",
+            "semantic",
+            "output",
+            "return"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationFailure06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "source_failed"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/SourceMigrationDiagnostic06"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationObservation06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/SourceMigrationRouteContract06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "source_A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "source_content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "source_inventory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "A": {
+              "$ref": "#/$defs/Digest"
+            },
+            "C": {
+              "$ref": "#/$defs/Digest"
+            },
+            "E": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "A",
+            "C",
+            "E"
+          ],
+          "additionalProperties": false
+        },
+        "E_profile": {
+          "type": "string",
+          "enum": [
+            "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+          ]
+        },
+        "output_ir_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "member_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "added",
+                  "removed",
+                  "replaced",
+                  "preserved"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "origin": {
+          "$ref": "#/$defs/RepresentationOrigin06"
+        },
+        "body_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "proof": {
+          "type": "string",
+          "const": "produced_bytes_with_confirmed_source_observation_not_consumer_read_or_adoption"
+        }
+      },
+      "required": [
+        "contract",
+        "request_digest",
+        "capture_id",
+        "tuple",
+        "source_A",
+        "source_content_digest",
+        "source_inventory",
+        "output",
+        "E_profile",
+        "output_ir_digest",
+        "member_actions",
+        "origin",
+        "body_bytes",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationRequest06": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "operation": {
+          "type": "string",
+          "const": "migrate_public_source"
+        },
+        "source_expected_A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "timeout_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "signature_policy": {
+          "type": "object",
+          "properties": {
+            "requireSignature": {
+              "type": "boolean",
+              "const": false
+            },
+            "expectedPublicKeyHex": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "requireSignature",
+            "expectedPublicKeyHex"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "operation",
+        "source_expected_A",
+        "timeout_ms",
+        "signature_policy"
+      ],
+      "additionalProperties": false
+    },
+    "SourceMigrationRequestAdmission06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "admitted_request"
+            },
+            "request": {
+              "$ref": "#/$defs/AdmittedSourceMigrationRequest06"
+            }
+          },
+          "required": [
+            "status",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/SourceMigrationFailure06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteCoreRejected06"
+        }
+      ]
+    },
+    "SourceMigrationRouteContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.source-migration/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    }
   },
   "non_schema_rules": [
     {
