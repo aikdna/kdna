@@ -15,7 +15,7 @@ import {
 } from './native-renderer.mjs';
 
 export const FROZEN_INPUT = Object.freeze({
-  commit: '226006f740c7b32a1acae3336abca08d2edf325e',
+  commit: 'e810caefcf16187bf44cc785f787520ef0b00e20',
   source: 'specs/public-semantic-source.json',
   source_sha256: 'c7588958ba0504dde7d30b49f4b684d4bdc2bdfac4d2c0e1d2829289f7349974',
   recipe: 'scripts/public-contract/native-output-recipe.json',
