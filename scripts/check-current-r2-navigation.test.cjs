@@ -119,11 +119,11 @@ const mutations = [
   [
     'root README current package',
     'README.md',
-    '| `@aikdna/kdna-core` | `0.37.5` |',
+    '| `@aikdna/kdna-core` | `0.37.6` |',
     '0.35.0-rc.source.1',
   ],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', 'Read `0.12.1`', '0.3.0-rc.component-semantics.2'],
+  ['Chinese README package', 'README.zh.md', 'Read `0.13.0`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -133,19 +133,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'Stable distribution: package `0.37.5` on `latest`',
+    'Stable distribution: package `0.37.6` on `latest`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'Stable distribution `0.12.1` on `latest`',
+    'Stable distribution `0.13.0` on `latest`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    '`@aikdna/kdna-core@0.37.4`',
+    '`@aikdna/kdna-core@0.37.6`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -169,7 +169,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'Read declares Core `0.37.6` as its exact peer',
+    'Read declares Core `0.37.7` as its exact peer',
     'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
@@ -208,7 +208,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.5` / Read `0.12.1`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.6` / Read `0.13.0`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -218,7 +218,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.5`',
+    '| `@aikdna/kdna-core` | `0.37.6`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -251,13 +251,13 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.6`、Read `0.13.0`',
+    'Core `0.37.7`、Read `0.13.1`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.6` and Read',
+    'Core `0.37.7` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -269,7 +269,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.6` and Read `0.13.0`',
+    'Core `0.37.7` and Read `0.13.1`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -344,7 +344,7 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.40.1` with the exact SDK pair above'));
+  assert.ok(guide.includes('CLI `0.42.0` with the exact SDK pair above'));
   assert.ok(
     guide.includes(
       'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent source candidates.',
@@ -393,13 +393,13 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.40.1` with that exact Core/Read pair',
+    'CLI `0.42.0` with that exact Core/Read pair',
     'CLI `0.39.0-rc.native-sections.2` with that exact Core/Read pair',
   ],
   [
     'MCP candidate row',
     'README.md',
-    'MCP `0.8.0-rc.native-sections.1` with that exact native CLI',
+    'MCP `0.8.0-rc.native-sections.2` with that exact native CLI',
     'MCP `0.8.1-rc.combination.1` with that exact native CLI',
   ],
   [
@@ -486,7 +486,7 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0\n',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
@@ -571,7 +571,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.40.1', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.42.0', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
@@ -764,7 +764,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.6` / Read `0.13.0`',
+    'local package line is Core `0.37.7` / Read `0.13.1`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1461,7 +1461,7 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.6` and Read `0.13.0`';
+  const marker = 'The current exact pair is Core `0.37.7` and Read `0.13.1`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,
@@ -1690,7 +1690,7 @@ for (const [file, before, after, issue] of [
   ],
   [
     'README.md',
-    'published stable\nCore `0.37.5` / Read `0.12.1`',
+    'published stable\nCore `0.37.6` / Read `0.13.0`',
     'the published browser-preview pair',
     'README.md:current:',
   ],
@@ -1757,7 +1757,7 @@ test('a release matrix that disagrees with the semantic source is recorded, not 
   const result = changedDocument('docs/release-coordinates.json', (text) => {
     const matrix = JSON.parse(text);
     const row = matrix.packages.find((entry) => entry.unit === 'core');
-    row.version = '0.37.7';
+    row.version = '0.37.8';
     delete row.candidate_version;
     return JSON.stringify(matrix, null, 2) + '\n';
   });
@@ -1793,7 +1793,7 @@ test('a declared source candidate that does not lead the published coordinate is
 test('declaring a leading source candidate leaves the published statement unchanged', () => {
   const result = changedDocument('docs/release-coordinates.json', (text) => {
     const matrix = JSON.parse(text);
-    matrix.packages.find((row) => row.unit === 'cli').candidate_version = '0.41.0';
+    matrix.packages.find((row) => row.unit === 'cli').candidate_version = '0.43.0';
     return JSON.stringify(matrix, null, 2) + '\n';
   });
   assert.deepEqual(result.issues, []);
@@ -1801,12 +1801,12 @@ test('declaring a leading source candidate leaves the published statement unchan
 test('a declared source candidate may not be rendered as the published artifact', () => {
   const matrixPath = 'docs/release-coordinates.json';
   const matrix = JSON.parse(fs.readFileSync(path.join(root, matrixPath), 'utf8'));
-  matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.13.0';
+  matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.13.1';
   const matrixText = JSON.stringify(matrix, null, 2) + '\n';
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   const promoted = readme.replace(
-    '| `@aikdna/kdna-read` | `0.12.1` |',
     '| `@aikdna/kdna-read` | `0.13.0` |',
+    '| `@aikdna/kdna-read` | `0.13.1` |',
   );
   assert.notEqual(promoted, readme, 'Counterexample must alter the published block');
   const result = checkCurrentNavigation(root, {

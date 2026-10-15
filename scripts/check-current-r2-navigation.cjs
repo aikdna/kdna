@@ -440,7 +440,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |',
+      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.2` with that exact native CLI and Core/Read pair | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |',
     },
     {
       file: 'README.md',
@@ -476,7 +476,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP \`0.8.0-rc.native-sections.1\` unpublished by policy; historical npm MCP \`0.5.0\` | Matched published native \`${released.cli.version}\` graph; operator-bound local stdio, named Host delivery/adoption \`NOT_RUN\` |`,
+      text: `| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP \`0.8.0-rc.native-sections.2\` unpublished by policy; historical npm MCP \`0.5.0\` | Matched published native \`${released.cli.version}\` graph; operator-bound local stdio, named Host delivery/adoption \`NOT_RUN\` |`,
     },
     {
       file: 'README.zh.md',
@@ -488,7 +488,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.1` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |',
+      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.2` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |',
     },
     {
       file: 'README.zh.md',
@@ -518,13 +518,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.40.1\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
+      text: '```sh\nmkdir kdna-native-example\ncd kdna-native-example\nnpm init -y\nnpm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0\nnode node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output\n```',
     },
     {
       file: 'docs/core-read-current-status.md',
@@ -536,7 +536,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/core-read-current-status.md',
       role: 'downstream',
       heading: '## Matching consumer routes',
-      text: '| Loader/MCP | MCP `0.8.0-rc.native-sections.1` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |',
+      text: '| Loader/MCP | MCP `0.8.0-rc.native-sections.2` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |',
     },
     {
       file: 'docs/core-read-current-status.md',
@@ -584,7 +584,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/current-release-support.md',
       role: 'downstream',
       heading: '## Native and Studio entry points',
-      text: 'The Loader/MCP source candidate `0.8.0-rc.native-sections.1` embeds that exact\nnative graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).\nIt is a local operator-bound stdio adapter; its npm publication is disabled.\nNamed Agent Host delivery and semantic adoption remain unassessed.',
+      text: 'The Loader/MCP source candidate `0.8.0-rc.native-sections.2` embeds that exact\nnative graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).\nIt is a local operator-bound stdio adapter; its npm publication is disabled.\nNamed Agent Host delivery and semantic adoption remain unassessed.',
     },
     {
       file: 'docs/current-release-support.md',

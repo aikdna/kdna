@@ -3,7 +3,7 @@
 基础合同 `kdna.external-grant-issuer/1` 和算法版本 `1.0.0` 保持；当前公开 Schema 是
 `urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:8`，见
 [external-grant-issuer-r2-binding-8.schema.json](external-grant-issuer-r2-binding-8.schema.json)。
-唯一公共源的 `external_grant_issuer.schema_binding` 固定 Core `0.37.6`、Read `0.13.0` 和 R2 组合；
+唯一公共源的 `external_grant_issuer.schema_binding` 固定 Core `0.37.7`、Read `0.13.1` 和 R2 组合；
 该绑定参与原有定义摘要算法。描述符须与实际安装包版本、Schema const 和定义摘要一致。
 本稳定发行候选尚未发布。已发布 Core `0.37.0` / Read `0.11.1` 及其binding7 Schema保留原字节和发布证据；binding8须独立核验产物和安装消费者。
 旧 [Schema](external-grant-issuer.schema.json) 和 [规范快照](history/pre-r2/external-grant-issuer.md)

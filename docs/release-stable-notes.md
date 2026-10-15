@@ -4,6 +4,25 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.7
+
+- Publishes the merged source-migration tree: the new, explicit
+  `kdna.source-migration/0.1.0-candidate` route reads exactly the current
+  container `0.5.0` public source generation and writes an admitted `0.6.0`
+  container with a confirmed `representation_origin`. Historical tuples,
+  protected sources and extension members are refused by name; the Read and
+  classic admission paths are unchanged and never convert implicitly.
+- Carries the regenerated contract preimages and the added migration module in
+  the bundled public contracts; every previously published coordinate keeps its
+  bytes, and the compiled classic tuple keeps its identity.
+- Pairs with Read `0.13.1` from the same reviewed source commit.
+
+## Read 0.13.1
+
+- Moves the exact Core peer pin to `0.37.7` so the paired release can be
+  published from the same reviewed source commit. Read-route behavior is
+  unchanged; no previously published coordinate changes bytes.
+
 ## Core 0.37.6
 
 - Re-publishes the same Core content from the corrected reviewed source commit

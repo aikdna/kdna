@@ -71,7 +71,7 @@ const PROTECTION_LAYOUT_DIGEST =
 // deliberate owner addition updates the live constant and leaves this one
 // frozen.
 export const FROZEN_PROTECTION_LAYOUT_DIGEST =
-  'sha256:80ea29ba2c9db0d53bab68bb9ad8fec384198c5108d55928f817ebdf29737de5';
+  'sha256:9b82e167c4086472f99b5ed90ddb7989f3d33b6c347499289f77d183eeebaed9';
 // The maintained path validates strictly against the reviewed live layout. The
 // explicit frozen-replay channel (KDNA_NATIVE_RECIPE, used only by the
 // coordinate-derivation counterexample replay) also accepts the historical

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.37.7 (2026-10-15)
+
+- Publishes the merged source-migration tree: the new, explicit
+  `kdna.source-migration/0.1.0-candidate` route reads exactly the current
+  container `0.5.0` public source generation and writes an admitted `0.6.0`
+  container with a confirmed `representation_origin`. Historical tuples,
+  protected sources and extension members are refused by name; the Read and
+  classic admission paths are unchanged and never convert implicitly.
+- Regenerates the public contract surfaces with the added migration module and
+  re-pins the source inventory, release matrix and navigation anchors in the
+  same change. Every previously published coordinate keeps its bytes, and the
+  compiled classic tuple keeps its identity.
+- Pairs with Read `0.13.1` from the same reviewed source commit.
+
 ## 0.37.6 (2026-10-14)
 
 - Re-publishes the same Core content from the corrected reviewed source commit

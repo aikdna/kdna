@@ -15,11 +15,11 @@ import {
 } from './native-renderer.mjs';
 
 export const FROZEN_INPUT = Object.freeze({
-  commit: '04012bcddb593debacf555d11bfc9fa78f6b9759',
+  commit: '226006f740c7b32a1acae3336abca08d2edf325e',
   source: 'specs/public-semantic-source.json',
-  source_sha256: 'f60589a8bd3146ca0250ba1043e2463093b064780d5f5d9cf8dd6950f658050f',
+  source_sha256: 'c7588958ba0504dde7d30b49f4b684d4bdc2bdfac4d2c0e1d2829289f7349974',
   recipe: 'scripts/public-contract/native-output-recipe.json',
-  recipe_sha256: 'd9d5df7fddf8eb7e142c111f2e45dbc114d706a6277cd5acf2ee6296384606f3',
+  recipe_sha256: '0e466a4b00530cdfa432c4ce068e19b3f5602873a125a15f8adbaa82a4c22c2f',
 });
 export const FROZEN_DOCUMENTS = Object.freeze([
   Object.freeze({
@@ -27,27 +27,27 @@ export const FROZEN_DOCUMENTS = Object.freeze([
     accepted_design_index: 2,
     source_pointer: '/accepted_designs/2',
     bytes: 50851,
-    sha256: '378375ba0a316e4fe2e17191e2992082ff8770ab8373c39b4037795190c98844',
+    sha256: '6e1fe1b53aff61dee61e242d10d1efb141dc5536bea3adbe46a6968aa89c5dfd',
   }),
   Object.freeze({
     path: 'specs/public-version-policy.md',
     accepted_design_index: 4,
     source_pointer: '/accepted_designs/4',
     bytes: 13074,
-    sha256: '52d89826151d3b9308214552aaa835b013952a5cef39e021899458da279624c8',
+    sha256: '3d6b563658f0bea6085b26f49d7b62227a91e28cdc7e4ff7f227c2bd11a8ac45',
   }),
   Object.freeze({
     path: 'specs/read-contract.md',
     accepted_design_index: 5,
     source_pointer: '/accepted_designs/5',
     bytes: 11722,
-    sha256: '0dadef023d8c482bacd618aeef2a69dec9d628834ba34ca998565f2ce1d4f09c',
+    sha256: 'd269f41cbb1dd434f61e0aa19d2d276218e42926f2167b63f1a5574aa6922147',
   }),
   Object.freeze({
     path: 'specs/protection-admission.md',
     source_pointer: '/protection_admission/specification',
     bytes: 38233,
-    sha256: '496a8f4ff3e96fe9c7ae0071becfc5657415d2bc26d58c47358f4bc8873e7162',
+    sha256: '96147d8d7ddfb28635d0a97a1ff94f34b7175d549d1447c3fdce97f5abc7ff41',
   }),
 ]);
 const DOCUMENT_WORDING = Object.freeze({
@@ -58,8 +58,8 @@ const VERSION_POLICY_WORDING = Object.freeze({
   from: 'The browser candidate above is unpublished and requires its own artifact and installed-consumer acceptance.',
   to: 'The exact candidate pair requires its own artifact review and installed-consumer acceptance; publication is established only by matching release and registry evidence.',
 });
-const OBSERVATION_DATE = Object.freeze({ before: '2026-10-14', after: '2026-10-14' });
-const OLD_COORDINATES = Object.freeze({ core: '0.37.5', read: '0.13.0' });
+const OBSERVATION_DATE = Object.freeze({ before: '2026-10-14', after: '2026-10-15' });
+const OLD_COORDINATES = Object.freeze({ core: '0.37.6', read: '0.13.0' });
 function formatRecipe(recipe) {
   const require = createRequire(import.meta.url);
   const manifestPath = require.resolve('prettier/package.json');
