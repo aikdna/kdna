@@ -78,18 +78,18 @@
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "0.37.6",
-      "source": "45debda928f3ea28c5b17fc165263ee37c436b57",
-      "manifest_sha256": "cacfa99159d0fc56a36391452cbe801d5c9bd509fc7af01d704d61bb6f24d7be"
+      "declared": "0.37.7",
+      "source": "d93af7c928cfc8d4806f0fc309ef7c76d17be5bb",
+      "manifest_sha256": "ad6e3b140bc4d861ffafadd1c56487b7e1d43ee73ea2828f4676b5e057d956e2"
     },
     {
       "repository": "kdna-cli",
       "manifest": "package.json",
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
-      "declared": "0.13.0",
-      "source": "45debda928f3ea28c5b17fc165263ee37c436b57",
-      "manifest_sha256": "cacfa99159d0fc56a36391452cbe801d5c9bd509fc7af01d704d61bb6f24d7be"
+      "declared": "0.13.1",
+      "source": "d93af7c928cfc8d4806f0fc309ef7c76d17be5bb",
+      "manifest_sha256": "ad6e3b140bc4d861ffafadd1c56487b7e1d43ee73ea2828f4676b5e057d956e2"
     },
     {
       "repository": "kdna-skills",
