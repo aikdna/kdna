@@ -9,43 +9,41 @@
     {
       "unit": "core",
       "name": "@aikdna/kdna-core",
-      "version": "0.37.6",
-      "candidate_version": "0.37.7",
+      "version": "0.37.7",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "0.37.6",
-      "source_commit": "78f114018b7a57d3bc7398b3a7c3594bc1890a43",
-      "artifact_sha256": "17137ebdd316f5e44b64c6164d6fca07b0e8486b42b5eb6e85347d92ad25087f",
-      "publish_run": 38561397028,
-      "release_id": 412671962,
-      "release_published_at": "2026-10-14T12:06:49Z"
+      "release_tag": "0.37.7",
+      "source_commit": "b28b0b4c831365727df748c980895f059c8e677e",
+      "artifact_sha256": "3dd7c560e86fd1fa6085d3162d781f33b797c73b27bce435a25bf8d997121560",
+      "publish_run": 38684060091,
+      "release_id": 413431665,
+      "release_published_at": "2026-10-15T04:55:52Z"
     },
     {
       "unit": "read",
       "name": "@aikdna/kdna-read",
-      "version": "0.13.0",
-      "candidate_version": "0.13.1",
+      "version": "0.13.1",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "read/0.13.0",
-      "source_commit": "78f114018b7a57d3bc7398b3a7c3594bc1890a43",
-      "artifact_sha256": "26f62bb703c7ad92acdfa02e44b3b981f73ec2e9c20bec29e1412937968170a7",
-      "publish_run": 38563666671,
-      "release_id": 412688641,
-      "release_published_at": "2026-10-14T12:25:19Z"
+      "release_tag": "read/0.13.1",
+      "source_commit": "b28b0b4c831365727df748c980895f059c8e677e",
+      "artifact_sha256": "2d367c9c9105350ffa7a4aa180ab9dcf4487489a91e0f5b4f62853f736cc0899",
+      "publish_run": 38684787598,
+      "release_id": 413435810,
+      "release_published_at": "2026-10-15T05:04:09Z"
     },
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.42.0",
+      "version": "0.43.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.42.0",
-      "source_commit": "45debda928f3ea28c5b17fc165263ee37c436b57",
-      "artifact_sha256": "8edc544208af12aa44e731a733aedc7ad6af0a4507e3d34ac6e5c5c5a1c08d00",
-      "publish_run": 38594278855,
-      "release_id": 412910824,
-      "release_published_at": "2026-10-14T16:00:03Z"
+      "release_tag": "0.43.0",
+      "source_commit": "d93af7c928cfc8d4806f0fc309ef7c76d17be5bb",
+      "artifact_sha256": "ff1096beeeb74e7fd1097695f0e9ee74e59199d32109236821f99f8ed302ec22",
+      "publish_run": 38688102173,
+      "release_id": 413455483,
+      "release_published_at": "2026-10-15T05:41:00Z"
     },
     {
       "unit": "studio-core",
@@ -78,11 +76,11 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "195be98b8e19c6173c60c06927b01a6930e1a90e",
+      "main_commit": "80a43305dd616ada934b6e2d8f15dab639ee9b4c",
       "mcp_package": "@aikdna/kdna-mcp-server",
-      "mcp_version": "0.8.0-rc.native-sections.2",
+      "mcp_version": "0.8.0-rc.native-sections.3",
       "npm_coordinate": null,
-      "delivery": "Git source channel only; the current MCP release candidate is not published and no MCP npm coordinate belongs to this wave"
+      "delivery": "Git source channel only; the current MCP release candidate is delivered through GitHub releases, and no MCP npm coordinate belongs to this wave"
     }
   ],
   "preserved_preview_tags": {

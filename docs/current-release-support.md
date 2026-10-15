@@ -1,26 +1,31 @@
 # Current source, supported combinations and distribution
 
-Snapshot: 2026-10-12. Package source versions, public Git revisions, npm bytes,
+Snapshot: 2026-10-15. Package source versions, public Git revisions, npm bytes,
 GitHub releases and dist-tags are separate facts. The five stable coordinates
-Core `0.37.6`, Read `0.13.0`, native CLI `0.42.0`, Studio Core `4.0.0` and
+Core `0.37.7`, Read `0.13.1`, native CLI `0.43.0`, Studio Core `4.0.0` and
 Studio CLI `0.13.0` are published on `latest`, each from its reviewed source
 commit with a retained, byte-verified artifact; the machine-readable matrix is
 [release-coordinates.json](./release-coordinates.json). No earlier preview is
 relabeled or overwritten. MCP/Creator/protected Host remain complete Git source
 deliveries, with no MCP npm target.
 
-> **Superseded statement (kept for the record).** The 2026-10-11 snapshot read:
+> **Superseded statements (kept for the record).** The 2026-10-11 snapshot read:
 > "This wave prepares five new stable coordinates for `latest`: Core `0.37.2`,
 > Read `0.11.3`, native CLI `0.39.0`, Studio Core `4.0.0` and Studio CLI
 > `0.13.0`. All five are unpublished source candidates until exact release and
 > registry evidence establishes otherwise." That statement was current on
-> 2026-10-11 and is superseded by the published results above; it is retained
-> here rather than silently rewritten.
+> 2026-10-11 and is superseded by later published results; it is retained
+> here rather than silently rewritten. The 2026-10-12 snapshot read: "The five
+> stable coordinates Core `0.37.6`, Read `0.13.0`, native CLI `0.42.0`,
+> Studio Core `4.0.0` and Studio CLI `0.13.0` are published on `latest`, each
+> from its reviewed source commit with a retained, byte-verified artifact."
+> That statement was current on 2026-10-12 and is superseded by the 2026-10-15
+> results above; it is likewise retained.
 
 ## Native and Studio entry points
 
-For a new native asset workflow, use CLI `0.42.0`, Core
-`0.37.6` and Read `0.13.0` together. The native route
+For a new native asset workflow, use CLI `0.43.0`, Core
+`0.37.7` and Read `0.13.1` together. The native route
 uses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery
 contains the CLI and all eleven required companion archives, a relative-file
 lock, full member bindings and licenses. Follow the
@@ -29,13 +34,13 @@ and [public author example](https://github.com/aikdna/kdna-cli/blob/main/example
 The example creates and saves, reads exact selections, revises official Source,
 reopens and reuses the revised asset, and preserves the original.
 
-The Loader/MCP source candidate `0.8.0-rc.native-sections.2` embeds that exact
+The Loader/MCP source candidate `0.8.0-rc.native-sections.3` embeds that exact
 native graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).
 It is a local operator-bound stdio adapter; its npm publication is disabled.
 Named Agent Host delivery and semantic adoption remain unassessed.
 
-StudioCLI `0.13.0` and StudioCore `4.0.0` use the
-same SDK package pair with a different container `0.5.0` / Read `0.6.4` route.
+StudioCLI `0.13.0` and StudioCore `4.0.0` use their own pinned SDK package pair
+(Core `0.37.2` / Read `0.11.3`) with a different container `0.5.0` / Read `0.6.4` route.
 Use their [source installation and ordinary/protected session guide](https://github.com/aikdna/kdna-studio-cli#readme).
 Session authoring, role-specific adoption, revision, save/read/verify and
 explicit protected export retain that route's source and credential contracts.
@@ -52,7 +57,7 @@ The native CLI does not read Studio's container. Neither route establishes real
 human identity, editorial acceptance, model execution or action permission.
 
 Core/Read's [exact stable artifact procedure](release-stable.md) and
-[contract status](core-read-current-status.md) specify the candidate pair.
+[contract status](core-read-current-status.md) specify the stable pair.
 Publication targets `latest` only after each exact dependency is public:
 Core → Read → native CLI and Studio Core → Studio CLI. MCP's complete source
 graph is rebound separately. Every new artifact requires registry integrity,
@@ -69,10 +74,10 @@ artifacts as current candidates.
 
 | Repository | Current source route and dependency boundary | Existing public distribution baseline |
 | --- | --- | --- |
-| [kdna](https://github.com/aikdna/kdna) | Exact Core/Read stable candidate pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.42.0` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
+| [kdna](https://github.com/aikdna/kdna) | Exact published Core/Read pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.43.0` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0`; exact current SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
+| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.0.0`; its own pinned SDK pair, container0.5 session route. | npm `3.0.0`. Current source is not a stable npm release. |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.13.0` with that exact StudioCore/SDK graph. | npm `0.11.0`. Current source is not a stable npm release. |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Source/index `0.3.0-rc.component-semantics.1`, verification scope `0.1.5`, with the older pinned SDK/Studio graph. Historical assets retain their own format and may reject under a newer reader. | GitHub release `0.1.1`; source asset index, not an npm SDK. |
 
@@ -131,6 +136,12 @@ for their release procedure and the official metadata for
 [CLI](https://registry.npmjs.org/@aikdna%2fkdna-cli/0.39.0-rc.native-sections.3),
 [Studio Core](https://registry.npmjs.org/@aikdna%2fkdna-studio-core/4.0.0-rc.components.2)
 and [Studio CLI](https://registry.npmjs.org/@aikdna%2fkdna-studio-cli/0.13.0-rc.components.2).
+
+Superseded on 2026-10-15: Core `0.37.6`, Read `0.13.0` and native CLI `0.42.0`
+were the observed `latest` values from their 2026-10-14 publication until the
+2026-10-15 successors above; those artifacts remain on the registry with their
+own integrities, and Studio Core `4.0.0` / Studio CLI `0.13.0` keep their
+`latest` entries without a successor.
 
 ## Verification and limits
 

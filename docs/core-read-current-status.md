@@ -1,8 +1,7 @@
 # Core and Read: current implementation status
 
-Source status: 2026-10-14. Core `0.37.6` and Read `0.13.0` are published
-stable coordinates; Core `0.37.7` and Read `0.13.1` are the current
-unpublished stable distribution candidates. Source readiness, exact artifact
+Source status: 2026-10-15. Core `0.37.7` and Read `0.13.1` are the published
+stable coordinates. Source readiness, exact artifact
 acceptance and actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
@@ -43,22 +42,22 @@ production identity service or native credential store.
 
 ## Matching consumer routes
 
-| Consumer | Current candidate graph | Use and boundary |
+| Consumer | Current published graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.42.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
-| Loader/MCP | MCP `0.8.0-rc.native-sections.2` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
-| Studio | StudioCLI `0.13.0` / StudioCore `4.0.0` with the same SDK pair | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
+| Native CLI | CLI `0.43.0` with the exact SDK pair above | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Loader/MCP | MCP `0.8.0-rc.native-sections.3` with that exact CLI and SDK pair | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
+| Studio | StudioCLI `0.13.0` / StudioCore `4.0.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 
 Use each consumer's own manifest, lock, full archive/member binding and
 installation instructions. Older local combination/material-edit delivery
 records retain their original bytes and scope; they no longer describe these
-current source candidates. No current acquisition route depends on an unnamed
+current sources. No current acquisition route depends on an unnamed
 local archive or a version guessed from an earlier checkout.
 
 The published history retains Core `0.37.0` / Read `0.11.1` and native CLI
 `0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read
-`0.11.0-rc.r2.7`. These are distinct installed graphs. The new stable coordinates
-are available only once the official release/registry actually supplies them.
+`0.11.0-rc.r2.7`. These are distinct installed graphs. The stable coordinates
+above are supplied by the official registry.
 No page, clean checkout, package.json version or draft PR establishes that fact.
 
 ## Choose and obtain one matching delivery
@@ -69,7 +68,7 @@ member and retain matching archives. Local candidate evidence cannot pass the
 real-release event gate. New stable versions target `latest` in dependency order;
 existing version collisions fail closed and earlier preview bytes remain fixed.
 The [published channel history](current-release-support.md#published-channel-history)
-is separate from these unpublished source candidates.
+is separate from these current sources.
 
 For a complete ordinary native journey, use the licensed author input and
 executable recipe in the [CLI source](https://github.com/aikdna/kdna-cli#readme).

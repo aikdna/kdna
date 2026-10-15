@@ -10,12 +10,12 @@ Select one exact dependency graph. The [top-level entry](../README.md) and
 
 | Line | Coordinates and acquisition | Status |
 |---|---|---|
-| Published stable distribution | Core `0.37.6`, Read `0.13.0`, CLI `0.42.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; use each complete source delivery until exact registry publication is verified | Published on `latest` |
+| Published stable distribution | Core `0.37.7`, Read `0.13.1`, CLI `0.43.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
 | Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the new candidate bytes |
 | Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
-The registry recipe in the [current source entry](#current-source-entry) is
-conditional on the exact new versions actually being published. Use
+The registry recipe in the [current source entry](#current-source-entry) now
+runs against the exact published versions. Use
 `--omit=optional` for the bound protected Host graph; otherwise npm may add
 `cbor-extract` and the Host rejects the unbound package.
 
@@ -55,8 +55,8 @@ published line.
 
 Use the [current support and distribution matrix](./current-release-support.md)
 and [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
-The native entry is CLI `0.42.0` with exact Core
-`0.37.6` / Read `0.13.0`, container0.6 and
+The native entry is CLI `0.43.0` with exact Core
+`0.37.7` / Read `0.13.1`, container0.6 and
 Read0.7-candidate. Prepare the complete twelve-archive delivery using the
 [CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
 Source availability and registry publication are separate facts; the registry
@@ -72,7 +72,7 @@ recipe to reopen and revise while preserving the original. It establishes this
 Agent's task use, not a real teammate's confirmation or named MCP Host adoption.
 
 The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is
-`0.8.0-rc.native-sections.1` with that same exact native CLI/SDK graph. Its npm
+`0.8.0-rc.native-sections.3` with that same exact native CLI/SDK graph. Its npm
 publication is disabled and named Host delivery remains NOT_RUN. Installing a
 Skill or copying a process vector does not establish Host activation.
 

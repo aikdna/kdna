@@ -119,11 +119,11 @@ const mutations = [
   [
     'root README current package',
     'README.md',
-    '| `@aikdna/kdna-core` | `0.37.6` |',
+    '| `@aikdna/kdna-core` | `0.37.7` |',
     '0.35.0-rc.source.1',
   ],
   ['root README current execution', 'README.md', 'native execution 0.3.1', 'native execution 0.2'],
-  ['Chinese README package', 'README.zh.md', 'Read `0.13.0`', '0.3.0-rc.component-semantics.2'],
+  ['Chinese README package', 'README.zh.md', 'Read `0.13.1`', '0.3.0-rc.component-semantics.2'],
   [
     'Chinese README execution',
     'README.zh.md',
@@ -208,7 +208,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.6` / Read `0.13.0`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.7` / Read `0.13.1`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -218,7 +218,7 @@ const mutations = [
   [
     'matrix current package',
     'docs/version-and-capability-matrix.md',
-    '| `@aikdna/kdna-core` | `0.37.6`',
+    '| `@aikdna/kdna-core` | `0.37.7`',
     '| `@aikdna/kdna-core` | `0.35.0-rc.source.1`',
   ],
   [
@@ -344,10 +344,10 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.42.0` with the exact SDK pair above'));
+  assert.ok(guide.includes('CLI `0.43.0` with the exact SDK pair above'));
   assert.ok(
     guide.includes(
-      'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent source candidates.',
+      'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent sources.',
     ),
   );
   assert.equal(guide.includes('0.17.0-rc.material-edit.1'), false);
@@ -393,20 +393,20 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.42.0` with that exact Core/Read pair',
+    'CLI `0.43.0` with that exact Core/Read pair',
     'CLI `0.39.0-rc.native-sections.2` with that exact Core/Read pair',
   ],
   [
     'MCP candidate row',
     'README.md',
-    'MCP `0.8.0-rc.native-sections.2` with that exact native CLI',
+    'MCP `0.8.0-rc.native-sections.3` with that exact native CLI',
     'MCP `0.8.1-rc.combination.1` with that exact native CLI',
   ],
   [
     'Studio candidate row',
     'README.md',
-    'StudioCore `4.0.0` with that exact Core/Read pair',
-    'StudioCore `4.5.0-rc.material-edit.1` with that exact Core/Read pair',
+    'StudioCore `4.0.0` on their own pinned Core `0.37.2` / Read `0.11.3` line',
+    'StudioCore `4.5.0-rc.material-edit.1` on their own pinned Core `0.37.2` / Read `0.11.3` line',
   ],
   [
     'English published Core',
@@ -486,7 +486,7 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.0\n',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
@@ -571,7 +571,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.42.0', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.43.0', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
@@ -599,14 +599,14 @@ for (const file of ['docs/version-taxonomy.md', 'specs/read-contract.md'])
 for (const [file, before, after] of [
   [
     'README.md',
-    'Once official registry metadata confirms the exact stable versions',
-    'The exact preview versions are already published',
+    'The exact published coordinate installs from an empty cache with:',
+    'The preview releases alone install from an empty cache',
   ],
   ['README.md', 'CLI `.2` and `.3` remain published previews', 'CLI `.2` is not published'],
   ['README.md', 'which must not overwrite either preview', '`.3` and may overwrite `.2`'],
   [
     'README.zh.md',
-    '只有官方 registry 元数据确认这三个精确稳定版本后',
+    '已发布的精确坐标可从空缓存安装',
     '这三个精确预览版本现在已在官方 registry 发布',
   ],
   [
@@ -1690,7 +1690,7 @@ for (const [file, before, after, issue] of [
   ],
   [
     'README.md',
-    'published stable\nCore `0.37.6` / Read `0.13.0`',
+    'published stable\nCore `0.37.7` / Read `0.13.1`',
     'the published browser-preview pair',
     'README.md:current:',
   ],
@@ -1793,7 +1793,7 @@ test('a declared source candidate that does not lead the published coordinate is
 test('declaring a leading source candidate leaves the published statement unchanged', () => {
   const result = changedDocument('docs/release-coordinates.json', (text) => {
     const matrix = JSON.parse(text);
-    matrix.packages.find((row) => row.unit === 'cli').candidate_version = '0.43.0';
+    matrix.packages.find((row) => row.unit === 'cli').candidate_version = '0.44.0';
     return JSON.stringify(matrix, null, 2) + '\n';
   });
   assert.deepEqual(result.issues, []);
@@ -1801,12 +1801,12 @@ test('declaring a leading source candidate leaves the published statement unchan
 test('a declared source candidate may not be rendered as the published artifact', () => {
   const matrixPath = 'docs/release-coordinates.json';
   const matrix = JSON.parse(fs.readFileSync(path.join(root, matrixPath), 'utf8'));
-  matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.13.1';
+  matrix.packages.find((row) => row.unit === 'read').candidate_version = '0.13.2';
   const matrixText = JSON.stringify(matrix, null, 2) + '\n';
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   const promoted = readme.replace(
-    '| `@aikdna/kdna-read` | `0.13.0` |',
     '| `@aikdna/kdna-read` | `0.13.1` |',
+    '| `@aikdna/kdna-read` | `0.13.2` |',
   );
   assert.notEqual(promoted, readme, 'Counterexample must alter the published block');
   const result = checkCurrentNavigation(root, {
