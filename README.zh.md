@@ -38,10 +38,10 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 | 入口 | 精确已发布组合 | 使用边界 |
 | --- | --- | --- |
-| Core/Read | Core `0.37.6` / Read `0.13.0` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
-| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.42.0` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.2` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
-| [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` 与上述精确 Core/Read | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
+| Core/Read | Core `0.37.7` / Read `0.13.1` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
+| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.0` 与上述精确 Core/Read | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与上述精确 CLI/Core/Read | 完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
+| [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.13.0` / StudioCore `4.0.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
 本仓源码当前携带的候选是 Core `0.37.7` / Read `0.13.1`，尚未发布；在它通过正式发布与取得检查前，
 上表只列出已发布并逐字节核验的组合。
@@ -66,14 +66,14 @@ Core `/execution` 的原生 0.3.1 Plan/Capsule 与显式 Host 参考 API 是独�
 与[可执行配方](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs)
 演示创建、精确选择披露、实质 Source 修订、重新打开及原文件保持不变。
 
-只有官方 registry 元数据确认这三个精确稳定版本后，才可在新目录用独立的
+已发布的精确坐标可从空缓存安装：在新目录用独立的
 registry 安装路径：
 
 ```sh
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.42.0
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.0
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
@@ -93,7 +93,7 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 
 已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
-已发布稳定线是 `0.42.0`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
+已发布稳定线是 `0.43.0`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
 作品适用性或实际任务采用。
 
 ## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径

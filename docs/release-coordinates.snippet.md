@@ -7,13 +7,13 @@ artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.6` | `latest` | `17137ebdd316f5e44b64c6164d6fca07b0e8486b42b5eb6e85347d92ad25087f` |
-| `@aikdna/kdna-read` | `0.13.0` | `latest` | `26f62bb703c7ad92acdfa02e44b3b981f73ec2e9c20bec29e1412937968170a7` |
-| `@aikdna/kdna-cli` | `0.42.0` | `latest` | `8edc544208af12aa44e731a733aedc7ad6af0a4507e3d34ac6e5c5c5a1c08d00` |
+| `@aikdna/kdna-core` | `0.37.7` | `latest` | `3dd7c560e86fd1fa6085d3162d781f33b797c73b27bce435a25bf8d997121560` |
+| `@aikdna/kdna-read` | `0.13.1` | `latest` | `2d367c9c9105350ffa7a4aa180ab9dcf4487489a91e0f5b4f62853f736cc0899` |
+| `@aikdna/kdna-cli` | `0.43.0` | `latest` | `ff1096beeeb74e7fd1097695f0e9ee74e59199d32109236821f99f8ed302ec22` |
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
 | `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` | `8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a` |
 
-MCP remains a Git source channel (main `195be98b8e19c6173c60c06927b01a6930e1a90e`) and adds no
+MCP remains a Git source channel (main `80a43305dd616ada934b6e2d8f15dab639ee9b4c`) and adds no
 npm coordinate in this wave. Exact source commits, release runs, preserved preview
 tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);
 earlier `latest` values stay in the

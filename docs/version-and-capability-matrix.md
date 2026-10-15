@@ -88,12 +88,12 @@ The current stable distribution source pair is read from the actual manifests;
 Read uses the exact Core peer shown. Registry publication, installed acceptance
 and downstream rebinding require separate artifact evidence. Use the
 [current support matrix](./current-release-support.md) for the five-package
-candidate graph, published previews and the observed earlier `latest` values.
+published graph, published previews and the observed earlier `latest` values.
 
-| Current local package (2026-10-11) | Actual source version | Bound graph and state |
+| Current local package (2026-10-15) | Actual source version | Bound graph and state |
 |---|---|---|
-| `@aikdna/kdna-core` | `0.37.6` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
-| `@aikdna/kdna-read` | `0.13.0` | Exact Core `0.37.6` peer; stable distribution on `latest`; Node >=20 |
+| `@aikdna/kdna-core` | `0.37.7` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.13.1` | Exact Core `0.37.7` peer; stable distribution on `latest`; Node >=20 |
 
 **Frozen 2026-10-07 observation.** The table below retains the source labels and
 publication descriptions recorded on that date. They do not describe the current
