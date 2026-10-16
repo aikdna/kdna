@@ -631,19 +631,19 @@ function retainedIdentityContexts(released, channelTag) {
     {
       file: 'packages/kdna-core/README.md',
       role: 'downstream',
-      heading: '# KDNA Core — R2 candidate',
+      heading: '# KDNA Core',
       text: 'Container `0.6.0` and Read `0.7.0-candidate`. See the',
     },
     {
       file: 'packages/kdna-read/README.md',
       role: 'downstream',
-      heading: '# KDNA Read — R2 candidate',
+      heading: '# KDNA Read',
       text: 'the native section route separately uses `kdna.read/0.7.0-candidate`.',
     },
     {
       file: 'packages/kdna-core/README.md',
       role: 'historical',
-      heading: '# KDNA Core — R2 candidate',
+      heading: '# KDNA Core',
       text: 'The earlier published Core `0.37.1-rc.browser.1` / Read\n`0.11.2-rc.browser.1` previews retain their own byte identities and tags.',
     },
     {

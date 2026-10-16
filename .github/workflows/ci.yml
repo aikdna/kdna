@@ -39,6 +39,10 @@ jobs:
         run: |
           node scripts/check-path-name-identifiers.cjs
           node --test scripts/check-path-name-identifiers.test.cjs
+      - name: Enforce the packaged-README publication-state gate
+        run: |
+          node scripts/check-packaged-readme.mjs
+          node --test scripts/check-packaged-readme.test.mjs
       - name: Test the current R2 navigation contract
         run: node --test scripts/check-current-r2-navigation.test.cjs
       - name: Verify the single-file asset inspector is fresh

@@ -8,6 +8,8 @@
 #   3. package.json version at the tagged commit
 #   4. npm gitHead binding when the registry exposes it
 #   5. SLSA provenance
+#   6. the README inside the served tarball still names its own version and
+#      states no publication state (scripts/check-packaged-readme.mjs --published)
 #
 # The live `main` HEAD version (from package.json on main) is ADVISORY. Owner
 # decision D8 (option 2, 2026-09-28) reclassified "main leads the published
@@ -137,6 +139,17 @@ jobs:
           node scripts/publish-health.mjs | tee -a "$GITHUB_STEP_SUMMARY"
         continue-on-error: true
 
+      # The packed README is the one surface a consumer reads that no source
+      # check can see: it is frozen inside the published tarball. Coordinates
+      # that predate the rule are named in docs/packaged-readme-legacy-claims.json
+      # and that list fails closed when it goes stale.
+      - name: Run packaged-README check (served tarball bytes)
+        id: packaged
+        run: |
+          set -o pipefail
+          node scripts/check-packaged-readme.mjs --published | tee -a "$GITHUB_STEP_SUMMARY"
+        continue-on-error: true
+
       - name: Summarize results
         if: always()
         run: |
@@ -145,9 +158,10 @@ jobs:
           echo "- ecosystem-version-lock: ${{ steps.lock.outcome }}" >> $GITHUB_STEP_SUMMARY
           echo "- validate-public-truth: ${{ steps.truth.outcome }}" >> $GITHUB_STEP_SUMMARY
           echo "- cross-package check: ${{ steps.cross.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- packaged-README check: ${{ steps.packaged.outcome }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Fail if any check failed
-        if: steps.lock.outcome == 'failure' || steps.truth.outcome == 'failure' || steps.cross.outcome == 'failure'
+        if: steps.lock.outcome == 'failure' || steps.truth.outcome == 'failure' || steps.cross.outcome == 'failure' || steps.packaged.outcome == 'failure'
         run: |
           echo "::error::One or more drift checks failed. See summary."
           exit 1
