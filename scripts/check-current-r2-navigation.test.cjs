@@ -133,19 +133,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'Stable distribution: package `0.37.6` on `latest`',
+    'Package `@aikdna/kdna-core` version `0.37.7`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'Stable distribution `0.13.0` on `latest`',
+    'Package `@aikdna/kdna-read` version `0.13.1`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    '`@aikdna/kdna-core@0.37.6`',
+    '`@aikdna/kdna-core@0.37.7`',
     '0.36.0-rc.r2.4',
   ],
   [

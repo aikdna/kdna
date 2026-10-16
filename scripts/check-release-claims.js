@@ -6,9 +6,18 @@
  * the npm registry truth and this repository's own CHANGELOG.
  *
  * Checks (P3-11):
- *  1. published/source separation: when package.json version differs from
- *     the published registry version, the package README must name both and
- *     carry an explicit separation marker.
+ *  1. identity: the package README must name the exact source version its own
+ *     package.json declares. It must NOT be asked to name the registry's
+ *     current version as well: a packaged README ships inside an immutable
+ *     tarball, while the registry's current version moves after that artifact
+ *     is frozen, so requiring the split here would demand prose that is false
+ *     the moment the release completes. The published/candidate split is a
+ *     status-surface fact and stays asserted there - against the live registry
+ *     by scripts/check-published-coordinates.mjs and inside the repository by
+ *     the release matrix and the rendered block in README.md. The complementary
+ *     rule, that a packaged README states no publication state at all, is
+ *     enforced on both the source tree and the served tarball bytes by
+ *     scripts/check-packaged-readme.mjs.
  *  2. "published incumbent X" claims must be registry-true, unless X is the
  *     current source version (a release PR in flight).
  *  3. version+feature claims (`X (some feature)`) on a published version must
@@ -24,8 +33,6 @@ const { execFileSync } = require('node:child_process');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const SEMVER_RE = /^\d+\.\d+\.\d+$/;
-const SEPARATION_RE =
-  /(?:unreleased|source candidate|源码候选|未发布|not (?:npm|Marketplace) latest|not yet published)/i;
 
 const PACKAGES = [
   { dir: 'packages/kdna-core', readme: 'packages/kdna-core/README.md' },
@@ -87,19 +94,9 @@ function checkPackage(entry) {
   }
   const readme = fs.readFileSync(readmePath, 'utf8');
 
-  // 1. published/source separation
-  if (source !== published) {
-    if (!readme.includes(published)) {
-      fail(`${pkg.name}/${entry.readme}: missing published version ${published}`);
-    }
-    if (!readme.includes(source)) {
-      fail(`${pkg.name}/${entry.readme}: missing source candidate version ${source}`);
-    }
-    if (!SEPARATION_RE.test(readme)) {
-      fail(
-        `${pkg.name}/${entry.readme}: published (${published}) and source (${source}) are not explicitly separated`,
-      );
-    }
+  // 1. identity
+  if (!readme.includes(source)) {
+    fail(`${pkg.name}/${entry.readme}: does not name its own source version ${source}`);
   }
 
   // 2. "published incumbent X" claims must be registry-true (or the in-flight release)
