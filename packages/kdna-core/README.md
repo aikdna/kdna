@@ -1,30 +1,34 @@
-# KDNA Core — R2 candidate
-> This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry states the exact source versions, registry status and installation route.
+# KDNA Core
+> This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry renders publication state, registry status and the installation route from the release-coordinate matrix.
 
 
-Stable distribution: package `0.37.6` on `latest`, paired with exact Read
-`0.13.0`. The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
+Package `@aikdna/kdna-core` version `0.37.7`, paired with exact Read `0.13.1`.
+The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`.
-The current source carries the next candidate pair -- package `0.37.7` with
-exact Read `0.13.1`. The Core change is additive: the retained selection plan
+The Core change in this version is additive: the retained selection plan
 issues an expansion target for each selection-closure member the read side
-delivers through its own handle. This source candidate is not yet published;
-its own exact release and registry acquisition must be verified first. Native section subpaths separately use
+delivers through its own handle. Native section subpaths separately use
 Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 
+This file states the identity of the version it ships with. Which coordinate a
+registry serves, and how to obtain it, is rendered from
+[`docs/release-coordinates.json`](../../docs/release-coordinates.json) into the
+[top-level entry](../../README.md); this package README makes no such claim, so
+it stays true for this artifact after later versions appear.
+
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. The published coordinate is Core `0.37.6` paired with Read `0.13.0` on
-`latest`; Core `0.37.5`, Core `0.37.4`, Read `0.12.1`, Core `0.37.3`, Read
-`0.12.0`, Core `0.37.2`, Read `0.11.3`, Core `0.37.0` and Read `0.11.1` remain
-earlier published stable coordinates.
+checks. Core `0.37.6` paired with Read `0.13.0`, Core `0.37.5`, Core `0.37.4`,
+Read `0.12.1`, Core `0.37.3`, Read `0.12.0`, Core `0.37.2`, Read `0.11.3`,
+Core `0.37.0` and Read `0.11.1` are earlier coordinates that remain installable
+under their own identities.
 The earlier published Core `0.37.1-rc.browser.1` / Read
 `0.11.2-rc.browser.1` previews retain their own byte identities and tags.
 
-The candidate includes the generated `/public-contract` descriptor exports.
+This version includes the generated `/public-contract` descriptor exports.
 They expose the fixed public types, diagnostic schema and limits from the same
 semantic source as the runtime; they do not create a caller-defined validator.
 Native path admission preserves `READ_CORE_INVALID` for short ZIP inputs and
