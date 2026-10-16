@@ -77,7 +77,7 @@ jobs:
           ref: 10d33fd502449ad93d99eb5670e1da4015b0a15a
           path: .ecosystem-repos/kdna-studio-swift
           fetch-depth: 0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22.23.1'
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
