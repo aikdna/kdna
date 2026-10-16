@@ -37,8 +37,13 @@ function renderBlock() {
     '| --- | --- | --- | --- |',
     ...rows,
     '',
-    `MCP remains a Git source channel (main \`${matrix.git_only[0].main_commit}\`) and adds no`,
-    'npm coordinate in this wave. Exact source commits, release runs, preserved preview',
+    // The Git-channel main commit and the MCP release version move without a KDNA
+    // release, so the rendered current-state block states the channel and leaves
+    // the exact refs to the matrix: a rendered sentence must not be able to rot
+    // between two refreshes. The values themselves stay checked against their live
+    // source by scripts/check-published-coordinates.mjs.
+    'MCP remains a Git source channel and adds no npm coordinate in this wave.',
+    'Exact source commits, release runs, preserved preview',
     'tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);',
     'earlier `latest` values stay in the',
     '[distribution history](./docs/current-release-support.md#published-channel-history).',

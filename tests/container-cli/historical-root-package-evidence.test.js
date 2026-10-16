@@ -28,8 +28,17 @@ test('historical root proof binds all eight package inputs independently of the 
     assert.equal(pkg.version, record.version);
   }
   const core = component.packages.find((entry) => entry.package_name === '@aikdna/kdna-core');
-  const current = JSON.parse(fs.readFileSync(path.join(repoRoot, core.package_json)));
-  assert.notEqual(current.version, read(component, core).version);
+  // The proof reads an exact commit, never the checkout. While the live tree is
+  // exactly the accepted release the two versions coincide, so the property that
+  // matters is the source of the bytes: each evidence entry must be the blob that
+  // commit carries at that path, and the entries stay bound to
+  // package_source_commit rather than to the manifest's own source_commit.
+  const coreEvidence = proof.packages.find((entry) => entry.package_name === '@aikdna/kdna-core');
+  assert.equal(
+    git(repoRoot, ['rev-parse', `${proof.package_source_commit}:${core.package_json}`]),
+    coreEvidence.blob,
+  );
+  assert.notEqual(proof.package_source_commit, component.source_commit);
   assert.throws(
     () => read({ ...component, source_commit: proof.package_source_commit }, core),
     /manifest source_commit differs/u,

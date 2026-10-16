@@ -43,6 +43,10 @@ jobs:
         run: |
           node scripts/check-packaged-readme.mjs
           node --test scripts/check-packaged-readme.test.mjs
+      - name: Verify the release matrix and the rendered entry agree
+        run: |
+          npm run release:coordinates:check
+          node --test scripts/render-release-coordinates.test.mjs scripts/check-published-coordinates.test.mjs
       - name: Test the current R2 navigation contract
         run: node --test scripts/check-current-r2-navigation.test.cjs
       - name: Verify the single-file asset inspector is fresh

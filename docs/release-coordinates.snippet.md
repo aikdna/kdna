@@ -1,6 +1,6 @@
 <!-- Generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand. -->
 
-**Current publication state (2026-10-15).** All five stable coordinates are
+**Current publication state (2026-10-16).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
@@ -13,8 +13,8 @@ artifact:
 | `@aikdna/kdna-studio-core` | `4.0.0` | `latest` | `062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62` |
 | `@aikdna/kdna-studio-cli` | `0.13.0` | `latest` | `8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a` |
 
-MCP remains a Git source channel (main `80a43305dd616ada934b6e2d8f15dab639ee9b4c`) and adds no
-npm coordinate in this wave. Exact source commits, release runs, preserved preview
+MCP remains a Git source channel and adds no npm coordinate in this wave.
+Exact source commits, release runs, preserved preview
 tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);
 earlier `latest` values stay in the
 [distribution history](./docs/current-release-support.md#published-channel-history).

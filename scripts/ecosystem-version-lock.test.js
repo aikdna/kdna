@@ -302,8 +302,12 @@ test('explicit historical root inputs preserve the default current dependency sc
   const historical = readPeer(scan(true));
   assert.equal(current.declared, '0.37.7');
   assert.deepEqual(explicitlyCurrent, current);
-  assert.equal(historical.declared, '0.37.1-rc.browser.1');
-  assert.equal(historical.expected, '0.37.0');
+  // The frozen root package inputs now record the accepted published pair, so the
+  // historical scan and the current scan describe the same coordinate. What the
+  // evidence must keep proving is that its bytes come from its own commit, which
+  // the blob/digest assertions below check.
+  assert.equal(historical.declared, current.declared);
+  assert.equal(historical.expected, '0.37.7');
 
   // The existing exact tuple shares this independently authenticated blob.
   // It does not accept a new stable dependency or alias another version.
@@ -318,11 +322,17 @@ test('explicit historical root inputs preserve the default current dependency sc
   assert.equal(binding.declared, historical.declared);
   const compatibility = new Map([[bindingKey(binding), binding]]);
   assert.equal(evaluateConsumers([historical], compatibility)[0].ok, true);
-  assert.equal(evaluateConsumers([current], compatibility)[0].ok, false);
-  assert.equal(evaluateConsumers([historical])[0].ok, false);
+  assert.equal(evaluateConsumers([current], compatibility)[0].ok, true);
+  // A declaration that differs from its baseline is refused unless an accepted
+  // compatibility binding covers it. The frozen inputs now record the accepted
+  // pair, so the counterexample is constructed here instead of borrowed from the
+  // data: a drifted peer version has no accepted binding and no baseline match.
+  const drifted = { ...historical, declared: '0.37.6' };
+  assert.equal(evaluateConsumers([drifted])[0].ok, false);
+  assert.equal(evaluateConsumers([drifted], compatibility)[0].ok, false);
   const wrongTuple = { ...binding, section: 'dependencies' };
   assert.equal(
-    evaluateConsumers([historical], new Map([[bindingKey(wrongTuple), wrongTuple]]))[0].ok,
+    evaluateConsumers([drifted], new Map([[bindingKey(wrongTuple), wrongTuple]]))[0].ok,
     false,
   );
   const unreviewed = { ...historical, manifest: 'packages/unreviewed/package.json' };

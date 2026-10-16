@@ -8,8 +8,13 @@
 #   3. package.json version at the tagged commit
 #   4. npm gitHead binding when the registry exposes it
 #   5. SLSA provenance
-#   6. the README inside the served tarball still names its own version and
-#      states no publication state (scripts/check-packaged-readme.mjs --published)
+#
+# Two further jobs audit surfaces that this job must not be able to hide:
+#   packaged-readme-drift  the README frozen inside each served tarball must name
+#                          its own version and state no publication state;
+#   coordinates-drift      docs/release-coordinates.json must still match the live
+#                          registry (versions, dist-tags, published bytes) and the
+#                          current-state fields that move on their own.
 #
 # The live `main` HEAD version (from package.json on main) is ADVISORY. Owner
 # decision D8 (option 2, 2026-09-28) reclassified "main leads the published
@@ -139,17 +144,6 @@ jobs:
           node scripts/publish-health.mjs | tee -a "$GITHUB_STEP_SUMMARY"
         continue-on-error: true
 
-      # The packed README is the one surface a consumer reads that no source
-      # check can see: it is frozen inside the published tarball. Coordinates
-      # that predate the rule are named in docs/packaged-readme-legacy-claims.json
-      # and that list fails closed when it goes stale.
-      - name: Run packaged-README check (served tarball bytes)
-        id: packaged
-        run: |
-          set -o pipefail
-          node scripts/check-packaged-readme.mjs --published | tee -a "$GITHUB_STEP_SUMMARY"
-        continue-on-error: true
-
       - name: Summarize results
         if: always()
         run: |
@@ -158,10 +152,60 @@ jobs:
           echo "- ecosystem-version-lock: ${{ steps.lock.outcome }}" >> $GITHUB_STEP_SUMMARY
           echo "- validate-public-truth: ${{ steps.truth.outcome }}" >> $GITHUB_STEP_SUMMARY
           echo "- cross-package check: ${{ steps.cross.outcome }}" >> $GITHUB_STEP_SUMMARY
-          echo "- packaged-README check: ${{ steps.packaged.outcome }}" >> $GITHUB_STEP_SUMMARY
 
+      # Each check above runs with continue-on-error so one failure cannot hide
+      # the others; this step keeps that design and still names exactly which
+      # checks failed, so a red run is attributed instead of being reported as a
+      # single generic gate failure.
       - name: Fail if any check failed
-        if: steps.lock.outcome == 'failure' || steps.truth.outcome == 'failure' || steps.cross.outcome == 'failure' || steps.packaged.outcome == 'failure'
+        if: always()
         run: |
-          echo "::error::One or more drift checks failed. See summary."
-          exit 1
+          failed=''
+          for pair in \
+            "ecosystem-version-lock=${{ steps.lock.outcome }}" \
+            "validate-public-truth=${{ steps.truth.outcome }}" \
+            "publish-health=${{ steps.cross.outcome }}"; do
+            name="${pair%%=*}"
+            outcome="${pair##*=}"
+            if [ "$outcome" = 'failure' ] || [ "$outcome" = 'cancelled' ]; then
+              failed="$failed $name"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::published-surface drift checks failed:$failed (each check's own output is in the job summary)"
+            exit 1
+          fi
+          echo 'all published-surface drift checks passed'
+
+  # The README inside a served tarball is the one published surface no source
+  # check can see: it is frozen inside the artifact. This job fails closed on
+  # that surface alone, so a real drift here is never hidden behind another
+  # check's failure in the job above. Coordinates that predate the rule are
+  # named in docs/packaged-readme-legacy-claims.json, and an entry that no
+  # longer matches the release matrix is itself a failure.
+  packaged-readme-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 22 }
+      - name: Audit the README bytes the registry serves
+        run: node scripts/check-packaged-readme.mjs --published
+
+  # The release-coordinate matrix is the single source for every public
+  # coordinate statement. This job compares it with the live registry (versions,
+  # dist-tags, published bytes) and with the current-state fields that move on
+  # their own. An unavailable registry, API or token is a failure of this job,
+  # never a silent pass: the gate prints the exact HTTP status it could not read.
+  coordinates-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 22 }
+      - name: Compare the release matrix with the live registry and current refs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-published-coordinates.mjs --bytes

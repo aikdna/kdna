@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-10-15",
+  "updated": "2026-10-16",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
@@ -76,7 +76,7 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "80a43305dd616ada934b6e2d8f15dab639ee9b4c",
+      "main_commit": "0a4cfeb2edfaa56e74c2101eb037e9e86bc2f8ee",
       "mcp_package": "@aikdna/kdna-mcp-server",
       "mcp_version": "0.8.0-rc.native-sections.3",
       "npm_coordinate": null,
