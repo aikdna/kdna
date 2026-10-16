@@ -42,9 +42,9 @@
       "manifest": "packages/kdna-read/package.json",
       "section": "peerDependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "0.37.1-rc.browser.1",
-      "manifest_sha256": "4a7be66544648ada4c73dde605f416bd2c0766d4f57497a39be7ebe99b0f70e9",
-      "source_manifest_blob": "86f40f194cd64d3b3acd06bfcaeeba430de26d2c"
+      "declared": "0.37.7",
+      "manifest_sha256": "3532ec42a4b1b0702f01669c91847c90efa56ea48da54bbd262e645980e7636d",
+      "source_manifest_blob": "a1fa8ac5d350c71f3d967af1ae07c387245c3c35"
     },
     {
       "repository": "kdna-assets",
