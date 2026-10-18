@@ -3,7 +3,7 @@
 > This page documents the earlier loading workflow at its last supporting published versions:
 > Runtime CLI **0.36.1** and Studio CLI **0.11.0**. The commands below need those exact versions.
 > The current published stable line is Runtime CLI **0.43.0** (exact Core `0.37.7` / Read `0.13.1`)
-> with Studio CLI **0.13.0**; the current implementation rejects these older inputs and does not
+> with Studio CLI **0.14.0**; the current implementation rejects these older inputs and does not
 > support this loading or project/card workflow. Its `inspect` and `validate` commands have a
 > different contract. For a current asset start with
 > [Core/Read](../core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme),
