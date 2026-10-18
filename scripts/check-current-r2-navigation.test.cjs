@@ -208,7 +208,7 @@ const mutations = [
     'Unknown critical semantics reject',
     'Unknown critical semantics permit historical catalog_only',
   ],
-  ['Start Here package', 'docs/start-here.md', '`0.37.7` / Read `0.13.1`', '0.35.0-rc.source.1'],
+  ['Start Here package', 'docs/start-here.md', '`0.37.8` / Read `0.13.2`', '0.35.0-rc.source.1'],
   [
     'Chinese status current execution',
     'docs/status.zh.md',
@@ -344,7 +344,7 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.43.0` with its own exact Core `0.37.7` / Read `0.13.1` pins'));
+  assert.ok(guide.includes('CLI `0.43.1` with its own exact Core `0.37.8` / Read `0.13.2` pins'));
   assert.ok(
     guide.includes(
       'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent sources.',
@@ -393,13 +393,13 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.43.0` with its own exact Core `0.37.7` / Read `0.13.1` pins',
-    'CLI `0.39.0-rc.native-sections.2` with its own exact Core `0.37.7` / Read `0.13.1` pins',
+    'CLI `0.43.1` with its own exact Core `0.37.8` / Read `0.13.2` pins',
+    'CLI `0.39.0-rc.native-sections.2` with its own exact Core `0.37.8` / Read `0.13.2` pins',
   ],
   [
     'MCP candidate row',
     'README.md',
-    'MCP `0.8.0-rc.native-sections.3` with that exact native CLI',
+    'MCP `0.8.0-rc.native-sections.3` with its own native CLI',
     'MCP `0.8.1-rc.combination.1` with that exact native CLI',
   ],
   [
@@ -486,7 +486,7 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.0\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.1\n',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
@@ -571,7 +571,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.43.0', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.43.1', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(

@@ -1,12 +1,5 @@
 {
   "schema": "kdna-packaged-readme-legacy-claims/1",
   "note": "Published coordinates whose tarball README predates the packaged-README rule in scripts/check-packaged-readme.mjs. Published bytes are immutable, so the contradiction cannot be repaired in place: each entry names the exact coordinate the release matrix serves, and must be deleted when that unit publishes again. A stale entry is a finding, never a silent pass.",
-  "coordinates": [
-    {
-      "name": "@aikdna/kdna-cli",
-      "version": "0.43.0",
-      "recorded": "2026-10-16",
-      "reason": "Tarball README names 0.42.0 on `latest` and calls 0.43.0 an unpublished next candidate."
-    }
-  ]
+  "coordinates": []
 }

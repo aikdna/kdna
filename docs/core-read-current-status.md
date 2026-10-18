@@ -50,8 +50,8 @@ production identity service or native credential store.
 
 | Consumer | Current published graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.43.0` with its own exact Core `0.37.7` / Read `0.13.1` pins | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
-| Loader/MCP | MCP `0.8.0-rc.native-sections.3` with that exact CLI and its Core `0.37.7` / Read `0.13.1` pins | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
+| Native CLI | CLI `0.43.1` with its own exact Core `0.37.8` / Read `0.13.2` pins | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.0` and Core `0.37.7` / Read `0.13.1` pins | Complete Git source plus bundled graph; one operator-bound local file. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
 | Studio | StudioCLI `0.14.0` / StudioCore `4.1.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 
 Use each consumer's own manifest, lock, full archive/member binding and
@@ -61,7 +61,8 @@ current sources. No current acquisition route depends on an unnamed
 local archive or a version guessed from an earlier checkout.
 
 The immediately preceding Core `0.37.7` / Read `0.13.1` pair remains
-installable; native CLI `0.43.0` still pins it. The published history also
+installable; native CLI `0.43.0` still pins it, while CLI `0.43.1` binds the
+current Core `0.37.8` / Read `0.13.2` pair. The published history also
 retains Core `0.37.0` / Read `0.11.1` and native CLI
 `0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read
 `0.11.0-rc.r2.7`. These are distinct installed graphs. The stable coordinates

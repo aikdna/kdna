@@ -34,15 +34,15 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.43.0",
+      "version": "0.43.1",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.43.0",
-      "source_commit": "d93af7c928cfc8d4806f0fc309ef7c76d17be5bb",
-      "artifact_sha256": "ff1096beeeb74e7fd1097695f0e9ee74e59199d32109236821f99f8ed302ec22",
-      "publish_run": 38688102173,
-      "release_id": 413455483,
-      "release_published_at": "2026-10-15T05:41:00Z"
+      "release_tag": "0.43.1",
+      "source_commit": "721c422ae38d43cf2ab9a55b269070beb8f39961",
+      "artifact_sha256": "2f9270073748d6b64439fc7354fe84ab7f246aaf85d6089bb6044a1ed05b7258",
+      "publish_run": 39129559318,
+      "release_id": 416452054,
+      "release_published_at": "2026-10-18T12:59:01Z"
     },
     {
       "unit": "studio-core",
