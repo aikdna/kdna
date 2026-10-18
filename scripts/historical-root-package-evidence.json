@@ -2,24 +2,24 @@
   "schema_version": "1.0.0",
   "scope": "historical-root-package-inputs",
   "repository": "aikdna/kdna",
-  "manifest_sha256": "5834ff3352f2d6a5b3ff8c5fd3eaccc038db287207aaa6b7ee14837aea28df8e",
+  "manifest_sha256": "e86fc1824b1ec891386173af84fb8679647fed9dc419295e0c99309f1ef6ac75",
   "manifest_source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
-  "package_source_commit": "b28b0b4c831365727df748c980895f059c8e677e",
-  "package_source_tree": "a629d78e9946a931f9a2469a0e0d0a395acd4491",
+  "package_source_commit": "0193072d803ea161d8157382c1590d81882c94df",
+  "package_source_tree": "0ff8f8cef0673bced7d025a1ddae83b5e726c2e7",
   "packages": [
     {
       "package_json": "packages/kdna-core/package.json",
       "package_name": "@aikdna/kdna-core",
-      "version": "0.37.7",
-      "blob": "1e094a9a6c10199343405617dde79ec55189b550",
-      "sha256": "db3dfbffd2170ce2f2c0f7a19e4011cfafe621828c35c4677bc7e8f0cc42421a"
+      "version": "0.37.8",
+      "blob": "223f5475029f54156dcc3b1e9cfa3ed96c5e6281",
+      "sha256": "fabcdfb2ca2736148a6afc1772870d9f13c583f1ffd13ce11ddf62176088ed95"
     },
     {
       "package_json": "packages/kdna-read/package.json",
       "package_name": "@aikdna/kdna-read",
-      "version": "0.13.1",
-      "blob": "a1fa8ac5d350c71f3d967af1ae07c387245c3c35",
-      "sha256": "3532ec42a4b1b0702f01669c91847c90efa56ea48da54bbd262e645980e7636d"
+      "version": "0.13.2",
+      "blob": "f39ff738d5ae5e79bf7ea3d61b16abc4eae10087",
+      "sha256": "afc851868df6ad59ac87832a13eb5eb2c1e51573a63dbdbdb809a6493bd6eadd"
     },
     {
       "package_json": "packages/kdna-eval/package.json",

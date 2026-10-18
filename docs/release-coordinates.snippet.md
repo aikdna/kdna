@@ -7,8 +7,8 @@ artifact:
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-core` | `0.37.7` | `latest` | `3dd7c560e86fd1fa6085d3162d781f33b797c73b27bce435a25bf8d997121560` |
-| `@aikdna/kdna-read` | `0.13.1` | `latest` | `2d367c9c9105350ffa7a4aa180ab9dcf4487489a91e0f5b4f62853f736cc0899` |
+| `@aikdna/kdna-core` | `0.37.8` | `latest` | `4b7f27f46a000e199578fd191716eef3b34aaa41890e59a8ea4945d468d75bd7` |
+| `@aikdna/kdna-read` | `0.13.2` | `latest` | `623f67f8643da6e158de2ae6063a5a9988e79e431eb1c548803c94a78e677688` |
 | `@aikdna/kdna-cli` | `0.43.0` | `latest` | `ff1096beeeb74e7fd1097695f0e9ee74e59199d32109236821f99f8ed302ec22` |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | `76a5e7dcca71b28259e5058d241304912713d72e9defba98ce8a03f7e4d1e22a` |
 | `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | `542270c699eec5cbc468b134b2d7235c312be7551e32f4ce66821b3fb814dfc7` |

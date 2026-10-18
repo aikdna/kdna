@@ -2,7 +2,7 @@
 
 Snapshot: 2026-10-18. Package source versions, public Git revisions, npm bytes,
 GitHub releases and dist-tags are separate facts. The five stable coordinates
-Core `0.37.7`, Read `0.13.1`, native CLI `0.43.0`, Studio Core `4.1.0` and
+Core `0.37.8`, Read `0.13.2`, native CLI `0.43.0`, Studio Core `4.1.0` and
 Studio CLI `0.14.0` are published on `latest`, each from its reviewed source
 commit with a retained, byte-verified artifact; the machine-readable matrix is
 [release-coordinates.json](./release-coordinates.json). No earlier preview is
@@ -20,12 +20,17 @@ deliveries, with no MCP npm target.
 > Studio Core `4.0.0` and Studio CLI `0.13.0` are published on `latest`, each
 > from its reviewed source commit with a retained, byte-verified artifact."
 > That statement was current on 2026-10-12 and is superseded by the 2026-10-15
-> results above; it is likewise retained.
+> results above; it is likewise retained. The 2026-10-15 snapshot recorded
+> Core `0.37.7` and Read `0.13.1` as the stable Core/Read coordinates; that
+> statement was current on 2026-10-15 and is superseded by the 2026-10-18
+> Core/Read results above. It is retained here rather than silently rewritten.
 
 ## Native and Studio entry points
 
 For a new native asset workflow, use CLI `0.43.0`, Core
-`0.37.7` and Read `0.13.1` together. The native route
+`0.37.7` and Read `0.13.1` together. CLI `0.43.0` retains its own exact
+Core `0.37.7` / Read `0.13.1` companion graph; the newly published Core
+`0.37.8` / Read `0.13.2` pair is not yet bound by a native CLI release. The native route
 uses container `0.6.0` and Read `0.7.0-candidate`. Its complete source delivery
 contains the CLI and all eleven required companion archives, a relative-file
 lock, full member bindings and licenses. Follow the
@@ -85,7 +90,7 @@ This stable wave covers the five main npm packages and the complete source
 deliveries described above. Web, React, server, activation, editor,
 application-scaffold and Apple-platform lines remain outside this wave.
 Their existing installations retain their own locks and declared scope;
-this candidate does not migrate, revive or retire those channels.
+this wave does not migrate, revive or retire those channels.
 
 Published third-party dependencies resolve through their locked registry URLs
 and integrity values. Those larger graphs require registry access on a cold
@@ -142,6 +147,12 @@ were the observed `latest` values from their 2026-10-14 publication until the
 2026-10-15 successors above; those artifacts remain on the registry with their
 own integrities, and Studio Core `4.0.0` / Studio CLI `0.13.0` keep their
 `latest` entries without a successor.
+
+Superseded on 2026-10-18: Core `0.37.7` and Read `0.13.1` were the observed
+Core/Read `latest` values from their 2026-10-15 publication until the
+2026-10-18 successors above; those artifacts remain on the registry with their
+own integrities. Native CLI `0.43.0` retains its own Core `0.37.7` / Read
+`0.13.1` pins.
 
 Superseded on 2026-10-18: Studio Core `4.0.0` and Studio CLI `0.13.0` were the
 observed `latest` values from their 2026-10-11 publication until the
