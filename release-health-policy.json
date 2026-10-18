@@ -47,7 +47,7 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
-      "version": "0.37.7",
+      "version": "0.37.8",
       "canonical_tag": {
         "type": "natural"
       }
@@ -57,7 +57,7 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-read/package.json",
       "npm_package": "@aikdna/kdna-read",
-      "version": "0.13.1",
+      "version": "0.13.2",
       "canonical_tag": {
         "type": "prefix",
         "value": "read/"

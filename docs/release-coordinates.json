@@ -9,30 +9,27 @@
     {
       "unit": "core",
       "name": "@aikdna/kdna-core",
-      "version": "0.37.7",
-      "candidate_version": "0.37.8",
+      "version": "0.37.8",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "0.37.7",
-      "source_commit": "b28b0b4c831365727df748c980895f059c8e677e",
-      "artifact_sha256": "3dd7c560e86fd1fa6085d3162d781f33b797c73b27bce435a25bf8d997121560",
-      "publish_run": 38684060091,
-      "release_id": 413431665,
-      "release_published_at": "2026-10-15T04:55:52Z"
+      "release_tag": "0.37.8",
+      "source_commit": "0193072d803ea161d8157382c1590d81882c94df",
+      "artifact_sha256": "4b7f27f46a000e199578fd191716eef3b34aaa41890e59a8ea4945d468d75bd7",
+      "publish_run": 39122156766,
+      "release_id": 416390661,
+      "release_published_at": "2026-10-18T11:10:19Z"
     },
     {
       "unit": "read",
       "name": "@aikdna/kdna-read",
-      "version": "0.13.1",
-      "candidate_version": "0.13.2",
+      "version": "0.13.2",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "read/0.13.1",
-      "source_commit": "b28b0b4c831365727df748c980895f059c8e677e",
-      "artifact_sha256": "2d367c9c9105350ffa7a4aa180ab9dcf4487489a91e0f5b4f62853f736cc0899",
-      "publish_run": 38684787598,
-      "release_id": 413435810,
-      "release_published_at": "2026-10-15T05:04:09Z"
+      "release_tag": "read/0.13.2",
+      "source_commit": "0193072d803ea161d8157382c1590d81882c94df",
+      "artifact_sha256": "623f67f8643da6e158de2ae6063a5a9988e79e431eb1c548803c94a78e677688",
+      "release_id": 416405399,
+      "release_published_at": "2026-10-18T11:18:36Z"
     },
     {
       "unit": "cli",
