@@ -1,14 +1,15 @@
 # Core and Read: current implementation status
 
-Source status: 2026-10-15. Core `0.37.7` and Read `0.13.1` are the published
-stable coordinates. Source readiness, exact artifact
+Source status: 2026-10-18. Core `0.37.7` and Read `0.13.1` are the published
+stable coordinates; Core `0.37.8` and Read `0.13.2` are the current unpublished
+stable distribution candidates. Source readiness, exact artifact
 acceptance and actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
 
 ## Exact SDK pair and contracts
 
-Read declares Core `0.37.7` as its exact peer; both declare Node >=20.
+Read declares Core `0.37.8` as its exact peer; both declare Node >=20.
 The release procedure produces the exact source commit/tree, archive SHA256,
 SRI and source-member inventory for each final artifact. Those external release
 records bind the installed graph and public channel; this document does not

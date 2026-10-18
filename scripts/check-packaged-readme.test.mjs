@@ -96,6 +96,40 @@ test('source mode covers every non-private workspace package, not a hand-kept li
   );
 });
 
+test('source mode accepts the candidate the matrix declares without promoting it', () => {
+  const packages = ['kdna-core', 'kdna-read'];
+  const manifests = {
+    'kdna-core': { name: '@aikdna/kdna-core', version: '0.37.8' },
+    'kdna-read': { name: '@aikdna/kdna-read', version: '0.13.2' },
+  };
+  const findings = checkSource({
+    readText: (path) => {
+      if (path === 'docs/release-coordinates.json') return read(path);
+      const name = path.split('/')[1];
+      if (path.endsWith('package.json')) return JSON.stringify(manifests[name]);
+      return `Package \`${manifests[name].version}\`.\n`;
+    },
+    listPackageDirs: () => packages,
+  });
+  assert.deepEqual(findings, []);
+  const promoted = { ...matrix, packages: matrix.packages.map((row) => ({ ...row })) };
+  const core = promoted.packages.find((row) => row.unit === 'core');
+  core.candidate_version = '0.37.9';
+  const mismatch = checkSource({
+    readText: (path) => {
+      if (path === 'docs/release-coordinates.json') return JSON.stringify(promoted);
+      const name = path.split('/')[1];
+      if (path.endsWith('package.json')) return JSON.stringify(manifests[name]);
+      return `Package \`${manifests[name].version}\`.\n`;
+    },
+    listPackageDirs: () => packages,
+  });
+  assert.deepEqual(
+    mismatch.map((finding) => [finding.rule, finding.label]),
+    [['matrix-source', 'packages/kdna-core']],
+  );
+});
+
 test('the served coordinates of the legacy list match the release matrix', () => {
   assert.deepEqual(evaluateLegacy(loadLegacy(read), matrix), []);
 });

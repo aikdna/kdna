@@ -43,7 +43,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.7"
+          "version": "0.37.8"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -53,7 +53,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.1"
+          "version": "0.13.2"
         },
         {
           "path": "packages/kdna/package.json",
@@ -90,7 +90,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.7"
+          "declared": "0.37.8"
         },
         {
           "path": "packages/kdna/package.json",
@@ -113,7 +113,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "3349f3871eec541ae6daa5b68b2faaf8a59ba227262c87ae4f7134914b32d305",
+          "sha256": "c3be64e62cd4cd66b26de82d9fb45870bb172dcef6b7781b35ad713d36be345c",
           "local_archives": []
         }
       ],
@@ -218,9 +218,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.7",
+          "version": "0.37.8",
           "member_count": 465,
-          "members_sha256": "58a1657c62935fa521610b5565842925a0318bda57d4f8b12a36776ae64b3347",
+          "members_sha256": "997e18d5aa81ae60a545f86781113cac245e84bc010f3333fbf705242cf27d7f",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -741,9 +741,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.1",
+          "version": "0.13.2",
           "member_count": 99,
-          "members_sha256": "20ff8f0032bcfd47806e997d8d3bcde75bb79fc81249f36ec36e26f24aeb994a",
+          "members_sha256": "18bc6d69a3f012c2d01a2c1bb67f97c5cab24848f9c4016b8f7d5693d30adce8",
           "paths": [
             "LICENSE",
             "NOTICE",

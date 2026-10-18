@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.37.8 (2026-10-18)
+
+- Distribution-coordinate and packaged-README patch. Pairs with Read `0.13.2`
+  and carries the corrected packaged README. The package-set descriptor version
+  fields and generated preimages follow the new coordinate; no runtime, rule,
+  schema-shape or capability behavior changes.
+- Core `0.37.7` and earlier coordinates remain installable under their own
+  identities. The 0.37.7 tarball README remains an immutable historical record.
+
 ## 0.37.7 (2026-10-15)
 
 - Publishes the merged source-migration tree: the new, explicit

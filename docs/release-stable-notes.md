@@ -4,6 +4,25 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.8
+
+- Distribution-coordinate and packaged-README patch: ships the corrected
+  README text in the tarball and pairs with Read `0.13.2` from the same reviewed
+  source commit.
+- The generated package-set descriptor version fields and contract preimages
+  follow the new coordinate. No runtime, schema-shape, rule, diagnostic or
+  capability behavior changes.
+- Core `0.37.7` remains published under its own identity; its immutable tarball
+  keeps the README bytes it shipped with.
+
+## Read 0.13.2
+
+- Moves the exact Core peer pin to `0.37.8` so the paired release can be
+  published from the same reviewed source commit, and ships the corrected
+  packaged README.
+- Read-route behavior, projection, contract rules and previously published
+  coordinates are unchanged.
+
 ## Core 0.37.7
 
 - Publishes the merged source-migration tree: the new, explicit
