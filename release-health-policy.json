@@ -16,7 +16,7 @@
       "repository": "aikdna/kdna-studio-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-cli",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "canonical_tag": {
         "type": "natural"
       }
@@ -26,7 +26,7 @@
       "repository": "aikdna/kdna-studio-core",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-core",
-      "version": "4.0.0",
+      "version": "4.1.0",
       "canonical_tag": {
         "type": "natural"
       }
