@@ -203,11 +203,16 @@ export function checkSource({ root = ROOT, readText, listPackageDirs } = {}) {
   for (const row of matrix.packages.filter((entry) => entry.repository === 'aikdna/kdna')) {
     const packageDir = `packages/kdna-${row.unit}`;
     const manifest = JSON.parse(read(`${packageDir}/package.json`));
-    if (manifest.name !== row.name || manifest.version !== row.version) {
+    const declared = [row.version, row.candidate_version].filter(
+      (version) => typeof version === 'string',
+    );
+    if (manifest.name !== row.name || !declared.includes(manifest.version)) {
       findings.push({
         rule: 'matrix-source',
         label: packageDir,
-        detail: `declares ${manifest.name}@${manifest.version}, the matrix declares ${row.name}@${row.version}`,
+        detail: `declares ${manifest.name}@${manifest.version}, the matrix declares ${row.name}@${row.version}${
+          typeof row.candidate_version === 'string' ? ` (candidate ${row.candidate_version})` : ''
+        }`,
       });
     }
   }

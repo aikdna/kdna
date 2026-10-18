@@ -1,13 +1,12 @@
 # KDNA Read
 
-Package `@aikdna/kdna-read` version `0.13.1`, declaring the exact peer
-`@aikdna/kdna-core@0.37.7`. The browser/Node contract remains
+Package `@aikdna/kdna-read` version `0.13.2`, declaring the exact peer
+`@aikdna/kdna-core@0.37.8`. The browser/Node contract remains
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
-This version carries the exact peer move to `@aikdna/kdna-core@0.37.7` together
-with the model-view 0.2.0 selection reduction, where non-selected closure members
-fold to focus, core expression and meaning markers behind their own expansion
-handles, and with the session-scoped handle resolution.
+This version is a distribution-coordinate and packaged-README patch. The exact
+peer moves to `@aikdna/kdna-core@0.37.8` and the corrected packaged README
+ships; no runtime, projection, contract-rule or capability behavior changes.
 Read consumes a genuine private Core snapshot and preserves authored focus,
 form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
@@ -19,7 +18,8 @@ registry serves, and how to obtain it, is rendered from
 [top-level entry](../../README.md); this package README makes no such claim, so
 it stays true for this artifact after later versions appear.
 
-Read `0.13.0` with exact Core `0.37.6`, Read `0.12.1` with exact Core `0.37.4`,
+Read `0.13.1` with exact Core `0.37.7`, Read `0.13.0` with exact Core `0.37.6`,
+Read `0.12.1` with exact Core `0.37.4`,
 Read `0.12.0` with exact Core `0.37.3` and Read `0.11.3` with exact Core
 `0.37.2` are earlier coordinates that remain installable under their own
 identities.

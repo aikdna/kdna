@@ -7461,7 +7461,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.7",
+              "const": "0.37.8",
               "type": "string"
             }
           },
@@ -8719,7 +8719,7 @@
               "type": "string"
             },
             "version": {
-              "const": "0.37.7",
+              "const": "0.37.8",
               "type": "string"
             }
           },

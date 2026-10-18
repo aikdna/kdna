@@ -2,14 +2,15 @@
 > This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry renders publication state, registry status and the installation route from the release-coordinate matrix.
 
 
-Package `@aikdna/kdna-core` version `0.37.7`, paired with exact Read `0.13.1`.
+Package `@aikdna/kdna-core` version `0.37.8`, paired with exact Read `0.13.2`.
 The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`.
-The Core change in this version is additive: the retained selection plan
-issues an expansion target for each selection-closure member the read side
-delivers through its own handle. Native section subpaths separately use
-Container `0.6.0` and Read `0.7.0-candidate`. See the
+This version is a distribution-coordinate and packaged-README patch. It pairs
+with Read `0.13.2` and carries the corrected packaged README. The package-set
+descriptor version fields and generated preimages follow the new coordinate;
+no runtime, rule, schema-shape or capability behavior changes. Native section
+subpaths separately use Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 
@@ -21,7 +22,8 @@ it stays true for this artifact after later versions appear.
 
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. Core `0.37.6` paired with Read `0.13.0`, Core `0.37.5`, Core `0.37.4`,
+checks. Core `0.37.7` paired with Read `0.13.1`, Core `0.37.6` paired with
+Read `0.13.0`, Core `0.37.5`, Core `0.37.4`,
 Read `0.12.1`, Core `0.37.3`, Read `0.12.0`, Core `0.37.2`, Read `0.11.3`,
 Core `0.37.0` and Read `0.11.1` are earlier coordinates that remain installable
 under their own identities.

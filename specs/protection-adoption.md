@@ -12,8 +12,8 @@ remain as declared by their source documents; no deprecation is issued here.
 
 ## 1. Current capability and evidence
 
-The current stable distribution candidate line is Core `0.37.7` and Read
-`0.13.1`. Local package identity is recorded in
+The current stable distribution candidate line is Core `0.37.8` and Read
+`0.13.2`. Local package identity is recorded in
 [public-semantic-source.json](public-semantic-source.json) (`engineering.package_versions`)
 and the [Core](../packages/kdna-core/package.json) / [Read](../packages/kdna-read/package.json)
 package metadata. [SPEC-INDEX](../SPEC-INDEX.md) records the current contract family.
