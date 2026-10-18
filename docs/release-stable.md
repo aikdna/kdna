@@ -119,11 +119,12 @@ acquisition and installed exports. The complete create/save/read/meaningful
 revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
-The companion candidate order is Core → Read, then native CLI `0.42.0` and
-Studio Core `4.0.0`, then Studio CLI `0.13.0`, following their actual exact
-dependencies and their own repository release gates. Complete MCP/Creator and
-protected Host source deliveries bind those new archives separately; this wave
-adds no MCP npm package. Historical Python, Conformance, Eval, compatibility and
+The published companion order is Core → Read, then native CLI `0.43.0` and
+Studio Core `4.1.0`, then Studio CLI `0.14.0`, following their actual exact
+dependencies and their own repository release gates. The earlier `0.42.0` /
+Studio Core `4.0.0` / Studio CLI `0.13.0` order remains historical. Complete
+MCP/Creator and protected Host source deliveries bind those new archives
+separately; this wave adds no MCP npm package. Historical Python, Conformance, Eval, compatibility and
 asset channels retain their independently declared scope.
 
 If publication fails, preserve the exact evidence and observed registry state.
