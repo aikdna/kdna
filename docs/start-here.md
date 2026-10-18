@@ -10,7 +10,7 @@ Select one exact dependency graph. The [top-level entry](../README.md) and
 
 | Line | Coordinates and acquisition | Status |
 |---|---|---|
-| Published stable distribution | Core `0.37.7`, Read `0.13.1`, CLI `0.43.0`, Studio Core `4.0.0`, Studio CLI `0.13.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
+| Published stable distribution | Core `0.37.7`, Read `0.13.1`, CLI `0.43.0`, Studio Core `4.1.0`, Studio CLI `0.14.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
 | Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the new candidate bytes |
 | Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
@@ -77,7 +77,7 @@ publication is disabled and named Host delivery remains NOT_RUN. Installing a
 Skill or copying a process vector does not establish Host activation.
 
 For Studio creation and local protection, use StudioCLI
-`0.13.0` / StudioCore `4.0.0` and their complete
+`0.14.0` / StudioCore `4.1.0` and their complete
 source graph. This separate route uses container0.5 / Read0.6.4. Saved protected
 consumption and revision use the [trusted local Host guide](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md),
 not StudioCLI's static read command or native container0.6. Credentials and

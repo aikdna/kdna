@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-10-16",
+  "updated": "2026-10-18",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
@@ -48,28 +48,28 @@
     {
       "unit": "studio-core",
       "name": "@aikdna/kdna-studio-core",
-      "version": "4.0.0",
+      "version": "4.1.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-studio-core",
-      "release_tag": "4.0.0",
-      "source_commit": "fbd6a22d889f28de5eefbef091ef212fa61a7fc5",
-      "artifact_sha256": "062c35970e4c7e3ba49f8d9420f1e221a3ec007fac145d67c04fe5ee2e88be62",
-      "publish_run": 38179830169,
-      "release_id": 409956038,
-      "release_published_at": "2026-10-11T22:17:31Z"
+      "release_tag": "4.1.0",
+      "source_commit": "ea2840ad4e7fb96c3225c7d1f6b1e9305debfa4c",
+      "artifact_sha256": "76a5e7dcca71b28259e5058d241304912713d72e9defba98ce8a03f7e4d1e22a",
+      "publish_run": 39095472822,
+      "release_id": 416220538,
+      "release_published_at": "2026-10-18T03:58:25Z"
     },
     {
       "unit": "studio-cli",
       "name": "@aikdna/kdna-studio-cli",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-studio-cli",
-      "release_tag": "0.13.0",
-      "source_commit": "470c2a086674a4e7c2b28fbecca9dd5050eb9ea5",
-      "artifact_sha256": "8f1b0b8109d03c1678339f90fbf3c63ef20c4eb190004f0d4b8aabfff198415a",
-      "publish_run": 38183475733,
-      "release_id": 409979826,
-      "release_published_at": "2026-10-11T23:13:32Z"
+      "release_tag": "0.14.0",
+      "source_commit": "7df78cf49a45ad0e4df31bb81ae6e7bd941b14d9",
+      "artifact_sha256": "542270c699eec5cbc468b134b2d7235c312be7551e32f4ce66821b3fb814dfc7",
+      "publish_run": 39096533307,
+      "release_id": 416227015,
+      "release_published_at": "2026-10-18T04:16:43Z"
     }
   ],
   "git_only": [

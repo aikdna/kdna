@@ -405,7 +405,7 @@ const nativeIdentityMutations = [
   [
     'Studio candidate row',
     'README.md',
-    'StudioCore `4.0.0` on their own pinned Core `0.37.2` / Read `0.11.3` line',
+    'StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line',
     'StudioCore `4.5.0-rc.material-edit.1` on their own pinned Core `0.37.2` / Read `0.11.3` line',
   ],
   [
@@ -465,8 +465,8 @@ const nativeIdentityMutations = [
   [
     'support Studio status',
     'docs/current-release-support.md',
+    'npm `4.1.0`; historical npm `3.0.0` and `4.0.0` retained.',
     'npm `3.0.0`. Current source is not a stable npm release.',
-    'npm `4.0.0`. Current source is a stable npm release.',
   ],
   [
     'support Loader/MCP adapter status',
