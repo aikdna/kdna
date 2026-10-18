@@ -333,12 +333,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-studio-core
-          ref: fbd6a22d889f28de5eefbef091ef212fa61a7fc5
+          ref: ea2840ad4e7fb96c3225c7d1f6b1e9305debfa4c
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 470c2a086674a4e7c2b28fbecca9dd5050eb9ea5
+          ref: 7df78cf49a45ad0e4df31bb81ae6e7bd941b14d9
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
