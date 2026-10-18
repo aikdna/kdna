@@ -464,13 +464,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` retained | Terminal creation session; container \`0.5.0\` / Read \`0.6.4\`, separate from native CLI |`,
+      text: `| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` and \`0.13.0\` retained | Terminal creation session; container \`0.5.0\` / Read \`0.6.4\`, separate from native CLI |`,
     },
     {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |`,
+      text: `| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` and \`4.0.0\` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |`,
     },
     {
       file: 'README.md',
@@ -596,13 +596,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/current-release-support.md',
       role: 'downstream',
       heading: '## Repository-by-repository support',
-      text: `| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source \`${released['studio-core'].version}\`; its own pinned SDK pair, container0.5 session route. | npm \`3.0.0\`. Current source is not a stable npm release. |`,
+      text: `| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source \`${released['studio-core'].version}\`; its own pinned SDK pair, container0.5 session route. | npm \`${released['studio-core'].version}\`; historical npm \`3.0.0\` and \`4.0.0\` retained. |`,
     },
     {
       file: 'docs/current-release-support.md',
       role: 'downstream',
       heading: '## Repository-by-repository support',
-      text: `| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source \`${released['studio-cli'].version}\` with that exact StudioCore/SDK graph. | npm \`0.11.0\`. Current source is not a stable npm release. |`,
+      text: `| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source \`${released['studio-cli'].version}\` with that exact StudioCore/SDK graph. | npm \`${released['studio-cli'].version}\`; historical npm \`0.11.0\` and \`0.13.0\` retained. |`,
     },
     {
       file: 'docs/current-release-support.md',

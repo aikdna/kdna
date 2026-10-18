@@ -29,7 +29,7 @@
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
-            "Local browser protected-read candidate; publication and consumer acceptance require separate evidence."
+            "Published and active on npm `latest`; live Host and consumer acceptance require separate evidence."
           ],
           "recommended_entrypoint": "npm install @aikdna/kdna-core",
           "legacy_replacement": null
@@ -44,7 +44,7 @@
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
-            "Local browser protected-read candidate; publication and consumer acceptance require separate evidence."
+            "Published and active on npm `latest`; live Host and consumer acceptance require separate evidence."
           ],
           "recommended_entrypoint": "npm install @aikdna/kdna-read",
           "legacy_replacement": null
