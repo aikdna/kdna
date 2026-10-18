@@ -178,6 +178,7 @@
       }
       footer code {
         font-family: var(--mono);
+        overflow-wrap: anywhere;
       }
       a {
         color: var(--accent);
@@ -234,7 +235,7 @@
           here, not a defect in the asset. To inspect a native asset, run the official CLI locally:
         </p>
         <pre class="scope-code">
-npx --yes @aikdna/kdna-cli@0.39.0-rc.native-sections.3 inspect ./your-asset.kdna</pre>
+npx --yes @aikdna/kdna-cli@0.43.0 inspect ./your-asset.kdna</pre>
         <p class="scope-line">
           It prints the admitted tuple and digests and uploads nothing. Agent hosts read the same
           asset through the operator-bound local MCP adapter (<a
@@ -395,7 +396,7 @@ npx --yes @aikdna/kdna-cli@0.39.0-rc.native-sections.3 inspect ./your-asset.kdna
                 'This is the expected rejection for a current native container, which stores its ' +
                 'payload as sections/pack-N.kdnab instead of payload.kdnab. Inspect it with the ' +
                 'official CLI instead: npx --yes ' +
-                '@aikdna/kdna-cli@0.39.0-rc.native-sections.3 inspect <file>',
+                '@aikdna/kdna-cli@0.43.0 inspect <file>',
             }),
           );
         }
