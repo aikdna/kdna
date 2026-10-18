@@ -149,7 +149,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "d93af7c928cfc8d4806f0fc309ef7c76d17be5bb",
+      "source_commit": "721c422ae38d43cf2ab9a55b269070beb8f39961",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -158,14 +158,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.43.0",
+          "version": "0.43.1",
           "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.43.0"
+          "published_version": "0.43.1"
         }
       ],
       "lifecycle": "Pre-release",
