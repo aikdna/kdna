@@ -70,8 +70,8 @@ test('protection definitions preserve all preexisting semantic leaves and absenc
     trace: 'kdna.judgment-trace/0.3.1',
     read: 'kdna.read/0.6.4',
   });
-  assert.equal(source.engineering.package_versions.core, '0.37.8');
-  assert.equal(source.engineering.package_versions.read, '0.13.2');
+  assert.equal(source.engineering.package_versions.core, '0.37.9');
+  assert.equal(source.engineering.package_versions.read, '0.13.3');
   assert.deepEqual(source.types.ProtectionEntitlement, {
     type: 'object',
     properties: {

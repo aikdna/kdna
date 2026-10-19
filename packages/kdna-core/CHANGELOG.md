@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.37.9 (2026-10-19)
+
+- Distribution-coordinate patch. Pairs with Read `0.13.3`; the package-set
+  descriptor version fields and generated preimages follow the new coordinate.
+  No runtime, rule, schema-shape or capability behavior changes.
+- Core `0.37.8` and earlier coordinates remain installable under their own
+  identities. The 0.37.8 tarball README remains an immutable historical record.
+
 ## 0.37.8 (2026-10-18)
 
 - Distribution-coordinate and packaged-README patch. Pairs with Read `0.13.2`

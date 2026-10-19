@@ -1,8 +1,9 @@
 # Core and Read: current implementation status
 
-Source status: 2026-10-18. Core `0.37.8` and Read `0.13.2` are the published
-stable coordinates. Source readiness, exact artifact acceptance and actual
-public publication are separate facts.
+Source status: 2026-10-19. Core `0.37.8` and Read `0.13.2` are the published
+stable coordinates; Core `0.37.9` and Read `0.13.3` are the current unpublished
+stable distribution candidates. Source readiness, exact artifact acceptance and
+actual public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
 
@@ -10,11 +11,15 @@ Read `0.13.2` was published with the npm CLI rather than the release workflow.
 Its registry tarball matches the reviewed SHA-256/SRI/SHA-1 and packaged bytes,
 but the registry record carries no `gitHead` and no provenance attestation;
 release-workflow provenance is not established for this coordinate. Core
-`0.37.8` was published by workflow run `39122156766` and carries both.
+`0.37.8` was published by workflow run `39122156766` and carries both. The
+`0.13.3` candidate is prepared for a provenance-bearing release; publication and
+registry attestation remain separate observations.
 
 ## Exact SDK pair and contracts
 
-Read declares Core `0.37.8` as its exact peer; both declare Node >=20.
+Published Read `0.13.2` declares Core `0.37.8` as its exact peer.
+Read declares Core `0.37.9` as its exact peer in the current source candidate;
+both declare Node >=20.
 The release procedure produces the exact source commit/tree, archive SHA256,
 SRI and source-member inventory for each final artifact. Those external release
 records bind the installed graph and public channel; this document does not

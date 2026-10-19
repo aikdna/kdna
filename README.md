@@ -108,8 +108,9 @@ by itself identify a published artifact.
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.0` and Core `0.37.7` / Read `0.13.1` pins | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
-The maintained source and the Core/Read row above are the same published
-combination Core `0.37.8` / Read `0.13.2`; the [current support
+The maintained source carries the candidate pair Core `0.37.9` / Read `0.13.3`,
+which the registry does not serve yet; until it does, the table above lists only
+the published and byte-verified combination. The [current support
 matrix](./docs/current-release-support.md) keeps the superseded snapshot
 statements for the record.
 

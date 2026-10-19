@@ -4,6 +4,24 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.9
+
+- Distribution-coordinate patch: pairs with Read `0.13.3` from the same reviewed
+  source commit. The generated package-set descriptor version fields and
+  contract preimages follow the new coordinate. No runtime, schema-shape, rule,
+  diagnostic or capability behavior changes.
+- Core `0.37.8` remains published under its own identity; its immutable tarball
+  keeps the README bytes it shipped with.
+
+## Read 0.13.3
+
+- Moves the exact Core peer pin to `0.37.9` and prepares the release for
+  provenance-bearing publication. Read-route behavior, projection, contract
+  rules and previously published coordinates are unchanged.
+- Read `0.13.2` remains published under its own identity; its registry record
+  has no `gitHead` or provenance attestation, and that historical fact is not
+  rewritten by this candidate.
+
 ## Core 0.37.8
 
 - Distribution-coordinate and packaged-README patch: ships the corrected
