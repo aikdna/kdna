@@ -70,8 +70,8 @@ test('source mode covers every non-private workspace package, not a hand-kept li
   const privatePackages = new Set(['artifact-engine']);
   const manifests = {
     kdna: { name: '@aikdna/kdna', version: '0.14.0' },
-    'kdna-core': { name: '@aikdna/kdna-core', version: '0.37.8' },
-    'kdna-read': { name: '@aikdna/kdna-read', version: '0.13.2' },
+    'kdna-core': { name: '@aikdna/kdna-core', version: '0.37.9' },
+    'kdna-read': { name: '@aikdna/kdna-read', version: '0.13.3' },
     'artifact-engine': { name: '@aikdna/kdna-artifact-engine', version: '0.1.0', private: true },
   };
   const findings = checkSource({
@@ -99,8 +99,8 @@ test('source mode covers every non-private workspace package, not a hand-kept li
 test('source mode accepts the published pair and refuses a mismatched matrix row', () => {
   const packages = ['kdna-core', 'kdna-read'];
   const manifests = {
-    'kdna-core': { name: '@aikdna/kdna-core', version: '0.37.8' },
-    'kdna-read': { name: '@aikdna/kdna-read', version: '0.13.2' },
+    'kdna-core': { name: '@aikdna/kdna-core', version: '0.37.9' },
+    'kdna-read': { name: '@aikdna/kdna-read', version: '0.13.3' },
   };
   const findings = checkSource({
     readText: (path) => {
@@ -114,8 +114,8 @@ test('source mode accepts the published pair and refuses a mismatched matrix row
   assert.deepEqual(findings, []);
   const promoted = { ...matrix, packages: matrix.packages.map((row) => ({ ...row })) };
   const core = promoted.packages.find((row) => row.unit === 'core');
-  core.version = '0.37.9';
-  core.candidate_version = '0.38.0';
+  core.version = '0.38.0';
+  core.candidate_version = '0.38.1';
   const mismatch = checkSource({
     readText: (path) => {
       if (path === 'docs/release-coordinates.json') return JSON.stringify(promoted);
@@ -232,7 +232,7 @@ test('a stale legacy entry is a finding, never an exemption', () => {
   );
   assert.ok(
     findings.some((finding) =>
-      finding.detail.includes('@aikdna/kdna-core@0.37.6: the matrix serves 0.37.8'),
+      finding.detail.includes('@aikdna/kdna-core@0.37.6: the matrix serves 0.37.9'),
     ),
   );
   assert.ok(findings.some((finding) => finding.detail.includes('duplicate legacy entry')));
@@ -248,15 +248,15 @@ test('published mode reads the tarball it is given and reports an unreadable coo
       Buffer.from(
         JSON.stringify({
           versions: {
-            '0.37.8': { dist: { tarball: 'https://registry.test/core-0.37.8.tgz' } },
+            '0.37.9': { dist: { tarball: 'https://registry.test/core-0.37.9.tgz' } },
           },
         }),
       ),
     ],
     [
-      'https://registry.test/core-0.37.8.tgz',
+      'https://registry.test/core-0.37.9.tgz',
       packedTarball([
-        ['package/README.md', '# KDNA Core\n\nPackage `@aikdna/kdna-core` version `0.37.8`.\n'],
+        ['package/README.md', '# KDNA Core\n\nPackage `@aikdna/kdna-core` version `0.37.9`.\n'],
       ]),
     ],
   ]);
@@ -269,13 +269,13 @@ test('published mode reads the tarball it is given and reports an unreadable coo
     },
   });
   assert.deepEqual(
-    findings.filter((finding) => finding.label === '@aikdna/kdna-core@0.37.8 tarball README'),
+    findings.filter((finding) => finding.label === '@aikdna/kdna-core@0.37.9 tarball README'),
     [],
   );
   assert.deepEqual(findings, [
     {
       rule: 'published',
-      label: '@aikdna/kdna-read@0.13.2',
+      label: '@aikdna/kdna-read@0.13.3',
       detail: 'unreadable: https://registry.npmjs.org/@aikdna%2Fkdna-read: HTTP 404',
     },
   ]);
@@ -290,7 +290,7 @@ test('published mode refuses a stale tarball README instead of trusting the sour
         : Buffer.from(
             JSON.stringify({
               versions: {
-                '0.37.8': { dist: { tarball: 'https://registry.test/core-0.37.8.tgz' } },
+                '0.37.9': { dist: { tarball: 'https://registry.test/core-0.37.9.tgz' } },
               },
             }),
           ),

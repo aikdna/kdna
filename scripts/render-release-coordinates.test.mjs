@@ -55,8 +55,8 @@ test('a matrix coordinate that the entry does not state is refused', () => {
   const { entry } = rendererCopy({
     mutate: (text) =>
       text
-        .replace('"version": "0.37.8"', '"version": "0.37.9"')
-        .replace('"artifact_sha256": "4b7f27f4', '"artifact_sha256": "0000000000'),
+        .replace('"version": "0.37.9"', '"version": "0.38.0"')
+        .replace('"artifact_sha256": "084afc94', '"artifact_sha256": "0000000000'),
   });
   const result = runRenderer(entry);
   assert.notEqual(result.status, 0, 'a drifted matrix must fail the check');

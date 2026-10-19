@@ -1,11 +1,15 @@
 # Exact stable Core and Read release
 
-Core `0.37.8` and Read `0.13.2` were published as stable coordinates for the
-npm `latest` tag on 2026-10-18. This document describes the preparation and
+Core `0.37.9` and Read `0.13.3` were published as stable coordinates for the
+npm `latest` tag on 2026-10-19. This document describes the preparation and
 publication gates that produced them; the same procedure applies to later
-candidates. Core `0.37.9` and Read `0.13.3` are the current stable distribution
-candidates, and the command, tag, approval and acquisition examples below name
-them. The [channel history](current-release-support.md#published-channel-history)
+candidates. The command, tag, approval and acquisition examples below name that
+pair. Both carry registry `gitHead` and provenance from source commit
+`3c89b8e`. Core was published by workflow run `39216131010`; that run is red at
+its registry-visibility step even though the npm publication, artifact bytes,
+`gitHead` and provenance succeeded. The release matrix omits Core `publish_run`
+rather than claiming a successful run. Read was published by green workflow run
+`39217540825`. The [channel history](current-release-support.md#published-channel-history)
 retains the earlier previews and observed `latest` values. A stable npm version
 is a distribution coordinate, not a claim that the entire ecosystem is GA.
 
@@ -122,10 +126,11 @@ acquisition and installed exports. The complete create/save/read/meaningful
 revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
-The companion release order is Core → Read, then native CLI `0.43.2` once its
-binding and vendor archives are prepared from the published Core/Read tarballs.
-Native CLI `0.43.1` retains its own Core `0.37.8` / Read `0.13.2` pins and
-remains installable. Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their
+The companion release order is Core → Read, then native CLI `0.43.2`, whose
+binding and vendor archives were prepared from the published Core/Read tarballs
+and which was published on 2026-10-19 with registry `gitHead` and provenance from
+source commit `663bf9c`. Native CLI `0.43.1` retains its own Core `0.37.8` /
+Read `0.13.2` pins and remains installable. Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their
 own pinned Core `0.37.2` / Read `0.11.3` graph and are not re-pinned by this
 Core/Read release. The earlier native CLI `0.43.0` and Studio Core `4.0.0` /
 Studio CLI `0.13.0` records remain historical. Complete MCP/Creator and protected Host source
