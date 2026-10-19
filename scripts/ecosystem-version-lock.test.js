@@ -302,13 +302,12 @@ test('explicit historical root inputs preserve the default current dependency sc
   const historical = readPeer(scan(true));
   assert.equal(current.declared, '0.37.9');
   assert.deepEqual(explicitlyCurrent, current);
-  // The frozen root package inputs record the last published pair, while the
-  // current source carries the next candidate until the paired release is
-  // published and the evidence is re-pinned. What the evidence must keep
-  // proving is that its bytes come from its own commit, which the blob/digest
-  // assertions below check.
-  assert.equal(historical.declared, '0.37.8');
-  assert.equal(historical.expected, '0.37.8');
+  // The frozen root package inputs now record the published pair, so the
+  // historical scan and the current scan describe the same coordinate. What
+  // the evidence must keep proving is that its bytes come from its own commit,
+  // which the blob/digest assertions below check.
+  assert.equal(historical.declared, '0.37.9');
+  assert.equal(historical.expected, '0.37.9');
 
   // The existing exact tuple shares this independently authenticated blob.
   // It does not accept a new stable dependency or alias another version.
@@ -323,9 +322,7 @@ test('explicit historical root inputs preserve the default current dependency sc
   assert.equal(binding.declared, historical.declared);
   const compatibility = new Map([[bindingKey(binding), binding]]);
   assert.equal(evaluateConsumers([historical], compatibility)[0].ok, true);
-  // The current source candidate is not an accepted compatibility coordinate
-  // yet, so the published binding does not cover it.
-  assert.equal(evaluateConsumers([current], compatibility)[0].ok, false);
+  assert.equal(evaluateConsumers([current], compatibility)[0].ok, true);
   // A declaration that differs from its baseline is refused unless an accepted
   // compatibility binding covers it. The counterexample is constructed here
   // instead of borrowed from the data: a drifted peer version has no accepted

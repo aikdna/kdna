@@ -1,7 +1,7 @@
 # KDNA Version and Capability Matrix
 
 Current replacement: [2026-10-11 support and distribution matrix](current-release-support.md).
-It binds the native CLI `0.43.1` and MCP source and separate Studio0.5 candidates to their exact
+It binds the native CLI `0.43.2` and MCP source and separate Studio0.5 candidates to their exact
 SDK archives and distinguishes official registry baselines from source
 candidates. The dated tables below remain historical observations, including
 superseded unpublished combinations; they are not current installation input.
@@ -90,10 +90,10 @@ and downstream rebinding require separate artifact evidence. Use the
 [current support matrix](./current-release-support.md) for the five-package
 published graph, published previews and the observed earlier `latest` values.
 
-| Current local package (2026-10-18) | Actual source version | Bound graph and state |
+| Current local package (2026-10-19) | Actual source version | Bound graph and state |
 |---|---|---|
-| `@aikdna/kdna-core` | `0.37.8` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
-| `@aikdna/kdna-read` | `0.13.2` | Exact Core `0.37.8` peer; stable distribution on `latest`; Node >=20 |
+| `@aikdna/kdna-core` | `0.37.9` | Stable distribution on `latest`; Node >=20; separate byte-bound acceptance |
+| `@aikdna/kdna-read` | `0.13.3` | Exact Core `0.37.9` peer; stable distribution on `latest`; Node >=20 |
 
 **Frozen 2026-10-07 observation.** The table below retains the source labels and
 publication descriptions recorded on that date. They do not describe the current
