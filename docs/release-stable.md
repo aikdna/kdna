@@ -3,7 +3,9 @@
 Core `0.37.8` and Read `0.13.2` were published as stable coordinates for the
 npm `latest` tag on 2026-10-18. This document describes the preparation and
 publication gates that produced them; the same procedure applies to later
-candidates. The [channel history](current-release-support.md#published-channel-history)
+candidates. Core `0.37.9` and Read `0.13.3` are the current stable distribution
+candidates, and the command, tag, approval and acquisition examples below name
+them. The [channel history](current-release-support.md#published-channel-history)
 retains the earlier previews and observed `latest` values. A stable npm version
 is a distribution coordinate, not a claim that the entire ecosystem is GA.
 
@@ -27,13 +29,13 @@ node scripts/core-release-authority.js provision-npm --artifact "$KDNA_TRUSTED_N
 node scripts/core-release-authority.js verify-npm
 node scripts/stable-release-authority.js candidate --unit core \
   --evidence "$OUTPUT/core.json" \
-  --artifact "$OUTPUT/aikdna-kdna-core-0.37.8.tgz"
+  --artifact "$OUTPUT/aikdna-kdna-core-0.37.9.tgz"
 node scripts/stable-release-authority.js candidate --unit read \
   --evidence "$OUTPUT/read.json" \
-  --artifact "$OUTPUT/aikdna-kdna-read-0.13.2.tgz"
+  --artifact "$OUTPUT/aikdna-kdna-read-0.13.3.tgz"
 node scripts/stable-release-authority.js candidate-smoke --unit core \
   --evidence "$OUTPUT/core.json" \
-  --artifact "$OUTPUT/aikdna-kdna-core-0.37.8.tgz"
+  --artifact "$OUTPUT/aikdna-kdna-core-0.37.9.tgz"
 ```
 
 The authority exports tracked Git blobs twice, runs source pack-content,
@@ -57,8 +59,8 @@ hash cannot be attached to a new stable coordinate.
 ## Real stable release event
 
 After the reviewed source is integrated on `origin/main`, select that same
-accepted commit for both tags. Publish Core tag `0.37.8` first, then Read tag
-`read/0.13.2` after the exact Core artifact is available from the registry.
+accepted commit for both tags. Publish Core tag `0.37.9` first, then Read tag
+`read/0.13.3` after the exact Core artifact is available from the registry.
 Both GitHub releases must be published, nondraft **stable releases**. A local
 command, prerelease event, branch ref or fabricated event cannot substitute.
 
@@ -72,8 +74,8 @@ followed by one final `kdna-stable-release` fenced JSON block. The Core shape is
   "repository": "aikdna/kdna",
   "source_commit": "FULL_REVIEWED_COMMIT",
   "source_tree": "FULL_REVIEWED_TREE",
-  "base_commit": "b28b0b4c831365727df748c980895f059c8e677e",
-  "version": "0.37.8",
+  "base_commit": "0193072d803ea161d8157382c1590d81882c94df",
+  "version": "0.37.9",
   "dist_tag": "latest",
   "artifact_sha256": "EXACT_REVIEWED_ARCHIVE_SHA256",
   "notes_sha256": "SHA256_OF_TRIMMED_EXACT_NOTES_UTF8",
@@ -82,9 +84,9 @@ followed by one final `kdna-stable-release` fenced JSON block. The Core shape is
 ```
 
 These placeholders are a schema example, not runnable approval metadata.
-For Read, change `unit` to `read` and `version` to `0.13.2`; `companion` contains
+For Read, change `unit` to `read` and `version` to `0.13.3`; `companion` contains
 exactly `name`, `version`, `sha256`, `integrity`, `shasum` and `gitHead` for the
-approved Core `0.37.8` artifact. Its `gitHead` must equal the same reviewed source
+approved Core `0.37.9` artifact. Its `gitHead` must equal the same reviewed source
 commit. Public notes and attachments contain only public release facts.
 
 The [publish workflow](../.github/workflows/publish.yml) invokes
@@ -111,7 +113,7 @@ empty user config and the exact package pair:
 ```sh
 npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
   --registry=https://registry.npmjs.org \
-  @aikdna/kdna-core@0.37.8 @aikdna/kdna-read@0.13.2
+  @aikdna/kdna-core@0.37.9 @aikdna/kdna-read@0.13.3
 ```
 
 Verify downloaded archive SHA256/SRI and `gitHead` against the approved evidence,
@@ -120,12 +122,13 @@ acquisition and installed exports. The complete create/save/read/meaningful
 revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
-The companion release order is Core → Read, then native CLI `0.43.1` once its
+The companion release order is Core → Read, then native CLI `0.43.2` once its
 binding and vendor archives are prepared from the published Core/Read tarballs.
-Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their own pinned Core
-`0.37.2` / Read `0.11.3` graph and are not re-pinned by this Core/Read release. The
-earlier native CLI `0.43.0` and Studio Core `4.0.0` / Studio CLI `0.13.0`
-records remain historical. Complete MCP/Creator and protected Host source
+Native CLI `0.43.1` retains its own Core `0.37.8` / Read `0.13.2` pins and
+remains installable. Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their
+own pinned Core `0.37.2` / Read `0.11.3` graph and are not re-pinned by this
+Core/Read release. The earlier native CLI `0.43.0` and Studio Core `4.0.0` /
+Studio CLI `0.13.0` records remain historical. Complete MCP/Creator and protected Host source
 deliveries bind new archives separately; this wave adds no MCP npm package.
 Historical Python, Conformance, Eval, compatibility and asset channels retain
 their independently declared scope.

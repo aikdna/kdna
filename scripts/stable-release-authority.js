@@ -3,8 +3,8 @@
 const { createAuthority } = require('./release-channel-authority.js');
 const authority = createAuthority({
   channel: 'stable',
-  base_commit: 'b28b0b4c831365727df748c980895f059c8e677e',
-  versions: { core: '0.37.8', read: '0.13.2' },
+  base_commit: '0193072d803ea161d8157382c1590d81882c94df',
+  versions: { core: '0.37.9', read: '0.13.3' },
 });
 if (require.main === module) {
   try {

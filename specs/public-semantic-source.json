@@ -90,7 +90,7 @@
     {
       "path": "specs/public-contract-decisions.json",
       "bytes": 50851,
-      "sha256": "2704ead34e3b53fd7f14b215049c7510249d41de333e54fdc233d00c95e136e4"
+      "sha256": "b5eafa673352ff2073865c57c33c0477471f28462f23223f4da5a3efbd26276e"
     },
     {
       "path": "specs/public-source-map.json",
@@ -100,12 +100,12 @@
     {
       "path": "specs/public-version-policy.md",
       "bytes": 13074,
-      "sha256": "70704e15970a461bdfbc072bbfe323494cd245fd55d87fc04feb6b7d95e8c473"
+      "sha256": "cf3fba8e0256fd225ab52edba5c7a9686b1019f4fe2dee3856257d70dd3c3725"
     },
     {
       "path": "specs/read-contract.md",
       "bytes": 11722,
-      "sha256": "839f0c21599784799d1bb5eebc75ca7339030edf03485e1a55410809774c5b72"
+      "sha256": "cf431144313a2c3e5c6df0c3b0fd7015637d1992e412a44f9029a84fdfa06721"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -30797,8 +30797,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.8",
-      "read": "0.13.2"
+      "core": "0.37.9",
+      "read": "0.13.3"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -32213,7 +32213,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.13.2",
+    "package_version": "0.13.3",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -35269,7 +35269,7 @@
     "specification": {
       "path": "specs/protection-admission.md",
       "bytes": 38233,
-      "sha256": "5bfbfa66eac2fcc28bf1a571f05aeabe524c4fbbc195a9d7f744b9aaaf46963d"
+      "sha256": "b734be266f52a2cf23688aaefb0a2c4b075356190113c7ac7d808e701a36edec"
     },
     "non_schema_rules": [
       {
@@ -35621,8 +35621,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.8",
-        "@aikdna/kdna-read": "0.13.2"
+        "@aikdna/kdna-core": "0.37.9",
+        "@aikdna/kdna-read": "0.13.3"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -36096,8 +36096,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.8",
-        "@aikdna/kdna-read": "0.13.2"
+        "@aikdna/kdna-core": "0.37.9",
+        "@aikdna/kdna-read": "0.13.3"
       }
     }
   },
@@ -36918,8 +36918,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.8",
-        "@aikdna/kdna-read": "0.13.2"
+        "@aikdna/kdna-core": "0.37.9",
+        "@aikdna/kdna-read": "0.13.3"
       }
     }
   },
@@ -41344,8 +41344,8 @@
       },
       "package_versions": [
         {
-          "core": "0.37.8",
-          "read": "0.13.2"
+          "core": "0.37.9",
+          "read": "0.13.3"
         }
       ],
       "preservation": "The released Core 0.37.0 / Read 0.11.1 pair and its three binding-7 schemas remain unchanged historical coordinates. This candidate adds retained browser protected projection and independent lifecycle; registry, consumer acceptance and publication are separate evidence."
@@ -42545,8 +42545,8 @@
           "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
         },
         "package_versions": {
-          "core": "0.37.8",
-          "read": "0.13.2"
+          "core": "0.37.9",
+          "read": "0.13.3"
         }
       }
     },

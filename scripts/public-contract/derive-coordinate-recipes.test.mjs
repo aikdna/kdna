@@ -16,7 +16,7 @@ import { digest, pointer, project, sha } from './native-renderer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const inputs = readFrozenInputs(root);
-const options = { ...inputs, core: '0.37.8', read: '0.13.2' };
+const options = { ...inputs, core: '0.37.9', read: '0.13.3' };
 const candidate = deriveCoordinates(options);
 
 test('coordinate derivation verifies every frozen guard and is byte reproducible', () => {
@@ -99,13 +99,13 @@ test('decisions change exactly the version and observation fields of the moved c
   // Both coordinates move in this transition; each moved row is rewritten to
   // the new candidate/source version and the genuinely moved observation date.
   const core = expected.version_policy.planned_packages[0];
-  core.candidate_version = '0.37.8';
-  core.current_source_version = '0.37.8';
-  core.current_source_version_observed = '2026-10-18';
+  core.candidate_version = '0.37.9';
+  core.current_source_version = '0.37.9';
+  core.current_source_version_observed = '2026-10-19';
   const read = expected.version_policy.planned_packages[1];
-  read.candidate_version = '0.13.2';
-  read.current_source_version = '0.13.2';
-  read.current_source_version_observed = '2026-10-18';
+  read.candidate_version = '0.13.3';
+  read.current_source_version = '0.13.3';
+  read.current_source_version_observed = '2026-10-19';
   assert.deepEqual(after, expected);
   const report = candidate.report.documents.find((row) => row.path === name);
   assert.equal(report.transformations.length, 6);
@@ -195,9 +195,9 @@ test('derivation CLI refuses maintained paths, aliases into the repository and e
     '--root',
     root,
     '--core-version',
-    '0.37.8',
+    '0.37.9',
     '--read-version',
-    '0.13.2',
+    '0.13.3',
     '--out-dir',
     output,
   ];
