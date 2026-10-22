@@ -1,0 +1,348 @@
+# One-off npm Trusted Publishing path for the reviewed Read 0.13.2 artifact.
+#
+# This workflow is workflow_dispatch-only and accepts no inputs. The package,
+# version, source commit, artifact digest and notes digest are fixed constants
+# below. It checks out the reviewed source, rebuilds the exact package with the
+# audited npm, verifies the reviewed GitHub release approval and the artifact
+# digest, then publishes with OIDC. It deliberately sets no NODE_AUTH_TOKEN and
+# no actions/setup-node registry-url, so npm can only use Trusted Publishing.
+#
+# Prerequisite: the npm package must have a Trusted Publisher configured for
+# this workflow filename, with `npm publish` allowed (not only stage publish).
+name: Publish Read (trusted)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-read-trusted
+  cancel-in-progress: false
+
+jobs:
+  publish-read:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      READ_VERSION: '0.13.2'
+      SOURCE_COMMIT: '0193072d803ea161d8157382c1590d81882c94df'
+      SOURCE_TREE: '0ff8f8cef0673bced7d025a1ddae83b5e726c2e7'
+      BASE_COMMIT: 'b28b0b4c831365727df748c980895f059c8e677e'
+      ARTIFACT_SHA256: '623f67f8643da6e158de2ae6063a5a9988e79e431eb1c548803c94a78e677688'
+      ARTIFACT_SHASUM: '93ea42ddc9c353db6e22fc677fd4da8449a1ba93'
+      ARTIFACT_INTEGRITY: 'sha512-fJU5cyZBvVA/95jodywOEm1sl49iZAkt6EcjfIqEznBKd9cdohsVI4/tz3UsPdk44Yi70yW3mzhR9djnJvILhg=='
+      NOTES_SHA256: '4d11f53a29b3757ae57403ab3fd1534d2793d8dc5ab2ad64109518598ddb1a41'
+      RELEASE_ID: '416405399'
+      CORE_VERSION: '0.37.8'
+      CORE_SHA256: '4b7f27f46a000e199578fd191716eef3b34aaa41890e59a8ea4945d468d75bd7'
+      CORE_SHASUM: '8bcf2cace5c467447ddbc70e7c14ec1f493e1480'
+      CORE_INTEGRITY: 'sha512-vK6hcqiPdImIdgdtUbU+8L0dQMQ80rucbiAMrn47b3EPL3/GxeNXFZalvcqcefVl5rm84CdKdiEp+pAk3zMBEQ=='
+      CORE_GITHEAD: '0193072d803ea161d8157382c1590d81882c94df'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: '0193072d803ea161d8157382c1590d81882c94df'
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.23.1'
+          check-latest: false
+
+      - name: Verify the exact reviewed source
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$SOURCE_TREE"
+          test -z "$(git status --porcelain=v2 --untracked-files=all)"
+          git merge-base --is-ancestor "$BASE_COMMIT" HEAD
+
+      - name: Verify source README, notes and package identity
+        run: |
+          node scripts/check-packaged-readme.mjs --source
+          node - <<'EOF'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const text = fs.readFileSync('docs/release-stable-notes.md', 'utf8');
+          const heading = '## Read ' + process.env.READ_VERSION;
+          const sections = text.split(/(?=^## )/mu).filter((section) => section.startsWith(heading + '\n'));
+          if (sections.length !== 1) throw new Error('Read notes section missing or duplicated');
+          const notes = sections[0].trim();
+          const notesSha = crypto.createHash('sha256').update(Buffer.from(notes)).digest('hex');
+          if (notesSha !== process.env.NOTES_SHA256) throw new Error('Read notes SHA mismatch');
+          const pkg = JSON.parse(fs.readFileSync('packages/kdna-read/package.json', 'utf8'));
+          if (pkg.name !== '@aikdna/kdna-read' || pkg.version !== process.env.READ_VERSION)
+            throw new Error('Read package identity mismatch');
+          if (pkg.peerDependencies['@aikdna/kdna-core'] !== process.env.CORE_VERSION)
+            throw new Error('Read peer dependency mismatch');
+          console.log('source, notes and package identity verified');
+          EOF
+
+      - name: Verify the reviewed GitHub release approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node - <<'EOF'
+          const https = require('https');
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const expected = {
+            schema: 'kdna.stable-release-approval/1',
+            unit: 'read',
+            repository: 'aikdna/kdna',
+            source_commit: process.env.SOURCE_COMMIT,
+            source_tree: process.env.SOURCE_TREE,
+            base_commit: process.env.BASE_COMMIT,
+            version: process.env.READ_VERSION,
+            dist_tag: 'latest',
+            artifact_sha256: process.env.ARTIFACT_SHA256,
+            notes_sha256: process.env.NOTES_SHA256,
+            companion: {
+              name: '@aikdna/kdna-core',
+              version: process.env.CORE_VERSION,
+              sha256: process.env.CORE_SHA256,
+              integrity: process.env.CORE_INTEGRITY,
+              shasum: process.env.CORE_SHASUM,
+              gitHead: process.env.CORE_GITHEAD,
+            },
+          };
+          const request = () =>
+            new Promise((resolve, reject) => {
+              https
+                .get(
+                  'https://api.github.com/repos/aikdna/kdna/releases/' + process.env.RELEASE_ID,
+                  {
+                    headers: {
+                      authorization: 'Bearer ' + process.env.GH_TOKEN,
+                      accept: 'application/vnd.github+json',
+                      'user-agent': 'kdna-read-trusted-publish',
+                    },
+                  },
+                  (response) => {
+                    let text = '';
+                    response.on('data', (chunk) => (text += chunk));
+                    response.on('end', () => {
+                      if (response.statusCode !== 200) {
+                        reject(new Error('release HTTP ' + response.statusCode));
+                        return;
+                      }
+                      try {
+                        resolve(JSON.parse(text));
+                      } catch (error) {
+                        reject(error);
+                      }
+                    });
+                  },
+                )
+                .on('error', reject);
+            });
+          request()
+            .then((release) => {
+              if (release.id !== Number(process.env.RELEASE_ID)) throw new Error('release id mismatch');
+              if (release.tag_name !== 'read/' + process.env.READ_VERSION) throw new Error('release tag mismatch');
+              if (release.target_commitish !== process.env.SOURCE_COMMIT)
+                throw new Error('release target mismatch');
+              if (release.draft !== false || release.prerelease !== false)
+                throw new Error('release state mismatch');
+              const parsed = require('./scripts/stable-release-authority.js').parseReleaseBody(
+                release.body,
+                'read',
+              );
+              const approval = parsed.approval;
+              for (const key of Object.keys(expected)) {
+                if (key === 'companion') {
+                  for (const companionKey of Object.keys(expected.companion)) {
+                    if (approval.companion?.[companionKey] !== expected.companion[companionKey])
+                      throw new Error('approval companion mismatch: ' + companionKey);
+                  }
+                } else if (approval[key] !== expected[key]) {
+                  throw new Error('approval mismatch: ' + key);
+                }
+              }
+              const notesText = fs.readFileSync('docs/release-stable-notes.md', 'utf8');
+              const heading = '## Read ' + process.env.READ_VERSION;
+              const sections = notesText.split(/(?=^## )/mu).filter((section) => section.startsWith(heading + '\n'));
+              if (sections.length !== 1) throw new Error('Read notes section missing or duplicated');
+              const notes = sections[0].trim();
+              if (notes !== parsed.notes) throw new Error('release notes differ from source notes');
+              if (crypto.createHash('sha256').update(Buffer.from(notes)).digest('hex') !== process.env.NOTES_SHA256)
+                throw new Error('notes SHA mismatch');
+              console.log('release approval verified', release.id, release.tag_name);
+            })
+            .catch((error) => {
+              console.error('release approval verification failed:', error.message);
+              process.exitCode = 1;
+            });
+          EOF
+
+      - name: Select the outside-repository trusted npm release
+        run: echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+
+      - name: Extract the audited npm CLI
+        run: |
+          mkdir -p "$RUNNER_TEMP/trusted-npm"
+          tar -xzf "$KDNA_TRUSTED_NPM_TARBALL" -C "$RUNNER_TEMP/trusted-npm"
+          test "$(node "$RUNNER_TEMP/trusted-npm/package/bin/npm-cli.js" --version)" = "11.17.0"
+          echo "NPM_CLI=$RUNNER_TEMP/trusted-npm/package/bin/npm-cli.js" >> "$GITHUB_ENV"
+
+      - name: Build the exact reviewed Read artifact
+        run: |
+          node scripts/stable-release-authority.js candidate --unit read \
+            --evidence "$RUNNER_TEMP/read-candidate-evidence.json" \
+            --artifact "$RUNNER_TEMP/aikdna-kdna-read-$READ_VERSION.tgz"
+
+      - name: Verify the retained Read artifact and candidate evidence
+        run: |
+          node - <<'EOF'
+          const crypto = require('crypto');
+          const fs = require('fs');
+          const cp = require('child_process');
+          const artifact = process.env.RUNNER_TEMP + '/aikdna-kdna-read-' + process.env.READ_VERSION + '.tgz';
+          const bytes = fs.readFileSync(artifact);
+          const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
+          const shasum = crypto.createHash('sha1').update(bytes).digest('hex');
+          const integrity = 'sha512-' + crypto.createHash('sha512').update(bytes).digest('base64');
+          if (sha256 !== process.env.ARTIFACT_SHA256) throw new Error('artifact SHA-256 mismatch');
+          if (shasum !== process.env.ARTIFACT_SHASUM) throw new Error('artifact SHA-1 mismatch');
+          if (integrity !== process.env.ARTIFACT_INTEGRITY) throw new Error('artifact SRI mismatch');
+          const evidence = JSON.parse(
+            fs.readFileSync(process.env.RUNNER_TEMP + '/read-candidate-evidence.json', 'utf8'),
+          );
+          if (evidence.unit !== 'read') throw new Error('candidate unit mismatch');
+          for (const key of ['commit', 'tree', 'base_commit']) {
+            const expected = {
+              commit: process.env.SOURCE_COMMIT,
+              tree: process.env.SOURCE_TREE,
+              base_commit: process.env.BASE_COMMIT,
+            }[key];
+            if (evidence.source[key] !== expected) throw new Error('candidate source mismatch: ' + key);
+          }
+          if (evidence.package.name !== '@aikdna/kdna-read' || evidence.package.version !== process.env.READ_VERSION)
+            throw new Error('candidate package identity mismatch');
+          if (evidence.notes_sha256 !== process.env.NOTES_SHA256) throw new Error('candidate notes mismatch');
+          if (evidence.artifact.sha256 !== process.env.ARTIFACT_SHA256) throw new Error('candidate artifact SHA mismatch');
+          if (evidence.artifact.shasum !== process.env.ARTIFACT_SHASUM) throw new Error('candidate artifact SHA-1 mismatch');
+          if (evidence.artifact.integrity !== process.env.ARTIFACT_INTEGRITY)
+            throw new Error('candidate artifact SRI mismatch');
+          if (!Array.isArray(evidence.artifact.files) || evidence.artifact.files.length !== 99)
+            throw new Error('candidate artifact member count mismatch');
+          const pkg = JSON.parse(cp.execFileSync('tar', ['-xOf', artifact, 'package/package.json'], { encoding: 'utf8' }));
+          if (pkg.name !== '@aikdna/kdna-read' || pkg.version !== process.env.READ_VERSION)
+            throw new Error('artifact package identity mismatch');
+          if (pkg.peerDependencies['@aikdna/kdna-core'] !== process.env.CORE_VERSION)
+            throw new Error('artifact peer dependency mismatch');
+          console.log('candidate artifact verified', sha256);
+          EOF
+          node --input-type=module - <<'EOF'
+          import { execFileSync } from 'node:child_process';
+          import { evaluatePackagedReadme } from './scripts/check-packaged-readme.mjs';
+          const artifact = process.env.RUNNER_TEMP + '/aikdna-kdna-read-' + process.env.READ_VERSION + '.tgz';
+          const readme = execFileSync('tar', ['-xOf', artifact, 'package/README.md'], { encoding: 'utf8' });
+          const findings = evaluatePackagedReadme({
+            readme,
+            name: '@aikdna/kdna-read',
+            version: process.env.READ_VERSION,
+            label: 'reviewed Read artifact',
+          });
+          if (findings.length !== 0) throw new Error(JSON.stringify(findings));
+          console.log('candidate README verified');
+          EOF
+
+      - name: Assert token-free OIDC environment
+        run: |
+          test -z "${NODE_AUTH_TOKEN:-}"
+          test -z "${NPM_TOKEN:-}"
+          if [ -f "$HOME/.npmrc" ] && grep -q "_authToken" "$HOME/.npmrc"; then
+            echo "unexpected npm auth token in $HOME/.npmrc" >&2
+            exit 1
+          fi
+          if [ -f .npmrc ] && grep -q "_authToken" .npmrc; then
+            echo "unexpected npm auth token in .npmrc" >&2
+            exit 1
+          fi
+
+      - name: Dry-run the trusted publish command
+        run: |
+          cd "$RUNNER_TEMP"
+          node "$NPM_CLI" publish "$RUNNER_TEMP/aikdna-kdna-read-$READ_VERSION.tgz" \
+            --ignore-scripts --access public --tag latest --dry-run
+
+      - name: Publish Read with npm Trusted Publishing
+        run: |
+          cd "$RUNNER_TEMP"
+          node "$NPM_CLI" publish "$RUNNER_TEMP/aikdna-kdna-read-$READ_VERSION.tgz" \
+            --ignore-scripts --access public --tag latest
+
+      - name: Verify the published registry identity and dist-tags
+        run: |
+          for attempt in $(seq 1 12); do
+            if node "$NPM_CLI" view "@aikdna/kdna-read@$READ_VERSION" version --json 2>/dev/null | grep -q "\"$READ_VERSION\""; then
+              break
+            fi
+            echo "waiting for registry propagation (attempt $attempt/12)"
+            sleep 5
+          done
+          node - <<'EOF'
+          const cp = require('child_process');
+          const run = (args) =>
+            JSON.parse(
+              cp.execFileSync(process.execPath, [process.env.NPM_CLI, ...args], { encoding: 'utf8' }),
+            );
+          const info = run([
+            'view',
+            '@aikdna/kdna-read@' + process.env.READ_VERSION,
+            'version',
+            'dist.integrity',
+            'dist.shasum',
+            'gitHead',
+            '--json',
+          ]);
+          if (info.version !== process.env.READ_VERSION) throw new Error('registry version mismatch');
+          if (info['dist.integrity'] !== process.env.ARTIFACT_INTEGRITY) throw new Error('registry integrity mismatch');
+          if (info['dist.shasum'] !== process.env.ARTIFACT_SHASUM) throw new Error('registry shasum mismatch');
+          if (info.gitHead !== process.env.SOURCE_COMMIT) throw new Error('registry gitHead mismatch');
+          const tags = run(['view', '@aikdna/kdna-read', 'dist-tags', '--json']);
+          if (tags.latest !== process.env.READ_VERSION) throw new Error('latest dist-tag mismatch');
+          if (tags['r2.7'] !== '0.11.0-rc.r2.7') throw new Error('r2.7 dist-tag moved');
+          if (tags['browser-preview'] !== '0.11.2-rc.browser.1') throw new Error('browser-preview dist-tag moved');
+          try {
+            const attestations = run([
+              'view',
+              '@aikdna/kdna-read@' + process.env.READ_VERSION,
+              'dist.attestations',
+              '--json',
+            ]);
+            console.log('provenance attestations', JSON.stringify(attestations));
+          } catch (error) {
+            console.warn('provenance attestation not observed yet; verify separately');
+          }
+          console.log('registry identity verified', info.version, info.gitHead);
+          EOF
+
+      - name: Cold-install the exact published pair
+        run: |
+          cold="$(mktemp -d)"
+          cd "$cold"
+          node "$NPM_CLI" init -y
+          node "$NPM_CLI" install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
+            "@aikdna/kdna-core@$CORE_VERSION" "@aikdna/kdna-read@$READ_VERSION"
+          node -e "const r=require('@aikdna/kdna-read');const p=require('@aikdna/kdna-read/package.json');if(p.version!==process.env.READ_VERSION)throw new Error('Read version mismatch');if(typeof r.admitReadRequest!=='function'||typeof r.project!=='function')throw new Error('Read exports missing');console.log('cold install verified',p.version)"
+
+      - name: Remove transient release outputs
+        if: always()
+        run: |
+          rm -rf "$RUNNER_TEMP/trusted-npm" \
+            "$RUNNER_TEMP/npm-11.17.0.tgz" \
+            "$RUNNER_TEMP/read-candidate-evidence.json" \
+            "$RUNNER_TEMP/aikdna-kdna-read-$READ_VERSION.tgz"
