@@ -54,7 +54,7 @@ jobs:
           fetch-depth: 0  # need full history for tag/branch resolution
 
       - name: Install Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
 
@@ -188,7 +188,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with: { node-version: 22 }
       - name: Audit the README bytes the registry serves
         run: node scripts/check-packaged-readme.mjs --published
@@ -203,7 +203,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with: { node-version: 22 }
       - name: Compare the release matrix with the live registry and current refs
         env:
