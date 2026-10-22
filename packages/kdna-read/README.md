@@ -69,6 +69,29 @@ For an exact judgment selection, Read preserves the entire Core method value: na
 
 Read also supplies the complete Core-owned `IRNode_judgment.static_policy_interpretation` from the explicit `/2` carrier and its new definition digest as mandatory selected content. `priority` means a single first matching candidate in the explicit direction: a true entry requires every earlier condition to be explicitly false, an unknown prior condition blocks later candidates, and fallback requires every condition to be explicitly false. Read communicates these common static semantics; it neither evaluates conditions nor asserts that any candidate was actually selected. It never rewrites the rule from prose or changes an asset to fit this finite strategy. Publication, Studio creation, Reader presentation and other consumer support remain separately verified responsibilities.
 
+## Budget, surfaces and tokens
+
+`budget_bytes` limits the complete final JCS `read_envelope`, not the printed
+model-view body. The measured envelope includes the envelope metadata, receipt,
+verification, content and its own `budget` object; `budget.required_bytes` and
+`budget.actual_bytes` report that measure as fixed-width decimal strings. Content
+is never truncated to fit. A body that fits inside a budget does not imply the
+read will be accepted, because the envelope also carries the contract, receipt,
+verification, states and the budget fields themselves.
+
+`--view body` is the author body plus one fingerprint. It omits the target index,
+the expansion handles and the envelope fields; the fingerprint names what was
+omitted and how to recover it. `--view raw` prints the library envelope unchanged,
+including the handles; `--view full` is a model view and may be smaller than raw
+(and may omit a handle). Use `--view raw` or a rejection envelope for the budget
+measure, and the session route to resolve handles. The modes answer different
+questions: `catalog` lists judgment ids without bodies; `exact_selection` returns
+the selected judgment with its mandatory closure; `whole_asset` returns the Core
+asset closure and may defer targets behind expansion handles.
+
+Byte counts are UTF-8 bytes of canonical JSON, not model tokens. The CLI does not
+tokenize; obtain token usage from the Host/model API.
+
 ## Protected browser Read candidate
 
 Use `@aikdna/kdna-read/protected-sections-browser` with an operation and normalized request returned by the [Core browser adapter](../kdna-core/README.md), plus its independently trusted Read authority. `createTrustedProtectedPayloadHostJson(observeJson, deliver)` creates the Host provider: `observeJson` returns closed observation JSON for the exact supplied binding and scope; `deliver(result, token)` acknowledges delivery with literal `true`. Call `readProtectedSectionBrowser(operation, request, authority, host)`. The [generated declarations](src/protected-sections-browser.d.ts) define all three callables.
