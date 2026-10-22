@@ -101,7 +101,9 @@ rationale is bounded like any other captured content.
 1. Whether the confirmation record lives inside the asset or in a host-side record
    that the asset references.
 2. Whether short author snippets are stored byte-exact or normalized with a locator.
-3. How the labels interact with the judgment lifecycle in
-   [RFC-0013](./RFC-0013-judgment-asset-lifecycle.md) when a judgment is revised.
+3. How the labels interact with the judgment lifecycle contract
+   ([`judgment.lifecycle`](../specs/public-semantic-source.json)) when a judgment is
+   revised. (The former link to the withdrawn `specs/RFC-0013` is corrected by
+   RFC-0023.)
 4. Which of these rules are enforced at container admission versus at presentation,
    and whether an unknown label is a hard rejection or a bounded warning.
