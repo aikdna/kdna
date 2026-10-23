@@ -459,6 +459,10 @@ that it is implemented now.
    being disguised as `author_stated`.
 7. An asset with only unconfirmed suggestions produces an explicit empty
    stance-set result with a reason, not a silently empty view.
+8. A rejection or withdrawal uses an explicit confirmation outcome
+   (`to_label: null` in the non-binding sketch), removes the entry from the
+   current stance set, preserves its history, and never promotes the proposal
+   to `author_stated`.
 
 **B - unresolved questions**
 
