@@ -1,412 +1,532 @@
-# RFC-0023: Source Attribution Labels, Judgment State, and Diagnostic Payload for the 0.6 Coordinate Family
+# RFC-0023: Source Attribution Labels, Unresolved-Question State, and Read Diagnostic Cause for the 0.6 Coordinate Family
 
-**Status:** draft — not implemented. Internal identifier
-`kdna-rfc/source-and-state-0.6`. This RFC proposes one coordinated coordinate
-move for the 0.6 family; it changes no published coordinate, package, or
-schema by itself. The slug uses `state` (not `pending`) to match the
-normative field value `open`.
+**Status:** draft - not implemented. Internal identifier
+`kdna-rfc/source-and-state-0.6`. This RFC changes no published coordinate,
+package, or schema by itself. It does not claim that the stable, creation,
+Native execution, and Read routes move together. The slug uses `state`
+(not `pending`) to match the proposed unresolved-question value `open`.
 
-**Intended audience:** consumers of the public kdna repositories — asset
+**Intended audience:** consumers of the public kdna repositories - asset
 authors, tool implementers reading the container/payload/IR contracts, and
 maintainers of kdna-core / kdna-cli / kdna-read / conformance.
 
-**Relationship to existing RFCs:** implements and partially supersedes the
-unimplemented draft [RFC-0022](./RFC-0022-source-attribution-labels.md)
-(one effective-set rule is replaced, see §3.1). Fixes RFC-0022's dangling
-reference to the withdrawn `specs/RFC-0013` (see §3.2). Changes no published
-coordinate by itself; everything rides one coordinated version move (§3.4).
+**Relationship to existing RFCs:** continues the unimplemented draft
+[RFC-0022](./RFC-0022-source-attribution-labels.md) and replaces its
+effective-set rule 1 (see section 3.1). It also fixes RFC-0022's dangling
+reference to the withdrawn `specs/RFC-0013` by pointing to the current
+`judgment.lifecycle` contract. This RFC is a design proposal only; RFC-0022
+and RFC-0023 remain drafts.
 
-**Scope trigger:** the 0.6 family — the candidate container `0.6.0` creation
-route (`kdna.creation-sections/0.1.0-candidate`, output tuple container
-`0.6.0` / payload `0.5.1` / IR `0.6.1` / read `0.7.0-candidate` on main today)
-and the `kdna.canonical-ir/0.6.x` and `kdna.read/0.6.x` axes. None of these
-fields land as silent additions to already-closed structures; they land with
-the 0.6 design finalization as one named, revertible move.
+**Scope trigger:** this proposal has three separable design tracks:
+
+1. source labels on captured judgment;
+2. an independent carrier for questions whose answer is not yet a complete
+   judgment;
+3. optional cause fields on the Read rejection diagnostic.
+
+Each track may land in a different versioned contract. No combined coordinate
+move is assumed.
 
 ---
 
 ## 1. Problem
 
-The creation surface can today record a judgment's content, method and
-lifecycle, but three things a faithful capture needs are missing. All three
-were observed as concrete failure shapes (not hypothetical) during authoring
-trials with real material.
+The creation surface can record a judgment's content, method, and lifecycle,
+but it cannot express the following three distinctions without overloading an
+existing structure.
+
+The failure shapes below were exercised in design review and synthetic
+fixtures. No real-author trial, real-author material, or independent author
+acceptance is claimed by this RFC.
 
 ### 1.1 No structural place for "who said this, on what basis" (A)
 
 A KDNA asset can carry judgment a person stated, judgment an Agent derived
 from material, and judgment an Agent merely proposed. The container records
 the judgment without a declared provenance class, so a reader cannot tell
-which entries belong to the author's own thinking (RFC-0022 Motivation). The
-failure mode observed in practice: Agent inferences and unconfirmed
-suggestions become indistinguishable from the author's stated positions once
-the asset is closed, and no later review can separate them, because the
-distinction was never captured. Existing actor structures (`subject.actor_ids`,
-revision `actor_refs`, `SourceUse`) answer different questions — who a judgment
-is about, who revised it, which material it cites — and none of them states
-the producer class of the judgment content itself. Adding "another actor" does
-not solve this (see §3.1 rules).
+which entries belong to the author's own thinking (RFC-0022 Motivation).
 
-### 1.2 No structural place for "not yet decided / refused / materials conflict" (B)
+Existing actor structures answer different questions:
 
-Four states of a question are distinguishable in real authoring and each means
-something different:
+* `subject.actor_ids` says who a judgment is about;
+* revision `actor_refs` says who revised an entry;
+* `SourceUse` says which material a target cites;
+* `AttributionDeclaration` is an asset-level role declaration with only
+  `creator`, `rights_holder`, and `representative`.
+
+None of these states the producer class of the judgment content itself, and
+none is a per-judgment delegation record. In particular, `attributions` must
+not be described as evidence of a per-entry delegation. This RFC does not
+add such a delegation structure.
+
+### 1.2 No structural place for an unresolved question (B)
+
+Four states are distinguishable in authoring:
 
 | State | Meaning |
 | --- | --- |
-| Undecided (pending) | Not yet discussed with the author; no determination exists yet. |
-| Declined | The author was asked and explicitly refused to answer. |
-| Not applicable | The question is out of scope for this author/asset (a scope judgment). |
-| Materials conflict | The source materials contradict each other; the conflict itself is the finding. |
+| Undecided (`open`) | No determination exists yet. |
+| Declined (`declined`) | The author was asked and explicitly declined to answer. |
+| Not applicable | The question is outside this author/asset scope. |
+| Materials conflict (`conflicted`) | The source materials contradict each other; the conflict itself is the finding. |
 
-Today the structure cannot express the first, second or fourth. The observed
-failure: "author did not provide an answer" gets silently filled in as
-`out_of_domain` (or a fabricated confirmation), producing an apparently
-complete asset that states a scope position the author never took. A missing
-answer is a knowledge state; `out_of_domain` is a scope judgment — different
-axes, not interchangeable. The third state already has expressions
-(`BoundaryEffect: out_of_domain`, declaration `not_applicable`) and needs no
-new synonym.
+The existing `Judgment` shape cannot carry the first, second, or fourth state
+without changing what a judgment means:
 
-### 1.3 Diagnostics carry coordinates but no cause (C)
+* `Judgment.required` has 15 fields, including `form`, `answer_kind`,
+  `core_expression`, `result_contract`, `method`, `material_refs`,
+  `reason_refs`, `parent_ref`, `ports`, `inputs`, and `content_uses`.
+* `Judgment.form` is only `conclusion` or `rule`.
+* `Judgment.oneOf` requires either `result` or `formation_rule`.
+* `Payload.judgments` is required and has `minItems: 1`.
+* `capabilityFor()` returns `null` when there are no judgments, and
+  `PUBLIC-ASSET-CAPABILITY` rejects a capability that cannot be derived.
 
-When creation or admission fails, the rejection envelope's `diagnostics[]`
-items are a closed five-field shape `{code, stage, severity, subject, field}`
-(`ReadDiagnostic` in `specs/public-semantic-source.json`, verified on main:
-`additionalProperties:false`). A diagnostic can say *where* (`field`) but not
-*why in machine-readable form* — no short reason code, no list of missing
-items, no expected value. The CLI today compensates for one failure class
-(`…/method/components`) with a sibling `guidance` key whose data comes from the
-delivered read-only method-role table (`getMethodRoleTable()` in
-`kdna-core/public-contract/components.js`, reasons `method_component_roles` /
-`method_missing`). That is CLI-side, one class only, and not part of the core
-envelope. The gap is cause-level detail inside the core diagnostic itself.
+An `open` question has no conclusion or formation rule. Putting it into a
+`Judgment` would therefore force a fabricated `result` or
+`formation_rule`. Making `judgment_state` an optional field on the existing
+`Judgment` would only label a complete judgment; it would not create a place
+for a question that has no complete judgment yet.
+
+The nearest existing fields are also different structures:
+
+* `AuthoredDeclarations.highest_question` is a required
+  `TextDeclarationProvided`, not a question lifecycle container.
+* `Relationship.participants` has exactly two `judgment_ref` entries.
+* `SourceTargetKind` does not include `question`.
+* `AuthoredUnprovidedState` is a declaration-level
+  `unknown` / `none` / `not_applicable` state, not an unresolved-question
+  lifecycle.
+
+### 1.3 Read diagnostics carry coordinates but no cause (C)
+
+`ReadDiagnostic` in the Read envelope is a closed five-field object:
+`{code, stage, severity, subject, field}` with
+`additionalProperties: false`. It can say where a failure occurred but does
+not provide a machine-readable cause, a list of missing items, or an expected
+value.
+
+This problem is specific to the Read rejection envelope. Creation and source
+routes use separate diagnostic shapes:
+
+* `AdmissionDiagnostic` has its own `AdmissionReason` vocabulary;
+* `SourceRouteDiagnostic06` has its own code and stage vocabulary;
+* `SourceMigrationDiagnostic06` has another code and stage vocabulary;
+* `BrowserProtectedDiagnostic` is a separate browser-facing shape.
+
+The CLI's existing `guidance` key is a sibling of `diagnostics[]`, not a
+field of `ReadDiagnostic`, and is not a ready-made vocabulary for this
+proposal. This RFC therefore does not claim that a creation or admission
+failure automatically produces a Read diagnostic.
 
 ---
 
 ## 2. Non-goals
 
-* No authorship authentication. Labels are producer declarations; proving who
-  a person is stays with the signature track (RFC-0021) and account work.
-* No automatic promotion of Agent output to author material, whatever a
-  model's confidence.
-* No change to `answer_kind` (17 values), `judgment.lifecycle`
-  (active/deprecated/superseded/withdrawn), `BoundaryEffect`,
-  `AuthoredUnprovidedState`, `PolicyDisposition`, or `SharedTextDeclaration`.
-* No default body-view change: the default `--view body` projection carries no
-  labels (a separate successor item with its own before/after comparison and
-  model-surface retest).
-* No backfill of any existing asset, and no migration tool that generates
-  labels or states.
-* No relaxation of any existing rejection gate.
+* No authorship authentication. Labels are producer declarations; proving
+  who a person is remains with the signature track (RFC-0021) and account
+  work.
+* No automatic promotion of Agent output to author material, regardless of
+  model confidence.
+* No change to `answer_kind`, `judgment.lifecycle`, `BoundaryEffect`,
+  `AuthoredUnprovidedState`, `PolicyDisposition`, or
+  `SharedTextDeclaration`.
+* No default body-view change. The default `--view body` projection carries
+  no labels; a later opt-in surface needs its own before/after comparison and
+  model-surface retest.
+* No backfill of an existing asset and no migration tool that generates
+  labels, unresolved questions, or diagnostic causes.
+* No relaxation of an existing rejection gate.
+* No claim that all diagnostic routes share one vocabulary or one envelope.
+* No claim that a candidate route's coordinates are stable or final.
 
 ---
 
 ## 3. Proposal
 
-### 3.1 A — Source attribution labels (continues RFC-0022, one rule replaced)
+### 3.1 A - Source attribution labels
 
-**Labels.** Adopt RFC-0022's three labels unchanged, at judgment granularity:
+Adopt RFC-0022's three labels unchanged, at judgment granularity:
 
 | Label | Meaning | Required companion material |
 | --- | --- | --- |
-| `author_stated` | The named author asserted this. | Locator plus the original snippet the judgment was taken from. |
-| `agent_inferred` | An Agent derived this from material, within an explicitly delegated scope or from cited material. | Rationale, producer identity, inputs derived from. |
+| `author_stated` | The named author asserted this. | A locator plus the original snippet from which the judgment was taken. |
+| `agent_inferred` | An Agent derived this from material. | Rationale, producer identity, and the inputs it used. |
 | `agent_suggested` | An Agent proposed this and no author has confirmed it. | The proposal and producer identity. |
 
 Labels are additive, carry no default, and are producer declarations, not
 authentication.
 
-**Two sets, not one (this replaces RFC-0022's effective-set rule 1).**
-RFC-0022 currently reads: effective set = `author_stated` plus
-`agent_inferred` entries that carry their rationale. **That rule is not
-adopted.** A reviewable inference is not an adopted position: rationale makes
-an inference inspectable, not authorial. This RFC replaces it with:
+**Two sets, not one.** RFC-0022's rule that `author_stated` plus rationalized
+`agent_inferred` entries form the effective set is not adopted. A reviewable
+inference is not an adopted author position. This RFC uses:
 
-1. **Author stance set** — answers "what did the author actually say/think" —
-   is exactly `author_stated` entries plus entries promoted by a confirmation
-   record.
-2. **Derived reviewable set** — `agent_inferred` entries. They can and should
-   be reviewed against their inputs and derivation, but presentation and
-   composition must not answer stance questions from this set as if the author
-   had stated it.
-3. `agent_suggested` stays a candidate outside both sets, with no automatic
-   promotion path.
-4. **Confirmation record is the only promotion channel.** Sketch fields per
-   RFC-0022 (non-binding there, settled here at implementation review):
-   `entry_digest`, `from_label`, `to_label`, `confirmed_by`, `confirmed_at`,
-   `method` (`author_review` / `author_edit` / `author_rejection`). Placement
-   leans **in-asset** (adoption facts should not be locked in a private
-   service); host-side records only reference it. Final placement and field
-   names: Open question 1.
-5. An Agent must never relabel `agent_suggested`/`agent_inferred` as
-   `author_stated`. A withdrawal is recorded like an addition: the entry keeps
-   its history and gains a confirmation record that removes it from the stance
-   set.
+1. **Author stance set:** exactly `author_stated` entries plus entries
+   promoted by a confirmation record.
+2. **Derived reviewable set:** `agent_inferred` entries. They may be reviewed
+   against their inputs and derivation, but must not answer stance questions
+   as if the author had stated them.
+3. `agent_suggested` remains a candidate outside both sets.
+4. A confirmation record is the only promotion channel.
 
-**Delegation boundary.** Within an explicitly delegated scope, an Agent's
-research/editing decisions are legitimately labeled `agent_inferred` (the
-authorization basis is expressed via `attributions`/process records): they are
-neither disguised as `author_stated` nor rendered unusable by the absence of
-per-item human signature.
+The confirmation record is a semantic requirement, not a settled wire shape.
+A non-binding sketch is:
 
-**Granularity.** Judgment-level first: `reason`/`material` content is covered
-by the label through references. Finer granularity is an open extension
-(Open question 3), not a launch requirement.
+```
+{
+  "entry_digest": "<digest of the entry being confirmed>",
+  "from_label": "agent_suggested",
+  "to_label": "author_stated",
+  "confirmed_by": "<declared author or authorized actor>",
+  "confirmed_at": "<timestamp>",
+  "method": "author_review" | "author_edit" | "author_rejection"
+}
+```
 
-**Unlabeled assets.** No label = unknown, forever. No tool backfills a label
-onto an existing entry. Consumers that do not understand labels treat a
-carrying asset at least as strictly as today (RFC-0022 Compatibility): they may
-refuse to present entries they cannot classify and must not present
-`agent_suggested` entries as author material.
+The final placement and field names are an implementation-review decision.
+Any confirmation record must remain linkable to the exact entry it confirms;
+whether that record lives in the asset or in a host-side record is still open.
 
-**Snippet handling.** Original wording is preserved as received; normalization
-happens as a separate, referenced layer, never as an overwrite. Byte-exact vs
-normalized-with-locator storage: Open question 2.
+An Agent must never relabel `agent_suggested` or `agent_inferred` as
+`author_stated`. A withdrawal is recorded like an addition: the old entry
+remains in history and the confirmation record removes it from the stance set.
 
-### 3.2 B — Judgment state (undecided / declined / conflicted)
+**Delegation boundary.** An explicitly delegated research or editing scope
+may justify an `agent_inferred` label, but the delegation basis must not be
+inferred from `AttributionDeclaration`. The current attribution roles are
+asset-level roles, not per-judgment authorization. If a future design needs a
+per-judgment delegation record, it must define that record separately.
 
-**Field.** New **optional** judgment-level field `judgment_state`:
+**Granularity.** Start at judgment level. `reason` and `material` content is
+covered through references. Finer-grained labels are a later extension and
+are not a launch requirement.
 
-| Value | Meaning |
+**Unlabeled assets.** No label means unknown, not `author_stated`. No tool
+backfills a label. A consumer that does not understand a label must not
+present the entry as author material. Whether an unknown label is rejected at
+container admission or at a later presentation gate remains an implementation
+decision; the fail-closed direction is mandatory.
+
+**Snippet handling.** Preserve the original wording as received. Normalization
+is a separate referenced layer and never overwrites the original. The storage
+encoding remains open; preservation of the original is fixed.
+
+### 3.2 B - Unresolved-question carrier
+
+This RFC does not add `judgment_state` to `Judgment`. A complete `Judgment`
+continues to require a conclusion or formation rule. Instead, the candidate
+design adds an independent payload-level collection whose working name is
+`unresolved_questions`. `JudgmentQuestion` is a candidate type name, not an
+existing public type.
+
+The collection is for questions that do not yet have a complete judgment.
+Its minimum semantic shape is:
+
+| Element | Meaning |
 | --- | --- |
-| `open` | Not yet discussed / not yet decided (the pending state). |
-| `declined` | The author was explicitly asked and refused to answer. |
-| `conflicted` | The materials behind this judgment conflict with each other. |
+| Stable question identity | A referenceable identifier. |
+| Question text | The question being left unresolved. |
+| State | `open`, `declined`, or `conflicted`. |
+| Basis | The available source, author interaction, or conflict evidence, when the state requires it. |
 
-"Explicitly not applicable" is **not** a fourth value: it keeps its existing
-expressions (`BoundaryEffect: out_of_domain`, declaration `not_applicable`).
-No new synonym is created.
+Exact field names, cardinalities, and whether the carrier is an array, a map,
+or a versioned alternate form are not settled here. The following rules are
+normative for any eventual shape:
 
-**The four states are not interchangeable (anti-fill-in rules).**
+1. An unresolved question must not be encoded as an empty `Judgment` or as a
+   synthetic `result` / `formation_rule`.
+2. `open` means no determination exists. It is never rewritten to
+   `out_of_domain`, `none`, or deletion.
+3. `declined` means the author was asked and explicitly declined. Absence of
+   an answer is not `declined`.
+4. `conflicted` means the materials behind this question conflict. It is not
+   automatically an asserted `conflict` relationship between judgments and is
+   not the existing `PolicyDisposition` code `conflict`.
+5. `not_applicable` is not a fourth value. Existing `BoundaryEffect` and
+   declaration expressions remain the place for explicit scope decisions.
+6. A state outside the three values is rejected, not coerced.
+7. An unresolved question is not a `Relationship` participant and is not a
+   `SourceTargetKind` target unless a later version explicitly extends those
+   structures.
+8. `highest_question` remains a provided declaration text and is not a
+   container for unresolved questions.
+9. `AuthoredUnprovidedState` and unresolved-question state are different
+   structures. Neither is a coercion or fallback for the other.
+10. An unresolved question does not itself create `asset_capability`. The
+    capability must still be derivable from complete judgments under the
+    current capability rules.
 
-* `open` is never rewritten to `out_of_domain`, `none`, or deleted — at
-  creation, migration, or conversion. An undetermined question stays visibly
-  undetermined.
-* Absence of an answer is never recorded as `declined`, and a refusal is never
-  recorded as `open` or as not-applicable; each state asserts a different fact
-  about what actually happened.
-* `conflicted` is a property of the materials behind **this** judgment. It is
-  not automatically an asserted `conflict` relation between two judgments, and
-  it is not the same structure as the existing `PolicyDisposition` code
-  `conflict` (a policy outcome disposition) — different axes, no coercion in
-  either direction. Likewise, juxtaposing a `conflict` disposition and a
-  `value_order` shared declaration proves nothing about a bound adjudication
-  basis; binding requires the actual confirmation record.
-* `judgment_state` is orthogonal to `judgment.lifecycle`
-  (active/deprecated/superseded/withdrawn): when an `open` judgment is later
-  decided, the old version keeps its `open` history and the new version states
-  normally. (This answers RFC-0022 Open question 3; the reference there to
-  `specs/RFC-0013` is dangling — that RFC is Withdrawn — and this RFC's
-  landing PR fixes the link to point at the current `judgment.lifecycle`
-  contract.)
-* `judgment_state` never becomes an 18th `answer_kind`.
+**Empty judgments are not decided by this draft.** The current
+`Payload.judgments` `minItems: 1` and `capabilityFor()` behavior remain in
+force until a separate accepted design changes them. This means the first
+version of `unresolved_questions` can coexist with at least one complete
+judgment; a question-only asset is not claimed to be valid.
 
-**Shape preservation.** A judgment carrying any state keeps the complete
-judgment shape (conclusion body + original wording). Marking never yields an
-empty result: old consumers that ignore the field read byte-identical behavior
-to today; new consumers can filter or flag.
+The lifecycle is versioned, not rewritten in place. If an unresolved question
+is later answered, the old asset version keeps its `open` or `declined`
+history and the new version records the resolution under the separately
+settled resolution design.
 
-**Admission.** Values outside the three-value enum are **rejected**, not
-silently tolerated. Absent field = existing behavior. (If `conflicted` later
-turns out to need per-actor split semantics, it is split out as its own later
-versioned change; the field is never distorted to carry both meanings. Open
-question 4.)
+### 3.3 C - Read diagnostic cause
 
-### 3.3 C — Diagnostic payload: `reason` / `missing` / `expected`
+In a new Read envelope version, `ReadDiagnostic` may gain three optional
+fields:
 
-In the next envelope version, `ReadDiagnostic` gains three **optional** fields:
-
-| Field | Type | Meaning |
+| Field | Candidate type | Meaning |
 | --- | --- | --- |
-| `reason` | short code (Text, code-shaped) | Machine-readable cause for this diagnostic. |
-| `missing` | array of strings, ≤ 64 items | The specific items whose absence caused the failure (e.g. required role names). |
-| `expected` | string or array (≤ 64 items) | What the field/structure expected instead of what it got. |
+| `cause` | code-shaped text | Machine-readable cause for this diagnostic. |
+| `missing` | array of strings, bounded | The specific items whose absence caused the failure. |
+| `expected` | string or bounded array | What the structure expected instead of what it received. |
 
-The five existing fields are preserved verbatim; `required` unchanged;
-`additionalProperties:false` retained — the new fields are additions inside a
-new version, never silent tolerance. Old consumers reading only the five
-fields are unaffected; producers and validators upgrade on the pinned
-coordinate.
+The name `cause` is intentional. `AdmissionDiagnostic.reason` already uses a
+separate vocabulary; reusing `reason` here would invite a false unification.
+The five existing `ReadDiagnostic` fields remain verbatim, `required` is
+unchanged, and `additionalProperties: false` remains in force in the new
+version.
 
-Diagnostics are **output objects**, not asset input: this changes no asset
-compatibility, but touches every validation/passthrough consumer (§4).
+`ReadEnvelopeRejected.diagnostics` currently has `minItems: 1` and
+`maxItems: 1`. This proposal does not change that cardinality. If a later
+design needs multiple diagnostics, it requires its own versioned decision.
 
-**Vocabulary.** `reason` values share one vocabulary with the existing
-source-input admission stage — one vocabulary, implemented in both places.
-The exact final list is not fixed by this draft (Open question 6): the
-candidate names circulating in design (`missing_required_key`,
-`unexpected_key`, `wrong_type`, `wrong_value`, `missing_roles`,
-`role_not_allowed`, `role_duplicate`, `component_method_mismatch`) do not all
-match names on current main, and the already-delivered CLI guidance sibling
-keys use `method_component_roles` / `method_missing`. The unified list passes
-the naming gate and is settled in this RFC's implementation review.
+The `cause` vocabulary is a separate Read cause axis. It does not merge with:
 
-**Producer work named by this RFC** (for the implementer): schema-keyword →
-reason mapping plus enum-derived `expected` in `validate.js`; method-role
-threading (`missing`/`expected` from the role table) in `r2-semantics.js`;
-sanitization and threading in `admit.js` (reason code-shaped, arrays ≤ 64);
-byte-identical synchronization of the browser-native mirrors, guarded by the
-existing node↔browser deep-equality regression suite.
+* `ReadDiagnosticCode`;
+* `AdmissionReason`;
+* `SourceRouteDiagnostic06`;
+* `SourceMigrationDiagnostic06`;
+* `BrowserProtectedDiagnostic`;
+* the CLI's `method_component_roles` / `method_missing` guidance keys.
 
-### 3.4 One coordinated version move (the named list)
+The exact `cause` values and bounds are settled in implementation review. The
+candidate design names must not be presented as current public vocabulary.
 
-A and B add payload/IR fields; C moves the IR axis. All three ride **one**
-coordinate move so consumers switch once. Verified against main at drafting
-(2026-10-22; numbers re-confirmed at implementation):
+The CLI's existing guidance remains a CLI-side sibling key unless a separate
+change explicitly moves it. This RFC does not claim a create-output
+passthrough, and it does not claim that a source or admission failure is
+represented by a Read diagnostic.
 
-| Axis | From | To | Why it moves |
-| --- | --- | --- | --- |
-| `kdna.canonical-ir` | `0.6.1` | `0.6.2` | `ReadDiagnostic` lives on the IR axis (`specs/public-semantic-source.json` `types.ReadDiagnostic` + `versionTuple.ir`). |
-| `kdna.read` | `0.6.4` | `0.6.5` | `specs/read-contract-0.6.4.schema.json` embeds its own `ReadDiagnostic` and the const `contract: kdna.canonical-ir/0.6.1`. |
-| `kdna.runtime-capsule` / `kdna.consumption-plan` / `kdna.agent-host` (request + receipt) / `kdna.judgment-trace` | `0.3.1` | `0.3.2` | `VersionTuple` is embedded as a const in the five execution schemas. |
-| `read-transport-admission` | `0.2.1` | `0.2.2` | Embeds the tuple. |
-| `package-set-node` | `0.2.1` | `0.2.2` | Embeds the tuple. |
-| `protection-admission-r2`, `external-grant-issuer-r2`, `protected-source-r2` bindings | `8` | `9` (evaluated) | Embed the tuple; binding-7 and older stay frozen and untouched. |
-| payload profile | `0.5.1` | next (number at implementation) | A/B fields are additions to the closed judgment structure. |
-| container (candidate 0.6 route) | `0.6.0` candidate | stays candidate until this design settles | The creation route's output tuple re-pins to the new axes. |
+### 3.4 Coordinate routes are separate
 
-Old coordinates are frozen; active graphs exclude them. Generation-source
-bookkeeping (`native-output-recipe.json` `input_sha256`, preimage metadata,
-`public-generation-manifest.json`) re-pins in the same commit.
+The current source contains distinct route coordinates. They are evidence for
+separate version decisions, not for one coordinated move:
 
-**No pre-landing.** None of C's three fields, and none of the embedded
-consumers above, change before this RFC's 0.6 design is final — including
-"small" preparatory edits to sources, generators, recipes or docs.
+| Route | Container | Payload | Core | IR | Execution four axes | Read | Source |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| stable/browser | `0.5.0` | `0.5.1` | `kdna.core/0.8.2` | `kdna.canonical-ir/0.6.1` | `0.3.1` | `kdna.read/0.6.4` | `versionTuple` |
+| creation candidate | `0.6.0` | `0.5.1` | `kdna.core/0.8.2` | `kdna.canonical-ir/0.6.1` | `0.3.1` | `kdna.read/0.7.0-candidate` | `representation_candidate.a18_native_creation.version.output_tuple` |
+| Native execution candidate | `0.6.0` | `0.5.1` | `kdna.core/0.8.2` | `kdna.canonical-ir/0.6.1` | `0.4.0-candidate` | `kdna.read/0.7.0-candidate` | `representation_candidate.a17_native_execution.version.wire_tuple` |
 
-**Loader gate for A/B.** Assets carrying the new fields are gated by
-`compatibility.min_loader_version`: an older core rejects such an asset with
-an explicit unsupported-version rejection whose message a user can understand
-(`READ_UNSUPPORTED_VERSION` with a plain-language explanation) — never a
-silent misread. The closed schemas already make misread structurally
-impossible; the gate makes the refusal legible. Final wording: Open
-question 11.
+The migration route is an explicit stable `0.5.0` to creation `0.6.0`
+migration. It does not prove that every axis moves together, and it does not
+make the execution candidate's four axes equal to the creation candidate's
+four axes.
+
+A/B/C may therefore require different changes:
+
+* A changes the payload/creation contract only if a later accepted design
+  places labels there.
+* B changes the payload contract only if the unresolved-question carrier is
+  accepted there.
+* C changes the Read envelope and its generated consumers only if the Read
+  route is selected.
+
+Exact target coordinates, package versions, and release windows are deferred
+to implementation review. No pre-landing is authorized by this RFC: no
+source, generator, recipe, schema, or documentation change is to be made
+before the relevant design is accepted.
+
+### 3.5 Loader gate
+
+An asset that carries a newly required field must be gated by
+`compatibility.min_loader_version`. The requirement is a strict `x.y.z`
+loader package coordinate:
+
+* the loader's own package coordinate may carry a prerelease or build suffix;
+* a malformed requirement is a schema failure;
+* an older loader rejects a compatible asset with
+  `KDNA_LOADER_VERSION_UNSUPPORTED`, not `READ_UNSUPPORTED_VERSION`;
+* the comparison uses the three numeric components and does not treat a
+  prerelease suffix as a different threshold.
+
+Before relying on this gate, implementation review must also resolve the
+current source/schema mismatch: `specs/public-semantic-source.json` describes
+`Compatibility.min_loader_version` with the broad `VersionLabel` reference,
+while the runtime loader and `packages/kdna-core/schema/manifest.schema.json`
+require a strict three-component coordinate. This RFC records that mismatch;
+it does not claim it is already fixed.
 
 ---
 
 ## 4. Affected surfaces
 
-**Single source of truth and its generated fan-out** (kdna repo):
-`specs/public-semantic-source.json` → `generate-native.mjs` outputs —
-canonical-IR schemas (under `specs/` and `packages/kdna-core/schema/`),
-execution validators, generated contract, `.d.ts`, test vectors;
-`specs/public-vocabulary.json`; `specs/read-contract-0.6.x.schema.json` +
-`specs/read-contract.md`; `native-output-recipe.json`;
+**Single source of truth and generated fan-out** (`kdna` repository):
+`specs/public-semantic-source.json` and its generated canonical-IR schemas,
+execution validators, contract types, `.d.ts`, test vectors, vocabulary,
+Read schema and documentation, `native-output-recipe.json`, and
 `public-generation-manifest.json`.
 
-**kdna-core:** `validate.js`, `r2-semantics.js`, `admit.js`, browser-native
-mirrors; producer self-validation; conformance vectors. Package release rides
-the repo's existing release rules (exact number at implementation).
+**kdna-core:** schema validation, semantic admission, browser-native mirrors,
+producer self-validation, and conformance vectors. Any source/schema
+correction is a separate reviewed change.
 
-**kdna-cli:** create-output passthrough of the new diagnostic fields; §8 field
-reference gains `reason`/`missing`/`expected` (+ existing `guidance` note);
-read output unchanged (default body view carries no labels — §2); surface and
-inventory counts re-pinned in the same commit.
+**kdna-cli:** no diagnostic passthrough is asserted by this draft. A later
+change may render a Read cause only if the installed Read envelope actually
+contains it and the change has its own tests and surface inventory.
 
-**kdna-read:** no logic change; coordinate statements (README, manifests,
-exact-peer pins) re-pin to the new read/IR axes.
+**kdna-read:** no logic change is implied by A or B. A C change would belong
+to a new Read envelope version and require its own exact-peer and consumer
+review.
 
-**MCP adapter:** presentation passthrough; no field-shape involvement.
+**MCP adapter:** presentation behavior is not changed by this draft. No
+field-shape involvement is claimed until the relevant envelope is accepted.
 
-**Browser entries:** sections-family failure shapes contain no `diagnostics[]`
-(unchanged); payload-family browser entries are inventoried at implementation
-(Open question 10).
+**Browser entries:** sections-family failure shapes currently contain no
+`diagnostics[]`. Payload-family browser entries must be inventoried before any
+claim about their diagnostic surface.
 
-**Conformance / eval:** new vector cases (below).
+**Conformance and evaluation:** new cases are required for each accepted
+track. Existing vectors remain regression controls; they do not prove a new
+track until the new track's own vectors pass.
 
-**Docs matrix / READMEs:** re-pin with the release.
-
-**New test categories:**
-
-* *A — labels:* (1) an old unlabeled asset reads as unknown and is never
-  backfilled; (2) `agent_inferred` is absent from the author stance set
-  regardless of rationale presence; (3) `agent_suggested` is absent from the
-  stance set until a confirmation record exists, and present after; (4) no
-  automatic promotion, including when suggestion text is byte-identical to an
-  author statement; (5) an unknown label is refused rather than read as author
-  material; (6) a delegated Agent decision labeled `agent_inferred` remains
-  usable (not dead-weight, not disguised); (7) an asset carrying only
-  unconfirmed suggestions yields an explicit empty-stance-set result with a
-  reason, not a silently empty view.
-* *B — state:* (1) absent field → byte-identical today-parity; (2) the three
-  values accepted; (3) an illegal value rejected (not coerced); (4) `open`
-  never rewritten to `out_of_domain`/`none`/deletion across create, migrate,
-  convert; (5) lifecycle orthogonality — a later decision leaves the old
-  version's `open` history intact; (6) `conflicted` not auto-derived as an
-  inter-judgment conflict relation.
-* *C — diagnostics:* (1) `reason`/`missing`/`expected` present where the
-  cause is known; (2) the five legacy fields verbatim unchanged; (3) illegal
-  `reason` type and over-64 `missing` rejected; (4) node↔browser mirror
-  deep-equality; (5) old `0.6.1`-era vectors do not regress.
-* *Cross — gate:* a new-field asset on an old core produces the explicit
-  unsupported-version rejection, not a silent misread.
+**Documentation:** coordinate statements and support matrices are re-pinned
+only in the release change that actually moves the relevant coordinate.
 
 ---
 
 ## 5. Compatibility
 
-1. **Closed stays closed.** Every touched type keeps `additionalProperties:
-   false` in its new version. New fields are optional additions inside a
-   versioned change; there is no silent tolerance and no unversioned field
-   anywhere.
-2. **What absolutely does not move:** the five `ReadDiagnostic` fields
-   (verbatim); `answer_kind` (17 values); `judgment.lifecycle`;
-   `BoundaryEffect`; `AuthoredUnprovidedState`; `PolicyDisposition`;
-   `SharedTextDeclaration`; binding-7 and older (frozen); the default
-   `body`/`raw`/`full` read projections; every existing rejection gate.
-3. **Old assets stay unknown.** No default label, no default state, no
-   backfill. Missing field = old behavior, exactly.
-4. **Labels only from creation/confirmation.** Conversion and migration tools
-   (including the public converter) never generate labels or states;
-   regression tests pin this.
-5. **Each field is separately revertible.** Stop writing it; readers tolerate
-   absence natively. No byte-level migration obligation is created.
-6. **Consumers that do not understand the new semantics** follow the declared
-   scope (RFC-0022 Compatibility section, extended by the same rules): refuse
-   to present what cannot be classified; never present `agent_suggested` as
-   author material; never rewrite `open`.
+1. **Closed stays closed.** Every touched type keeps
+   `additionalProperties: false` in its new version. New fields are
+   versioned additions; there is no unversioned field and no silent
+   tolerance.
+2. **Existing meanings do not move.** The five `ReadDiagnostic` fields,
+   `answer_kind`, `judgment.lifecycle`, `BoundaryEffect`,
+   `AuthoredUnprovidedState`, `PolicyDisposition`, and
+   `SharedTextDeclaration` retain their current meanings.
+3. **Old assets stay unknown.** No default label, no default unresolved
+   state, and no backfill. A missing field keeps today's behavior.
+4. **No capability by implication.** An unresolved question does not create
+   an asset capability. The current `Payload.judgments` minimum and
+   `capabilityFor()` behavior remain until separately changed.
+5. **No coercion.** An unresolved question is not a judgment, a relationship,
+   a source target, or an `AuthoredUnprovidedState`. A Read cause is not an
+   `AdmissionReason`, a source route code, or a migration code.
+6. **Separate revertibility.** Each track can be stopped independently by
+   ceasing to write its versioned field. No byte-level migration obligation
+   is created by this draft.
+7. **Consumers that do not understand a new semantic** must fail closed for
+   that semantic: they must not present an unknown label as author material,
+   must not rewrite `open`, and must not treat an unresolved question as a
+   complete judgment.
 
 ---
 
-## 6. Open questions
+## 6. Conformance requirements
 
-1. **Confirmation record placement and field names** — in-asset (leaning) vs
-   host-side reference; final field names. (Inherited from RFC-0022 OQ1.)
-2. **Snippet storage** — byte-exact vs normalized with locator (RFC-0022 OQ2).
-   Original-wording preservation is fixed; the storage encoding is not.
-3. **Label granularity** — is judgment-level sufficient, or do `reason`/
-   `material`-level labels become necessary? Extension stays open; not a
-   launch blocker.
-4. **`conflicted` actor-split** — if real material shows the conflicted state
-   needs per-actor columns (two authors' materials conflicting vs one
-   author's materials self-conflicting), split it out as a later versioned
-   change. Design does not cover this yet.
-5. **Exact new coordinates** — payload profile number, package versions, and
-   the final pairing of A/B/C changes across the candidate 0.6 route; main has
-   moved since the plan was written (core `0.37.3` → `0.37.9`, read `0.13.3`
-   peer `0.37.9`) and numbers are confirmed at implementation, not here.
-6. **`reason` vocabulary** — final unified list and names. The candidate names
-   in design notes do not all exist verbatim on main; delivered CLI guidance
-   uses `method_component_roles` / `method_missing`. One vocabulary, naming
-   gate, full list settled in implementation review.
-7. **Enforcement point for labels** — unknown label: hard rejection at
-   container admission vs bounded warning at presentation (RFC-0022 OQ4).
-   `judgment_state` admission is specified (reject illegal values); label
-   admission is not.
-8. **Where labels surface to readers** — default body view excluded by
-   decision; the opt-in surface (CLI read output / model-view / API) is a
-   separate successor with its own before/after comparison and model-surface
-   retest. This RFC does not define it.
-9. **`judgment_state` vs declaration-level unprovided states** — both
-   `judgment_state` and `AuthoredUnprovidedState`
-   (`unknown`/`none`/`not_applicable`) can apply to nearby content; the design
-   does not map their interaction. A precedence rule or an explicit
-   "different structures, no coercion" statement is needed.
-10. **Browser payload-family failure shapes** — which payload-family browser
-    entries can surface `diagnostics[]`; inventoried at implementation.
-11. **`min_loader_version` rejection wording** — the user-facing message for
-    "this asset needs a newer loader" (explicit refusal, user-comprehensible,
-    names the needed coordinate).
+The following are required once a track is implemented; they are not evidence
+that it is implemented now.
 
+**A - labels**
+
+1. An old unlabeled asset reads as unknown and is never backfilled.
+2. `agent_inferred` is absent from the author stance set regardless of
+   rationale presence.
+3. `agent_suggested` is absent from the stance set until a confirmation
+   record exists, and present after confirmation.
+4. No automatic promotion occurs, including when suggestion text is
+   byte-identical to an author statement.
+5. An unknown label is not presented as author material and is rejected or
+   refused at the implementation-selected gate.
+6. A delegated Agent decision labeled `agent_inferred` remains usable without
+   being disguised as `author_stated`.
+7. An asset with only unconfirmed suggestions produces an explicit empty
+   stance-set result with a reason, not a silently empty view.
+
+**B - unresolved questions**
+
+1. An `open` question is not encoded as an empty or fabricated `Judgment`.
+2. `open` is never rewritten to `out_of_domain`, `none`, or deletion across
+   create, migrate, or convert.
+3. `declined` is not inferred from silence and is not rewritten to `open` or
+   not-applicable.
+4. `conflicted` is not auto-derived as an inter-judgment conflict relation or
+   a `PolicyDisposition` conflict.
+5. An illegal state is rejected, not coerced.
+6. A question-only payload is rejected while `Payload.judgments` retains its
+   current minimum.
+7. An unresolved question cannot become a `Relationship` participant or a
+   `SourceTargetKind` target without a separately accepted extension.
+8. `highest_question` and `AuthoredUnprovidedState` remain distinct from the
+   new carrier.
+
+**C - Read diagnostic cause**
+
+1. The five legacy fields remain verbatim.
+2. `cause`, `missing`, and `expected` appear only in the new Read version and
+   only where the cause is known.
+3. Illegal types, unbounded arrays, and over-limit values are rejected.
+4. The rejected envelope keeps its current one-diagnostic cardinality.
+5. Read, admission, source-route, migration, browser, and CLI vocabularies do
+   not collapse into one enum.
+6. Node and browser mirrors remain byte-identical where the contract requires
+   mirror equality.
+
+**Loader gate**
+
+1. A valid strict `min_loader_version` below the loader coordinate is
+   accepted.
+2. A higher requirement produces `KDNA_LOADER_VERSION_UNSUPPORTED`.
+3. A malformed requirement is a schema failure, not an unsupported-version
+   diagnostic.
+4. A loader package prerelease suffix does not change the numeric threshold.
 
 ---
+
+## 7. Security considerations
+
+A label is a producer claim, not authentication. It must not be treated as
+proof that a named person authored, reviewed, or adopted anything. Only a
+confirmation record, together with the signature track where required, can
+evidence that a specific person acted.
+
+Unresolved-question text and label companion material are captured content and
+must be bounded like other material. They must not become a covert channel for
+credentials, private control records, or unredacted personal data.
+
+A Read cause must not expose secrets, full source material, or private host
+context. Error fields are output surfaces and require the same redaction and
+size discipline as the existing diagnostic fields.
+
+## 8. Dispositions and remaining decisions
+
+The earlier draft left eleven open questions. Their dispositions are:
+
+| ID | Topic | Disposition |
+| --- | --- | --- |
+| 1 | Confirmation-record placement and field names | Deferred to implementation review. This draft fixes only the unique promotion channel and the need for exact-entry evidence. |
+| 2 | Snippet storage | Preserve original wording plus locator. Normalization is a separate referenced layer; the encoding remains open. |
+| 3 | Label granularity | Judgment-level first. Reason/material-level labels remain a later extension. |
+| 4 | `conflicted` actor split | Deferred to a later version. It must not be folded into the first carrier. |
+| 5 | Exact coordinates | Split by route. Numeric targets and release windows are deferred. |
+| 6 | Cause vocabulary | Use a separate Read cause axis; do not merge Read, admission, source-route, migration, browser, or CLI vocabularies. |
+| 7 | Unknown label enforcement | Proposed direction is hard rejection at admission, but the exact gate must be confirmed by implementation review. |
+| 8 | Reader/UI surface | Default body view remains unchanged. An opt-in surface is a separate successor with its own comparison and retest. |
+| 9 | Unresolved carrier vs `AuthoredUnprovidedState` | Different structures; no coercion or fallback in either direction. |
+| 10 | Browser payload diagnostics | Inventory at implementation. No current passthrough is claimed. |
+| 11 | Loader wording | Use `KDNA_LOADER_VERSION_UNSUPPORTED` and strict `x.y.z`; malformed requirements are schema failures. |
+
+The following decisions remain with the Owner or public maintainers:
+
+1. Accept an independent `unresolved_questions` carrier, or choose a
+   versioned alternate form.
+2. Decide whether `Payload.judgments` may ever be empty and how
+   `asset_capability` would then be derived.
+3. Decide whether `Relationship` or `SourceTargetKind` may reference
+   unresolved questions in a later version.
+4. Confirm the admission gate for an unknown label.
+5. Resolve the `min_loader_version` source/schema mismatch before relying on
+   the loader gate.
+6. Select final route coordinates and release windows.
+
+None of these decisions is made by this draft. RFC-0023 remains a draft and
+does not authorize an implementation, migration, publication, or release.
