@@ -3,20 +3,20 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1541192,
-    "sha256": "e4f34a41649d7cd3e546a60ebd51cd8c26274d70f039e082b7d0f428bfd1548a"
+    "bytes": 1541563,
+    "sha256": "2b4a9fa83f6ce210970e8aca1e79630a0d9ce07e89cd8901ec6c39fd67af4146"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
-      "bytes": 168167,
-      "sha256": "dc0c8be398b5120ce855adddad7822f9dc0bb9f9b39ef5d3b13fb2dfe18ccf36"
+      "bytes": 168194,
+      "sha256": "f8c2732fba50410f1c6ef0611d4d285005129ab53ef0dbb33325fc664f23a5a6"
     },
     "scripts": [
       {
         "path": "scripts/public-contract/generate-native.mjs",
         "bytes": 6966,
-        "sha256": "2385330076357ac83182d77e0a1f7bf683003aaae276103919862811db36da3d"
+        "sha256": "617985d95ba7880cb39779f6648bfee43fd7904c7110e82fef907b7a024be197"
       },
       {
         "path": "scripts/public-contract/native-renderer.mjs",
@@ -599,6 +599,7 @@
     "StoredIRTargetDescriptor06",
     "StoredMandatoryClosure06",
     "StoredRepresentationMetadata06",
+    "StrictLoaderVersion",
     "StructuralPartitionObservation06",
     "StructureFrameObservation06",
     "StructuredCondition",
@@ -647,18 +648,18 @@
   "artifacts": [
     {
       "path": "packages/kdna-core/src/public-contract/sections/validators.cjs",
-      "bytes": 40317102,
-      "sha256": "c6a67c7a1fcd2e06b2399d0bf173e7deffe878ecc0efa6aeb07c59880f6bced4"
+      "bytes": 40317018,
+      "sha256": "475fafc37048349c7aefdd36db5710d787a52abe114d62e4ea88ea79094e2f55"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/types.d.ts",
-      "bytes": 122264,
-      "sha256": "1a081c40957836cc006dcf053f819febfa8220225ef658a753676aaba9fe978a"
+      "bytes": 122313,
+      "sha256": "2d19660241366f8d37fd5f25b43750038b7e03ca949577acd754fa0e772abacb"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "bytes": 570835,
-      "sha256": "1c31eec617080c9fd460dbb0d4a4c430f1eb3d0e22f34e2b5f1b545ac5a094d3"
+      "bytes": 571206,
+      "sha256": "0f35e7a6ecf903d054dbe7d90f9f8f089289753b1cf06ef60fc238946acc8fa8"
     },
     {
       "path": "packages/kdna-core/src/public-contract/protected-sections-node.d.ts",

@@ -60,7 +60,7 @@ export function buildAllOutputs(options) {
     fail('SOURCE_IDENTITY', 'Source and generation recipe must be reconciled together');
   const names = recipe.base_type_order;
   if (
-    names.length !== 431 ||
+    names.length !== 432 ||
     new Set(names).size !== names.length ||
     names.some((name) => !Object.hasOwn(source.types, name))
   )
