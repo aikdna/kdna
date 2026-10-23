@@ -62,8 +62,9 @@ Existing actor structures answer different questions:
 * `subject.actor_ids` says who a judgment is about;
 * revision `actor_refs` says who revised an entry;
 * `SourceUse` says which material a target cites;
-* `AttributionDeclaration` is an asset-level role declaration with only
-  `creator`, `rights_holder`, and `representative`.
+* `AttributionDeclaration` is an asset-level provided/unprovided role
+  declaration; its attributions use only `creator`, `rights_holder`, and
+  `representative`.
 
 None of these states the producer class of the judgment content itself, and
 none is a per-judgment delegation record. In particular, `attributions` must
@@ -186,17 +187,22 @@ A non-binding sketch is:
 ```
 {
   "entry_digest": "<digest of the entry being confirmed>",
-  "from_label": "agent_suggested",
-  "to_label": "author_stated",
+  "from_label": "author_stated" | "agent_inferred" | "agent_suggested",
+  "to_label": "author_stated" | null,
   "confirmed_by": "<declared author or authorized actor>",
   "confirmed_at": "<timestamp>",
-  "method": "author_review" | "author_edit" | "author_rejection"
+  "method": "author_review" | "author_edit" | "author_rejection" | "author_withdrawal"
 }
 ```
 
 The final placement and field names are an implementation-review decision.
 Any confirmation record must remain linkable to the exact entry it confirms;
 whether that record lives in the asset or in a host-side record is still open.
+`to_label: null` records removal from the stance set rather than a promotion:
+a rejection does not relabel an Agent proposal as author material, and a
+withdrawal keeps the old entry in history while removing it from the current
+stance set. The sketch is non-binding, but it must not be read as making every
+confirmation record a promotion to `author_stated`.
 
 An Agent must never relabel `agent_suggested` or `agent_inferred` as
 `author_stated`. A withdrawal is recorded like an addition: the old entry
