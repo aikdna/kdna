@@ -25,8 +25,9 @@ maintainers of kdna-core / kdna-cli / kdna-read / conformance.
 [RFC-0022](./RFC-0022-source-attribution-labels.md) and replaces its
 effective-set rules 1 and 3 (see section 3.1): reviewable inference is not
 author stance, and a confirmation record is the only promotion channel. It
-also fixes RFC-0022's dangling reference to the withdrawn `specs/RFC-0013`
-by pointing to the current `judgment.lifecycle` contract. This RFC is a
+also fixes RFC-0022's dangling reference to the withdrawn
+`rfcs/RFC-0013-judgment-asset-lifecycle.md` by pointing to the current
+`judgment.lifecycle` contract. This RFC is a
 design proposal only; RFC-0022 and RFC-0023 remain drafts.
 
 **Scope trigger:** this proposal has three separable design tracks:
@@ -175,13 +176,25 @@ authentication.
 inference is not an adopted author position. This RFC uses:
 
 1. **Author stance set:** exactly `author_stated` entries plus entries
-   promoted by a confirmation record.
+   promoted by a confirmation record. The promotion channel applies equally
+   to `agent_inferred` and `agent_suggested` entries: a positive
+   confirmation record (`to_label: author_stated`) moves either label into
+   the stance set, and nothing else does.
 2. **Derived reviewable set:** `agent_inferred` entries. They may be reviewed
    against their inputs and derivation, but must not answer stance questions
    as if the author had stated them.
 3. `agent_suggested` remains a candidate outside both sets.
 4. A confirmation record from an author-side principal is the only promotion
-   channel. The producing Agent cannot confirm its own output.
+   channel. An author-side principal is the declared author, or a person the
+   author has explicitly authorized to act on their behalf. No agent-side
+   principal may issue a confirmation record - not only the Agent that
+   produced or inferred the entry, but any other Agent or delegated agent
+   role as well.
+5. When several confirmation records exist for the same entry, the latest
+   confirmation record governs. After a rejection or withdrawal
+   (`to_label: null`), an entry re-enters the stance set only through a new
+   author-side positive confirmation; re-confirmation is a new author
+   decision, and history never re-promotes an entry automatically.
 
 The confirmation record is a semantic requirement, not a settled wire shape.
 A non-binding sketch is:
@@ -200,8 +213,9 @@ A non-binding sketch is:
 The final placement and field names are an implementation-review decision.
 Any confirmation record must remain linkable to the exact entry it confirms;
 whether that record lives in the asset or in a host-side record is still open.
-`confirmed_by` must identify an author-side principal, not the Agent that
-produced or inferred the entry. A claim of authorization remains a declaration;
+`confirmed_by` must identify an author-side principal, not any agent-side
+principal (including, but not limited to, the Agent that produced or
+inferred the entry). A claim of authorization remains a declaration;
 authentication stays with the signature and account tracks.
 `to_label: null` records removal from the stance set rather than a promotion:
 a rejection does not relabel an Agent proposal as author material, and a
@@ -280,6 +294,16 @@ normative for any eventual shape:
 10. An unresolved question does not itself create `asset_capability`. The
     capability must still be derivable from complete judgments under the
     current capability rules.
+
+**Adjacent closed names.** The main source already carries near-name closed
+fields with a different semantics: `CanonicalIR.unresolved_external` and
+`RepresentationMetadata06.unresolved_external` record external semantics
+that were not obtained, and `READ_UNRESOLVED_EXTERNAL` is the corresponding
+closed diagnostic code. None of them carries an author-side unresolved
+question, and this carrier does not extend or reuse them. The working name
+`unresolved_questions` is provisional: the final name must avoid the
+`unresolved_external` word form so the two semantics never collapse, and
+implementation review must record the distinction when the carrier is named.
 
 **Empty judgments are not decided by this draft.** The current
 `Payload.judgments` `minItems: 1` and `capabilityFor()` behavior remain in
@@ -372,6 +396,15 @@ loader package coordinate:
   `KDNA_LOADER_VERSION_UNSUPPORTED`, not `READ_UNSUPPORTED_VERSION`;
 * the comparison uses the three numeric components and does not treat a
   prerelease suffix as a different threshold.
+
+`KDNA_LOADER_VERSION_UNSUPPORTED` is a new code. It is not one of the
+current closed `ReadDiagnosticCode` values and is not in the diagnostic
+registry. Its emitting surface is the kdna-core loader/read gate (container
+validation before projection), not the Read envelope's `ReadDiagnostic`
+vocabulary, and an implementation must add the code to the appropriate
+closed vocabulary in the same reviewed change instead of emitting an
+unregistered literal. The existing `READ_UNSUPPORTED_VERSION` is a
+different, retained code and is not used for this gate.
 
 Before relying on this gate, implementation review must also resolve the
 current source/schema mismatch: `specs/public-semantic-source.json` describes
@@ -475,6 +508,10 @@ that it is implemented now.
    a claimed authorization without author-side evidence remains unverified.
 10. A directly authored `author_stated` entry links an exact authoring input or
     immutable locator; without one, the entry remains unknown.
+11. An `agent_inferred` entry joins the stance set after a positive
+    author-side confirmation and not before; where several confirmation
+    records exist, the latest governs, and after a withdrawal the entry
+    re-enters only through a new positive confirmation.
 
 **B - unresolved questions**
 
@@ -552,7 +589,7 @@ The earlier draft left eleven open questions. Their dispositions are:
 | 8 | Reader/UI surface | Default body view remains unchanged. An opt-in surface is a separate successor with its own comparison and retest. |
 | 9 | Unresolved carrier vs `AuthoredUnprovidedState` | Different structures; no coercion or fallback in either direction. |
 | 10 | Browser payload diagnostics | Inventory at implementation. No current passthrough is claimed. |
-| 11 | Loader wording | Use `KDNA_LOADER_VERSION_UNSUPPORTED` and strict `x.y.z`; malformed requirements are schema failures. |
+| 11 | Loader wording | Use `KDNA_LOADER_VERSION_UNSUPPORTED` and strict `x.y.z`; malformed requirements are schema failures. The code is new: it must join the appropriate closed vocabulary at implementation, and its emitting surface is the kdna-core loader gate, not `ReadDiagnosticCode`. |
 
 The following decisions remain with the Owner or public maintainers:
 
