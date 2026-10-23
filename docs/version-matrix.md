@@ -32,6 +32,12 @@ rules.
   requirement at or below the current loader package coordinate is compatible;
   a higher requirement is blocked before projection or load with
   `KDNA_LOADER_VERSION_UNSUPPORTED`.
+- The structural schemas enforce the same strict form
+  (`StrictLoaderVersion`): a manifest whose `min_loader_version` is not a bare
+  `x.y.z` coordinate is structurally invalid. If a consumer ever meets a value
+  it cannot parse as `x.y.z`, loader compatibility is not established and the
+  asset must not be admitted on that basis; an explicit runtime diagnostic for
+  that unparsable-value state is tracked as a separate follow-up.
 - Structural validity and loader compatibility are independent evidence. A
   well-formed asset can be structurally valid while requiring a newer loader.
 - Package releases can change without creating another KDNA asset format.

@@ -704,6 +704,11 @@
       "maxLength": 4096,
       "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
     },
+    "StrictLoaderVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "description": "Strict x.y.z loader version requirement (no leading zeros, prerelease suffix, or build metadata) used by Compatibility.min_loader_version; matches the runtime loader gate and the standalone manifest schema."
+    },
     "VersionLabel": {
       "$ref": "#/$defs/Identifier"
     },
@@ -3111,7 +3116,7 @@
       "type": "object",
       "properties": {
         "min_loader_version": {
-          "$ref": "#/$defs/VersionLabel"
+          "$ref": "#/$defs/StrictLoaderVersion"
         },
         "profile": {
           "$value": "/versionTuple/payload_profile"

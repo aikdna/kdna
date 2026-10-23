@@ -62,9 +62,9 @@
       "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
     },
     {
-      "bytes": 16760,
+      "bytes": 17131,
       "path": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
-      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+      "sha256": "edac8af81678f4d95efe823677d9d7bc87f7a1425a5af3e3643dc418af8214c1"
     },
     {
       "bytes": 107892,
@@ -122,7 +122,7 @@
       "sha256": "7fcb513a9769f221b792a4a95e3644d4ec88f17f3e04a4948b5be8bc0dea4dbd"
     }
   ],
-  "derived_aggregate_sha256": "12495d2b8298829d066e2b1bd7999b9fcd8eba5a25b249e2b2e85e464d706df0",
+  "derived_aggregate_sha256": "a088e885ca16024e517cf0c4d1d92e4fef7397345b4c8167cc2c56d53573b40b",
   "excluded": [
     "specs/public-generation-manifest.json",
     "docs/audits/2026-09-06-open-wave1-machine-source-implementation.json",
@@ -648,9 +648,9 @@
       "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
     },
     {
-      "bytes": 16760,
+      "bytes": 17131,
       "path": "packages/kdna-core/schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
-      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+      "sha256": "edac8af81678f4d95efe823677d9d7bc87f7a1425a5af3e3643dc418af8214c1"
     },
     {
       "bytes": 107892,
@@ -698,14 +698,14 @@
       "sha256": "bcaf3a2b91dcba7fb618d987f41fc3530d65fb1f21d5d00c24408895ac14e653"
     },
     {
-      "bytes": 354560,
+      "bytes": 354931,
       "path": "packages/kdna-core/src/public-contract/generated-contract.json",
-      "sha256": "d8ef313a26b53299c1c2b232fcf0dcb73180e24b7ca82b9926629853e9281336"
+      "sha256": "dec323287fd69ab1a340ccb04f55fb3221060c25e20c38549d328b1669df48ea"
     },
     {
-      "bytes": 192114,
+      "bytes": 192450,
       "path": "packages/kdna-core/src/public-contract/handoff-validator.generated.js",
-      "sha256": "963104e1421eb3ffe47dfcb3158f16ed474e0acf636b851c022b741a42472bf2"
+      "sha256": "3b7359a9c8ace8a809bb233af11cd75588106fd849e28d015101e1fe37753bde"
     },
     {
       "bytes": 28490,
@@ -748,9 +748,9 @@
       "sha256": "e5398bd03ad0cf4f81b381ee9036e6778d6a137428b87ded1b6f10d44073c938"
     },
     {
-      "bytes": 349367,
+      "bytes": 349738,
       "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
-      "sha256": "1ca9366c5faff2e6483ffb703b3f0f8890d87f5fe6f32d8003f6808c77d8fca7"
+      "sha256": "171b5ebc618d7e287bf28ca45b04130a57fad71110604b920bfb26150442ee8d"
     },
     {
       "bytes": 10225,
@@ -793,14 +793,14 @@
       "sha256": "fc355a5dad8cfddd9edfc77ddabf208d6f0e9b3e1c10767d7a3a4c8e1e24f1a9"
     },
     {
-      "bytes": 88868,
+      "bytes": 88917,
       "path": "packages/kdna-core/src/public-contract/types.d.ts",
-      "sha256": "d39c8ffc01dce73d65cfe19783132c3341ebc66bd98e1cdacd050a4c9bd7c5d7"
+      "sha256": "75fe169b2ab78c3e66d2ad3e5586dae4968d5b724f2f8eae326d5a8216a1930f"
     },
     {
-      "bytes": 3875326,
+      "bytes": 3877846,
       "path": "packages/kdna-core/src/public-contract/validators.generated.js",
-      "sha256": "f4ff35fe15e66993622d3e49a4c5f17ab0e70b2ea3c6cff521615410d3cdc6be"
+      "sha256": "39c0f4c7c3893b98509035f6e44bc814590910152727278898f443ace40b5db5"
     },
     {
       "bytes": 241789,
@@ -963,9 +963,9 @@
     }
   ],
   "source": {
-    "bytes": 1541192,
+    "bytes": 1541563,
     "path": "specs/public-semantic-source.json",
-    "sha256": "e4f34a41649d7cd3e546a60ebd51cd8c26274d70f039e082b7d0f428bfd1548a"
+    "sha256": "2b4a9fa83f6ce210970e8aca1e79630a0d9ce07e89cd8901ec6c39fd67af4146"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -979,10 +979,10 @@
   "type_ownership": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
-      "bytes": 168167,
-      "sha256": "dc0c8be398b5120ce855adddad7822f9dc0bb9f9b39ef5d3b13fb2dfe18ccf36"
+      "bytes": 168194,
+      "sha256": "f8c2732fba50410f1c6ef0611d4d285005129ab53ef0dbb33325fc664f23a5a6"
     },
-    "base_types": 431,
-    "canonical_types": 793
+    "base_types": 432,
+    "canonical_types": 794
   }
 }

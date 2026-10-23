@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "e4f34a41649d7cd3e546a60ebd51cd8c26274d70f039e082b7d0f428bfd1548a",
+  "input_sha256": "2b4a9fa83f6ce210970e8aca1e79630a0d9ce07e89cd8901ec6c39fd67af4146",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -113,6 +113,7 @@
     "Payload",
     "Creator",
     "Compatibility",
+    "StrictLoaderVersion",
     "PayloadDescriptor",
     "ManifestRuntime",
     "ManifestAuthoring",
@@ -1046,7 +1047,7 @@
         }
       ],
       "root_count": 120,
-      "type_closure_count": 483,
+      "type_closure_count": 484,
       "ajv_options": {
         "strict": true,
         "strictTypes": false,
@@ -1742,7 +1743,7 @@
         }
       ],
       "root_count": 10,
-      "type_closure_count": 66,
+      "type_closure_count": 67,
       "ajv_options": {
         "strict": true,
         "strictTypes": false,

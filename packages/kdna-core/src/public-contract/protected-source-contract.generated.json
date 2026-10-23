@@ -1744,7 +1744,7 @@
       "additionalProperties": false,
       "properties": {
         "min_loader_version": {
-          "$ref": "#/$defs/VersionLabel"
+          "$ref": "#/$defs/StrictLoaderVersion"
         },
         "profile": {
           "const": "kdna.payload.judgment",
@@ -14210,6 +14210,11 @@
         "direction"
       ],
       "type": "object"
+    },
+    "StrictLoaderVersion": {
+      "description": "Strict x.y.z loader version requirement (no leading zeros, prerelease suffix, or build metadata) used by Compatibility.min_loader_version; matches the runtime loader gate and the standalone manifest schema.",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "type": "string"
     },
     "StructuredCondition": {
       "additionalProperties": false,
