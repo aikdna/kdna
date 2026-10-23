@@ -15,9 +15,11 @@ import {
   jsonBytes,
   byteIdentity,
   project,
+  closure,
   nativeOutputPaths,
   buildNativeOutputs,
 } from './native-renderer.mjs';
+import navigation from '../check-current-r2-navigation.cjs';
 
 const self = fileURLToPath(import.meta.url),
   directory = path.dirname(self),
@@ -59,10 +61,30 @@ export function buildAllOutputs(options) {
   if (sha(sourceBytes) !== recipe.input_sha256)
     fail('SOURCE_IDENTITY', 'Source and generation recipe must be reconciled together');
   const names = recipe.base_type_order;
+  // The declared base ownership must cover every type reachable from the
+  // rooted artifacts and the base module sections. It may also retain names
+  // no root reaches, so this is a subset pin rather than a count pin: a
+  // count pin rejects frozen coordinate derivations whose declared base
+  // predates a newly shared type. Names inside source.types that the closure
+  // never reaches are no longer caught here; the source pin (input_sha256)
+  // and review remain their guard.
+  const declaredBase = new Set(names);
+  const derivableBaseRoots = [
+    ...(source.artifacts ?? [])
+      .filter((artifact) => typeof artifact?.root === 'string')
+      .map((artifact) => artifact.root),
+    ...navigation.MODULES.flatMap((key) => {
+      const section = source[key];
+      return section && typeof section === 'object' && typeof section.root === 'string'
+        ? [section.root]
+        : [];
+    }),
+  ].filter((root) => Object.hasOwn(source.types, root));
+  const derivableBase = closure(source.types, derivableBaseRoots);
   if (
-    names.length !== 432 ||
-    new Set(names).size !== names.length ||
-    names.some((name) => !Object.hasOwn(source.types, name))
+    declaredBase.size !== names.length ||
+    names.some((name) => !Object.hasOwn(source.types, name)) ||
+    Object.keys(derivableBase).some((name) => !declaredBase.has(name))
   )
     fail('BASE_OWNERSHIP', 'Expected the declared base type ownership');
   // This is an in-memory ownership view. All semantic values come from one source;

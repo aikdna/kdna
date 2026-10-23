@@ -8,7 +8,9 @@
 const test = require('node:test'),
   assert = require('node:assert/strict'),
   fs = require('node:fs'),
-  path = require('node:path');
+  os = require('node:os'),
+  path = require('node:path'),
+  { spawnSync } = require('node:child_process');
 
 const repoRoot = path.resolve(__dirname, '../../..');
 const readJson = (file) =>
@@ -101,5 +103,50 @@ test('wide version labels fail the generated validator', () => {
       /\/compatibility\/min_loader_version/,
       `expected ${value} to be rejected at min_loader_version`,
     );
+  }
+});
+
+// The base ownership gate must reject a recipe whose declared base_type_order
+// omits a type the derivable base closure still needs. The generator fails
+// before writing anything, so each probe is a fast exit-1 spawn.
+test('base ownership gate rejects an undeclared closure member', () => {
+  const recipe = readJson('scripts/public-contract/native-output-recipe.json');
+  for (const omitted of ['StrictLoaderVersion', 'Timestamp']) {
+    const base = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-base-ownership-')));
+    const mutated = {
+      ...recipe,
+      base_type_order: recipe.base_type_order.filter((name) => name !== omitted),
+    };
+    const recipeFile = path.join(base, 'recipe.json');
+    fs.writeFileSync(recipeFile, JSON.stringify(mutated, null, 2) + '\n');
+    const outDir = path.join(base, 'out');
+    fs.mkdirSync(outDir);
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [
+          path.join(repoRoot, 'scripts/public-contract/generate.mjs'),
+          '--check',
+          '--source',
+          path.join(repoRoot, 'specs/public-semantic-source.json'),
+          '--root',
+          repoRoot,
+          '--dependency-root',
+          repoRoot,
+          '--out-dir',
+          outDir,
+        ],
+        {
+          cwd: repoRoot,
+          encoding: 'utf8',
+          env: { ...process.env, KDNA_NATIVE_RECIPE: recipeFile },
+        },
+      );
+      assert.notEqual(result.status, 0, `omitting ${omitted} must fail`);
+      const output = (result.stdout || '') + (result.stderr || '');
+      assert.match(output, /BASE_OWNERSHIP/, `omitting ${omitted} should fail the ownership gate`);
+    } finally {
+      fs.rmSync(base, { recursive: true, force: true });
+    }
   }
 });
