@@ -180,7 +180,8 @@ inference is not an adopted author position. This RFC uses:
    against their inputs and derivation, but must not answer stance questions
    as if the author had stated them.
 3. `agent_suggested` remains a candidate outside both sets.
-4. A confirmation record is the only promotion channel.
+4. A confirmation record from an author-side principal is the only promotion
+   channel. The producing Agent cannot confirm its own output.
 
 The confirmation record is a semantic requirement, not a settled wire shape.
 A non-binding sketch is:
@@ -190,7 +191,7 @@ A non-binding sketch is:
   "entry_digest": "<digest of the entry being confirmed>",
   "from_label": "author_stated" | "agent_inferred" | "agent_suggested",
   "to_label": "author_stated" | null,
-  "confirmed_by": "<declared author or authorized actor>",
+  "confirmed_by": "<declared author or author-side principal>",
   "confirmed_at": "<timestamp>",
   "method": "author_review" | "author_edit" | "author_rejection" | "author_withdrawal"
 }
@@ -199,6 +200,9 @@ A non-binding sketch is:
 The final placement and field names are an implementation-review decision.
 Any confirmation record must remain linkable to the exact entry it confirms;
 whether that record lives in the asset or in a host-side record is still open.
+`confirmed_by` must identify an author-side principal, not the Agent that
+produced or inferred the entry. A claim of authorization remains a declaration;
+authentication stays with the signature and account tracks.
 `to_label: null` records removal from the stance set rather than a promotion:
 a rejection does not relabel an Agent proposal as author material, and a
 withdrawal keeps the old entry in history while removing it from the current
@@ -463,6 +467,8 @@ that it is implemented now.
    (`to_label: null` in the non-binding sketch), removes the entry from the
    current stance set, preserves its history, and never promotes the proposal
    to `author_stated`.
+9. The producing Agent cannot create a confirmation record for its own output;
+   a claimed authorization without author-side evidence remains unverified.
 
 **B - unresolved questions**
 
