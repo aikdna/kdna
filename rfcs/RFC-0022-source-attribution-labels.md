@@ -59,6 +59,9 @@ person to accept it. Collapsing them lets unconfirmed proposals read as findings
 
 Sketch only: field names, digests and placement are settled by the implementation RFC
 that follows this one, not here.
+RFC-0023 keeps this sketch non-binding and makes rejection/withdrawal outcomes
+explicit: a confirmation record must be able to remove an entry from the stance
+set without coercing an Agent proposal into `author_stated`.
 
 ## Non-goals
 

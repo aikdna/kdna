@@ -23,10 +23,11 @@ maintainers of kdna-core / kdna-cli / kdna-read / conformance.
 
 **Relationship to existing RFCs:** continues the unimplemented draft
 [RFC-0022](./RFC-0022-source-attribution-labels.md) and replaces its
-effective-set rule 1 (see section 3.1). It also fixes RFC-0022's dangling
-reference to the withdrawn `specs/RFC-0013` by pointing to the current
-`judgment.lifecycle` contract. This RFC is a design proposal only; RFC-0022
-and RFC-0023 remain drafts.
+effective-set rules 1 and 3 (see section 3.1): reviewable inference is not
+author stance, and a confirmation record is the only promotion channel. It
+also fixes RFC-0022's dangling reference to the withdrawn `specs/RFC-0013`
+by pointing to the current `judgment.lifecycle` contract. This RFC is a
+design proposal only; RFC-0022 and RFC-0023 remain drafts.
 
 **Scope trigger:** this proposal has three separable design tracks:
 
