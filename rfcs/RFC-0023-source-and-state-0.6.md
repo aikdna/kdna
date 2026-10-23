@@ -6,6 +6,17 @@ package, or schema by itself. It does not claim that the stable, creation,
 Native execution, and Read routes move together. The slug uses `state`
 (not `pending`) to match the proposed unresolved-question value `open`.
 
+## Summary
+
+This draft makes three separable proposals. A labels captured judgments as
+`author_stated`, `agent_inferred`, or `agent_suggested`, with separate
+author-stance and derived-reviewable sets. B introduces an independent
+`unresolved_questions` / `JudgmentQuestion` carrier candidate instead of
+putting `judgment_state` on a complete `Judgment`. C adds optional
+`cause` / `missing` / `expected` fields to a new Read rejection diagnostic.
+Exact wire shapes, coordinates, and release windows remain deferred. No
+schema, package, or published contract changes until a track is accepted.
+
 **Intended audience:** consumers of the public kdna repositories - asset
 authors, tool implementers reading the container/payload/IR contracts, and
 maintainers of kdna-core / kdna-cli / kdna-read / conformance.
@@ -29,7 +40,7 @@ move is assumed.
 
 ---
 
-## 1. Problem
+## 1. Motivation
 
 The creation surface can record a judgment's content, method, and lifecycle,
 but it cannot express the following three distinctions without overloading an
@@ -142,7 +153,7 @@ failure automatically produces a Read diagnostic.
 
 ---
 
-## 3. Proposal
+## 3. Normative rules
 
 ### 3.1 A - Source attribution labels
 
@@ -393,7 +404,7 @@ only in the release change that actually moves the relevant coordinate.
 
 ---
 
-## 5. Compatibility
+## 5. Compatibility impact
 
 1. **Closed stays closed.** Every touched type keeps
    `additionalProperties: false` in its new version. New fields are
@@ -497,7 +508,7 @@ A Read cause must not expose secrets, full source material, or private host
 context. Error fields are output surfaces and require the same redaction and
 size discipline as the existing diagnostic fields.
 
-## 8. Dispositions and remaining decisions
+## 8. Open questions and remaining decisions
 
 The earlier draft left eleven open questions. Their dispositions are:
 
