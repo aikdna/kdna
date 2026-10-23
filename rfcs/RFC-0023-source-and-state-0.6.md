@@ -231,7 +231,10 @@ decision; the fail-closed direction is mandatory.
 
 **Snippet handling.** Preserve the original wording as received. Normalization
 is a separate referenced layer and never overwrites the original. The storage
-encoding remains open; preservation of the original is fixed.
+encoding remains open; preservation of the original is fixed. For a directly
+authored judgment, the exact authoring input or an immutable locator to it may
+serve as the original snippet. If neither can be retained, the entry remains
+unknown rather than claiming `author_stated`.
 
 ### 3.2 B - Unresolved-question carrier
 
@@ -438,8 +441,8 @@ only in the release change that actually moves the relevant coordinate.
    is created by this draft.
 7. **Consumers that do not understand a new semantic** must fail closed for
    that semantic: they must not present an unknown label as author material,
-   must not rewrite `open`, and must not treat an unresolved question as a
-   complete judgment.
+   must not rewrite `open`, must not silently omit an unresolved question,
+   and must not treat one as a complete judgment.
 
 ---
 
@@ -454,7 +457,8 @@ that it is implemented now.
 2. `agent_inferred` is absent from the author stance set regardless of
    rationale presence.
 3. `agent_suggested` is absent from the stance set until a confirmation
-   record exists, and present after confirmation.
+   record with `to_label: author_stated` exists, and present after that
+   positive confirmation.
 4. No automatic promotion occurs, including when suggestion text is
    byte-identical to an author statement.
 5. An unknown label is not presented as author material and is rejected or
@@ -469,6 +473,8 @@ that it is implemented now.
    to `author_stated`.
 9. The producing Agent cannot create a confirmation record for its own output;
    a claimed authorization without author-side evidence remains unverified.
+10. A directly authored `author_stated` entry links an exact authoring input or
+    immutable locator; without one, the entry remains unknown.
 
 **B - unresolved questions**
 
@@ -486,6 +492,11 @@ that it is implemented now.
    `SourceTargetKind` target without a separately accepted extension.
 8. `highest_question` and `AuthoredUnprovidedState` remain distinct from the
    new carrier.
+9. A later version that resolves a question leaves the earlier version's
+   `open` or `declined` state and bytes unchanged.
+10. A consumer that does not understand the unresolved-question carrier does
+    not silently omit it; it rejects or explicitly marks the projection
+    incomplete.
 
 **C - Read diagnostic cause**
 
