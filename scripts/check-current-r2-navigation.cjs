@@ -1540,6 +1540,9 @@ module.exports = {
   // check audits instead of transcribing the templates by hand.
   retainedIdentityContexts,
   releaseCoordinates,
+  // The base module sections, so generation gates derive the same root set
+  // this check validates instead of duplicating the list.
+  MODULES,
 };
 if (require.main === module) {
   try {

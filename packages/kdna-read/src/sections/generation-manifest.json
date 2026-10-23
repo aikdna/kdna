@@ -15,8 +15,8 @@
     "scripts": [
       {
         "path": "scripts/public-contract/generate-native.mjs",
-        "bytes": 6966,
-        "sha256": "617985d95ba7880cb39779f6648bfee43fd7904c7110e82fef907b7a024be197"
+        "bytes": 8123,
+        "sha256": "fca86c5ca0e47e311582b0263b9e5a2dd87726dc8316347afa0c4d232e802dc1"
       },
       {
         "path": "scripts/public-contract/native-renderer.mjs",
