@@ -1,0 +1,411 @@
+{
+ "manifest": {
+  "asset_id": "asset:authoring-example",
+  "asset_type": "domain",
+  "asset_uid": "uid:authoring-example-20261024",
+  "compatibility": {
+   "min_loader_version": "0.37.1",
+   "profile": "kdna.payload.judgment",
+   "profile_version": "0.5.1"
+  },
+  "created_at": "2026-10-24T00:00:00Z",
+  "creator": {
+   "id": "actor:example-author",
+   "kind": "person",
+   "name": "Example Author"
+  },
+  "description": "Minimal teaching example: a two-judgment author-input for the kdna CLI create command. Synthetic content; no real author.",
+  "history": {
+   "coverage": "complete",
+   "statement": "Teaching example asset input.",
+   "entries": [
+    {
+     "id": "revision:example-1.0",
+     "version": "1.0.0",
+     "judgment_version": "1.0.0",
+     "at": "2026-10-24T00:00:00Z",
+     "summary": "Initial teaching example.",
+     "affected_refs": [
+      {
+       "kind": "asset",
+       "id": "uid:authoring-example-20261024"
+      }
+     ],
+     "actor_refs": [
+      "actor:example-author"
+     ]
+    }
+   ]
+  },
+  "judgment_version": "1.0.0",
+  "keywords": [
+   "example",
+   "teaching",
+   "minimal"
+  ],
+  "languages": [
+   "en"
+  ],
+  "lineage": [],
+  "runtime": {
+   "mandatory_entries": []
+  },
+  "summary": "A minimal two-judgment teaching example for the authoring guide.",
+  "title": "Authoring Example (Minimal)",
+  "updated_at": "2026-10-24T00:00:00Z",
+  "version": "1.0.0"
+ },
+ "payload": {
+  "actors": [
+   {
+    "id": "actor:example-author",
+    "kind": "person",
+    "name": "Example Author"
+   }
+  ],
+  "asset": {
+   "asset_id": "asset:authoring-example",
+   "asset_version": "1.0.0",
+   "judgment_version": "1.0.0"
+  },
+  "asset_capability": "asserted_answers",
+  "attributions": {
+   "state": "provided",
+   "value": [
+    {
+     "role": "creator",
+     "actor_ids": [
+      "actor:example-author"
+     ],
+     "statement": "Synthetic teaching example; not a real author's judgment."
+    }
+   ]
+  },
+  "conditions": [],
+  "contracts": [],
+  "declarations": {
+   "highest_question": {
+    "state": "provided",
+    "value": "What makes a technical example trustworthy?"
+   },
+   "boundaries": {
+    "state": "provided",
+    "value": [
+     {
+      "id": "boundary:teaching-only",
+      "effect": "limit",
+      "statement": "Teaching example; synthetic content only.",
+      "declared_by": "actor:example-author",
+      "applies_to": {
+       "kind": "asset"
+      },
+      "exception_refs": []
+     }
+    ]
+   }
+  },
+  "dependencies": [],
+  "examples": [
+   {
+    "id": "example:runnable",
+    "title": "Runnable example",
+    "kind": "observed",
+    "context": "A documentation example that could not be copied and run.",
+    "input_refs": [],
+    "adopted_judgments": [
+     {
+      "kind": "local",
+      "judgment_id": "judgment:runnable-examples"
+     }
+    ],
+    "application": "The example was rewritten as a complete command.",
+    "results": [
+     {
+      "id": "example-result:runnable",
+      "kind": "disposition",
+      "statement": "Complete commands build reader trust."
+     }
+    ],
+    "source_refs": []
+   }
+  ],
+  "exceptions": [],
+  "extensions": [],
+  "judgments": [
+   {
+    "id": "judgment:runnable-examples",
+    "focus": "What is the minimum standard for examples in documentation?",
+    "subject": {
+     "actor_ids": [
+      "actor:example-author"
+     ],
+     "statement": "The example author's documentation standard."
+    },
+    "scope": {
+     "statement": "Code examples in technical documentation."
+    },
+    "form": "conclusion",
+    "answer_kind": "determination",
+    "core_expression": {
+     "kind": "authored",
+     "statement": "Every code example in documentation must be runnable as written, with a complete command a reader can copy and verify in under a minute; pseudocode must be explicitly labeled.",
+     "qualification_refs": []
+    },
+    "method": {
+     "method": {
+      "term": "interpretation"
+     },
+     "components": [
+      {
+       "id": "component:runnable-examples:1",
+       "method": {
+        "term": "interpretation"
+       },
+       "role": "解读对象",
+       "statement": "Reader trust in documentation equals trust in its examples.",
+       "material_refs": []
+      },
+      {
+       "id": "component:runnable-examples:2",
+       "method": {
+        "term": "interpretation"
+       },
+       "role": "解释关系",
+       "statement": "An example that fails when copied is worse than no example.",
+       "material_refs": []
+      }
+     ],
+     "bindings": []
+    },
+    "parent_ref": null,
+    "material_refs": [],
+    "reason_refs": [],
+    "ports": [],
+    "inputs": [],
+    "content_uses": [],
+    "boundaries": {
+     "state": "provided",
+     "value": [
+      {
+       "id": "boundary:runnable-examples",
+       "effect": "limit",
+       "statement": "Applies to reference documentation; conceptual prose may use illustrative fragments.",
+       "declared_by": "actor:example-author",
+       "applies_to": {
+        "kind": "judgments",
+        "judgment_refs": [
+         "judgment:runnable-examples"
+        ]
+       },
+       "exception_refs": []
+      }
+     ]
+    },
+    "exceptions": {
+     "state": "none",
+     "value": null
+    },
+    "misuse": {
+     "state": "provided",
+     "value": [
+      {
+       "id": "misuse:runnable-examples",
+       "statement": "Treating the presence of code blocks as proof of runnability."
+      }
+     ]
+    },
+    "extensions": [],
+    "result_contract": {
+     "id": "result-contract:runnable-examples",
+     "form": {
+      "term": "scalar",
+      "vocabulary": "core"
+     },
+     "shape": {
+      "kind": "scalar",
+      "scalar_type": "text"
+     },
+     "minimum": 1,
+     "maximum": 1,
+     "allowed_result_types": [
+      {
+       "term": "text",
+       "vocabulary": "core"
+      }
+     ]
+    },
+    "result": {
+     "contract_ref": "result-contract:runnable-examples",
+     "result_type": {
+      "term": "text",
+      "vocabulary": "core"
+     },
+     "value": {
+      "kind": "text",
+      "value": "Every code example in documentation must be runnable as written, with a complete command a reader can copy and verify in under a minute; pseudocode must be explicitly labeled."
+     }
+    }
+   },
+   {
+    "id": "judgment:version-pinning",
+    "focus": "How should versions appear in documentation commands?",
+    "subject": {
+     "actor_ids": [
+      "actor:example-author"
+     ],
+     "statement": "The example author's versioning standard."
+    },
+    "scope": {
+     "statement": "Version references in technical documentation."
+    },
+    "form": "conclusion",
+    "answer_kind": "determination",
+    "core_expression": {
+     "kind": "authored",
+     "statement": "Documentation commands pin exact versions; floating tags such as latest are prohibited because they are an unknown variable in the reader's environment.",
+     "qualification_refs": []
+    },
+    "method": {
+     "method": {
+      "term": "interpretation"
+     },
+     "components": [
+      {
+       "id": "component:version-pinning:1",
+       "method": {
+        "term": "interpretation"
+       },
+       "role": "解读对象",
+       "statement": "Reproducibility is the lifeline of technical documentation.",
+       "material_refs": []
+      },
+      {
+       "id": "component:version-pinning:2",
+       "method": {
+        "term": "interpretation"
+       },
+       "role": "解释关系",
+       "statement": "A floating tag resolves differently tomorrow than today.",
+       "material_refs": []
+      }
+     ],
+     "bindings": []
+    },
+    "parent_ref": null,
+    "material_refs": [],
+    "reason_refs": [],
+    "ports": [],
+    "inputs": [],
+    "content_uses": [],
+    "boundaries": {
+     "state": "provided",
+     "value": [
+      {
+       "id": "boundary:version-pinning",
+       "effect": "limit",
+       "statement": "Applies to command examples; prose may mention a version line informally.",
+       "declared_by": "actor:example-author",
+       "applies_to": {
+        "kind": "judgments",
+        "judgment_refs": [
+         "judgment:version-pinning"
+        ]
+       },
+       "exception_refs": []
+      }
+     ]
+    },
+    "exceptions": {
+     "state": "none",
+     "value": null
+    },
+    "misuse": {
+     "state": "provided",
+     "value": [
+      {
+       "id": "misuse:version-pinning",
+       "statement": "Using pinning to argue against ever upgrading dependencies."
+      }
+     ]
+    },
+    "extensions": [],
+    "result_contract": {
+     "id": "result-contract:version-pinning",
+     "form": {
+      "term": "scalar",
+      "vocabulary": "core"
+     },
+     "shape": {
+      "kind": "scalar",
+      "scalar_type": "text"
+     },
+     "minimum": 1,
+     "maximum": 1,
+     "allowed_result_types": [
+      {
+       "term": "text",
+       "vocabulary": "core"
+      }
+     ]
+    },
+    "result": {
+     "contract_ref": "result-contract:version-pinning",
+     "result_type": {
+      "term": "text",
+      "vocabulary": "core"
+     },
+     "value": {
+      "kind": "text",
+      "value": "Documentation commands pin exact versions; floating tags such as latest are prohibited because they are an unknown variable in the reader's environment."
+     }
+    }
+   }
+  ],
+  "kernel": {
+   "purpose": {
+    "kind": "authored",
+    "statement": "Let an Agent apply the example author's documentation standards: runnable examples and pinned versions."
+   },
+   "foundation_refs": []
+  },
+  "materials": [],
+  "misuse": [],
+  "profile": "kdna.payload.judgment",
+  "profile_version": "0.5.1",
+  "reading_order": [
+   "judgment:runnable-examples",
+   "judgment:version-pinning"
+  ],
+  "reasons": [],
+  "relationships": [],
+  "resources": [],
+  "scope": {
+   "statement": "Documentation standards teaching example."
+  },
+  "shared_declarations": [],
+  "sources": [
+   {
+    "id": "source:example-author",
+    "identity": "Synthetic teaching example; no real author.",
+    "version": "1.0.0"
+   }
+  ],
+  "source_uses": [
+   {
+    "id": "source-use:runnable",
+    "role": "support",
+    "source_ref": "source:example-author",
+    "target_kind": "judgment",
+    "target_ref": "judgment:runnable-examples"
+   },
+   {
+    "id": "source-use:version",
+    "role": "support",
+    "source_ref": "source:example-author",
+    "target_kind": "judgment",
+    "target_ref": "judgment:version-pinning"
+   }
+  ]
+ },
+ "members": []
+}
