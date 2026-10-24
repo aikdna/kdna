@@ -243,14 +243,16 @@ async function main(argv) {
           const captured = fs.readFileSync(path.join(work, log), 'utf8').trimEnd();
           if (captured) {
             const tail = captured.split('\n').slice(-20).join('\n');
-            const enriched = new Error(
-              `${error.message}\n[root-audit tail from ${log}]\n${tail}`,
-            );
+            const enriched = new Error(`${error.message}\n[root-audit tail from ${log}]\n${tail}`);
             enriched.cause = error.cause || error;
             throw enriched;
           }
         } catch (readError) {
-          if (readError !== undefined && readError.message && !readError.message.includes('root-audit tail')) {
+          if (
+            readError !== undefined &&
+            readError.message &&
+            !readError.message.includes('root-audit tail')
+          ) {
             //  Log unreadable: fall through and rethrow the original error.
           }
         }
