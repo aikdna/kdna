@@ -1,5 +1,9 @@
 # 你的第一个 KDNA 领域
 
+> 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
+> 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
+
 > 简明指南。详细端到端教程见 [First Domain Walkthrough](./first-domain-walkthrough.md)（英文）。
 
 10 分钟内构建一个可工作的 KDNA 领域，并看到它如何改变 Agent 的判断。
@@ -7,16 +11,16 @@
 ## 第一步：安装
 
 ```bash
-npm i -g @aikdna/kdna-cli
+npm i -g @aikdna/kdna-cli@0.36.1
 ```
 
 ## 第二步：创建开发源工作区
 
 ```bash
-cp -R templates/minimal-domain my-domain
+kdna demo minimal ./my-domain
 ```
 
-这会复制出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 [`@aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli)（`kdna-studio create` / `card` / `export`）完成 Human Lock、编译和导出。
+这会生成一个非权威的开发源工作区（`mimetype`、`kdna.json`、`payload.kdnab`、`checksums.json`）。阅读更完整的判断结构示例，可查看仓库内 `templates/minimal-domain/` 的 `KDNA_Core.json` 与 `KDNA_Patterns.json`（仅作阅读参考；对模板目录执行 `kdna inspect`/`validate` 会因结构不属于该发布线而 exit 2）。需要可信 `.kdna` 资产时，请使用 [`@aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli)（`kdna-studio create` / `card` / `export`）完成 Human Lock、编译和导出。
 
 ## 第三步：查看
 
@@ -55,15 +59,13 @@ kdna inspect ./my-domain
 
 ## 第六步：创建你自己的
 
-```bash
-cp -R templates/minimal-domain my-domain
-```
-
-编辑 `KDNA_Core.json`——为你的领域写 2-3 条公理。然后：
+上面的源目录是生成的演示工件。请按 [30 分钟创作指南](./30-minute-authoring-guide.md)（英文）在新目录中创建你的正式创作项目，包括判断材料、显式确认与导出；复用生成的演示目录作为新 Studio 项目会失败，空项目不能导出。对开发源工作区的检查命令仍是：
 
 ```bash
 kdna validate ./my-domain
-kdna publish --check ./my-domain
 ```
 
-**下一步**：[Loader 行为规范](/zh/docs/loader-behavior) — 理解 Agent 该如何使用 KDNA。
+注：更早草稿时代的 `kdna publish --check` 不存在于任何已发布线的命令清单（在
+0.36.1 与当前线均 exit 2）；本线可用的检查命令是上面的 `kdna validate`。
+
+**下一步**：[Loader 行为规范](./loader-behavior.zh.md) — 理解 Agent 该如何使用 KDNA。

@@ -1,5 +1,9 @@
 # FAQ: KDNA with Skills, Prompts, and the AI Ecosystem
 
+> Commands in this FAQ use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
 ## What is KDNA?
 
 KDNA is a **judgment asset format and loading protocol**. A `.kdna` file gives a
@@ -196,7 +200,11 @@ source directories as authoring inputs — runtime loading takes a packaged
 
 ## Where should I start?
 
-1. `npm install -g @aikdna/kdna-cli`
+The sequence below is the **historical loading line, pinned to published CLI
+`0.36.1`**. On the current published line (CLI `0.43.2`) these commands are
+unavailable (exit 2); start from [Start Here](./start-here.md) instead.
+
+1. `npm install -g @aikdna/kdna-cli@0.36.1`
 2. `kdna demo minimal /tmp/hello`
 3. `kdna pack /tmp/hello /tmp/hello.kdna`
 4. `kdna validate /tmp/hello.kdna`
