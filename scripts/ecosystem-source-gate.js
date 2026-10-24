@@ -235,6 +235,25 @@ async function main(argv) {
         command.status = 'PASS';
       } catch (error) {
         command.status = /ETIMEDOUT/u.test(error.message) ? 'TIMED_OUT' : 'FAILED';
+        //  Attach the tail of the captured log so a real audit finding is never
+        //  misread as "no diagnostic output" when stdout was redirected to the
+        //  log file and stderr is empty.  The tail is bounded and reported as
+        //  an excerpt, not a replacement for the full log artifact.
+        try {
+          const captured = fs.readFileSync(path.join(work, log), 'utf8').trimEnd();
+          if (captured) {
+            const tail = captured.split('\n').slice(-20).join('\n');
+            const enriched = new Error(
+              `${error.message}\n[root-audit tail from ${log}]\n${tail}`,
+            );
+            enriched.cause = error.cause || error;
+            throw enriched;
+          }
+        } catch (readError) {
+          if (readError !== undefined && readError.message && !readError.message.includes('root-audit tail')) {
+            //  Log unreadable: fall through and rethrow the original error.
+          }
+        }
         throw error;
       } finally {
         fs.closeSync(output);
