@@ -7,7 +7,7 @@ export const ArtifactSchema = z.object({
     type: z.string(),
     version: z.number().default(1),
     status: ArtifactStatusSchema.default('draft'),
-    data: z.record(z.unknown()),
+    data: z.record(z.string(), z.unknown()),
     qualityScore: z.number().min(0).max(1).optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -42,7 +42,7 @@ export const ArtifactEnvelopeSchema = z.object({
         stage_attempt: z.number().int().min(1).optional(),
         stage_status: z.enum(['running', 'completed', 'failed', 'skipped']).optional(),
     }).optional(),
-    content: z.record(z.unknown()),
+    content: z.record(z.string(), z.unknown()),
     content_digest: z.string(),
     quality: z.object({
         gate_results: z.array(z.object({
