@@ -20,11 +20,11 @@ different responsibilities, maturity, and release schedules:
 | Responsibility | Repositories | Mission |
 |---|---|---|
 | Protocol and Core | `kdna` | Container, schema, identity, integrity, encryption, authorization, and loading contracts |
-| Runtime tooling | `kdna-cli` | Inspect, validate, plan, manage, load, and consume KDNA assets |
+| Runtime tooling | `kdna-cli` | Inspect, validate, create, read, and revise KDNA assets (`plan`/`load` are unavailable on the current line; they belong to the historical `0.36.1` loading line) |
 | Authoring | `kdna-studio-core`, `kdna-studio-cli` | Make implicit judgment explicit, review it, and export versioned assets |
 | Reference assets | `kdna-assets` | Interoperability fixtures and reference judgment assets |
 | Apple ecosystem | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime, shared application contracts, and native authoring integration |
-| Agent and editor integration | `kdna-skills`, `kdna-vscode` | Agent, Skill, MCP, and editor workflows for KDNA creation and consumption |
+| Agent and editor integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent, Skill, and MCP workflows for KDNA creation and consumption; `kdna-vscode` is paused by owner decision and not on the current public surface |
 | Web ecosystem | `kdna-web-client`, `kdna-web-server`, `kdna-react`, `create-kdna-web-app`, `kdna-demo-web-viewer` | Browser, server, React, scaffolding, and demonstrable end-to-end integration |
 | Authorization and remote use | `kdna-activation-server`, `kdna-remote-server` | Optional entitlement, revocation, and remote consumption deployments |
 

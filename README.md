@@ -219,14 +219,17 @@ collection; the current single formal work is created and independently
 accepted separately. See [engineering isolation](https://github.com/aikdna/kdna-assets/blob/main/references/public/ENGINEERING-ONLY.md).
 
 The two preserved historical references retain their original bytes and
-licenses. Their recorded published-CLI validation does not transfer to the
-current asset-adapter graph, which rejects them with `READ_CORE_INVALID`.
-The earlier-contract `@aikdna/verification-scope@0.1.5` candidate is likewise
-an engineering input, with no Release coordinate or human review. See the
-[asset README](https://github.com/aikdna/kdna-assets#readme) for exact bytes,
-observations and licenses. Listing is not endorsement.
+licenses in that repository's Git history. **No public sample asset is
+currently obtainable from it**: its index lists no asset and its release
+downloads are withdrawn. Their recorded published-CLI validation does not
+transfer to the current asset-adapter graph, which rejects them with
+`READ_CORE_INVALID`. The earlier-contract
+`@aikdna/verification-scope@0.1.5` candidate is likewise an engineering
+input, with no Release coordinate or human review. See the
+[asset README](https://github.com/aikdna/kdna-assets#readme) for that state,
+exact bytes, observations and licenses. Listing is not endorsement.
 
-→ [Full 5-minute guide](./docs/try-kdna.md) · [Historical engineering reference inputs](https://github.com/aikdna/kdna-assets)
+→ [Full 5-minute guide](./docs/try-kdna.md) · [kdna-assets: historical engineering reference, no public assets](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 
@@ -393,7 +396,7 @@ its source version, protocol coordinate and publication state are separate facts
 | Component | Role | Source |
 | --- | --- | --- |
 | **KDNA Core spec** | Format, schemas, runtime loading contract | this repo |
-| **KDNA CLI** | Official command-line entry: `inspect`, `validate`, `pack`, `unpack`, `load` | this repo + `@aikdna/kdna-cli` |
+| **KDNA CLI** | Official command-line entry (current line): `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`, `convert`; `plan`/`load` unavailable. The historical `pack`/`unpack`/`plan-load`/`load` surface belongs to published CLI `0.36.1` | this repo + `@aikdna/kdna-cli` |
 | **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
 | **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |

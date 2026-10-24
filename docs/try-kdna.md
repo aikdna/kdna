@@ -1,6 +1,9 @@
 # Try KDNA in 5 Minutes
 
-> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> **This guide is pinned to the historical loading line (CLI 0.36.1).** For the
+> current published line (CLI `0.43.2`), use the
+> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0432).
+> Commands below use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
 > For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
 
@@ -48,7 +51,7 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
 - **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
-- **Current AIKDNA reference display**: [kdna-assets](https://github.com/aikdna/kdna-assets) (versioned historical references and a separate current-contract candidate; no content endorsement)
+- **Reference assets**: [kdna-assets](https://github.com/aikdna/kdna-assets) is a historical engineering reference. It currently lists no public asset and its release downloads are withdrawn — no public sample asset is obtainable from it yet. No content endorsement.
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is

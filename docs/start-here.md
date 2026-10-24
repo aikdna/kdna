@@ -19,9 +19,60 @@ runs against the exact published versions. Use
 `--omit=optional` for the bound protected Host graph; otherwise npm may add
 `cbor-extract` and the Host rejects the unbound package.
 
-The walkthroughs below preserve CLI `0.36.1` and its historical loading
-contract. For current native or Studio authoring, follow the current source
-entry, retain its lock, and use the reader named by the producing route.
+The [current line quickstart below](#current-line-quickstart-cli-0432) runs
+the published stable CLI `0.43.2` command surface. The older walkthroughs
+further down preserve CLI `0.36.1` and its historical loading contract; for
+current native or Studio authoring, follow the current source entry, retain
+its lock, and use the reader named by the producing route.
+
+## Current line quickstart (CLI 0.43.2)
+
+Five commands from an empty directory create, check and read a real `.kdna`
+asset with the **current published** CLI — `@aikdna/kdna-cli@0.43.2` with its
+exact Core `0.37.9` / Read `0.13.3` pins. Every command below was re-run from
+a clean directory with an empty npm cache.
+
+```bash
+mkdir kdna-first-asset && cd kdna-first-asset
+npm init -y
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.2
+
+# 1. Create a first asset from the bundled teaching example
+npx --no-install kdna create node_modules/@aikdna/kdna-cli/examples/team-update/author.json --output first-asset.kdna --allow-create
+
+# 2. Inspect: identity, contract tuple and digests (no judgment bodies)
+npx --no-install kdna inspect first-asset.kdna
+
+# 3. Validate: technical admission
+npx --no-install kdna validate first-asset.kdna
+
+# 4. Read the catalog: which judgments does this asset carry?
+npx --no-install kdna read first-asset.kdna --mode catalog --budget 1000000 --allow-read
+
+# 5. Read one judgment with its mandatory support closure
+npx --no-install kdna read first-asset.kdna --mode exact_selection --asset-id asset:team-update-format --asset-version 1.0.0 --judgment-id update:order --budget 1000000 --allow-read
+```
+
+What you will see: `create` reports `status: "saved"` with the exact byte
+length and SHA-256 (`1482397a…` for this deterministic example); `inspect`
+and `validate` report `status: "accepted"` with `core: valid`; the catalog
+lists the three judgment ids `update:order`, `update:evidence` and
+`update:rationale`; and `exact_selection` returns the selected judgment's
+statement together with its mandatory closure.
+
+Notes:
+
+- `--allow-create` and `--allow-read` are explicit per-invocation permissions
+  for technical operations. They do not confirm the author, establish
+  adoption, or authorize any action.
+- `--budget` counts the complete final JCS read envelope, not the printed
+  body. For the exact read contract and the authored-input format for
+  `create`, see the [CLI README](https://github.com/aikdna/kdna-cli#readme).
+- The example input is synthetic teaching content. To author your own
+  `{manifest, payload, members}` document, start from the same README.
+- `plan`/`load` and the older `demo`/`pack` commands are **unavailable on
+  this line** (exit 2); they belong to the
+  [historical CLI 0.36.1 walkthrough](#5-minute-quick-start) below.
 
 ---
 
@@ -37,8 +88,9 @@ published line.
 
 | I want to... | Start here | Time |
 |-------------|-----------|------|
+| **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.2)](#current-line-quickstart-cli-0432) | 5 min |
 | **Use current Core and Read source** | [Current source entry](#current-source-entry) | 5 min |
-| **Try the published CLI 0.36.1 lifecycle** | [Published walkthrough](#5-minute-quick-start) | 5 min |
+| **Try the historical loading line (CLI 0.36.1)** | [Historical walkthrough](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [Current native/Studio routes](#current-source-entry); [published-line authoring guide](./30-minute-authoring-guide.md) | 30 min |
 | **Preserve personal judgment or preferences** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
@@ -94,8 +146,12 @@ retain their own artifacts and exact dependency graphs. Never substitute
 
 ## 5-Minute Quick Start
 
-This is the published CLI **0.36.1** walkthrough. It preserves the older loading
-contract and does not establish current Core/Read compatibility or Agent adoption.
+> **Historical (loading line, CLI 0.36.1).** This section preserves the
+> published 2026-09 loading workflow (`demo` / `pack` / `plan-load` / `load`).
+> On the current line these commands are unavailable (exit 2); start from the
+> [Current line quickstart (CLI 0.43.2)](#current-line-quickstart-cli-0432)
+> instead. This walkthrough preserves the older loading contract and does not
+> establish current Core/Read compatibility or Agent adoption.
 
 ```bash
 npm install -g @aikdna/kdna-cli@0.36.1
@@ -122,7 +178,7 @@ Expected validation result for CLI 0.36.1:
 }
 ```
 
-## Create your own asset
+## Historical: create your own asset (Studio CLI 0.11.0 + CLI 0.36.1)
 
 For current source creation, use the [Studio CLI README](https://github.com/aikdna/kdna-studio-cli#readme).
 The example below instead pairs published Studio CLI **0.11.0** with Runtime

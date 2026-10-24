@@ -28,7 +28,7 @@ repository README; historical release coordinates do not describe current source
 | `kdna-remote-server` | Not on the current public surface | npm: 8 versions, all 8 deprecated, latest `0.4.2`. |
 | `kdna-demo-web-viewer` | Not on the current public surface | no npm package. |
 | Swift runtime, Studio Swift, and app-shared package | Pre-release | The recorded Swift Core 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
-| `kdna-vscode` | Not on the current public surface | Repository is private; no npm package. The editor mission remains part of the ecosystem, and current source maturity and exact compatibility await owner-reviewed recertification. |
+| `kdna-vscode` | Paused (owner decision, 2026-10-24) | Owner decision 2026-10-24: the line is paused and receives no engineering time. It is not part of the current public surface or communication surface. The Marketplace `0.1.0` listing is pending removal. The source repository stays private; no open-sourcing decision has been made. |
 | `@aikdna/agent` | Legacy / Deprecated | Frozen source only; new integrations use explicit Core/CLI file loading while Agent adapters are recertified. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 
