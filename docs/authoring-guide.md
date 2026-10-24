@@ -1,146 +1,303 @@
-# KDNA Authoring Guide — Writing Your First `author-input.json`
+# KDNA Authoring Guide
 
-This guide covers the **current published CLI** (`@aikdna/kdna-cli@0.43.2`) `create`
-command input format. It documents the admission rules the CLI actually enforces —
-including several that are not in the JSON schema and were verified empirically.
-A complete runnable minimal template is at
-[`examples/author-input-minimal.json`](./examples/author-input-minimal.json) (2
-judgments, ~10 KB).
+> **For the current published CLI `create` input format (CLI 0.43.2), see
+> [authoring-guide-cli.md](./authoring-guide-cli.md).** This page preserves the
+> historical dev-source / Studio-line authorization workflow.
 
-For the published loading-line walkthrough (CLI 0.36.1), see
-[Try KDNA](./try-kdna.md). For the 30-minute Studio-line guide, see
-[30-minute authoring guide](./30-minute-authoring-guide.md).
+> **For distributable KDNA assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation. Dev source directories are authoring views and do not by themselves constitute a shippable `.kdna` asset.
 
-## Quick start
+## Quick Start (Dev Source — for experimentation)
+
+1. Copy `templates/minimal-domain/` to your working directory
+2. Rename the folder to your domain ID (e.g., `my_domain`)
+3. Edit each JSON file — fill in every placeholder in angle brackets
+4. Validate: `kdna validate <your-domain-folder>`
+5. Export a `.kdna` asset, then validate and load that exact asset through the
+   Runtime contract.
+
+> **To produce a `.kdna` asset:** create or migrate a Studio project, export it, then run `kdna validate`, `kdna plan-load`, and `kdna load`. See [getting-started.md](./getting-started.md).
+
+---
+
+## 0. Field Name Reference (REQUIRED — read before writing any JSON)
+
+If you write KDNA JSON from scratch, you MUST use these exact field names. The loader reads by field name; the validator checks by field name; wrong field names silently produce zero agent judgment.
+
+### KDNA_Core.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | `version`, `domain`, `created`, `purpose`, `load_condition` | Invariant — must be in every KDNA file |
+| `axioms[]` | `id`, `one_sentence`, `full_statement`, `why` | Invariant — see SPEC §5.2 |
+| `ontology[]` | `id`, `one_sentence`, `essence`, `boundary`, `trigger_signal` | Invariant — see SPEC §5.3 |
+| `frameworks[]` | `id`, `name`, `when_to_use`, `steps` | Invariant — see SPEC §5.4 |
+| `core_structure[]` | `from`, `to`, `via` | Invariant — see SPEC §5.5 |
+| `stances` | `string[]` | Invariant — array of stance strings |
+
+### KDNA_Patterns.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `terminology.standard_terms[]` | `term`, `definition` | Standard vocabulary |
+| `terminology.banned_terms[]` | `term`, `why`, `replace_with` | Invariant — see SPEC §6.2 |
+| `misunderstandings[]` | `id`, `wrong`, `correct`, `key_distinction`, `why` | Invariant — see SPEC §6.3 |
+| `self_check` | `string[]` or `{ question: string }[]` | Invariant — yes/no questions |
+
+### KDNA_Scenarios.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `scenes[]` | `id`, `name`, `trigger_signal`, `sub_scenarios[]` | |
+
+### KDNA_Cases.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `cases[]` | `id`, `title`, `context`, `what_happened`, `what_was_learned`, `structural_pattern` | |
+
+### KDNA_Reasoning.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `reasoning_chains[]` | `id`, `one_sentence`, `logic` (string[]), `so_what` | Invariant — see SPEC §7.3 |
+
+### KDNA_Evolution.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `stages[]` | `id`, `name`, `description`, `indicators` (string[]) | |
+| `evolution_layers[]` | `id`, `name`, `capability`, `from_stage`, `to_stage` | |
+| `measurement[]` | `id`, `what`, `how`, `threshold` | |
+
+### Common mistakes (field names that do NOT exist)
+
+| If you wrote... | Use instead... |
+|-----------------|----------------|
+| `statement` | `one_sentence` (short) or `full_statement` (long) |
+| `description` / `summary` | `one_sentence` |
+| `name` / `definition` (on ontology) | `id` / `one_sentence` + `essence` |
+| `claim` / `misreading` (on misunderstanding) | `wrong` |
+| `reality` (on misunderstanding) | `correct` |
+| `input` / `judgment` / `output` (on core_structure) | `from` / `via` / `to` |
+| `conclusion` (on reasoning) | `one_sentence` |
+| `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
+| `capability_layers` (on evolution) | `stages` |
+
+For dev source experiments, copy `templates/minimal-domain/` or start a Studio project with `kdna-studio create <name>` (from `@aikdna/kdna-studio-cli`), or use `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. A formal asset exists when it is exported to the KDNA Asset Container and passes `kdna validate`; the Studio toolchain is one authoring path, not a creation gate.
+
+---
+
+## 1. Start Narrow
+
+Do not try to encode an entire profession at once.
+
+**Bad:** `leadership`  
+**Better:** `frontline_team_feedback`  
+**Best:** `feedback-delivery-first-time-manager`
+
+A narrow domain forces you to write axioms with a clear decision boundary. A
+broad domain produces generic advice whose intended effect cannot be inspected.
+
+---
+
+## 2. Write the Domain Sentence
+
+Before writing any JSON, answer this:
+
+```text
+This domain helps an AI agent judge ______ so that ______.
+```
+
+Example:
+
+> This domain helps an AI agent judge whether a meeting produced an actionable decision — or just discussion — so that the agent does not generate action items for commitments that don't exist.
+
+If you cannot fill both blanks concretely, your domain is too vague.
+
+---
+
+## 3. Write Good Axioms
+
+Axioms are the domain's core judgment principles. They must state a meaningful
+choice and the conditions under which that choice applies.
+
+### What makes a good axiom:
+
+- **Specific**: Two experts would agree when it applies
+- **Falsifiable**: You can construct a scenario where it does NOT apply
+- **Decision-bearing**: Applying the axiom would select, reject, prioritize, or
+  qualify something in at least one concrete case
+
+### Good vs Bad:
+
+| Bad (slogan) | Good (operational) |
+|---|---|
+| "Communication is important." | "The speaker's intent and the listener's interpretation are different things. Judge the gap, not the words." |
+| "Be user-centered." | "When a user requests feature X, first identify what outcome they are trying to achieve. Features are means; outcomes are ends." |
+| "Trust matters in sales." | "Price objections are certainty deficits, not price problems. Lowering price addresses the symptom; building certainty addresses the cause." |
+
+### Self-test for each axiom:
+
+- If I remove this axiom, does the asset lose a meaningful choice in at least
+  one scenario?
+- Can I write a specific scenario where this axiom selects one direction over
+  another?
+- Can I write a scenario where this axiom does NOT apply (proving it has a boundary)?
+
+---
+
+## 4. Write Good Ontology Concepts
+
+Every concept needs a real boundary, not a dictionary definition.
+
+### What makes a good ontology entry:
+
+- **Operational essence**: Not "what does this word mean" but "what does the agent need to check"
+- **Real boundary**: Something the agent must NOT confuse this concept with
+- **Observable trigger**: Words or patterns the agent can detect in user input
+
+### Good vs Bad:
+
+| Bad (decorative) | Good (operational) |
+|---|---|
+| Essence: "Trust is important in relationships." Boundary: "Not distrust." | Essence: "The buyer believes you will prioritize their outcome over your commission." Boundary: "Not rapport. Rapport is comfort; trust is confidence in your intent." Trigger: "Buyer asks for references, pauses before answering pricing questions, or says 'I need to think about it' without a specific concern." |
+| Essence: "Quality means meeting standards." Boundary: "Not low quality." | Essence: "The product performs its core function without requiring workarounds." Boundary: "Not feature count. A product with 3 features that all work is higher quality than one with 20 features and 15 workarounds." |
+
+---
+
+## 5. Write Good Stances
+
+Stances are the domain's default positions. Think of them as "when in doubt, lean this way."
+
+### What makes a good stance:
+
+- Prescriptive, not descriptive
+- The stance selects a direction that differs from at least one plausible
+  alternative
+- Paired with its opposite (so the agent knows both positions exist)
+
+### Good vs Bad:
+
+| Bad (truism) | Good (prescriptive) |
+|---|---|
+| "Be honest." | "Transparency about uncertainty builds more trust than confident wrong answers." |
+| "Listen to the customer." | "The customer describes symptoms; the professional diagnoses causes. Do not build what the customer asks for — build what solves the problem they described." |
+
+---
+
+## 6. Write Good Misunderstandings
+
+Misunderstandings are usually more useful than definitions. For each:
+
+- **wrong**: What an agent without domain judgment would assume
+- **correct**: What the domain teaches instead
+- **key_distinction**: The specific conceptual boundary
+- **why**: What bad judgment results from the wrong interpretation
+
+### Good vs Bad:
+
+| Bad (straw man) | Good (real confusion) |
+|---|---|
+| Wrong: "Communication doesn't matter." | Wrong: "If the other person is upset, I should address their emotions first." |
+| Correct: "Communication matters." | Correct: "If the other person is upset, I should identify the unmet need behind the emotion. Addressing the emotion without the need is temporary relief." |
+| **(No real agent would hold this wrong belief)** | **(Many agents default to emotion-first because it feels empathetic)** |
+
+---
+
+## 7. Write Good Self-Checks
+
+Self-checks are yes/no questions the agent asks itself after generating a response. They are the last line of defense.
+
+### What makes a good self-check:
+
+- Yes/no answerable
+- Domain-specific (not generic "is this helpful?")
+- Would catch a real mistake the agent might make
+
+### Good vs Bad:
+
+| Bad (generic) | Good (domain-specific) |
+|---|---|
+| "Is the response helpful?" | "Did I check whether the meeting actually produced a decision, or did I just summarize what was discussed?" |
+| "Did I follow best practices?" | "Did I identify the buyer's specific certainty deficit before suggesting a response to their price objection?" |
+| "Is this clear?" | "Would a domain expert reading this response say 'yes, that's how you think about this' — or did the agent default to common sense?" |
+
+---
+
+## 8. Prefer Observable Signals Over Abstract Labels
+
+A trigger signal should be something the agent can actually detect in text.
+
+**Bad:** `When the user is defensive.`  
+**Better:** `When the user repeatedly justifies themselves, quotes the other person as unreasonable, or asks for a sentence that proves they are right.`
+
+---
+
+## 9. Pre-Publication Checklist
+
+Before submitting a domain, verify:
+
+- [ ] Each axiom carries a meaningful choice in at least one specific scenario
+- [ ] Each ontology concept has a real boundary (something it is NOT)
+- [ ] Each stance is prescriptive (would bias the agent toward a different answer)
+- [ ] Each misunderstanding describes a belief a real agent might hold
+- [ ] Each self-check is a yes/no question specific to this domain
+- [ ] All trigger signals are observable in text
+- [ ] `kdna-lint` passes with zero warnings
+- [ ] `kdna-validate` passes
+- [ ] Named review cases cover in-scope direction, out-of-scope restraint, and
+      conflicts with facts, user intent, safety policy, or Host authority
+- [ ] The exported projection preserves the critical judgment units and reports
+      any omission or partial projection
+- [ ] The `kdna.json` manifest is filled and accurate
+
+---
+
+## 10. Review the Asset and Its Projection
+
+There is no universal output-improvement test for a judgment asset. Before
+sharing one, the asset owner or a named reviewer should instead inspect a
+bounded set of cases and declare what acceptance means for that asset:
+
+- in-scope cases should express the declared preference or decision rule;
+- out-of-scope cases should not inherit the asset's judgment;
+- current facts, explicit user intent, law, safety policy, and Host authority
+  take precedence when they conflict;
+- the exported projection should preserve critical judgment units and make any
+  omission visible;
+- authorization, disabling, switching, and rollback should remain possible in
+  the intended Host.
+
+A caller may compare different carriers or unloaded outputs for its own
+diagnosis, but that comparison is not a KDNA validity gate and does not prove
+that KDNA improves model intelligence, is universally correct, or is superior
+to Prompt, Skill, or ordinary documents.
+
+An effect experiment must use an equally sufficient Markdown/Skill judgment body
+as the comparison arm instead of a deliberately weakened baseline. Equal correct
+answers are a normal result: they do not make an asset fail and do not prove
+causal influence. Any public effect claim must state four things together — the
+task, the model, the input, and the evaluation method. If any of the four is
+missing, write "unverified" rather than a proven effect.
 
 ```bash
-mkdir my-first-asset && cd my-first-asset
-npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.2
-# Copy the minimal template, edit it, then:
-npx --no-install kdna create author-input.json --output my-asset.kdna --allow-create
-npx --no-install kdna inspect my-asset.kdna
-npx --no-install kdna validate my-asset.kdna
-npx --no-install kdna read my-asset.kdna --mode catalog --budget 1000000 --allow-read
+# Validate the exported asset and inspect its LoadPlan
+kdna validate ./dist/my-domain.kdna
+kdna plan-load ./dist/my-domain.kdna
+
+# Load an explicit projection for review
+kdna load ./dist/my-domain.kdna --profile=compact --as=json
 ```
 
-**Install flags** — which are actually needed for the install itself vs. defense in depth:
+---
 
-| Flag | Needed? | What it does |
-| --- | --- | --- |
-| `--save-exact` | Recommended | Pins the exact version in `package.json` (no `^` drift) |
-| `--ignore-scripts` | **Recommended** (security) | Skips any package lifecycle scripts; this package needs none |
-| `--omit=optional` | **Required for the bound Host graph** | Prevents `cbor-extract` from being pulled in; the unbound package is rejected by the Host (see the [start-here](./start-here.md) note) |
-| `--no-audit` / `--no-fund` | Optional | Suppresses registry advisory/funding requests; no functional effect |
+## 11. Cluster Authoring (multi-domain)
 
-## The three top-level keys
+For clusters containing multiple domains, use `kdna cluster init <name>` and see `templates/cluster/`.
 
-```json
-{ "manifest": { ... }, "payload": { ... }, "members": [] }
-```
-
-| Key | What goes in it |
-| --- | --- |
-| `manifest` | **17 fields** — asset identity, version, creator, history |
-| `payload` | **25 keys** — judgments and everything they reference |
-| `members` | Attachments as base64; empty array `[]` for a text-only asset |
-
-## Rule 1: Version alignment (four places must match)
-
-The admission layer checks that these **four fields are identical**:
-
-```
-manifest.version            ─┐
-manifest.judgment_version    ├─ all must be the same string (e.g. "1.0.0")
-payload.asset.asset_version ─┤
-payload.asset.judgment_version ─┘
-```
-
-Changing only one side is rejected with a generic `READ_CORE_INVALID`. Use full
-semver (`"2.0.0"`, not `"2.0"`). When revising an existing asset with
-`source-open`/`source-pack`, bump all four together.
-
-## Rule 2: Method term → component role sequence templates
-
-Each judgment has a `method` block. The `method.method.term` **determines the exact
-ordered sequence of component roles**. Missing, extra, out-of-order or mismatched
-roles are rejected. These are the verified templates:
-
-| `term` | Required component `role` sequence (in order) |
-| --- | --- |
-| `interpretation` | `解读对象`, `解释关系` |
-| `inference` | `判断前提`, `推导关系` |
-| `tradeoff` | `候选方案`, `比较因素`, `取舍原则` |
-| `criteria_comparison` | `判断标准`, `对照办法`, `归结办法` |
-| `feeling` | `个人感受` |
-
-Each component also carries `material_refs` (empty array `[]` is fine — but the
-key **must be present**; omitting it is rejected).
-
-## Rule 3: The other empirically verified admission rules
-
-These were verified against CLI 0.43.2 / Core 0.37.9 and are **not** all visible in
-the JSON schema (the schema allows things the admission layer rejects):
-
-1. **`payload.asset` has no `asset_uid`** — only `asset_id`, `asset_version`,
-   `judgment_version`. (The `asset_uid` lives in `manifest` only.)
-2. **`payload.declarations`** uses exactly the keys `highest_question` and
-   `boundaries` — not free-form names.
-3. **`payload.attributions`** must use the closed shape
-   `{"state":"provided","value":[{"role":"creator","actor_ids":[...],"statement":"..."}]}`.
-4. **`payload.kernel.purpose`** uses `{"kind":"authored","statement":"..."}`
-   (not `{"kind":"summary"}`).
-5. **`payload.materials[].source_refs`** items are **plain identifier strings**
-   (`["source:my-source"]`), not `{kind,id}` objects.
-6. **`answer_kind`** must be in the enum: `determination`, `classification`,
-   `evaluation`, `status`, `diagnosis`, `estimate`, `prediction`, `applicability`,
-   `ranking`, `selection`, `adjustment`, `interpretation`, `stance`, `preference`,
-   `guidance`, `composite`, `other`.
-7. **`examples` are optional** (the official CLI example has `examples: []`), but
-   if provided each must have the full shape including `title`, `context`,
-   `adopted_judgments`, `application`, `results`, `source_refs`.
-8. **Session input**: each stdin line to `kdna read --session` must be a complete
-   ReadRequest **including the full 9-key `tuple`** (copy it from `kdna inspect`
-   output's `tuple` field). A request without the tuple is rejected with
-   `READ_INPUT_INVALID`.
-
-## Boundary structure
-
-Per-judgment `boundaries`:
-
-```json
-"boundaries": {
-  "state": "provided",
-  "value": [{
-    "id": "boundary:my-judgment",
-    "effect": "limit",
-    "statement": "Applies to ...; does not apply when ...",
-    "declared_by": "actor:my-actor",
-    "applies_to": { "kind": "judgments", "judgment_refs": ["judgment:my-judgment"] },
-    "exception_refs": []
-  }]
-}
-```
-
-Boundaries state the scope where the judgment holds. A judgment without a
-boundary is weaker when an Agent cites it — the boundary travels with the
-closure on every `exact_selection` read.
-
-## Revision and conversion
-
-- **Revise an existing asset**: first get the current digest with
-  `kdna inspect existing.kdna` — the `digests.A.observed` field is the `--expected-a`
-  value. Then:
-  ```bash
-  npx --no-install kdna source-open existing.kdna --expected-a sha256:<A-from-inspect> --allow-source > open-output.json
-  # edit open-output.json's "edits" object, then:
-  npx --no-install kdna source-pack existing.kdna --edits edits.json --expected-a sha256:<same-A> --output revised.kdna --allow-source
-  ```
-  The original file is never modified. Bump all four version fields in `edits`.
-- **Convert 0.5 → 0.6**: same pattern — `inspect` first to get `--expected-a`.
-
-## What `create` does NOT do
-
-Technical validity is separate from authorship confirmation, adoption or action
-authorization. A `saved` status means the bytes were written and admitted — it
-does not certify content quality or grant any permission.
+Each sub-domain in a cluster follows the same six-file structure. The cluster manifest (`KDNA_Cluster.json`) declares packages and composition rules.
