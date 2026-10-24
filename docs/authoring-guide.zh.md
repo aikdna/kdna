@@ -1,91 +1,134 @@
-# 编写指南
+# KDNA 创作指南 — 写你的第一份 author-input.json
 
-如何写出忠于作者判断的领域文件——格式正确、边界清楚，并在适用场景中表达出
-可检查的判断。
+本指南针对**当前已发布 CLI**（`@aikdna/kdna-cli@0.43.2`）的 `create` 命令输入格式，
+记录 CLI 实际执行的准入规则——包括 JSON schema 中看不到的、经实证验证的多条。
+完整可运行最小模板见 [`examples/author-input-minimal.json`](./examples/author-input-minimal.json)
+（2 条判断，约 10 KB）。
+
+旧 loading 线走查（CLI 0.36.1）见[试试 KDNA](./try-kdna.md)；30 分钟 Studio 线指南见
+[30 分钟创作指南](./30-minute-authoring-guide.md)。
 
 ## 快速开始
 
-1. 复制 `templates/minimal-domain/` 到你的工作目录
-2. 重命名为你的领域 ID（如 `my_domain`）
-3. 编辑每个 JSON 文件——填入选角括号中的占位符
-4. 验证：`kdna validate <你的领域目录>`
-5. 导出 `.kdna` 资产，再通过 Runtime 合同验证并加载这一精确资产。
+```bash
+mkdir my-first-asset && cd my-first-asset
+npm init -y
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.2
+# 复制最小模板、编辑后：
+npx --no-install kdna create author-input.json --output my-asset.kdna --allow-create
+npx --no-install kdna inspect my-asset.kdna
+npx --no-install kdna validate my-asset.kdna
+npx --no-install kdna read my-asset.kdna --mode catalog --budget 1000000 --allow-read
+```
 
-## 从窄开始
+**安装旗标**——哪些安全必需、哪些可选：
 
-不要试图一次性编码整个行业。
+| 旗标 | 必需？ | 作用 |
+| --- | --- | --- |
+| `--save-exact` | 建议 | 在 `package.json` 钉精确版本（无 `^` 漂移） |
+| `--ignore-scripts` | **建议**（安全） | 跳过包生命周期脚本；本包不需要任何脚本 |
+| `--omit=optional` | **绑定 Host 图时必需** | 阻止 `cbor-extract` 被拉入；未绑定的包被 Host 拒绝（见 [start-here](./start-here.md) 注记） |
+| `--no-audit` / `--no-fund` | 可选 | 抑制注册表建议/资助请求；无功能影响 |
 
-**差：** `leadership`
-**好：** `frontline_team_feedback`
-**最好：** `feedback-delivery-first-time-manager`
+## 顶层三键
 
-窄领域迫使你把判断写到能被检查的程度：两位专家会同意它何时适用。宽领域只能
-产出无法检查适用范围的泛泛建议。
+```json
+{ "manifest": { ... }, "payload": { ... }, "members": [] }
+```
 
-## 写好的公理
+| 键 | 内容 |
+| --- | --- |
+| `manifest` | **17 字段**——资产身份、版本、创建者、历史 |
+| `payload` | **25 键**——判断及所有被引用对象 |
+| `members` | base64 附件；纯文本资产用空数组 `[]` |
 
-公理是领域的核心判断原则。好的公理在应用时会选择、拒绝、排定优先级或限定
-一种做法，而不是复述一个人人同意的事实。
+## 规则 1：版本对齐（四处必须一致）
 
-### 什么是好的公理
+准入层校验以下**四个字段完全相同**：
 
-- **具体**：两位专家会同意它何时适用
-- **可证伪**：你可以构造一个它不适用的场景
-- **带判断**：应用它会选择、拒绝、排定优先级或限定一种做法（最终答案可能
-  不变，它仍然成立）
+```
+manifest.version                 ─┐
+manifest.judgment_version         ├─ 必须是同一字符串（如 "1.0.0"）
+payload.asset.asset_version      ─┤
+payload.asset.judgment_version   ─┘
+```
 
-### 好与坏的对比
+只改一侧会被拒（泛化 `READ_CORE_INVALID`）。使用完整 semver（`"2.0.0"` 而非
+`"2.0"`）。用 `source-open`/`source-pack` 修订已有资产时，四处一起递增。
 
-| 差（口号） | 好（可操作） |
-|-----------|------------|
-| "沟通很重要。" | "说话者的意图和听者的解读是不同的东西。判断差距，而非文字。" |
-| "要以用户为中心。" | "当用户请求功能 X 时，先识别他们想达成的结果。功能是手段，结果是目的。" |
-| "信任在销售中很重要。" | "价格异议是确定性不足，不是价格问题。降价处理症状，建立确定性处理原因。" |
+## 规则 2：Method term → 组件角色序列模板
 
-## 写好的立场
+每条判断有 `method` 块。`method.method.term` **决定组件角色的精确有序序列**。
+缺失、多余、乱序或错配均被拒。经实证的模板：
 
-立场是领域的默认姿态。"当不确定时，倾向这边。"
+| `term` | 必需的组件 `role` 序列（按序） |
+| --- | --- |
+| `interpretation` | `解读对象`、`解释关系` |
+| `inference` | `判断前提`、`推导关系` |
+| `tradeoff` | `候选方案`、`比较因素`、`取舍原则` |
+| `criteria_comparison` | `判断标准`、`对照办法`、`归结办法` |
+| `feeling` | `个人感受` |
 
-差的立场是口号（"要诚实。"）。好的立场是处方（"对不确定性的透明比对自信的错答更能建立信任。"）。
+每个组件还须带 `material_refs`（空数组 `[]` 可以——但**键必须在**，省略被拒）。
 
-## 写好的误解识别
+## 规则 3：其余经实证的准入规则
 
-误解通常比定义更有用。
+以下规则经 CLI 0.43.2 / Core 0.37.9 实证，**并非全部**在 JSON schema 中可见
+（schema 允许的东西准入层可能拒绝）：
 
-差的误解是稻草人（"沟通不重要。"——没有 Agent 会这样认为）。
-好的误解是真实困惑（"如果对方不高兴，我应该先处理情绪。"——很多 Agent 默认如此，因为感觉更共情。但正确做法是：识别情绪背后的未满足需求。）
+1. **`payload.asset` 无 `asset_uid`**——只有 `asset_id`、`asset_version`、
+   `judgment_version`（`asset_uid` 仅在 `manifest` 中）。
+2. **`payload.declarations`** 恰用键 `highest_question` 与 `boundaries`——不能自由命名。
+3. **`payload.attributions`** 须用闭合形状
+   `{"state":"provided","value":[{"role":"creator","actor_ids":[...],"statement":"..."}]}`。
+4. **`payload.kernel.purpose`** 用 `{"kind":"authored","statement":"..."}`
+   （不是 `{"kind":"summary"}`）。
+5. **`payload.materials[].source_refs`** 的条目是**纯标识符字符串**
+   （`["source:my-source"]`），不是 `{kind,id}` 对象。
+6. **`answer_kind`** 必须在枚举内：`determination`、`classification`、`evaluation`、
+   `status`、`diagnosis`、`estimate`、`prediction`、`applicability`、`ranking`、
+   `selection`、`adjustment`、`interpretation`、`stance`、`preference`、`guidance`、
+   `composite`、`other`。
+7. **`examples` 可选**（官方 CLI 示例 `examples: []`），但若提供则每条须含完整
+   结构：`title`、`context`、`adopted_judgments`、`application`、`results`、`source_refs`。
+8. **Session 输入**：`kdna read --session` 的每行 stdin 必须是完整 ReadRequest
+   **含完整 9 键 `tuple`**（从 `kdna inspect` 输出的 `tuple` 字段复制）。缺 tuple
+   被拒（`READ_INPUT_INVALID`）。
 
-## 发布前检查清单
+## Boundary 结构
 
-提交领域之前，确认：
+判断级 `boundaries`：
 
-- [ ] 每条公理在至少一个具体场景中带着明确选择（应用它会选择、拒绝、排定优先级或限定条件）
-- [ ] 每个本体概念有真正的边界（不是"不是 X"）
-- [ ] 每个立场是处方性的（会使 Agent 偏向不同答案）
-- [ ] 每个误解描述了一个真实 Agent 可能持有的信念
-- [ ] 每条自检是只对该领域有意义的 yes/no 问题
-- [ ] 所有触发信号在文本中可观测
-- [ ] 具名审查用例覆盖了作用域内的判断方向、作用域外的克制，以及与事实、用户意图、安全策略或 Host 权限的冲突
-- [ ] 导出的投影保留了关键判断单元，并如实报告任何省略或部分投影
-- [ ] `kdna-lint` 零警告通过
-- [ ] `kdna-validate` 通过
-- [ ] `kdna.json` 清单已填写且准确
+```json
+"boundaries": {
+  "state": "provided",
+  "value": [{
+    "id": "boundary:my-judgment",
+    "effect": "limit",
+    "statement": "适用于……；不适用于……",
+    "declared_by": "actor:my-actor",
+    "applies_to": { "kind": "judgments", "judgment_refs": ["judgment:my-judgment"] },
+    "exception_refs": []
+  }]
+}
+```
 
-## 效果声明
+Boundary 声明判断成立的范围。没有 boundary 的判断在 Agent 引用时更弱——
+boundary 随每次 `exact_selection` 读取的闭包一起返回。
 
-格式合规、忠实表达作者判断、适用范围、对真实任务的效果评估是四件不同的事。
-前一件成立不证明后一件成立。KDNA 不提供通用的"输出改善"测试。
+## 修订与转换
 
-在有/无 KDNA 的对照中，双方给出**相同的正确答案**是正常结果：它不构成资产
-失败，也不证明因果影响。做对照实验时，对照臂必须是**同等充分的 MD/Skill 判断
-内容**，而不是刻意弱化的基线。
+- **修订已有资产**：先用 `kdna inspect existing.kdna` 取当前摘要——`digests.A.observed`
+  字段即 `--expected-a` 值。然后：
+  ```bash
+  npx --no-install kdna source-open existing.kdna --expected-a sha256:<inspect取的A> --allow-source > open-output.json
+  # 编辑 open-output.json 的 "edits" 对象后：
+  npx --no-install kdna source-pack existing.kdna --edits edits.json --expected-a sha256:<同一A> --output revised.kdna --allow-source
+  ```
+  原件永不被修改。在 `edits` 中四处版本一起递增。
+- **0.5 → 0.6 转换**：同一模式——先 `inspect` 取 `--expected-a`。
 
-若要在对外文本中写入任何效果声明，必须同时给出四个要素：
+## `create` 不做的事
 
-1. **任务**：具体是什么任务
-2. **模型**：哪个模型及其版本
-3. **输入**：用了什么输入，对照臂是什么
-4. **评价方法**：由谁、按什么标准评定
-
-缺任一要素时，只能写"**未验证**"，不得写成已证效果。各评估层之间不能互相证明
-的说明见[评估一个 KDNA 资产](./evaluation.zh.md)。
+技术有效性与作者确认、采用或行动授权分别成立。`saved` 状态意味着字节已写入
+并被准入——不证明内容质量，也不授予任何权限。
