@@ -1,14 +1,14 @@
 # KDNA Tool Status Matrix
 
-Current source entry: 2026-10-09. Use the [support matrix](current-release-support.md)
+Current published entry: 2026-10-24. Use the [support matrix](current-release-support.md)
 for exact channel availability and the [actual Agent task](../examples/native-team-update/README.md)
 for selected Read, revision and reopened use.
 
 | Current entry | Commands and boundary |
 | --- | --- |
-| Native CLI `0.39.0-rc.native-sections.3`, exact Core `0.37.1-rc.browser.1` / Read `0.11.2-rc.browser.1` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`; explicit local permissions, container0.6, Read0.7-candidate; no Plan/load. |
-| MCP `0.8.0-rc.native-sections.1` with the same native graph | Operator-bound catalog/read/expand/cancel; named Host delivery NOT_RUN; no decryption. |
-| StudioCLI `0.13.0-rc.components.2` / StudioCore `4.0.0-rc.components.2` | Separate container0.5/Read0.6.4 session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
+| Native CLI `0.43.2`, exact Core `0.37.9` / Read `0.13.3` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container0.6, Read0.7-candidate; plan/load unavailable (exit 2). |
+| MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.0` / Core `0.37.7` / Read `0.13.1` graph | Operator-bound catalog/read/expand/cancel; named Host delivery NOT_RUN; no decryption. |
+| StudioCLI `0.14.0` / StudioCore `4.1.0` on their own Core `0.37.2` / Read `0.11.3` line | Separate container0.5/Read0.6.4 session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
 
 The following dated descriptions preserve the older source and published
 observations. They do not describe the current entries above. In particular,
@@ -133,7 +133,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 | Component | Status |
 |---|---|
 | `kdna-loader` skill | **Unassessed** — mission retained; the previous broad-discovery and silent-loading model is not the current Host contract. |
-| MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current source channel is MCP `0.8.0-rc.native-sections.1` over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
+| MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current source channel is MCP `0.8.0-rc.native-sections.3` over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
 
 ## Package Boundaries
 
