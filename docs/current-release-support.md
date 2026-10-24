@@ -77,6 +77,11 @@ lock; a newer SDK pair must not be injected into it.
 
 ## Repository-by-repository support
 
+Which repositories belong to the public commitment surface — and which areas remain
+private without being part of the public API — is stated in
+[Repository Boundaries](./repository-boundaries.md). The table below covers the
+public repositories.
+
 “Complete source” means the exact Git revision, including its tracked vendor
 archives, lock, examples and license texts. It does not mean that a package with
 the same version already exists on npm. The table records public channel
