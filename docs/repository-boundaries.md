@@ -40,10 +40,9 @@ that decision is made per repository and announced through normal releases.
 
 The internal whitepaper and judgment-system working repository is **permanently
 private**. It holds unpublished drafts, internal records and private material. The
-only intended public release unit derived from that work is the whitepaper asset
-itself (a `.kdna` release), published — when ready — through the public asset
-channel under its own license and review. The working repository itself is not a
-publication surface and has no path to becoming one.
+working repository itself is not a publication surface. Any public release derived
+from it — the whitepaper `.kdna` asset, or a separately reviewed public asset
+repository — is an explicit, per-unit publication decision.
 
 ## How this boundary is maintained
 
