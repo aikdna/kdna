@@ -362,6 +362,38 @@ test('superseded consumer rows stay in dated records while the current guide nam
   assert.deepEqual(checkCurrentNavigation(root).issues, []);
 });
 
+test('the historical quickstart cannot requalify Plan/load as current workflow', () => {
+  const guide = fs.readFileSync(path.join(root, 'docs/try-kdna.md'), 'utf8');
+  assert.ok(guide.includes('This guide is pinned to the historical loading line (CLI 0.36.1).'));
+  assert.ok(
+    guide.includes(
+      'The current CLI `0.43.2` line does not provide the `plan-load` or `load` commands',
+    ),
+  );
+  assert.ok(guide.includes('**Historical loading follow-up**'));
+  assert.ok(guide.includes('**Historical authoring follow-up**'));
+
+  const drifted = changedDocument('docs/try-kdna.md', (text) =>
+    text.replace(
+      'The current CLI `0.43.2` line does not provide the `plan-load` or `load` commands',
+      'The current CLI `0.43.2` line provides the `plan-load` and `load` commands',
+    ),
+  );
+  assert.ok(
+    drifted.issues.some((row) => row.name === 'docs/try-kdna.md:historical-plan-load-boundary'),
+    JSON.stringify(drifted.issues.slice(0, 5)),
+  );
+});
+
+test('the historical quickstart must route current-line visitors explicitly', () => {
+  const guide = fs.readFileSync(path.join(root, 'docs/try-kdna.md'), 'utf8');
+  assert.ok(guide.includes('For the\n> current published line (CLI `0.43.2`), use the'));
+  assert.ok(
+    guide.includes('[Current line quickstart](./start-here.md#current-line-quickstart-cli-0432)'),
+  );
+  assert.equal(guide.includes('What do you want'), false);
+});
+
 function changedDocument(file, transform) {
   const original = fs.readFileSync(path.join(root, file), 'utf8');
   const changed = transform(original);
