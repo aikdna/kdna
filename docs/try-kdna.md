@@ -49,13 +49,17 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 ## What's next
 
-- **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
-- **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
+- **Historical loading follow-up**: [15-minute agent guide](./15-minute-agent-guide.md)
+  also belongs to the CLI `0.36.1` line; it does not describe current CLI
+  `0.43.2` delivery.
+- **Historical authoring follow-up**: [30-minute authoring guide](./30-minute-authoring-guide.md)
+  keeps the older project/card workflow; current authoring starts from the
+  [Current line quickstart](./start-here.md#current-line-quickstart-cli-0432).
 - **Reference assets**: [kdna-assets](https://github.com/aikdna/kdna-assets) is a historical engineering reference. It currently lists no public asset and its release downloads are withdrawn — no public sample asset is obtainable from it yet. No content endorsement.
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is
 
-KDNA is an open file format for packaging domain judgment and loading it into AI agents. `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain.
+KDNA is an open file format for packaging domain judgment and loading it into AI agents. On this historical line, `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain. The current CLI `0.43.2` line does not provide the `plan-load` or `load` commands; use the [Current line quickstart](./start-here.md#current-line-quickstart-cli-0432) for its create/inspect/validate workflow.
 
 KDNA Core is content-neutral. It validates file structure and loading contracts; publishers and callers decide content quality, distribution, and runtime policy.
