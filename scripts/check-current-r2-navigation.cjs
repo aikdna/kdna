@@ -1038,6 +1038,25 @@ function checkCurrentNavigation(root, options = {}) {
     'Source availability and registry publication are separate facts',
     'publication is disabled and named Host delivery remains NOT_RUN',
   ]);
+  const historicalQuickstart = segment('docs/try-kdna.md', null, '## Path A');
+  check(
+    'docs/try-kdna.md:historical-current-entry',
+    historicalQuickstart.includes(
+      `> **This guide is pinned to the historical loading line (CLI 0.36.1).** For the\n> current published line (CLI \`${released.cli.version}\`), use the\n> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0432).`,
+    ),
+    'The historical loading walkthrough must send current-line visitors to the current entry',
+  );
+  check(
+    'docs/try-kdna.md:historical-plan-load-boundary',
+    read('docs/try-kdna.md').includes(
+      `The current CLI \`${released.cli.version}\` line does not provide the \`plan-load\` or \`load\` commands`,
+    ),
+    'Current-line Plan/load capability must not be borrowed from the historical CLI',
+  );
+  contains('docs/try-kdna.md', "## What's next", '## What KDNA Is', [
+    '**Historical loading follow-up**',
+    '**Historical authoring follow-up**',
+  ]);
   contains('docs/status.zh.md', null, '## 当前成熟度', [
     '当前 R2',
     '原生 0.3.1 Plan/Capsule',
