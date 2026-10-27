@@ -75,7 +75,7 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "0a4cfeb2edfaa56e74c2101eb037e9e86bc2f8ee",
+      "main_commit": "88a991d966e6162e0014443b4f74ac16ff87fa8c",
       "mcp_package": "@aikdna/kdna-mcp-server",
       "mcp_version": "0.8.0-rc.native-sections.3",
       "npm_coordinate": null,
