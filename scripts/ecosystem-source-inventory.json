@@ -113,7 +113,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "0040347d79e1952a1992fcab6f1d282bb820be1b2de30f047583ab4c3f6eaabf",
+          "sha256": "2b4a78172112395fbee6e8083689a5ef7559c35e54a3a4ada35312d89aff57ca",
           "local_archives": []
         }
       ],
@@ -126,7 +126,7 @@
           "name": "@aikdna/kdna-conformance",
           "version": "0.2.0",
           "member_count": 84,
-          "members_sha256": "925a81aa0552fc4e82e7cbd2c49bf54e6ca74b68bdf0b7f6390d37c81ef7ad49",
+          "members_sha256": "480850d92877a12a052f3f6d8b217e25d4bfd4f8b56c3a1d6629c80e25cbffa7",
           "paths": [
             "LICENSE",
             "README.md",
@@ -220,7 +220,7 @@
           "name": "@aikdna/kdna-core",
           "version": "0.37.9",
           "member_count": 465,
-          "members_sha256": "d19b41a0815aa59ea1871e749fb5d3a92f15b9c297d87439803ff8bf2a121c74",
+          "members_sha256": "3ac6cecd75426427574a2f470ee3a18966ecada03e8816738fa53d9969c18d52",
           "paths": [
             "LICENSE",
             "NOTICE",
