@@ -9,7 +9,7 @@
 # KDNA
 
 <!-- release-coordinates:begin (generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand) -->
-**Current publication state (2026-10-19).** All five stable coordinates are
+**Current publication state (2026-11-01).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
