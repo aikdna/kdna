@@ -209,3 +209,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/check-published-coordinates.mjs --bytes
+
+  # Registry bytes are necessary but not sufficient: a consumer must be able to
+  # install the exact published coordinate in an empty prefix and use the public
+  # teaching sample. This job never reads the source workspace as a package; the
+  # sample is only input to the installed CLI.
+  published-cli-consumer-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 22 }
+      - name: Install the published CLI in an empty prefix and read the public sample
+        run: node scripts/check-published-cli-consumer.mjs

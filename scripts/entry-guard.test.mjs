@@ -53,6 +53,7 @@ const RUNS_ENTRIES = [
 // whether or not the file is also exercised as a command above.
 const IMPORT_ONLY_ENTRIES = [
   'scripts/check-post-cutover-naming.mjs',
+  'scripts/check-published-cli-consumer.mjs',
   'scripts/publish-health.mjs',
   'scripts/generate-post-cutover-token-authority.mjs',
   'scripts/check-scoped-release-readiness.mjs',

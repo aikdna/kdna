@@ -24,6 +24,7 @@
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",
     "check:inventory": "node scripts/check-inventory.cjs",
     "check:published-coordinates": "node scripts/check-published-coordinates.mjs",
+    "check:published-cli-consumer": "node scripts/check-published-cli-consumer.mjs",
     "check:packaged-readme": "node scripts/check-packaged-readme.mjs",
     "check:packaged-readme:published": "node scripts/check-packaged-readme.mjs --published",
     "test:packaged-readme": "node --test scripts/check-packaged-readme.test.mjs",
