@@ -34,7 +34,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22.23.1'
           check-latest: false
@@ -120,7 +120,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -175,7 +175,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -231,7 +231,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22.23.1'
           check-latest: false
@@ -364,7 +364,7 @@ jobs:
           ref: 57b7661fbf525f28272b7fa79bb86fc482877180
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
