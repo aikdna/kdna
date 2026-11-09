@@ -34,7 +34,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22.23.1'
           check-latest: false
@@ -81,7 +81,7 @@ jobs:
         run: >-
           node scripts/stable-release-authority.js guard --unit core
           --evidence "$CORE_RELEASE_EVIDENCE" --artifact "$CORE_RELEASE_ARTIFACT"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: kdna-core-release-evidence
           path: |
@@ -120,7 +120,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -137,7 +137,7 @@ jobs:
         run: |
           ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
           echo "EVAL_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: kdna-eval-release-evidence
           path: release-evidence/
@@ -175,7 +175,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -192,7 +192,7 @@ jobs:
         run: |
           ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
           echo "CONFORMANCE_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: kdna-conformance-release-evidence
           path: release-evidence/
@@ -231,7 +231,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22.23.1'
           check-latest: false
@@ -275,7 +275,7 @@ jobs:
         run: >-
           node scripts/stable-release-authority.js guard --unit read
           --evidence "$READ_RELEASE_EVIDENCE" --artifact "$READ_RELEASE_ARTIFACT"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: kdna-read-release-evidence
           path: |
@@ -364,7 +364,7 @@ jobs:
           ref: 57b7661fbf525f28272b7fa79bb86fc482877180
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -421,7 +421,7 @@ jobs:
           --workspace @aikdna/kdna run publish:guard --
           --evidence "$RUNNER_TEMP/kdna-compat-release-evidence.json"
           --artifact "$RUNNER_TEMP/kdna-compat-release.tgz"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: kdna-compat-release-evidence
           path: |
@@ -494,7 +494,7 @@ jobs:
             "$RUNNER_TEMP/python-$kind/bin/python" -I -B -m unittest discover -s "$GITHUB_WORKSPACE/python-sdk/tests" -p 'test_*.py' -v
             cd "$GITHUB_WORKSPACE"
           done
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: aikdna-python-source-candidate
           path: ${{ runner.temp }}/python-source-dist/
