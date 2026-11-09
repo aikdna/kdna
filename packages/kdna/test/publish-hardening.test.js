@@ -38,9 +38,9 @@ const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
 const HASH = 'a'.repeat(40);
 const OTHER_HASH = 'c'.repeat(40);
 const CHECKOUT_ACTION_SHA = '3d3c42e5aac5ba805825da76410c181273ba90b1';
-const SETUP_NODE_ACTION_SHA = '249970729cb0ef3589644e2896645e5dc5ba9c38';
+const SETUP_NODE_ACTION_SHA = '949feb2413d6458794dcd2491c4babbbce0c15c1';
 const SETUP_PYTHON_ACTION_SHA = '5fda3b95a4ea91299a34e894583c3862153e4b97';
-const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
+const UPLOAD_ACTION_SHA = 'cf430e030ddbb5b0abf93d22962f4752f3646cd9';
 const EXPECTED_COMPAT_CHECKOUTS = JSON.parse(
   fs.readFileSync(path.join(REPO_ROOT, 'ecosystem-manifest.json'), 'utf8'),
 ).components
