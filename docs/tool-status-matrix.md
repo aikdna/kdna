@@ -7,7 +7,7 @@ for selected Read, revision and reopened use.
 | Current entry | Commands and boundary |
 | --- | --- |
 | Native CLI `0.43.2`, exact Core `0.37.9` / Read `0.13.3` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container0.6, Read0.7-candidate; plan/load unavailable (exit 2). |
-| MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.0` / Core `0.37.7` / Read `0.13.1` graph | Operator-bound catalog/read/expand/cancel; named Host delivery NOT_RUN; no decryption. |
+| MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.2` / Core `0.37.9` / Read `0.13.3` graph | Optional source preview for operator-bound catalog/read/expand/cancel; direct CLI is the primary route; named Host delivery NOT_RUN; no decryption. |
 | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own Core `0.37.2` / Read `0.11.3` line | Separate container0.5/Read0.6.4 session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
 
 The following dated descriptions preserve the older source and published

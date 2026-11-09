@@ -38,6 +38,9 @@ establish acceptance of these new artifacts. The new exact source, retained
 archives and installed graphs each require their own checks.
 
 Follow [Start Here](docs/start-here.md) and the matching table below.
+For the smallest Agent route, use [Agent entry](docs/agent-entry.md); for the
+explicit current-generation migration, use the
+[0.5 → 0.6 checklist](docs/migration-checklist.md).
 The complete static tuple, native execution 0.3.1 formats and reference APIs are
 linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index).
 Historical contracts retain their coordinates and exact dependency graphs.
@@ -105,7 +108,7 @@ by itself identify a published artifact.
 | --- | --- | --- |
 | Core/Read | Core `0.37.9` / Read `0.13.3` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
 | [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.2` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.0` and Core `0.37.7` / Read `0.13.1` pins | Complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
 The maintained source and the Core/Read row above are the same published
@@ -456,7 +459,7 @@ changes require an RFC and an explicit migration path.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.43.2` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, explicit Read and Source revision; its own exact Core `0.37.9` / Read `0.13.3` pins |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.3` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP `0.5.0` | Matched published native `0.43.0` graph; operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.3` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP `0.5.0` | Matched published native `0.43.2` / Core `0.37.9` / Read `0.13.3` graph; optional operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read contract with macOS validation and generic iOS compilation; no JavaScript preview parity, device runtime or native Host claim |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Historical Swift release `0.4.0`; current source has its own binding | Apple authoring kernel; historical release compatibility and current-source verification are separate, described by the owning README |
