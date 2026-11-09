@@ -1,0 +1,88 @@
+{
+  "schema": "kdna.read-cost.samples/1",
+  "budget_bytes": 1000000,
+  "repeats": 3,
+  "samples": [
+    {
+      "id": "team-update-1.0.0",
+      "description": "Published three-judgment teaching asset with an optional rationale dependency.",
+      "path": "examples/native-team-update/team-update-1.0.0.kdna",
+      "asset_id": "asset:team-update-format",
+      "asset_version": "1.0.0",
+      "judgment_ids": ["update:order", "update:evidence", "update:rationale"],
+      "semantic_requirements": [
+        {
+          "judgment_id": "update:order",
+          "required_terms": ["completed changes first", "current blockers", "next concrete action"],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "update:evidence",
+          "required_terms": [
+            "link to an observable result",
+            "brief statement of what it proves",
+            "evidence is unavailable"
+          ],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "update:rationale",
+          "required_terms": ["supporting rationale in an optional detail section"],
+          "mandatory_dependency_ids": []
+        }
+      ]
+    },
+    {
+      "id": "semantic-decisions-5",
+      "description": "Generated five-judgment fixture covering ordered values, a condition, exceptions, conflict and a mandatory dependency.",
+      "generator": "scripts/read-cost-complex-sample.mjs",
+      "asset_id": "asset:read-cost-semantic-decisions",
+      "asset_version": "1.0.0",
+      "judgment_ids": [
+        "decision:priority",
+        "decision:evidence",
+        "decision:reversibility",
+        "decision:conflict",
+        "decision:handoff"
+      ],
+      "semantic_requirements": [
+        {
+          "judgment_id": "decision:priority",
+          "required_terms": [
+            "user-harm evidence first",
+            "reversibility",
+            "schedule cost",
+            "applies only when"
+          ],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "decision:evidence",
+          "required_terms": ["reproducible evidence", "evidence is unavailable", "provisional"],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "decision:reversibility",
+          "required_terms": ["smallest reversible step", "except when", "security exposure"],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "decision:conflict",
+          "required_terms": ["safety wins", "Record the conflict", "losing option"],
+          "mandatory_dependency_ids": []
+        },
+        {
+          "judgment_id": "decision:handoff",
+          "required_terms": [
+            "chosen judgment",
+            "evidence status",
+            "owner",
+            "review trigger",
+            "required dependency"
+          ],
+          "mandatory_dependency_ids": ["decision:evidence"]
+        }
+      ]
+    }
+  ]
+}
