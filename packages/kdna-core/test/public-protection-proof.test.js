@@ -59,11 +59,12 @@ test('opaque protection operations cannot cross an independently loaded package 
  let clocks=0;const f=await local({clock(){clocks++;return 1000;}}),original=core.bindProtectionOperation(f.operation);
  assert.equal(original.status,'bound');const checkpoint=await original.binding.observe('projection');assert.equal(checkpoint.status,'current');
  // Place the copy beneath the current runtime so its real transitive dependencies
- // resolve exactly as the original does; only the Core module instance differs.
+ // resolve exactly as the original does; link the installed tree instead of copying
+ // native modules, which Windows locks while they are loaded.
  const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(H.coreDir,'../..');
  const temp=fs.mkdtempSync(path.join(runtime,'protection-instance-'));
  try{
-  const copied=path.join(temp,'node_modules/@aikdna/kdna-core');fs.mkdirSync(path.dirname(copied),{recursive:true});fs.cpSync(H.coreDir,copied,{recursive:true});
+  const copied=path.join(temp,'node_modules/@aikdna/kdna-core');fs.mkdirSync(path.dirname(copied),{recursive:true});fs.cpSync(H.coreDir,copied,{recursive:true,filter(source){return path.basename(source)!=='node_modules';}});fs.symlinkSync(path.join(H.coreDir,'node_modules'),path.join(copied,'node_modules'),process.platform==='win32'?'junction':'dir');
   const foreign=createRequire(path.join(temp,'entry.cjs'))('@aikdna/kdna-core/protection-node');assert.notEqual(foreign,core);
   const before=clocks,refused=foreign.bindProtectionOperation(f.operation);
   assert.equal(refused.status,'protection_failed');assert.equal(refused.diagnostic.code,'PROTECTION_OPERATION_UNTRUSTED');assert.deepEqual(Object.keys(refused).sort(),['diagnostic','status']);assert.equal(clocks,before);
