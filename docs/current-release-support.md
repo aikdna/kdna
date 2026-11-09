@@ -44,11 +44,12 @@ and [public author example](https://github.com/aikdna/kdna-cli/blob/main/example
 The example creates and saves, reads exact selections, revises official Source,
 reopens and reuses the revised asset, and preserves the original.
 
-The Loader/MCP source candidate `0.8.0-rc.native-sections.3` embeds its own
-published native CLI `0.43.0` / Core `0.37.7` / Read `0.13.1` graph; it is not
-the CLI `0.43.2` graph. Follow its [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).
-It is a local operator-bound stdio adapter; its npm publication is disabled.
-Named Agent Host delivery and semantic adoption remain unassessed.
+The Loader/MCP source candidate `0.8.0-rc.native-sections.3` embeds the same
+published native CLI `0.43.2` / Core `0.37.9` / Read `0.13.3` graph. Follow its
+[complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).
+The direct official CLI is the primary Agent route. MCP is an optional
+operator-bound stdio preview; its npm publication is disabled. Named Agent Host
+delivery and semantic adoption remain unassessed.
 
 StudioCLI `0.14.0` and StudioCore `4.1.0` use their own pinned SDK package pair
 (Core `0.37.2` / Read `0.11.3`) with a different container `0.5.0` / Read `0.6.4` route.

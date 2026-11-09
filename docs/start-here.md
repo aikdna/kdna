@@ -96,6 +96,8 @@ published line.
 | **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Build a team judgment asset** | [Enterprise Pilot](./enterprise-pilot.md) | 20 min |
 | **Consume KDNA in my AI agent** | [Current source entry](#current-source-entry); [published loading-line guide](./15-minute-agent-guide.md) | 15 min |
+| **Give one selected asset to an Agent** | [Agent entry: one selected file, one explicit task](./agent-entry.md) | 5 min |
+| **Migrate a current-generation 0.5 source** | [0.5 → 0.6 migration checklist](./migration-checklist.md) | 5 min |
 | **Understand optional advanced runtime surfaces** | [Consumption Runtime](./consumption-runtime.md) | 20 min |
 | **Assess a specific asset claim** | [Maturity and evidence](./maturity.md) | 10 min |
 | **Understand the protocol** | [KDNA and the AI Stack](./kdna-and-ai-stack.md) | 15 min |
@@ -126,10 +128,11 @@ recipe to reopen and revise while preserving the original. It establishes this
 Agent's task use, not a real teammate's confirmation or named MCP Host adoption.
 
 The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is
-`0.8.0-rc.native-sections.3` with its own CLI `0.43.0` / Core `0.37.7` / Read
-`0.13.1` graph. Its npm
-publication is disabled and named Host delivery remains NOT_RUN. Installing a
-Skill or copying a process vector does not establish Host activation.
+`0.8.0-rc.native-sections.3` with its own CLI `0.43.2` / Core `0.37.9` / Read
+`0.13.3` graph. Its npm publication is disabled. The direct official CLI is the
+primary Agent route; MCP is an optional source preview for an operator-bound
+local Host. Named Host delivery remains NOT_RUN, and installing a Skill or
+copying a process vector does not establish Host activation.
 
 For Studio creation and local protection, use StudioCLI
 `0.14.0` / StudioCore `4.1.0` and their complete
