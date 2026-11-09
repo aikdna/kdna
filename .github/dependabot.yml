@@ -9,6 +9,10 @@ updates:
       timezone: "Asia/Shanghai"
     open-pull-requests-limit: 10
     versioning-strategy: increase
+    ignore:
+      # The recipe formatter version is part of the frozen coordinate contract.
+      # See scripts/public-contract/derive-coordinate-recipes.mjs.
+      - dependency-name: "prettier"
 
   - package-ecosystem: "github-actions"
     directory: "/"
