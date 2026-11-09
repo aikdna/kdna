@@ -60,9 +60,11 @@ test('opaque protection operations cannot cross an independently loaded package 
  assert.equal(original.status,'bound');const checkpoint=await original.binding.observe('projection');assert.equal(checkpoint.status,'current');
  // Place the copy beneath the current runtime so its real transitive dependencies
  // resolve exactly as the original does; link the installed tree instead of copying
- // native modules, which Windows locks while they are loaded.
+ // native modules, which Windows locks while they are loaded. The ignored dependency
+ // cache keeps an interrupted test from leaving an artifact at the repository root.
  const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(H.coreDir,'../..');
- const temp=fs.mkdtempSync(path.join(runtime,'protection-instance-'));
+ const cache=path.join(runtime,'node_modules','.cache');fs.mkdirSync(cache,{recursive:true});
+ const temp=fs.mkdtempSync(path.join(cache,'protection-instance-'));
  try{
   const copied=path.join(temp,'node_modules/@aikdna/kdna-core');fs.mkdirSync(path.dirname(copied),{recursive:true});fs.cpSync(H.coreDir,copied,{recursive:true,filter(source){return path.basename(source)!=='node_modules';}});fs.symlinkSync(path.join(H.coreDir,'node_modules'),path.join(copied,'node_modules'),process.platform==='win32'?'junction':'dir');
   const foreign=createRequire(path.join(temp,'entry.cjs'))('@aikdna/kdna-core/protection-node');assert.notEqual(foreign,core);
@@ -72,7 +74,7 @@ test('opaque protection operations cannot cross an independently loaded package 
   assert.equal(original.binding.assertCurrent(checkpoint.checkpoint).status,'current');
   const copiedOperation=JSON.parse(JSON.stringify(f.operation));assert.equal(core.bindProtectionOperation(copiedOperation).diagnostic.code,'PROTECTION_OPERATION_UNTRUSTED');
   core.disposeProtectionOperation(f.operation);assert.equal(core.bindProtectionOperation(f.operation).diagnostic.code,'PROTECTION_OPERATION_DISPOSED');
- }finally{fs.rmSync(temp,{recursive:true,force:true});core.disposeProtectionOperation(f.operation);}
+ }finally{core.disposeProtectionOperation(f.operation);fs.rmSync(temp,{recursive:true,force:true,maxRetries:3,retryDelay:50});}
 });
 
 test('current-tuple later Host rejection stays a read result and cannot masquerade as request-version rejection',async()=>{
