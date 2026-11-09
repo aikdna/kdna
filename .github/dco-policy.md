@@ -24,3 +24,17 @@ superseded.
 There is no blanket bot exemption. The DCO check fails closed until a
 human-signed replacement commit exists, so that every merged change carries an
 identity that can be held accountable.
+
+### GitHub Actions updates
+
+`.github/workflows/publish.yml` may only use audited action commits.
+`packages/kdna/test/publish-hardening.test.js` therefore pins the checkout,
+setup-node, setup-python and upload-artifact SHAs as constants, and the test
+fails when Dependabot changes a `uses:` SHA without changing those constants.
+That failure is intentional: it prevents an unaudited action commit from
+reaching the publish workflow.
+
+When accepting an Actions update, verify that each new SHA belongs to the
+intended upstream release tag, then update the matching constant in the same
+maintainer-signed replacement commit. Do not relax the assertion or replace it
+with a floating tag.
