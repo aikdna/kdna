@@ -52,6 +52,8 @@ The embedding factory wraps an independently trusted Host callback. Its observat
 
 `whole_asset`, `catalog`, `exact_selection` and `expand` consume Core-provided ordering and mandatory support. Host scope cannot remove a mandatory selected node or return a success-shaped partial catalog/asset index. Any denied required entry rejects the complete mode without hidden identifiers or counts. Asset-level risk and extensions remain typed declarations in the modes that disclose the necessary asset declaration; catalog can omit it.
 
+`whole_asset` returns the Core asset closure and may defer judgment bodies behind handles. A ready body-view answer can therefore contain the catalog with zero inline judgment bodies and omit the asset index and handles; `ready` means the requested projection was admitted and delivered, not that every judgment body is inline. Use `catalog` then `exact_selection`, or one session request with multiple `judgment_ids` values, when the task needs those bodies.
+
 Each Node call accepts a path or bytes through Core Node admission and therefore creates a new snapshot. New admission invalidates an old snapshot-bound handle. A custom trusted embedding that retains a snapshot can use pure projection under the same current Host gate; pure projection alone is never a disclosure endpoint. The internal reference pipeline tests this lifecycle without adding a production injection or mint API.
 
 Browser Core admits stored and deflated bytes synchronously through the shared implementation. Browser Read also accepts a retained Core snapshot for expansion. Node execution of a browser entry is not proof of a browser engine; native browser acceptance, platform coverage and external identity/confirmation services are recorded separately.

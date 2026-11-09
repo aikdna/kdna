@@ -105,6 +105,26 @@ test('does not treat historical snapshot inventory as active narrative', () => {
   );
 });
 
+test('rejects archived candidates in the current core narrative only', () => {
+  for (const sample of [
+    'Core `0.24.0-rc.component-semantics.2`',
+    'Read `0.3.0-rc.component-semantics.2`',
+  ]) {
+    const violations = findNarrativeViolations('docs/core-narrative-and-boundaries.md', sample);
+    assert.ok(
+      violations.some(({ rule }) => rule.startsWith('stale-current-')),
+      sample,
+    );
+  }
+  assert.deepEqual(
+    findNarrativeViolations(
+      'docs/version-and-capability-matrix.md',
+      'Historical Core `0.24.0-rc.component-semantics.2` / Read `0.3.0-rc.component-semantics.2`.',
+    ),
+    [],
+  );
+});
+
 test('fails when a required guardrail disappears', () => {
   const missing = findMissingGuardrails(() => 'not the required language');
   assert.ok(missing.length > 0);

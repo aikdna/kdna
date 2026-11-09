@@ -82,6 +82,18 @@ const FORBIDDEN = [
   ],
 ];
 
+// A current-definition page must not re-promote an archived candidate to
+// "current". Historical inventories elsewhere may still name these versions.
+const STALE_CURRENT_COORDINATE_RULES = new Map([
+  [
+    'docs/core-narrative-and-boundaries.md',
+    [
+      ['stale-current-core-candidate', /\b0\.24\.0-rc\b/],
+      ['stale-current-read-candidate', /\b0\.3\.0-rc\b/],
+    ],
+  ],
+]);
+
 const REQUIRED_GUARDRAILS = new Map([
   [
     'docs/core-narrative-and-boundaries.md',
@@ -89,6 +101,11 @@ const REQUIRED_GUARDRAILS = new Map([
       'independent asset and a shared loading contract',
       'claim exclusive ownership of judgment or automatic behavioral superiority',
       'KDNA does not require a global asset library',
+      // Keep these three coordinates in sync with the release matrix. A release
+      // that moves the current line updates this page and this gate together.
+      'CLI `0.43.2`',
+      'Core `0.37.9`',
+      'Read `0.13.3`',
     ],
   ],
   [
@@ -157,7 +174,8 @@ export function findNarrativeViolations(relPath, content) {
   const rules = ADAPTER_COMMAND_DOCS.has(relPath)
     ? FORBIDDEN.filter(([rule]) => !rule.startsWith('current-cli-'))
     : FORBIDDEN;
-  return rules.flatMap(([rule, pattern]) =>
+  const scoped = STALE_CURRENT_COORDINATE_RULES.get(relPath) ?? [];
+  return [...rules, ...scoped].flatMap(([rule, pattern]) =>
     pattern.test(content) ? [{ path: relPath, rule }] : [],
   );
 }

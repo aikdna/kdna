@@ -5,6 +5,9 @@ stable coordinates. Source readiness, exact artifact acceptance and actual
 public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
+The next read-cost measurement work is scoped in
+[Read cost measurement work package](./read-cost-work-package.md); it does not
+change the published contracts.
 
 Both Core `0.37.9` and Read `0.13.3` were published from reviewed source commit
 `3c89b8e` with registry `gitHead` and provenance attestations. Core `0.37.9`
