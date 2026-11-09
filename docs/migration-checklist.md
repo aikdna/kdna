@@ -23,14 +23,18 @@ and read it directly.
    output path. Do not use a directory, a symlink or an existing file as the
    destination.
 
-2. **Inspect and record the source digest.**
+2. **Record the source digest.**
 
    ```sh
-   npx --no-install kdna inspect source-0.5.kdna --json
+   shasum -a 256 source-0.5.kdna   # macOS
+   sha256sum source-0.5.kdna       # Linux
    ```
 
-   Copy the `digests.A.observed` value. This is the exact `--expected-a`
-   binding for the next step.
+   Use the printed digest as `sha256:<digest>` for `--expected-a`. Do not use
+   `kdna inspect` for this step: the current CLI reads current containers and
+   rejects a 0.5 source with `READ_UNSUPPORTED_VERSION` at the metadata stage.
+   That rejection is expected and does not indicate a damaged or unsupported
+   fixture; `convert` performs the explicit 0.5 binding itself.
 
 3. **Convert with explicit permission.**
 
