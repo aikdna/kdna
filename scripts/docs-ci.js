@@ -51,6 +51,22 @@ for (const file of docsFiles) {
   }
 }
 
+console.log('── Agent entry batch route');
+
+const agentEntry = fs.readFileSync(path.join(DOCS_DIR, 'agent-entry.md'), 'utf8');
+check(
+  'agent-entry.md links the complete session request example',
+  agentEntry.includes('original.requests.jsonl'),
+);
+check(
+  'agent-entry.md names selection.judgment_ids for multi-judgment requests',
+  agentEntry.includes('selection.judgment_ids'),
+);
+check(
+  'agent-entry.md explains that whole_asset may defer judgment bodies',
+  agentEntry.includes('zero judgment bodies inline'),
+);
+
 console.log('── Package published and reachable');
 
 const ecosystemManifest = JSON.parse(

@@ -1,6 +1,6 @@
 # Agent entry: one selected file, one explicit task
 
-Current entry reviewed on 2026-11-09. This page describes one local route for an
+Current entry reviewed on 2026-11-10. This page describes one local route for an
 Agent that already has a tool-capable Host. It is not a Host certification, a
 human-confirmation record or an action authorization.
 
@@ -52,9 +52,18 @@ quality or establish adoption. `--system` adds warnings-only integrity checks;
 a warning does not turn a structurally valid asset into a failure and a clean
 system check does not establish truth or suitability.
 
-For a batch of judgments, use the session route documented by the CLI instead
-of repeating a full selection. Keep handles within the same process and do not
-reuse them after the session closes.
+For a batch of judgments, use the session route instead of repeating a full
+selection. A complete, copyable request file is
+[`original.requests.jsonl`](../examples/native-team-update/original.requests.jsonl);
+for multiple judgments in one request, use `selection.judgment_ids` as shown in
+the [`kdna-loader` skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md).
+Keep handles within the same process and do not reuse them after the session
+closes.
+
+A `whole_asset` result can be `ready` while returning only the catalog and
+expansion handles, with zero judgment bodies inline. When the task needs
+judgment text, use `exact_selection` or expand the returned handles and check
+the final result before treating the task as complete.
 
 ## What the Agent should report
 
