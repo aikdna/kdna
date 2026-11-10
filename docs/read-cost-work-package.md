@@ -1,10 +1,13 @@
 # Read Cost Measurement Work Package
 
-**Status:** first measurement complete; not a release gate.
-**Date:** 2026-11-09.
+**Status:** M2-R1 remeasurement complete; audit review pending. Not a release gate.
+**Date:** 2026-11-10.
 **Scope:** public CLI and Read model-input cost. This package does not change
 Reader app code, Native Reader, accounts, payment or protocol semantics.
-**Results:** [`read-cost-results-2026-11-09.md`](read-cost-results-2026-11-09.md).
+**Results:** [`read-cost-results-2026-11-10.md`](read-cost-results-2026-11-10.md).
+The earlier [`read-cost-results-2026-11-09.md`](read-cost-results-2026-11-09.md)
+remains as historical evidence; its cross-view whole-asset comparison and mixed
+startup/request latency description are superseded by the M2-R1 run.
 
 ## Why this package exists
 

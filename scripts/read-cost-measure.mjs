@@ -143,21 +143,221 @@ function deliveredJudgmentIds(outputs) {
   return [...deliveredJudgmentText(outputs).keys()];
 }
 
-function deliveredJudgmentText(outputs) {
-  const textById = new Map();
+function targetId(entry) {
+  return entry?.target?.id ?? entry?.value?.id ?? null;
+}
+
+function entryKey(role, id) {
+  return `${role}\u0000${id}`;
+}
+
+function serializeForCheck(value) {
+  return JSON.stringify(value ?? null);
+}
+
+function valueIsRicher(candidate, current) {
+  if (!current) return true;
+  if (candidate?.body_delivery !== 'deferred' && current?.body_delivery === 'deferred') return true;
+  return serializeForCheck(candidate?.value).length > serializeForCheck(current?.value).length;
+}
+
+function collectReadEvidence(outputs) {
+  const entries = new Map();
+  const catalogIds = new Set();
+
   for (const output of outputs) {
     const content = contentOf(output);
-    if (!Array.isArray(content?.closure)) continue;
-    for (const entry of content.closure) {
-      if (entry?.role !== 'judgment') continue;
-      if (entry.value === null || entry.value === undefined) continue;
-      const id = entry.target?.id ?? entry.value?.id;
-      if (typeof id !== 'string') continue;
-      const previous = textById.get(id);
-      const current = JSON.stringify(entry.value);
-      textById.set(id, previous ? `${previous}\n${current}` : current);
+    if (!content) continue;
+    if (Array.isArray(content.catalog)) {
+      for (const row of content.catalog) {
+        const id = row?.judgment_id ?? row?.id;
+        if (typeof id === 'string') catalogIds.add(id);
+      }
+    }
+    if (Array.isArray(content.relationships)) {
+      for (const relationship of content.relationships) {
+        if (typeof relationship?.id !== 'string') continue;
+        const entry = {
+          role: 'relationship',
+          target: { kind: 'relationship', id: relationship.id },
+          owner: { kind: 'asset', id: content.selected?.asset_id ?? null },
+          owner_judgment_id: null,
+          value: relationship,
+        };
+        const key = entryKey(entry.role, relationship.id);
+        if (valueIsRicher(entry, entries.get(key))) entries.set(key, entry);
+      }
+    }
+    if (!Array.isArray(content.closure)) continue;
+    for (const rawEntry of content.closure) {
+      if (typeof rawEntry?.role !== 'string') continue;
+      let id = targetId(rawEntry);
+      if (id === null && typeof rawEntry.value_ref === 'string') id = rawEntry.value_ref;
+      if (id === null) continue;
+      const entry = { ...rawEntry, target: rawEntry.target ?? { kind: null, id } };
+      if (entry.role === 'relationship' && !entry.value) {
+        const rel = content.relationships?.find((row) => row.id === id);
+        if (rel) entry.value = rel;
+      }
+      const key = entryKey(entry.role, id);
+      if (valueIsRicher(entry, entries.get(key))) entries.set(key, entry);
     }
   }
+
+  const all = [...entries.values()];
+  const byRoleAndId = new Map(all.map((entry) => [entryKey(entry.role, targetId(entry)), entry]));
+  const judgments = new Map(
+    all.filter((entry) => entry.role === 'judgment').map((entry) => [targetId(entry), entry]),
+  );
+  return { all, byRoleAndId, judgments, catalogIds };
+}
+
+function judgmentText(evidence, id) {
+  const parts = [];
+  const own = evidence.judgments.get(id);
+  if (own) parts.push(serializeForCheck(own.value));
+
+  const owned = evidence.all.filter((entry) => entry.owner_judgment_id === id);
+  for (const entry of owned) parts.push(serializeForCheck(entry.value));
+
+  const ownedExceptions = new Set(
+    owned
+      .filter((entry) => entry.role === 'exception')
+      .map((entry) => targetId(entry))
+      .filter(Boolean),
+  );
+  for (const entry of evidence.all) {
+    if (entry.role !== 'condition') continue;
+    if (!ownedExceptions.has(entry.value?.owner_ref?.id)) continue;
+    parts.push(serializeForCheck(entry.value));
+  }
+  return parts.join('\n');
+}
+
+function matchesExpectedSubset(actual, expected, path = '$') {
+  if (Array.isArray(expected)) {
+    if (!Array.isArray(actual) || actual.length !== expected.length) {
+      return [`${path} (array length ${expected.length})`];
+    }
+    return expected.flatMap((value, index) =>
+      matchesExpectedSubset(actual[index], value, `${path}[${index}]`),
+    );
+  }
+  if (expected && typeof expected === 'object') {
+    if (!actual || typeof actual !== 'object' || Array.isArray(actual)) {
+      return [`${path} (object)`];
+    }
+    return Object.entries(expected).flatMap(([key, value]) =>
+      matchesExpectedSubset(actual[key], value, `${path}.${key}`),
+    );
+  }
+  return Object.is(actual, expected) ? [] : [`${path}=${JSON.stringify(expected)}`];
+}
+
+function activeStructuredRequirements(requirements, expectedIds) {
+  const expected = new Set(expectedIds);
+  return requirements.filter(
+    (requirement) =>
+      !Array.isArray(requirement.required_when_any_judgment_ids) ||
+      requirement.required_when_any_judgment_ids.some((id) => expected.has(id)),
+  );
+}
+
+function evaluateStructuredRequirements(evidence, requirements, deferredOnly) {
+  return requirements.map((requirement) => {
+    const key = entryKey(requirement.role, requirement.id);
+    const entry = evidence.byRoleAndId.get(key);
+    if (!entry) {
+      return {
+        role: requirement.role,
+        id: requirement.id,
+        state: deferredOnly ? 'deferred' : 'missing',
+        missing_fields: [],
+        missing_terms: requirement.required_terms ?? [],
+      };
+    }
+    const missingFields = [];
+    if (
+      Object.hasOwn(requirement, 'owner_judgment_id') &&
+      entry.owner_judgment_id !== requirement.owner_judgment_id
+    ) {
+      missingFields.push(`$.owner_judgment_id=${JSON.stringify(requirement.owner_judgment_id)}`);
+    }
+    if (requirement.expect) {
+      missingFields.push(...matchesExpectedSubset(entry.value, requirement.expect));
+    }
+    const structureText = serializeForCheck(entry.value);
+    const missingTerms = (requirement.required_terms ?? []).filter(
+      (term) => !structureText.includes(term),
+    );
+    return {
+      role: requirement.role,
+      id: requirement.id,
+      state: missingFields.length || missingTerms.length ? 'incomplete' : 'complete',
+      missing_fields: missingFields,
+      missing_terms: missingTerms,
+    };
+  });
+}
+
+function evaluateMandatoryDependency(evidence, requirement, dependency) {
+  const dependencyId = dependency.id ?? null;
+  const dependencyEntry = evidence.all.find((entry) => {
+    if (entry.role !== 'dependency') return false;
+    if (dependencyId && targetId(entry) !== dependencyId) return false;
+    return (
+      entry.value?.producer?.judgment_ref === dependency.judgment_id &&
+      entry.value?.consumer_judgment_ref === requirement.judgment_id
+    );
+  });
+  if (!dependencyEntry) {
+    return {
+      judgment_id: dependency.judgment_id,
+      dependency_id: dependencyId,
+      state: 'missing',
+      missing_fields: [],
+      missing_terms: dependency.required_terms ?? [],
+      body_delivery: null,
+    };
+  }
+
+  const missingFields = dependency.expect
+    ? matchesExpectedSubset(dependencyEntry.value, dependency.expect)
+    : [];
+  const producer = evidence.judgments.get(dependency.judgment_id);
+  if (!producer) {
+    return {
+      judgment_id: dependency.judgment_id,
+      dependency_id: dependencyId,
+      state: 'missing',
+      missing_fields: missingFields,
+      missing_terms: dependency.required_terms ?? [],
+      body_delivery: null,
+    };
+  }
+
+  const producerText = judgmentText(evidence, dependency.judgment_id);
+  const missingTerms = (dependency.required_terms ?? []).filter(
+    (term) => !producerText.includes(term),
+  );
+  const bodyDeferred = producer.body_delivery === 'deferred';
+  let state = 'complete';
+  if (missingFields.length || missingTerms.length) state = 'incomplete';
+  if (dependency.require_full_body === true && bodyDeferred) state = 'deferred';
+  return {
+    judgment_id: dependency.judgment_id,
+    dependency_id: dependencyId,
+    state,
+    missing_fields: missingFields,
+    missing_terms: missingTerms,
+    body_delivery: producer.body_delivery ?? null,
+  };
+}
+
+function deliveredJudgmentText(outputs) {
+  const evidence = collectReadEvidence(outputs);
+  const textById = new Map();
+  for (const id of evidence.judgments.keys()) textById.set(id, judgmentText(evidence, id));
   return textById;
 }
 
@@ -205,13 +405,23 @@ export function extractBudgets(outputs) {
   return rows;
 }
 
-export function evaluateSemantics(outputs, expectedIds, requirements, allowDeferred) {
+export function evaluateSemantics(
+  outputs,
+  expectedIds,
+  requirements,
+  allowDeferred,
+  structuredRequirements = [],
+) {
   if (!expectedIds.length) {
-    return { status: 'not_applicable', details: [] };
+    return {
+      status: 'not_applicable',
+      details: [],
+      structures: [],
+      scope: { expected_judgment_ids: [], active_structured_requirement_ids: [] },
+      limitations: [],
+    };
   }
-  const selected = new Set(selectedJudgmentIds(outputs));
-  const delivered = new Set(deliveredJudgmentIds(outputs));
-  const deliveredText = deliveredJudgmentText(outputs);
+  const evidence = collectReadEvidence(outputs);
   const requiredById = new Map(requirements.map((row) => [row.judgment_id, row]));
   const details = [];
 
@@ -219,38 +429,93 @@ export function evaluateSemantics(outputs, expectedIds, requirements, allowDefer
     const requirement = requiredById.get(id) ?? {
       required_terms: [],
       mandatory_dependency_ids: [],
+      mandatory_dependencies: [],
     };
-    if (!selected.has(id) && !delivered.has(id)) {
+    const entry = evidence.judgments.get(id);
+    if (!entry) {
+      const catalogDeferred = allowDeferred && evidence.catalogIds.has(id);
       details.push({
         judgment_id: id,
-        state: allowDeferred ? 'deferred' : 'missing',
+        state: catalogDeferred ? 'deferred' : 'missing',
+        body_delivery: null,
         missing_terms: requirement.required_terms,
         missing_dependencies: requirement.mandatory_dependency_ids.filter(
-          (dependency) => !delivered.has(dependency),
+          (dependency) => !evidence.judgments.has(dependency),
         ),
+        dependency_details: [],
       });
       continue;
     }
-    const judgmentText = deliveredText.get(id) ?? '';
-    const missingTerms = requirement.required_terms.filter((term) => !judgmentText.includes(term));
-    const missingDependencies = requirement.mandatory_dependency_ids.filter(
-      (dependency) => !delivered.has(dependency),
+
+    const text = judgmentText(evidence, id);
+    const missingTerms = requirement.required_terms.filter((term) => !text.includes(term));
+    const legacyDependencies = (requirement.mandatory_dependency_ids ?? []).map((dependencyId) => ({
+      judgment_id: dependencyId,
+      id: null,
+      required_terms: [],
+      require_full_body: false,
+    }));
+    const dependencies = [...legacyDependencies, ...(requirement.mandatory_dependencies ?? [])];
+    const dependencyDetails = dependencies.map((dependency) =>
+      evaluateMandatoryDependency(evidence, requirement, dependency),
     );
+    const missingDependencies = dependencyDetails
+      .filter((row) => row.state === 'missing' || row.state === 'incomplete')
+      .map((row) => row.judgment_id);
+    const deferredDependencies = dependencyDetails
+      .filter((row) => row.state === 'deferred')
+      .map((row) => row.judgment_id);
+    let state = 'complete';
+    if (missingTerms.length || missingDependencies.length) state = 'incomplete';
+    if (requirement.require_full_body === true && entry.body_delivery === 'deferred') {
+      state = 'deferred';
+    }
+    if (!missingTerms.length && !missingDependencies.length && deferredDependencies.length) {
+      state = 'deferred';
+    }
     details.push({
       judgment_id: id,
-      state: missingTerms.length || missingDependencies.length ? 'incomplete' : 'complete',
+      state,
+      body_delivery: entry.body_delivery ?? null,
       missing_terms: missingTerms,
       missing_dependencies: missingDependencies,
+      deferred_dependencies: deferredDependencies,
+      dependency_details: dependencyDetails,
     });
   }
 
-  if (details.every((row) => row.state === 'complete')) {
-    return { status: 'complete', details };
+  const activeStructured = activeStructuredRequirements(structuredRequirements, expectedIds);
+  const deferredOnly =
+    allowDeferred &&
+    details.every((row) => row.state === 'deferred' || row.state === 'complete') &&
+    details.some((row) => row.state === 'deferred');
+  const structures = evaluateStructuredRequirements(evidence, activeStructured, deferredOnly);
+  const allStates = [...details.map((row) => row.state), ...structures.map((row) => row.state)];
+  let status = 'complete';
+  if (allStates.some((state) => state === 'incomplete' || state === 'missing')) {
+    status = 'incomplete';
+  } else if (allStates.some((state) => state === 'deferred')) {
+    status = allowDeferred ? 'deferred' : 'incomplete';
   }
-  if (allowDeferred && details.every((row) => row.state === 'deferred')) {
-    return { status: 'deferred', details };
-  }
-  return { status: 'incomplete', details };
+  return {
+    status,
+    details,
+    structures,
+    missing_structures: structures
+      .filter((row) => row.state === 'missing')
+      .map(({ role, id, missing_terms }) => ({ role, id, missing_terms })),
+    deferred_structures: structures
+      .filter((row) => row.state === 'deferred')
+      .map(({ role, id }) => ({ role, id })),
+    scope: {
+      expected_judgment_ids: expectedIds,
+      active_structured_requirement_ids: activeStructured.map((row) => `${row.role}:${row.id}`),
+    },
+    limitations: [
+      'Mechanical checks cover declared terms, fixed structural fields and references; they do not establish recommendation quality.',
+      'A reduced body passes only when the task oracle does not require its full body and every declared requirement is present.',
+    ],
+  };
 }
 
 function normalizeCliPath(cli) {
@@ -386,6 +651,7 @@ class SessionRunner {
   }
 
   async run(groups) {
+    const started = process.hrtime.bigint();
     const child = spawn(
       this.cli,
       ['read', this.asset, '--session', '--allow-read', '--view', this.options.view],
@@ -398,7 +664,6 @@ class SessionRunner {
     const lines = makeLineQueue(child.stdout);
     const stderr = [];
     child.stderr.on('data', (chunk) => stderr.push(chunk));
-    const started = process.hrtime.bigint();
     const requestLatencies = [];
     const outputs = [];
     const stdoutLines = [];
@@ -445,6 +710,7 @@ class SessionRunner {
   }
 
   async runWholeAndExpand(judgmentIds) {
+    const started = process.hrtime.bigint();
     const child = spawn(
       this.cli,
       ['read', this.asset, '--session', '--allow-read', '--view', 'full'],
@@ -457,7 +723,6 @@ class SessionRunner {
     const lines = makeLineQueue(child.stdout);
     const stderr = [];
     child.stderr.on('data', (chunk) => stderr.push(chunk));
-    const started = process.hrtime.bigint();
     const requestLatencies = [];
     const outputs = [];
     const stdoutLines = [];
@@ -518,12 +783,104 @@ class SessionRunner {
       throw error;
     }
   }
+
+  async runExactThenExpand(selectionIds, expandTargetId) {
+    const started = process.hrtime.bigint();
+    const child = spawn(
+      this.cli,
+      ['read', this.asset, '--session', '--allow-read', '--view', 'body'],
+      {
+        cwd: ROOT,
+        env: { ...process.env, NO_COLOR: '1' },
+        stdio: ['pipe', 'pipe', 'pipe'],
+      },
+    );
+    const lines = makeLineQueue(child.stdout);
+    const stderr = [];
+    child.stderr.on('data', (chunk) => stderr.push(chunk));
+    const requestLatencies = [];
+    const outputs = [];
+    const stdoutLines = [];
+    const selection = {
+      asset_id: this.options.assetId,
+      asset_version: this.options.assetVersion,
+      judgment_ids: selectionIds,
+    };
+    const send = async (request) => {
+      const requestStarted = process.hrtime.bigint();
+      child.stdin.write(`${JSON.stringify(request)}\n`);
+      const line = await lines.next();
+      if (line === null) throw new Error('session ended before producing a response');
+      requestLatencies.push(Number(process.hrtime.bigint() - requestStarted) / 1e6);
+      stdoutLines.push(line);
+      const output = JSON.parse(line);
+      outputs.push(output);
+      return { output, line };
+    };
+
+    try {
+      const first = await send({
+        request_id: `read-cost:${this.options.sampleId}:${this.options.operationId}:${this.options.runIndex}:initial`,
+        tuple: this.binding.tuple,
+        budget_bytes: this.budget,
+        mode: 'exact_selection',
+        selection,
+        handle: null,
+      });
+      const content = contentOf(first.output);
+      const entries = Array.isArray(content?.closure) ? content.closure : [];
+      const target = entries.find(
+        (entry) => entry?.role === 'judgment' && targetId(entry) === expandTargetId,
+      );
+      const handleId =
+        target?.handle_id ??
+        content?.expansion_handles?.find((handle) => handle?.target?.id === expandTargetId)
+          ?.handle_id ??
+        null;
+      if (!handleId) {
+        throw new Error(`exact_selection did not issue a handle for ${expandTargetId}`);
+      }
+      const expanded = await send({
+        request_id: `read-cost:${this.options.sampleId}:${this.options.operationId}:${this.options.runIndex}:expand`,
+        tuple: this.binding.tuple,
+        budget_bytes: this.budget,
+        mode: 'expand',
+        selection,
+        handle_id: handleId,
+      });
+      child.stdin.end();
+      const code = await new Promise((resolve, reject) => {
+        child.once('error', reject);
+        child.once('close', resolve);
+      });
+      return {
+        code,
+        stdout: `${stdoutLines.join('\n')}\n`,
+        stderr: Buffer.concat(stderr).toString('utf8'),
+        elapsed_ms: Number(process.hrtime.bigint() - started) / 1e6,
+        request_latencies_ms: requestLatencies,
+        outputs,
+        stage_outputs: {
+          initial: [first.output],
+          expand: [expanded.output],
+        },
+        stage_stdout: {
+          initial: `${first.line}\n`,
+          expand: `${expanded.line}\n`,
+        },
+        handle_id: handleId,
+      };
+    } catch (error) {
+      child.kill('SIGKILL');
+      throw error;
+    }
+  }
 }
 
 export function buildOperations(sample) {
   const ids = sample.judgment_ids;
   const firstTwo = ids.slice(0, 2);
-  return [
+  const operations = [
     {
       id: 'catalog',
       kind: 'single',
@@ -576,6 +933,22 @@ export function buildOperations(sample) {
       model_input_view: 'full',
     },
   ];
+  for (const task of sample.tasks ?? []) {
+    if (task.kind === 'handoff-exact-then-expand') {
+      operations.push({
+        id: task.id,
+        kind: task.kind,
+        expected_ids: task.expected_judgment_ids,
+        selection: task.selection_judgment_ids,
+        expand_target_id: task.expand_judgment_id,
+        allow_deferred: false,
+        initial_allow_deferred: true,
+        views: ['body'],
+        model_input_view: 'body',
+      });
+    }
+  }
+  return operations;
 }
 
 function commandArgs(operation, sample, asset, budget, view) {
@@ -637,6 +1010,7 @@ function measurementRecord(run, operation, options) {
   const budgets = extractBudgets(outputs);
   const bodyBytes = Buffer.byteLength(run.stdout, 'utf8');
   const stdoutLines = run.stdout.split('\n').filter((line) => line.length > 0);
+  const requestLatencies = run.request_latencies_ms ?? [];
   const projectedStdoutBytes = stdoutLines.reduce(
     (sum, line) => sum + Buffer.byteLength(line, 'utf8'),
     0,
@@ -657,15 +1031,28 @@ function measurementRecord(run, operation, options) {
     budget_required_bytes: budgets.reduce((sum, row) => sum + (row.required_bytes ?? 0), 0),
     budget_actual_bytes: budgets.reduce((sum, row) => sum + (row.actual_bytes ?? 0), 0),
     stdout_lines: stdoutLines,
-    latency_ms: run.elapsed_ms,
-    request_latencies_ms: run.request_latencies_ms ?? [],
+    task_elapsed_ms: run.elapsed_ms,
+    first_response_ms: requestLatencies.length ? requestLatencies[0] : run.elapsed_ms,
+    subsequent_request_latencies_ms: requestLatencies.slice(1),
     breakdown: outputBreakdown(outputs[0]),
     semantic: evaluateSemantics(
       outputs,
       operation.expected_ids,
       options.sample.semantic_requirements,
       operation.allow_deferred === true,
+      options.sample.structured_requirements,
     ),
+    initial_semantic:
+      run.stage_outputs?.initial === undefined
+        ? null
+        : evaluateSemantics(
+            run.stage_outputs.initial,
+            operation.expected_ids,
+            options.sample.semantic_requirements,
+            operation.initial_allow_deferred === true,
+            options.sample.structured_requirements,
+          ),
+    handle_id: run.handle_id ?? null,
   };
 }
 
@@ -711,6 +1098,16 @@ async function runMeasurement(
       runIndex: repeat,
     });
     run = await session.runWholeAndExpand(operation.expected_ids);
+  } else if (operation.kind === 'handoff-exact-then-expand') {
+    const session = new SessionRunner(cli, asset, binding, budget, {
+      view: 'body',
+      assetId: sample.asset_id,
+      assetVersion: sample.asset_version,
+      sampleId: sample.id,
+      operationId: operation.id,
+      runIndex: repeat,
+    });
+    run = await session.runExactThenExpand(operation.selection, operation.expand_target_id);
   } else {
     const args = commandArgs(operation, sample, asset, budget, view);
     run = await spawnResult(cli, args, { cwd: ROOT });
@@ -719,6 +1116,22 @@ async function runMeasurement(
 
   const record = measurementRecord(run, operation, { sample });
   record.tokens = tokenCounts(tokenizer, record.stdout_lines);
+  if (run.stage_stdout) {
+    record.stages = Object.entries(run.stage_stdout).map(([id, stdout]) => {
+      const lines = stdout.split('\n').filter((line) => line.length > 0);
+      return {
+        id,
+        response_count: lines.length,
+        projection_scope: lines.length === 1 ? 'single_response' : 'sum_of_responses',
+        stdout_bytes: Buffer.byteLength(stdout, 'utf8'),
+        projected_stdout_bytes: lines.reduce(
+          (sum, line) => sum + Buffer.byteLength(line, 'utf8'),
+          0,
+        ),
+        tokens: tokenCounts(tokenizer, lines),
+      };
+    });
+  }
   return { record, stdout: run.stdout, stderr: run.stderr };
 }
 
@@ -730,11 +1143,77 @@ async function writeRunArtifacts(runDir, sampleId, operationId, view, repeat, ru
   await fsp.writeFile(path.join(dir, `${base}.err`), run.stderr);
 }
 
-function combineRecords(records) {
-  const latencies = records.map((record) => record.latency_ms);
-  const requestLatencies = records.flatMap((record) => record.request_latencies_ms);
+export function summarizeSemanticRuns(runs) {
+  if (!runs.length) return { status: 'not_applicable', details: [] };
+  const statuses = runs.map((run) => run.status);
+  let status = 'complete';
+  if (statuses.every((value) => value === 'not_applicable')) status = 'not_applicable';
+  else if (statuses.some((value) => value === 'incomplete' || value === 'missing')) {
+    status = 'incomplete';
+  } else if (statuses.some((value) => value === 'deferred')) status = 'deferred';
+  return {
+    status,
+    details: runs[0]?.details ?? [],
+    structures: runs[0]?.structures ?? [],
+    scope: runs[0]?.scope ?? null,
+    limitations: runs[0]?.limitations ?? [],
+    failed_repeats: runs
+      .map((run, index) => ({ ...run, index }))
+      .filter((run) => run.status === 'incomplete' || run.status === 'missing')
+      .map((run) => run.index),
+    deferred_repeats: runs
+      .map((run, index) => ({ ...run, index }))
+      .filter((run) => run.status === 'deferred')
+      .map((run) => run.index),
+  };
+}
+
+function combineStageRecords(records) {
+  const stageCount = records[0]?.stages?.length ?? 0;
+  if (!stageCount) return null;
+  return Array.from({ length: stageCount }, (_, index) => {
+    const stages = records.map((record) => record.stages[index]).filter(Boolean);
+    const first = stages[0];
+    return {
+      id: first.id,
+      response_count: first.response_count,
+      projection_scope: first.projection_scope,
+      stdout_bytes: first.stdout_bytes,
+      projected_stdout_bytes: first.projected_stdout_bytes,
+      projected_stdout_bytes_samples: latencySummary(
+        stages.map((stage) => stage.projected_stdout_bytes),
+      ),
+      tokens: first.tokens,
+    };
+  });
+}
+
+export function combineRecords(records) {
+  const taskElapsed = records.map((record) => record.task_elapsed_ms);
+  const firstResponses = records.map((record) => record.first_response_ms);
+  const subsequentLatencies = records.flatMap(
+    (record) => record.subsequent_request_latencies_ms ?? [],
+  );
   const projectedStdoutBytes = records.map((record) => record.projected_stdout_bytes);
   const capturedStdoutBytes = records.map((record) => record.stdout_bytes);
+  const semanticRuns = records.map((record, repeat) => ({
+    repeat,
+    status: record.semantic.status,
+    details: record.semantic.details,
+    structures: record.semantic.structures,
+  }));
+  const initialSemanticRuns = records
+    .map((record, repeat) =>
+      record.initial_semantic
+        ? {
+            repeat,
+            status: record.initial_semantic.status,
+            details: record.initial_semantic.details,
+            structures: record.initial_semantic.structures,
+          }
+        : null,
+    )
+    .filter(Boolean);
   const first = records[0];
   return {
     response_count: first.response_count,
@@ -754,10 +1233,20 @@ function combineRecords(records) {
     budget_actual_bytes: first.budget_actual_bytes,
     stdout_lines: first.stdout_lines,
     breakdown: first.breakdown,
-    semantic: first.semantic,
+    semantic: summarizeSemanticRuns(semanticRuns),
+    semantic_runs: semanticRuns,
+    initial_semantic: initialSemanticRuns.length
+      ? summarizeSemanticRuns(initialSemanticRuns)
+      : null,
+    initial_semantic_runs: initialSemanticRuns,
+    stages: combineStageRecords(records),
+    handle_id: first.handle_id ?? null,
     tokens: first.tokens,
-    latency_ms: latencySummary(latencies),
-    request_latencies_ms: requestLatencies.length ? latencySummary(requestLatencies) : null,
+    task_elapsed_ms: latencySummary(taskElapsed),
+    first_response_ms: latencySummary(firstResponses),
+    subsequent_request_latencies_ms: subsequentLatencies.length
+      ? latencySummary(subsequentLatencies)
+      : null,
     repeats: records.length,
   };
 }
@@ -828,17 +1317,37 @@ export function compareOperations(results, sampleId) {
       .map((result) => [result.operation_id, result]),
   );
   const pairs = [
-    ['exact-2-separate', 'exact-2-combined'],
-    ['exact-all-separate', 'exact-all-combined'],
+    {
+      comparison: 'separate-vs-combined',
+      separateId: 'exact-2-separate',
+      combinedId: 'exact-2-combined',
+      view: 'body',
+    },
+    {
+      comparison: 'separate-vs-combined',
+      separateId: 'exact-all-separate',
+      combinedId: 'exact-all-combined',
+      view: 'body',
+    },
+    {
+      comparison: 'whole-expand-all-vs-exact-all-combined',
+      separateId: 'whole-expand-all',
+      combinedId: 'exact-all-combined',
+      view: 'full',
+    },
   ];
-  return pairs.map(([separateId, combinedId]) => {
-    const separate = byId.get(separateId)?.views?.body;
-    const combined = byId.get(combinedId)?.views?.body;
-    if (!separate || !combined) return { separate: separateId, combined: combinedId };
+  return pairs.map(({ comparison, separateId, combinedId, view }) => {
+    const separate = byId.get(separateId)?.views?.[view];
+    const combined = byId.get(combinedId)?.views?.[view];
+    if (!separate || !combined) {
+      return { comparison, view, separate: separateId, combined: combinedId };
+    }
     const separateBytes = separate.projected_stdout_bytes ?? separate.stdout_bytes;
     const combinedBytes = combined.projected_stdout_bytes ?? combined.stdout_bytes;
     const saved = separateBytes - combinedBytes;
     return {
+      comparison,
+      view,
       separate: separateId,
       combined: combinedId,
       separate_bytes: separateBytes,
@@ -873,13 +1382,19 @@ function renderMarkdown(result) {
     const view = row.model_input_view;
     const measurement = row.views[view];
     if (!measurement) continue;
-    const envelopeView = row.views.raw ?? row.views.full ?? measurement;
+    const envelopeView = measurement;
+    const semanticLabel = measurement.initial_semantic
+      ? `${measurement.initial_semantic.status} → ${measurement.semantic.status}`
+      : measurement.semantic.status;
+    const failedSuffix = measurement.semantic.failed_repeats?.length
+      ? ` (failed repeats: ${measurement.semantic.failed_repeats.join(', ')})`
+      : '';
     lines.push(
       `| ${row.sample_id} | ${row.operation_id} | ${view} | ${measurement.response_count} | ` +
         `${measurement.projected_stdout_bytes} | ${measurement.stdout_bytes} | ` +
         `${envelopeView.budget_required_bytes || ''} | ` +
         `${measurement.tokens?.total ?? 'NOT_MEASURED'} | ${measurement.host_model_input} | ` +
-        `${measurement.semantic.status} | ${row.tool_calls.total} |`,
+        `${semanticLabel}${failedSuffix} | ${row.tool_calls.total} |`,
     );
   }
   lines.push(
@@ -892,38 +1407,58 @@ function renderMarkdown(result) {
     '',
     '## Separation and Latency',
     '',
-    '| Sample | Operation | Fresh-process median ms | In-session request median ms | Repeats |',
-    '| --- | --- | ---: | ---: | ---: |',
+    '| Sample | Operation | Task elapsed median ms | First-response median ms | Later in-session request median ms | Repeats |',
+    '| --- | --- | ---: | ---: | ---: | ---: |',
   );
   for (const row of result.results) {
     const measurement = row.views[row.model_input_view];
     if (!measurement) continue;
     lines.push(
-      `| ${row.sample_id} | ${row.operation_id} | ${measurement.latency_ms.median?.toFixed(2) ?? ''} | ` +
-        `${measurement.request_latencies_ms?.median?.toFixed(2) ?? ''} | ${measurement.repeats} |`,
+      `| ${row.sample_id} | ${row.operation_id} | ${measurement.task_elapsed_ms.median?.toFixed(2) ?? ''} | ` +
+        `${measurement.first_response_ms.median?.toFixed(2) ?? ''} | ` +
+        `${measurement.subsequent_request_latencies_ms?.median?.toFixed(2) ?? 'n/a'} | ` +
+        `${measurement.repeats} |`,
     );
   }
   lines.push(
     '',
-    'A fresh process is not a purged OS cache. In-session values cover requests handled by one retained session and are not Host service-level measurements.',
+    'A fresh process is not a purged OS cache. First-response time starts at process spawn; later requests exclude that startup cost. These are not Host service-level measurements.',
     '',
     '## Multi-select Comparison',
     '',
-    '| Sample | Pair | Separate bytes | Combined bytes | Saved | Saved % |',
-    '| --- | --- | ---: | ---: | ---: | ---: |',
+    '| Sample | Comparison | View | Baseline bytes | Alternative bytes | Saved | Saved % |',
+    '| --- | --- | --- | ---: | ---: | ---: | ---: |',
   );
   for (const row of result.comparisons) {
     lines.push(
-      `| ${row.sample_id} | ${row.separate} → ${row.combined} | ${row.separate_bytes ?? ''} | ` +
+      `| ${row.sample_id} | ${row.separate} → ${row.combined} (${row.comparison}) | ${row.view} | ${row.separate_bytes ?? ''} | ` +
         `${row.combined_bytes ?? ''} | ${row.saved_bytes ?? ''} | ${row.saved_percent ?? ''} |`,
     );
   }
   lines.push(
     '',
+    'Every comparison row uses the same view on both sides. The whole-asset-plus-expansion path and the exact multi-select path are both measured in `full` view.',
+    '',
+    '## Expansion Stages',
+    '',
+    '| Sample | Operation | Stage | Responses | Projected bytes | Computed tokens |',
+    '| --- | --- | --- | ---: | ---: | ---: |',
+  );
+  for (const row of result.results) {
+    const measurement = row.views[row.model_input_view];
+    for (const stage of measurement?.stages ?? []) {
+      lines.push(
+        `| ${row.sample_id} | ${row.operation_id} | ${stage.id} | ${stage.response_count} | ` +
+          `${stage.projected_stdout_bytes} | ${stage.tokens?.total ?? 'NOT_MEASURED'} |`,
+      );
+    }
+  }
+  lines.push(
+    '',
     '## Envelope Breakdown',
     '',
-    '| Sample | Operation | Total bytes | Largest envelope fields | Largest content fields |',
-    '| --- | --- | ---: | --- | --- |',
+    '| Sample | Operation | View | Total bytes | Largest envelope fields | Largest content fields |',
+    '| --- | --- | --- | ---: | --- | --- |',
   );
   for (const row of result.results) {
     for (const view of Object.keys(row.views)) {
@@ -940,7 +1475,7 @@ function renderMarkdown(result) {
         .map(([key, value]) => `${key}=${value}`)
         .join(', ');
       lines.push(
-        `| ${row.sample_id} | ${row.operation_id} | ${measurement.stdout_bytes} | ${top} | ${content} |`,
+        `| ${row.sample_id} | ${row.operation_id} | ${view} | ${measurement.stdout_bytes} | ${top} | ${content} |`,
       );
     }
   }
@@ -1027,6 +1562,14 @@ async function main(argv) {
         }
         viewRows[view] = combineRecords(records);
       }
+      const requestCount =
+        operation.kind === 'session'
+          ? operation.groups.length
+          : operation.kind === 'whole-expand-all'
+            ? operation.expected_ids.length + 1
+            : operation.kind === 'handoff-exact-then-expand'
+              ? 2
+              : 1;
       results.push({
         sample_id: sample.id,
         operation_id: operation.id,
@@ -1035,19 +1578,9 @@ async function main(argv) {
         allow_deferred: operation.allow_deferred === true,
         model_input_view: operation.model_input_view ?? 'body',
         tool_calls: {
-          processes: operation.kind === 'session' || operation.kind === 'whole-expand-all' ? 1 : 1,
-          session_requests:
-            operation.kind === 'session'
-              ? operation.groups.length
-              : operation.kind === 'whole-expand-all'
-                ? operation.expected_ids.length + 1
-                : 1,
-          total:
-            operation.kind === 'session'
-              ? operation.groups.length
-              : operation.kind === 'whole-expand-all'
-                ? operation.expected_ids.length + 1
-                : 1,
+          processes: 1,
+          session_requests: requestCount,
+          total: requestCount,
         },
         views: viewRows,
       });
@@ -1062,6 +1595,7 @@ async function main(argv) {
     run_id: runId,
     generated_at: new Date().toISOString(),
     manifest: path.relative(ROOT, options.manifest),
+    manifest_sha256: hashFile(options.manifest),
     environment,
     tokenizer: tokenizer
       ? { label: tokenizer.label, module_sha256: tokenizer.module_sha256 }
@@ -1086,9 +1620,9 @@ async function main(argv) {
         'NOT_MEASURED: no Host trace of prompts, retries, expansion routing or tool-response wrappers.',
       tokenizer: 'Computed tokenizer count, not a Host observation.',
       latency:
-        'Fresh process and in-session request latency are reported separately; no OS cache purge was attempted.',
+        'Task elapsed, first response from process spawn, and later in-session requests are separate; no OS cache purge was attempted.',
       semantic:
-        'Deferred material is complete only after expansion, not when a catalog or whole_asset body is returned.',
+        'Deferred material is complete only after expansion. Mechanical checks cover declared terms and structures, not recommendation quality.',
     },
   };
   await fsp.writeFile(path.join(runDir, 'results.json'), `${JSON.stringify(report, null, 2)}\n`);
@@ -1098,6 +1632,15 @@ async function main(argv) {
     `${JSON.stringify(environment, null, 2)}\n`,
   );
   console.log(runDir);
+  const semanticFailures = results.flatMap((row) =>
+    Object.entries(row.views)
+      .filter(([, measurement]) => measurement.semantic.status === 'incomplete')
+      .map(([view]) => `${row.sample_id}/${row.operation_id}/${view}`),
+  );
+  if (semanticFailures.length) {
+    console.error(`semantic checks failed: ${semanticFailures.join(', ')}`);
+    return 1;
+  }
   return 0;
 }
 

@@ -80,7 +80,227 @@
             "review trigger",
             "required dependency"
           ],
-          "mandatory_dependency_ids": ["decision:evidence"]
+          "mandatory_dependency_ids": [],
+          "mandatory_dependencies": [
+            {
+              "id": "dependency:handoff-evidence",
+              "judgment_id": "decision:evidence",
+              "require_full_body": true,
+              "required_terms": [
+                "Require reproducible evidence.",
+                "mark the claim provisional",
+                "A catalog or saved file is not evidence of task completion."
+              ],
+              "expect": {
+                "id": "dependency:handoff-evidence",
+                "producer": {
+                  "kind": "judgment_result",
+                  "judgment_ref": "decision:evidence",
+                  "result_contract_ref": "result-contract:decision:evidence"
+                },
+                "producer_port": "result",
+                "consumer_judgment_ref": "decision:handoff",
+                "consumer_port": "context",
+                "required": true
+              }
+            }
+          ]
+        }
+      ],
+      "structured_requirements": [
+        {
+          "role": "shared_declaration",
+          "id": "shared:decision-value-order",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": ["decision:priority"],
+          "required_terms": ["user-harm evidence", "reversibility", "schedule cost"],
+          "expect": {
+            "kind": "value_order",
+            "applies_to": { "kind": "asset" },
+            "value": ["user-harm evidence", "reversibility", "schedule cost"]
+          }
+        },
+        {
+          "role": "condition",
+          "id": "condition:evidence-unavailable",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": ["decision:evidence", "decision:handoff"],
+          "required_terms": ["A required observation is absent or cannot be reproduced."],
+          "expect": {
+            "owner_ref": {
+              "kind": "exception",
+              "id": "exception:evidence-unavailable"
+            }
+          }
+        },
+        {
+          "role": "condition",
+          "id": "condition:active-exposure",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": ["decision:reversibility"],
+          "required_terms": ["A security exposure is already active and containment can begin."],
+          "expect": {
+            "owner_ref": {
+              "kind": "exception",
+              "id": "exception:active-exposure"
+            }
+          }
+        },
+        {
+          "role": "boundary",
+          "id": "boundary:live-path",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": [
+            "decision:priority",
+            "decision:evidence",
+            "decision:reversibility",
+            "decision:conflict",
+            "decision:handoff"
+          ],
+          "required_terms": [
+            "Applies only to live product or operations decisions; archival cleanup is outside scope."
+          ],
+          "expect": {
+            "effect": "limit",
+            "applies_to": {
+              "kind": "judgments",
+              "judgment_refs": [
+                "decision:priority",
+                "decision:evidence",
+                "decision:reversibility",
+                "decision:conflict",
+                "decision:handoff"
+              ]
+            },
+            "exception_refs": []
+          }
+        },
+        {
+          "role": "boundary",
+          "id": "boundary:evidence",
+          "owner_judgment_id": "decision:evidence",
+          "required_when_any_judgment_ids": ["decision:evidence", "decision:handoff"],
+          "required_terms": ["A catalog or saved file is not evidence of task completion."],
+          "expect": {
+            "effect": "limit",
+            "applies_to": {
+              "kind": "judgments",
+              "judgment_refs": ["decision:evidence"]
+            },
+            "exception_refs": ["exception:evidence-unavailable"]
+          }
+        },
+        {
+          "role": "exception",
+          "id": "exception:evidence-unavailable",
+          "owner_judgment_id": "decision:evidence",
+          "required_when_any_judgment_ids": ["decision:evidence", "decision:handoff"],
+          "required_terms": [
+            "If evidence cannot be reproduced, mark the judgment provisional instead of claiming completion."
+          ],
+          "expect": {
+            "boundary_ref": "boundary:evidence",
+            "applies_to": {
+              "kind": "judgments",
+              "judgment_refs": ["decision:evidence"]
+            },
+            "when": {
+              "kind": "condition",
+              "id": "condition:evidence-unavailable"
+            },
+            "effect": { "kind": "waive" }
+          }
+        },
+        {
+          "role": "boundary",
+          "id": "boundary:reversibility",
+          "owner_judgment_id": "decision:reversibility",
+          "required_when_any_judgment_ids": ["decision:reversibility"],
+          "required_terms": [
+            "Prefer reversibility unless an active exposure requires immediate containment."
+          ],
+          "expect": {
+            "effect": "limit",
+            "applies_to": {
+              "kind": "judgments",
+              "judgment_refs": ["decision:reversibility"]
+            },
+            "exception_refs": ["exception:active-exposure"]
+          }
+        },
+        {
+          "role": "exception",
+          "id": "exception:active-exposure",
+          "owner_judgment_id": "decision:reversibility",
+          "required_when_any_judgment_ids": ["decision:reversibility"],
+          "required_terms": [
+            "An active security exposure is the stated exception; containment precedes reversibility review."
+          ],
+          "expect": {
+            "boundary_ref": "boundary:reversibility",
+            "applies_to": {
+              "kind": "judgments",
+              "judgment_refs": ["decision:reversibility"]
+            },
+            "when": {
+              "kind": "condition",
+              "id": "condition:active-exposure"
+            },
+            "effect": { "kind": "waive" }
+          }
+        },
+        {
+          "role": "relationship",
+          "id": "relationship:speed-conflicts-safety",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": ["decision:conflict", "decision:reversibility"],
+          "required_terms": [
+            "A release-speed preference conflicts with the safety rule when both cannot be satisfied."
+          ],
+          "expect": {
+            "kind": { "term": "conflict" },
+            "direction": "undirected",
+            "operator": { "term": "conflicts_with" },
+            "effect": { "term": "preserves_disagreement" },
+            "participants": [
+              {
+                "role": { "term": "side_a" },
+                "judgment_ref": "decision:conflict"
+              },
+              {
+                "role": { "term": "side_b" },
+                "judgment_ref": "decision:reversibility"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dependency",
+          "id": "dependency:handoff-evidence",
+          "owner_judgment_id": null,
+          "required_when_any_judgment_ids": ["decision:handoff"],
+          "required_terms": ["The handoff must carry the evidence standard and its exception."],
+          "expect": {
+            "producer": {
+              "kind": "judgment_result",
+              "judgment_ref": "decision:evidence",
+              "result_contract_ref": "result-contract:decision:evidence"
+            },
+            "producer_port": "result",
+            "consumer_judgment_ref": "decision:handoff",
+            "consumer_port": "context",
+            "input_role": "context",
+            "required": true
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "handoff-exact-then-expand",
+          "kind": "handoff-exact-then-expand",
+          "selection_judgment_ids": ["decision:handoff"],
+          "expected_judgment_ids": ["decision:handoff"],
+          "expand_judgment_id": "decision:evidence"
         }
       ]
     }
