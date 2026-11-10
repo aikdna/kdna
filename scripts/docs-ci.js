@@ -55,8 +55,8 @@ console.log('── Agent entry batch route');
 
 const agentEntry = fs.readFileSync(path.join(DOCS_DIR, 'agent-entry.md'), 'utf8');
 check(
-  'agent-entry.md links the complete session request example',
-  agentEntry.includes('original.requests.jsonl'),
+  'agent-entry.md links the complete multi-select session request example',
+  agentEntry.includes('multi.requests.jsonl'),
 );
 check(
   'agent-entry.md names selection.judgment_ids for multi-judgment requests',
@@ -65,6 +65,39 @@ check(
 check(
   'agent-entry.md explains that whole_asset may defer judgment bodies',
   agentEntry.includes('zero judgment bodies inline'),
+);
+check(
+  'agent-entry.md shows the published CLI install coordinate',
+  agentEntry.includes('@aikdna/kdna-cli@0.43.2'),
+);
+check(
+  'agent-entry.md shows the same-session multi-select route',
+  agentEntry.includes('multi.requests.jsonl') && agentEntry.includes('--session --allow-read'),
+);
+
+const multiRequestsPath = path.resolve(
+  __dirname,
+  '..',
+  'examples',
+  'native-team-update',
+  'multi.requests.jsonl',
+);
+const multiRequests = fs
+  .readFileSync(multiRequestsPath, 'utf8')
+  .trim()
+  .split('\n')
+  .map((line) => JSON.parse(line));
+const multiSelection = multiRequests.find((request) => request.mode === 'exact_selection');
+check(
+  'multi.requests.jsonl has one catalog and one exact_selection request',
+  multiRequests.length === 2 &&
+    multiRequests.filter((request) => request.mode === 'catalog').length === 1 &&
+    Boolean(multiSelection),
+);
+check(
+  'multi.requests.jsonl selects two judgment ids in one request',
+  Array.isArray(multiSelection?.selection?.judgment_ids) &&
+    multiSelection.selection.judgment_ids.length === 2,
 );
 
 console.log('── Package published and reachable');
