@@ -7,13 +7,17 @@ human-confirmation record or an action authorization.
 ## One request
 
 Give the Agent one exact `.kdna` file, the task it should help with, who will
-read the result, and whether the asset may be disclosed to that Host. If those
-choices are already clear, the request can be this short:
+read the result, and whether the asset may be disclosed to that Host. The
+request text and the command route must travel together; the sentence alone is
+not a sufficient entry.
 
-> Use the KDNA asset at `<absolute-path>` for this task: `<task>`. Inspect and
-> validate the file, read only the judgments needed for the task, and tell me
-> which asset version and judgments you used. Do not use the asset as permission
-> for an external action.
+> Use the KDNA asset at `<absolute-path>` for this task: `<task>`. Install the
+> published `@aikdna/kdna-cli@0.43.2` and follow the copyable route below:
+> inspect and validate the file, read the catalog, select every judgment the
+> task needs in one `selection.judgment_ids` request in one session, expand any
+> needed handles in that same session, and report the asset version, CLI version
+> and judgment IDs. `--allow-read` permits local disclosure only; it does not
+> authorize an external action. Do not unzip or binary-probe the `.kdna`.
 
 The Agent should not search a global library, treat a filename as authority or
 read more judgments than the task needs.
@@ -49,6 +53,12 @@ The session file sends a catalog request and one `exact_selection` request whose
 task needs more judgments, add their ids to that array instead of repeating a
 separate selection for each one. Keep the same process for expansion handles and
 expand them in that process; do not reuse a handle after the session closes.
+
+The `tuple` in `multi.requests.jsonl` is the exact tuple reported by
+`kdna inspect` for this CLI and asset. When using another asset, keep the
+installed CLI's tuple and change only the file path, asset id, asset version and
+judgment ids. Do not edit tuple fields independently: the supported route and
+container format must match what `inspect` reports.
 
 For a task that needs only one judgment, use:
 
