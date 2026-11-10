@@ -1,6 +1,6 @@
 # Read Cost Measurement Work Package
 
-**Status:** M2-R1 remeasurement complete; audit review pending. Not a release gate.
+**Status:** M2-R1 remeasurement complete; independent audit passed on 2026-11-10. Not a release gate.
 **Date:** 2026-11-10.
 **Scope:** public CLI and Read model-input cost. This package does not change
 Reader app code, Native Reader, accounts, payment or protocol semantics.
@@ -8,6 +8,13 @@ Reader app code, Native Reader, accounts, payment or protocol semantics.
 The earlier [`read-cost-results-2026-11-09.md`](read-cost-results-2026-11-09.md)
 remains as historical evidence; its cross-view whole-asset comparison and mixed
 startup/request latency description are superseded by the M2-R1 run.
+
+The independent audit reviewed the merged measurement PR
+[#446](https://github.com/aikdna/kdna/pull/446), reran its regression, and
+checked the fixed oracle and saved outputs. It accepted the fixed-sample,
+same-view semantic and latency evidence. Host model input, token use observed
+by a Host, real-user adoption and general performance remain `NOT_MEASURED`;
+the audit does not turn this package into a release gate.
 
 ## Why this package exists
 

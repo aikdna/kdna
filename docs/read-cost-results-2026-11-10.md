@@ -1,7 +1,7 @@
 # Read Cost Measurement Results — 2026-11-10
 
-**Status:** M2-R1 remeasurement complete. This is measurement evidence, not a
-release gate.
+**Status:** M2-R1 remeasurement complete; independent audit passed on
+2026-11-10. This is measurement evidence, not a release gate.
 **Scope:** published CLI, Core and Read packages. No Reader, account, Native,
 payment, protocol or deployment change is part of this run.
 
