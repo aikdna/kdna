@@ -4,6 +4,12 @@
 **Scope:** published CLI, Core and Read packages; no Reader, account, Native,
 payment, protocol or deployment changes.
 
+Historical note added 2026-11-10: the byte observations below remain the
+original run. Its whole-asset comparison mixed `full` with `body`, and its
+latency description did not separate process startup from later in-session
+requests. Use [`read-cost-results-2026-11-10.md`](read-cost-results-2026-11-10.md)
+for the corrected M2-R1 comparison.
+
 ## Coordinates
 
 - CLI: `@aikdna/kdna-cli@0.43.2`
