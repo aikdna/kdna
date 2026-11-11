@@ -41,6 +41,51 @@ Follow [Start Here](docs/start-here.md) and the matching table below.
 For the smallest Agent route, use [Agent entry](docs/agent-entry.md); for the
 explicit current-generation migration, use the
 [0.5 → 0.6 checklist](docs/migration-checklist.md).
+
+## 30-second hook
+
+A `.kdna` file packages a judgment — what to weigh, what to refuse, and when it
+applies — as a single portable, versioned, inspectable file that an agent reads
+instead of re-reading a long prompt. It does not change the model; it changes
+what the model is handed, and lets you see exactly what that was.
+
+| | `CLAUDE.md` / system prompt | `.kdna` |
+| --- | --- | --- |
+| Good for | Project-wide instructions, quick edits, zero tooling | Judgment you want to reuse across agents and projects |
+| Portability | Tied to one tool or repository | One file, moves between hosts |
+| Versioning | Whatever your VCS history gives you | Declared version and integrity metadata |
+| Inspection | Read the text | `inspect` / `validate` show structure and integrity |
+| Selection | Usually loaded whole | Judgments can be selected by id or judged by applicability |
+| Access control | File permissions | Optional local password protection |
+
+Both are legitimate; they are not mutually exclusive, and this table makes no
+claim about output quality.
+
+### Quickstart: Create / Read / Protect / Compare
+
+**Published today (`@aikdna/kdna-cli@0.43.2`):**
+
+```bash
+npx @aikdna/kdna-cli@0.43.2 create authored.json --allow-create   # Create
+npx @aikdna/kdna-cli@0.43.2 validate my.kdna                      # Check
+npx @aikdna/kdna-cli@0.43.2 inspect my.kdna                       # Inspect
+npx @aikdna/kdna-cli@0.43.2 read my.kdna                          # Read
+```
+
+Protect and Compare are not in the published CLI yet.
+
+**Next CLI (not yet published; local branch `feat/cli-create-consume-protect-diff-20261111`):**
+
+```bash
+kdna init                                   # Create: scaffold input
+kdna validate-input authored.json
+kdna compile authored.json                  # or: kdna create --draft
+kdna read my.kdna --judgment-id a,b --compact          # Read selected judgments
+kdna protect my.kdna --password-file ./pw.txt          # Protect (local, optional)
+kdna diff old.kdna new.kdna --format human             # Compare
+```
+
+These commands may change before release; rely on the published block above.
 The complete static tuple, native execution 0.3.1 formats and reference APIs are
 linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index).
 Historical contracts retain their coordinates and exact dependency graphs.

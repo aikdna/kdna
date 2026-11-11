@@ -22,6 +22,50 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 直接解压或解析原始 payload 不是兼容的 Agent 消费路径。
 
+## 30 秒入口
+
+`.kdna` 把一条判断——权衡什么、拒绝什么、何时适用——封装成一个可移植、可版本化、
+可检查的文件，让 Agent 读取它而不是重复阅读长 Prompt。它不改变模型，只改变交给
+模型的内容，并让你看清交给了什么。
+
+| | `CLAUDE.md` / system prompt | `.kdna` |
+| --- | --- | --- |
+| 适合 | 项目级说明、快速修改、无需工具 | 需要跨 Agent、跨项目复用的判断 |
+| 可移植 | 绑定某个工具或仓库 | 单一文件，可在 Host 间移动 |
+| 版本 | 依赖 VCS 历史 | 声明版本与完整性元数据 |
+| 检查 | 阅读文本 | `inspect` / `validate` 展示结构与完整性 |
+| 选择 | 通常整体加载 | 可按 id 选择或按适用性判断 |
+| 访问控制 | 文件权限 | 可选的本地密码保护 |
+
+两者都合理、可并用；本表不对输出质量作任何声明。
+
+### 四步上手：创建 / 读取 / 保护 / 对比
+
+**已发布（`@aikdna/kdna-cli@0.43.2`）：**
+
+```bash
+npx @aikdna/kdna-cli@0.43.2 create authored.json --allow-create   # 创建
+npx @aikdna/kdna-cli@0.43.2 validate my.kdna                      # 校验
+npx @aikdna/kdna-cli@0.43.2 inspect my.kdna                       # 检查
+npx @aikdna/kdna-cli@0.43.2 read my.kdna                          # 读取
+```
+
+保护与对比尚未包含在已发布 CLI 中。
+
+**下一版 CLI（尚未发布；本地分支 `feat/cli-create-consume-protect-diff-20261111`）：**
+
+```bash
+kdna init                                   # 创建：生成输入骨架
+kdna validate-input authored.json
+kdna compile authored.json                  # 或：kdna create --draft
+kdna read my.kdna --judgment-id a,b --compact          # 读取选定判断
+kdna protect my.kdna --password-file ./pw.txt          # 保护（本地、可选）
+kdna diff old.kdna new.kdna --format human             # 对比
+```
+
+这些命令在发布前可能变化，请以上方已发布命令为准。
+
+
 > 第一次使用 → [Start Here](./docs/start-here.md)
 >
 > 单个已选资产的最小 Agent 入口 → [Agent entry](./docs/agent-entry.md)
