@@ -17,14 +17,14 @@ const OUT_PATH = process.env.KDNA_INSPECTOR_OUT
 
 // The core is spliced into a module <script>, so strip `export` keywords and
 // refuse anything that would need a module loader or the network.
-const coreSource = fs.readFileSync(CORE_PATH, 'utf8');
+const coreSource = fs.readFileSync(CORE_PATH, 'utf8').replaceAll('\r\n', '\n');
 if (/^\s*import\s/m.test(coreSource) || /\bfetch\s*\(|XMLHttpRequest|WebSocket/.test(coreSource)) {
   throw new Error('inspector-core.mjs must stay dependency-free and offline');
 }
 const coreBundle = coreSource.replace(/^export\s+/gm, '');
 const digest = createHash('sha256').update(coreBundle).digest('hex');
 
-const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
+const template = fs.readFileSync(TEMPLATE_PATH, 'utf8').replaceAll('\r\n', '\n');
 if (!template.includes('/*__KDNA_INSPECTOR_CORE__*/')) {
   throw new Error('inspector template is missing the core placeholder');
 }

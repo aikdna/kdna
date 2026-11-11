@@ -43,7 +43,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.9"
+          "version": "0.37.10"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -53,7 +53,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.3"
+          "version": "0.13.4"
         },
         {
           "path": "packages/kdna/package.json",
@@ -75,12 +75,6 @@
           "declared": "0.36.1"
         },
         {
-          "path": "package.json",
-          "section": "devDependencies",
-          "name": "@aikdna/kdna-web-client",
-          "declared": "0.3.0"
-        },
-        {
           "path": "packages/kdna-conformance/package.json",
           "section": "dependencies",
           "name": "@aikdna/kdna-core",
@@ -90,7 +84,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.9"
+          "declared": "0.37.10"
         },
         {
           "path": "packages/kdna/package.json",
@@ -113,7 +107,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "53f5d24b8b7d0d26580aac8d7f5310d0c80a41aec8e8e58505c50057664c663b",
+          "sha256": "f19698d311f51e27fc837a9b6f3f2ffa047a77db625165d9801dd5d34e781f74",
           "local_archives": []
         }
       ],
@@ -218,9 +212,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.9",
+          "version": "0.37.10",
           "member_count": 465,
-          "members_sha256": "42480036d8359aeb604c7f4c98880bd88c2d917e4333e39e8154f283962f7df2",
+          "members_sha256": "72f17ce5dcf4996a15cc955da8d6b06f19c7e3e55aa4d6fd6999859a742e1a3d",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -741,9 +735,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.3",
+          "version": "0.13.4",
           "member_count": 99,
-          "members_sha256": "34cb24f944f5b6568384894aaa731c2d3b5ee2446ef656ddcbe636196bb4f45d",
+          "members_sha256": "6d353afec71335d24dc1d8145ed95921693ff025510a785c09543078cb38aca1",
           "paths": [
             "LICENSE",
             "NOTICE",
