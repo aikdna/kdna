@@ -33,7 +33,10 @@ test('inspector entry list agrees with an independent ZIP listing', async () => 
   const listing = spawnSync('unzip', ['-Z1', path.join(ROOT, SAMPLE)], { encoding: 'utf8' });
   if (listing.status !== 0) return; // unzip unavailable; structural tests above still apply
   const report = await inspectKdna(read(SAMPLE));
-  assert.deepEqual(report.entries.map((e) => e.name).sort(), listing.stdout.split('\n').filter(Boolean).sort());
+  assert.deepEqual(
+    report.entries.map((e) => e.name).sort(),
+    listing.stdout.split('\n').filter(Boolean).sort(),
+  );
 });
 
 test('encrypted payload yields a clear notice, not a crash', async () => {
@@ -46,25 +49,39 @@ test('encrypted payload yields a clear notice, not a crash', async () => {
 });
 
 test('inspector fails closed on non-containers and tampered tables', async () => {
-  await assert.rejects(inspectKdna(new Uint8Array([1, 2, 3])), (e) => e instanceof InspectError && e.code === 'KDNA_NOT_A_CONTAINER');
+  await assert.rejects(
+    inspectKdna(new Uint8Array([1, 2, 3])),
+    (e) => e instanceof InspectError && e.code === 'KDNA_NOT_A_CONTAINER',
+  );
   const bytes = read(SAMPLE);
   const tampered = bytes.slice();
   // Flip a byte inside the stored pack-1 member (the end of the archive body).
   const marker = Buffer.from('sections/pack-1.kdnab');
-  const at = Buffer.from(tampered).lastIndexOf(marker, Buffer.from(tampered).indexOf(Buffer.from('PK\x01\x02')));
+  const at = Buffer.from(tampered).lastIndexOf(
+    marker,
+    Buffer.from(tampered).indexOf(Buffer.from('PK\x01\x02')),
+  );
   tampered[at + marker.length + 40] ^= 0xff;
   const report = await inspectKdna(tampered);
   assert.ok(report.notices.some((n) => n.level === 'error'));
 });
 
 test('generated page is fresh, offline, account-free and syntactically valid', () => {
-  const check = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'check-asset-inspector.mjs')], { encoding: 'utf8' });
+  const check = spawnSync(
+    process.execPath,
+    [path.join(ROOT, 'scripts', 'check-asset-inspector.mjs')],
+    { encoding: 'utf8' },
+  );
   assert.equal(check.status, 0, check.stderr);
   const html = fs.readFileSync(path.join(ROOT, 'docs', 'inspector', 'index.html'), 'utf8');
   assert.ok(!html.includes('__KDNA_'));
   assert.ok(!/web-client/i.test(html));
   assert.ok(!/https?:\/\//i.test(html), 'page must carry no external links');
-  assert.ok(!/\b(sign[ -]?in|log[ -]?in|sign[ -]?up|account)\b/i.test(html.replace(/no account is needed/, '')));
+  assert.ok(
+    !/\b(sign[ -]?in|log[ -]?in|sign[ -]?up|account)\b/i.test(
+      html.replace(/no account is needed/, ''),
+    ),
+  );
   assert.ok(!/<script[^>]+src=/i.test(html));
   const script = html.match(/<script type="module">([\s\S]*?)<\/script>/)[1];
   const tmp = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-insp-')), 'page.mjs');

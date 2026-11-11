@@ -7,6 +7,8 @@ const validators = require('../protected-browser-contract/validators.cjs');
 const origins = new WeakMap(), requests = new WeakMap(), authorities = new WeakMap();
 const operations = new WeakMap(), snapshots = new WeakMap(), checkpoints = new WeakMap(), failures = new WeakMap();
 const tuple = require('../generated-contract.json').versionTuple;
+const tuple06 = contract.module.candidateVersionTuple06;
+const supportedTuples = Object.freeze([tuple, tuple06]);
 const frozen = strict.freeze;
 function need(ok, code = 'READ_INPUT_INVALID') {
   if (!ok) { const error = new Error(code); failures.set(error, code); throw error; }
@@ -44,7 +46,7 @@ function parseJsonText(value) { need(typeof value === 'string'); return strict.p
 function keys(value, names) {
   need(value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === names.length && names.every(k => Object.hasOwn(value, k)));
 }
-const C = { strict, contract, validate, keys, need, parseJsonText, isFailure: e => failures.has(e), failureCode: e => failures.get(e) ?? null };
+const C = { strict, contract, validators, validate, scalars, keys, need, parseJsonText, isFailure: e => failures.has(e), failureCode: e => failures.get(e) ?? null };
 function failed(code = 'PROTECTION_OPERATION_UNTRUSTED', stage = 'input') {
   return frozen({ status: 'protection_failed', diagnostic: { code, stage }, checked_at_ms: null });
 }
@@ -52,7 +54,7 @@ function failed(code = 'PROTECTION_OPERATION_UNTRUSTED', stage = 'input') {
 // JSON copies and Node admissions cannot establish this provenance.
 function register(snapshot, metadata) {
   const view = inspectSnapshot(snapshot);
-  need(view && strict.canonicalJson(view.tuple) === strict.canonicalJson(tuple), 'READ_SNAPSHOT_UNATTESTED');
+  need(view && supportedTuples.some(sup => strict.canonicalJson(view.tuple) === strict.canonicalJson(sup)), 'READ_SNAPSHOT_UNATTESTED');
   const origin = { phase: 'available', view, metadata: frozen(metadata) };
   origins.set(snapshot, origin);
   markProtectedSnapshot(snapshot, () => origin.phase !== 'closed');
@@ -196,5 +198,5 @@ async function admit(snapshot, admitted, authority) {
     return failed(failures.get(e) ?? 'READ_CORE_CAPABILITY_UNAVAILABLE', 'authorization');
   }
 }
-module.exports = { C, tuple, frozen, register, mintRequest, request, inspectRequest, normalized, createAuthority,
+module.exports = { C, tuple, tuple06, supportedTuples, frozen, register, mintRequest, request, inspectRequest, normalized, createAuthority,
   operation, inspectSnapshot: inspectProtectedSnapshot, pairRequest, dispose, onDispose, grant, bind, admit };

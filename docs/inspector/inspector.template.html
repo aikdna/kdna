@@ -258,8 +258,8 @@
         <p class="scope-line">
           It reads the current <code>0.6.0</code> native container (<code>kdna.json</code> plus
           <code>sections/pack-N.kdnab</code>) and the older single-<code>payload.kdnab</code>
-          layout. It shows the public manifest, the version tuple, the judgment catalog and
-          payload table digests.
+          layout. It shows the public manifest, the version tuple, the judgment catalog and payload
+          table digests.
         </p>
         <p class="scope-line">
           It does not decode payload frames, verify signatures or keys, or decrypt anything. An
@@ -348,8 +348,21 @@
 
       function table(headers, rows) {
         const t = el('table');
-        t.append(el('tr', {}, headers.map((h) => el('th', { text: h }))));
-        for (const row of rows) t.append(el('tr', {}, row.map((c) => el('td', { text: String(c ?? '') }))));
+        t.append(
+          el(
+            'tr',
+            {},
+            headers.map((h) => el('th', { text: h })),
+          ),
+        );
+        for (const row of rows)
+          t.append(
+            el(
+              'tr',
+              {},
+              row.map((c) => el('td', { text: String(c ?? '') })),
+            ),
+          );
         return t;
       }
 
@@ -378,7 +391,10 @@
         out.push(
           section(
             'Manifest',
-            el('div', {}, [state, el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` })]),
+            el('div', {}, [
+              state,
+              el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` }),
+            ]),
             kv([
               ['File', `${file.name} (${formatBytes(file.size)})`],
               ['Title', s.title],
@@ -422,7 +438,10 @@
             ['Encoding', report.payload.encoding],
             ['Encryption profile', report.encryption?.profile],
           ]),
-          table(['Member', 'Size'], report.entries.map((e) => [e.name, formatBytes(e.size)])),
+          table(
+            ['Member', 'Size'],
+            report.entries.map((e) => [e.name, formatBytes(e.size)]),
+          ),
         ];
         if (report.payload.tables.length) {
           payloadBits.push(
@@ -448,8 +467,14 @@
         return el('section', { class: 'card error' }, [
           el('h2', { text: 'Could not read this file' }),
           el('div', { class: 'code', text: `${file.name} — ${code}` }),
-          el('div', { class: 'msg', text: error?.message ?? 'The file could not be read as a KDNA asset.' }),
-          el('div', { class: 'msg', text: 'The inspector fails closed: a structural problem rejects the whole file.' }),
+          el('div', {
+            class: 'msg',
+            text: error?.message ?? 'The file could not be read as a KDNA asset.',
+          }),
+          el('div', {
+            class: 'msg',
+            text: 'The inspector fails closed: a structural problem rejects the whole file.',
+          }),
         ]);
       }
     </script>

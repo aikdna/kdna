@@ -89,8 +89,8 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 50851,
-      "sha256": "b5eafa673352ff2073865c57c33c0477471f28462f23223f4da5a3efbd26276e"
+      "bytes": 50853,
+      "sha256": "5b18b8a5588b95a7f7f219fd36a5680c4a4d194648572ba829fe433a3a4a0967"
     },
     {
       "path": "specs/public-source-map.json",
@@ -99,13 +99,13 @@
     },
     {
       "path": "specs/public-version-policy.md",
-      "bytes": 13074,
-      "sha256": "cf3fba8e0256fd225ab52edba5c7a9686b1019f4fe2dee3856257d70dd3c3725"
+      "bytes": 13173,
+      "sha256": "9fb4ddcfa53a08e6669be6fa192df16cb88d653bea10d3faa679cd878783cd14"
     },
     {
       "path": "specs/read-contract.md",
-      "bytes": 11722,
-      "sha256": "cf431144313a2c3e5c6df0c3b0fd7015637d1992e412a44f9029a84fdfa06721"
+      "bytes": 11841,
+      "sha256": "ae38106e30f0e6c45e74a3ead6bdb00e588f3e0c6d049648529f64351cab355f"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -27175,7 +27175,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -27210,7 +27210,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -27245,7 +27245,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -27279,7 +27279,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -27563,7 +27563,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -27655,7 +27655,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -28097,7 +28097,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -28192,7 +28192,7 @@
           "const": "catalog_only"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -28287,7 +28287,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -28382,7 +28382,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -28479,7 +28479,7 @@
         "tuple": {
           "anyOf": [
             {
-              "$ref": "#/$defs/VersionTuple"
+              "$ref": "#/$defs/BrowserProtectedTuple"
             },
             {
               "type": "null"
@@ -29276,7 +29276,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -29410,7 +29410,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -29451,7 +29451,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -29460,7 +29460,7 @@
           "$ref": "#/$defs/AssetDigests"
         },
         "ir": {
-          "$ref": "#/$defs/CanonicalIR"
+          "$ref": "#/$defs/BrowserProtectedCanonicalIR"
         },
         "ir_digest": {
           "$ref": "#/$defs/Digest"
@@ -29935,6 +29935,26 @@
         "definition_digest"
       ],
       "additionalProperties": false
+    },
+    "BrowserProtectedTuple": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        }
+      ]
+    },
+    "BrowserProtectedCanonicalIR": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CanonicalIR"
+        },
+        {
+          "$ref": "#/$defs/CanonicalIR06Candidate"
+        }
+      ]
     }
   },
   "non_schema_rules": [
@@ -30802,8 +30822,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.9",
-      "read": "0.13.3"
+      "core": "0.37.10",
+      "read": "0.13.4"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -32218,7 +32238,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.13.3",
+    "package_version": "0.13.4",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -35273,8 +35293,8 @@
     ],
     "specification": {
       "path": "specs/protection-admission.md",
-      "bytes": 38233,
-      "sha256": "b734be266f52a2cf23688aaefb0a2c4b075356190113c7ac7d808e701a36edec"
+      "bytes": 38234,
+      "sha256": "fae2fbbb729fc024771455bbe444eda819b29faeecae89a4eea645e05136a110"
     },
     "non_schema_rules": [
       {
@@ -35626,8 +35646,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.9",
-        "@aikdna/kdna-read": "0.13.3"
+        "@aikdna/kdna-core": "0.37.10",
+        "@aikdna/kdna-read": "0.13.4"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -36101,8 +36121,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.9",
-        "@aikdna/kdna-read": "0.13.3"
+        "@aikdna/kdna-core": "0.37.10",
+        "@aikdna/kdna-read": "0.13.4"
       }
     }
   },
@@ -36923,8 +36943,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.9",
-        "@aikdna/kdna-read": "0.13.3"
+        "@aikdna/kdna-core": "0.37.10",
+        "@aikdna/kdna-read": "0.13.4"
       }
     }
   },
@@ -41349,8 +41369,8 @@
       },
       "package_versions": [
         {
-          "core": "0.37.9",
-          "read": "0.13.3"
+          "core": "0.37.10",
+          "read": "0.13.4"
         }
       ],
       "preservation": "The released Core 0.37.0 / Read 0.11.1 pair and its three binding-7 schemas remain unchanged historical coordinates. This candidate adds retained browser protected projection and independent lifecycle; registry, consumer acceptance and publication are separate evidence."
@@ -42496,7 +42516,7 @@
         },
         "domain": {
           "origin": "Only the exact successful admitProtectedBrowser snapshot registered in this same Core instance; ordinary, copied, foreign, consumed or closed origins reject.",
-          "interpretation": "Complete original base payload/IR admission; catalog is a projection of that complete origin.",
+          "interpretation": "Complete original base 0.5.0 or native 0.6.0 payload/IR admission; catalog is a projection of that complete origin.",
           "physical_reads": "none",
           "provenance": "host_supplied_triple",
           "proof": "observation_not_authority",
@@ -42536,10 +42556,12 @@
           "BrowserProtectedReadAuthority": "candidate/protected-browser/schemas/BrowserProtectedReadAuthority.json",
           "TrustedBrowserProtectedHost": "candidate/protected-browser/schemas/TrustedBrowserProtectedHost.json",
           "BrowserProtectedDeliveryToken": "candidate/protected-browser/schemas/BrowserProtectedDeliveryToken.json",
-          "BrowserProtectedHostContext": "candidate/protected-browser/schemas/BrowserProtectedHostContext.json"
+          "BrowserProtectedHostContext": "candidate/protected-browser/schemas/BrowserProtectedHostContext.json",
+          "ProtectedManifest06Candidate": "candidate/protected-logical06/ProtectedManifest06Candidate.schema.json",
+          "CanonicalIR06Candidate": "candidate/protected-logical06/CanonicalIR06Candidate.schema.json"
         },
         "rules": {
-          "tuple": "Request tuple must equal the actual immutable base snapshot tuple. Unknown and mixed tuples reject; no candidate06 relabeling.",
+          "tuple": "Request tuple must equal the actual immutable origin snapshot tuple (base 0.5.0 VersionTuple or 0.6.0 CandidateVersionTuple06). Unknown, cross-generation and mixed tuples reject.",
           "authority": "Fresh independent current callback and immutable origin signature-policy check for admission, every read and each lifecycle boundary including transport. Unlock observation never grants read authority.",
           "capture_id": "Ephemeral same-operation retained-origin identity, not a file-descriptor or new physical capture attestation.",
           "ingress": "Request/policy and settled Host observations are primitive JSON text, strict duplicate-key/scalar parsing and generated validators. Opaque tokens are same-instance WeakMap authority. Trusted callback returns retain JavaScript await semantics.",
@@ -42550,8 +42572,20 @@
           "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
         },
         "package_versions": {
-          "core": "0.37.9",
-          "read": "0.13.3"
+          "core": "0.37.10",
+          "read": "0.13.4"
+        },
+        "candidateVersionTuple06": {
+          "container": "0.6.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.5.1",
+          "core": "kdna.core/0.8.2",
+          "ir": "kdna.canonical-ir/0.6.1",
+          "runtime": "kdna.runtime-capsule/0.3.1",
+          "plan": "kdna.consumption-plan/0.3.1",
+          "host": "kdna.agent-host/0.3.1",
+          "trace": "kdna.judgment-trace/0.3.1",
+          "read": "kdna.read/0.7.0-candidate"
         }
       }
     },

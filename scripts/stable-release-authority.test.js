@@ -124,7 +124,7 @@ test('Core and Read require their own exact final published event and stable app
     const value = fixture(unit),
       context = authority.validateContext(value);
     assert.equal(context.authorization, 'published-stable-release-event');
-    assert.equal(context.tag, unit === 'core' ? '0.37.9' : 'read/0.13.3');
+    assert.equal(context.tag, unit === 'core' ? '0.37.10' : 'read/0.13.4');
     assert.throws(() => preview.validateContext(value));
     for (const [name, change] of [
       ['prerelease', (f) => (f.event.release.prerelease = true)],
@@ -235,7 +235,7 @@ test('stable source inspection binds real Git bytes, index, DCO range and stable
     const local = createAuthority({
       channel: 'stable',
       base_commit: baseline,
-      versions: { core: '0.37.9', read: '0.13.3' },
+      versions: { core: '0.37.10', read: '0.13.4' },
     });
     fs.mkdirSync(path.join(root, 'docs'));
     fs.mkdirSync(path.join(root, 'packages/kdna-core'), { recursive: true });
@@ -447,7 +447,7 @@ test(
           const local = createAuthority({
             channel: 'stable',
             base_commit: baseline,
-            versions: { core: '0.37.9', read: '0.13.3' },
+            versions: { core: '0.37.10', read: '0.13.4' },
           });
           fs.mkdirSync(path.join(source, 'scripts'));
           fs.mkdirSync(path.join(source, 'docs'));

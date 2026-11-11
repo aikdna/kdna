@@ -134,3 +134,41 @@ test('browser admission consumes the d0 dual-slot family end to end',async()=>{
  assert.equal(mixed.status,'protection_failed',JSON.stringify(mixed));
  assert.equal(mixed.diagnostic.code,'PROTECTION_OBSERVATION_BINDING_INVALID');
 });
+test('browser admission accepts 0.6.0 ProtectedManifest06Candidate containers with CandidateVersionTuple06 and Node section IR parity',async()=>{
+ const migration=req('@aikdna/kdna-core/source-migration-node');
+ const source06=req('@aikdna/kdna-core/source-sections-node');
+ const node06=req('@aikdna/kdna-core/protected-sections-node');
+ const {versionTuple:tuple06}=require(path.join(coreDir,'src/public-contract/sections/contract.json')).module;
+ const sha256=b=>'sha256:'+crypto.createHash('sha256').update(b).digest('hex');
+ const a=asset(),src05=F.encode(a,req,{entries:{'attachments/preserve.bin':Buffer.from([9,8,7,6])}});
+ const migReq=migration.admitSourceMigrationRequest({request_id:'req:mig06',tuple:structuredClone(tuple06),operation:'migrate_public_source',source_expected_A:sha256(src05),timeout_ms:60000,signature_policy:policy});
+ assert.equal(migReq.status,'admitted_request');
+ const migrated=await migration.migratePublicSourceNode(src05,migReq.request,migration.createNativeSourceMigrationAuthority(()=>true));
+ assert.equal(migrated.status,'migrated',JSON.stringify(migrated));
+ // Unencrypted 0.6.0 section container has sections/pack-*.kdnab instead of payload.kdnab -> core_rejected at container stage.
+ const unencrypted=await browser.admitProtectedBrowser({bytes:migrated.bytes,plaintextPayload:new Uint8Array([0xa0]),observation:observation(selection(0,'primary')),signaturePolicy:policy},provider);
+ assert.equal(unencrypted.status,'core_rejected',JSON.stringify(unencrypted));
+ assert.equal(unencrypted.stage,'container');
+ // Protect 0.6.0 source with password + checksums + Ed25519 signature.
+ const protReq=source06.admitSourceOperationRequest({request_id:'req:prot06',tuple:structuredClone(tuple06),operation:'protect_source',expected_A:sha256(migrated.bytes),timeout_ms:60000,signature_policy:policy});
+ assert.equal(protReq.status,'admitted_request');
+ const signingSeed=crypto.randomBytes(32);
+ const produced=await source06.protectSectionSourceNode(migrated.bytes,protReq.request,source06.createNativeSourceOperationAuthority(()=>true),{kind:'password',asset_uid:a.manifest.asset_uid,entitlement:{profile:'password'},slots:[{slot:'primary',kdf_profile:'scrypt-sha256'},{slot:'second',kdf_profile:'scrypt-sha256'}],checksums:true,signature:'ed25519'},()=>({passwords,signingSeed}));
+ assert.equal(produced.status,'produced',JSON.stringify(produced));
+ const entries=parseContainer(produced.bytes),manifest=JSON.parse(Buffer.from(entries['kdna.json']));
+ assert.equal(manifest.format_version,'0.6.0');
+ const envelope=crypt.validateEnvelope(codec.decodeEnvelope(entries['payload.kdnab']),{id:manifest.encryption.profile,version:'0.1.0'});
+ const plaintext=crypt.decryptPassword(envelope,{kind:'password',password:passwords[1].password,slotIndex:1},manifest);
+ const admitted=await browser.admitProtectedBrowser({bytes:produced.bytes,plaintextPayload:plaintext,observation:observation(selection(1,'second')),signaturePolicy:{requireSignature:true,expectedPublicKeyHex:null}},provider);
+ assert.equal(admitted.status,'accepted',JSON.stringify(admitted));
+ assert.deepEqual(admitted.snapshot.tuple,tuple06);
+ assert.equal(admitted.disclosure.slot_selection.slotIndex,1);
+ // Cross-check IR and digests against 0.6.0 Node protected section admission.
+ const nodeReq=node06.admitProtectedPayloadRequest({request_id:'req:node06',tuple:structuredClone(tuple06),budget_bytes:1000000,mode:'catalog',selection:null,handle:null});
+ const nodeOut=await node06.admitProtectedSectionNode(produced.bytes,nodeReq.request,node06.createProtectedPayloadReadAuthority(()=>true),{credential:{kind:'password',password:passwords[1].password,slotIndex:1},signaturePolicy:{requireSignature:true,expectedPublicKeyHex:null}},provider);
+ assert.equal(nodeOut.status,'accepted',JSON.stringify(nodeOut));
+ const nodeView=node06.inspectProtectedPayloadSnapshot(nodeOut.snapshot);
+ assert.equal(canonicalJson(admitted.snapshot.ir),canonicalJson(nodeView.ir),'0.6.0 browser/node IR parity');
+ assert.equal(canonicalJson(admitted.snapshot.digests),canonicalJson(nodeView.digests),'0.6.0 browser/node digests parity');
+ node06.disposeProtectedSectionOperation(nodeOut.operation);
+});

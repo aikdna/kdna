@@ -9,18 +9,21 @@
 // kdsig.ed25519:0.1.0 framing as the node helper), and the checksums document
 // is verified against a verbatim local port of protection-integrity.makeChecksums
 // (that module is node-bound by its kdsig helper import).
-const { parseJson, canonicalJson, freeze, uint, identifier } = require('./strict-input.js');
+const { parseJson, canonicalJson, freeze, uint, identifier, reject } = require('./strict-input.js');
 const { parseContainer } = require('./container.js');
 const { inflate } = require('./browser-native/portable-inflate.js');
 const { utf8, fromHex } = require('./browser-native/bytes.js');
-const { digest, contentTreePreimage, runtimeEntryPreimage, runtimeEntryNames } = require('./digests.js');
+const { digest, digestCanonical, evidence, contentTreePreimage, runtimeEntryPreimage, runtimeEntryNames } = require('./digests.js');
 const { validate } = require('./validate.js');
+const { buildIR } = require('./canonical-ir.js');
+const { issueSnapshot, inspectSnapshot } = require('./brand.js');
 const { rejected } = require('./admit.js');
 const { decodeValidatedPayload, assertContentBindings, finishAdmission } = require('./semantic-admission.js');
 const { fail, failure, isFailure, closed, provider, assetProtectionDeclaration } = require('./protection-declaration.js');
 const { decodeEnvelope, validateEnvelopeShape } = require('./protection-envelope-codec.js');
 const { signatureContentPreimage } = require('./browser-native/signature-domain.js');
 const { ChecksumsDocument1: checksumsShape } = require('./protection-validators.generated.js');
+const pbState = require('./browser-protected/state.js');
 function checkDeclaration(manifest) {
   const profile = assetProtectionDeclaration(manifest);
   if (!profile) fail('NOT_DECLARED', 'declaration');
@@ -97,12 +100,47 @@ async function verifyIntegrityBrowser(entries, manifest, E, policy) {
   } else if (policy.requireSignature || policy.expectedPublicKeyHex !== null) fail('SIGNATURE_INVALID', 'integrity');
   return integrity;
 }
+function validateManifestBrowser(rawManifest) {
+  if (rawManifest && typeof rawManifest === 'object' && !Array.isArray(rawManifest) && rawManifest.format_version === '0.6.0') {
+    const c = rawManifest.compatibility;
+    if (c && typeof c === 'object' && typeof c.profile === 'string' && typeof c.profile_version === 'string') {
+      if (c.profile !== pbState.tuple06.payload_profile || c.profile_version !== pbState.tuple06.payload_version) reject('READ_UNSUPPORTED_VERSION');
+    }
+    if (rawManifest.payload && typeof rawManifest.payload === 'object' && rawManifest.payload.encrypted === false) {
+      checkDeclaration(rawManifest);
+    }
+    const validator = pbState.C.validators.ProtectedManifest06Candidate;
+    if (!validator(rawManifest)) {
+      const err = validator.errors?.[0], pointer = err?.instancePath ?? '';
+      const missing = err?.keyword === 'required' ? '/' + String(err.params.missingProperty).replace(/~/g, '~0').replace(/\//g, '~1') : '';
+      reject('READ_CORE_INVALID', { subject: null, field: '/manifest' + pointer + missing });
+    }
+    try { pbState.C.scalars(rawManifest, pbState.C.contract.types.ProtectedManifest06Candidate); } catch { reject('READ_CORE_INVALID'); }
+    return rawManifest;
+  }
+  return validate('Manifest', rawManifest);
+}
+function finishAdmission06(manifest, payload, entries, { A, C, E }, expectedE = null) {
+  const expectedC = manifest.content_digest ?? manifest.authoring?.content_digest ?? null;
+  const digests = {
+    A: evidence('A', A),
+    C: evidence('C', C, expectedC, expectedC ? { kind: 'manifest_declaration', source_id: manifest.content_digest ? 'kdna.json' : 'kdna.json/authoring/content_digest' } : null),
+    E: evidence('E', E, expectedE, expectedE ? { kind: 'checksums_declaration', source_id: 'checksums.json' } : null),
+  };
+  const ir = { ...buildIR(manifest, payload, entries), tuple: structuredClone(pbState.tuple06) };
+  if (!pbState.C.validators.CanonicalIR06Candidate(ir)) reject('READ_CORE_INVALID');
+  try { pbState.C.scalars(ir, pbState.C.contract.types.CanonicalIR06Candidate); } catch { reject('READ_CORE_INVALID'); }
+  const uuid = globalThis.crypto?.randomUUID?.();
+  if (!uuid) reject('READ_CORE_CAPABILITY_UNAVAILABLE');
+  const data = { snapshot_id: 'snapshot:' + uuid, tuple: structuredClone(pbState.tuple06), asset: payload.asset, digests, ir, ir_digest: digestCanonical(ir), runtime_entry_names: runtimeEntryNames(entries, manifest), expansion_targets: ir.expansion_targets };
+  return freeze({ status: 'accepted', snapshot: issueSnapshot(data) });
+}
 async function admitProtectedBrowser(input, inputProvider) {
   let copied, plaintext, stage = 'input';
   try {
     copied = inputs(input, inputProvider); plaintext = copied.plaintext; const bytes = copied.bytes;
     stage = 'container'; const entries = parseContainer(bytes, inflate);
-    stage = 'manifest'; const manifest = validate('Manifest', parseJson(entries['kdna.json']));
+    stage = 'manifest'; const manifest = validateManifestBrowser(parseJson(entries['kdna.json']));
     const profile = checkDeclaration(manifest);
     const digests = { A: digest(bytes), C: digest(contentTreePreimage(entries)), E: digest(runtimeEntryPreimage(entries, manifest)) };
     assertContentBindings(manifest, digests.C);
@@ -110,11 +148,12 @@ async function admitProtectedBrowser(input, inputProvider) {
     const envelope = validateEnvelopeShape(decodeEnvelope(entries['payload.kdnab']), profile);
     assertObservationBinding(copied.observation, envelope);
     stage = 'payload'; const payload = decodeValidatedPayload(manifest, plaintext);
-    stage = 'interpretation'; const result = finishAdmission(manifest, payload, entries, digests, integrity.checksums === 'verified_document_1' ? digests.E : null);
+    const expectedE = integrity.checksums === 'verified_document_1' ? digests.E : null;
+    stage = 'interpretation'; const result = manifest.format_version === '0.6.0' ? finishAdmission06(manifest, payload, entries, digests, expectedE) : finishAdmission(manifest, payload, entries, digests, expectedE);
     const disclosure = freeze({ slot_selection: { ...copied.observation.selection }, observation_not_authority: true, provenance: 'host_supplied_triple' });
     if (result.status === 'accepted') {
-      const view = require('./brand.js').inspectSnapshot(result.snapshot);
-      require('./browser-protected/state.js').register(result.snapshot, {
+      const view = inspectSnapshot(result.snapshot);
+      pbState.register(result.snapshot, {
         provider: copied.trustedProvider, integrity, disclosure,
         observation: { snapshot_id: view.snapshot_id, tuple: view.tuple, asset: view.asset,
           ...digests, ir_digest: view.ir_digest, integrity, unlock_observation: copied.observation,

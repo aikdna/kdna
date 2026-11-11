@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.37.10 (2026-11-11)
+
+- Adds native `0.6.0` `ProtectedManifest06Candidate` container admission and
+  retained section reading in `/protected-browser` and
+  `/protected-sections-browser` alongside the base `0.5.0` tuple, enforcing
+  exact origin-to-request tuple equality. Pairs with Read `0.13.4`.
+- Core `0.37.9` and earlier coordinates remain installable under their own
+  identities.
+
 ## 0.37.9 (2026-10-19)
 
 - Distribution-coordinate patch. Pairs with Read `0.13.3`; the package-set

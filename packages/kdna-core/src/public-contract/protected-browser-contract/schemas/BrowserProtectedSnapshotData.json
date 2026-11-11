@@ -669,6 +669,16 @@
       ],
       "additionalProperties": false
     },
+    "BrowserProtectedCanonicalIR": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CanonicalIR"
+        },
+        {
+          "$ref": "#/$defs/CanonicalIR06Candidate"
+        }
+      ]
+    },
     "BrowserProtectedIntegrity": {
       "type": "object",
       "properties": {
@@ -726,7 +736,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -784,7 +794,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -793,7 +803,7 @@
           "$ref": "#/$defs/AssetDigests"
         },
         "ir": {
-          "$ref": "#/$defs/CanonicalIR"
+          "$ref": "#/$defs/BrowserProtectedCanonicalIR"
         },
         "ir_digest": {
           "$ref": "#/$defs/Digest"
@@ -828,6 +838,16 @@
         "observation"
       ],
       "additionalProperties": false
+    },
+    "BrowserProtectedTuple": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        }
+      ]
     },
     "BrowserProtectedUnlockObservation": {
       "type": "object",
@@ -953,6 +973,64 @@
       ],
       "additionalProperties": false
     },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
     "CanonicalIR": {
       "type": "object",
       "properties": {
@@ -962,6 +1040,100 @@
         },
         "tuple": {
           "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReference"
+          },
+          "minItems": 0
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRRelationship"
+          },
+          "minItems": 0
+        },
+        "mandatory_closures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MandatoryClosure"
+          },
+          "minItems": 0
+        },
+        "expansion_targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpansionTarget"
+          },
+          "minItems": 0
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRTargetDescriptor"
+          },
+          "minItems": 0
+        },
+        "asset_closure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "unresolved_external": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UnresolvedExternalReference"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "asset",
+        "nodes",
+        "catalog",
+        "references",
+        "relationships",
+        "mandatory_closures",
+        "expansion_targets",
+        "asset_index",
+        "asset_closure",
+        "unresolved_external"
+      ],
+      "additionalProperties": false
+    },
+    "CanonicalIR06Candidate": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"

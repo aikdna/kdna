@@ -216,3 +216,103 @@ test('admission allocates plaintext only after every caller metadata access and 
     assert.deepEqual(Array.from(plain), before);
   }
 });
+let fixture06Promise;
+async function fixture06() {
+  if (!fixture06Promise) fixture06Promise = (async () => {
+    const migration = req('@aikdna/kdna-core/source-migration-node');
+    const source06 = req('@aikdna/kdna-core/source-sections-node');
+    const { versionTuple: tuple06 } = require(path.join(coreDir, 'src/public-contract/sections/contract.json')).module;
+    const sha256 = b => 'sha256:' + H.crypto.createHash('sha256').update(b).digest('hex');
+    const a = asset(), src05 = F.encode(a, req), password = Buffer.from('synthetic-browser-06-test');
+    const migReq = migration.admitSourceMigrationRequest({
+      request_id: 'req:mig06', tuple: structuredClone(tuple06), operation: 'migrate_public_source',
+      source_expected_A: sha256(src05), timeout_ms: 60000, signature_policy: { requireSignature: false, expectedPublicKeyHex: null }
+    });
+    const migrated = await migration.migratePublicSourceNode(src05, migReq.request, migration.createNativeSourceMigrationAuthority(() => true));
+    assert.equal(migrated.status, 'migrated');
+    const protReq = source06.admitSourceOperationRequest({
+      request_id: 'req:prot06', tuple: structuredClone(tuple06), operation: 'protect_source',
+      expected_A: sha256(migrated.bytes), timeout_ms: 60000, signature_policy: { requireSignature: false, expectedPublicKeyHex: null }
+    });
+    const produced = await source06.protectSectionSourceNode(
+      migrated.bytes, protReq.request, source06.createNativeSourceOperationAuthority(() => true),
+      { kind: 'password', asset_uid: a.manifest.asset_uid, entitlement: { profile: 'password' },
+        slots: [{ slot: 'primary', kdf_profile: 'scrypt-sha256' }], checksums: true, signature: 'none' },
+      () => ({ passwords: [{ slot: 'primary', password }] })
+    );
+    assert.equal(produced.status, 'produced');
+    const entries = require(path.join(coreDir, 'src/public-contract/container.js')).parseContainer(produced.bytes);
+    const manifest = JSON.parse(Buffer.from(entries['kdna.json']));
+    const envelope = require(path.join(coreDir, 'src/public-contract/protection-envelope-codec.js')).decodeEnvelope(entries['payload.kdnab']);
+    const plaintext = crypto.decryptPassword(envelope, { kind: 'password', password, slotIndex: 0 }, manifest);
+    return { bytes: produced.bytes, plaintext, tuple06, password };
+  })();
+  return fixture06Promise;
+}
+test('browser retained 0.6.0 whole/catalog/set/expand preserve CandidateVersionTuple06 and 0.7.0-candidate handles', async () => {
+  const f06 = await fixture06(), { tuple06 } = f06;
+  const req06 = (mode = 'whole_asset', selection = null, handle = null) =>
+    JSON.stringify({ request_id: 'request:test06', tuple: tuple06, budget_bytes: 1000000, mode, selection, handle });
+  const original = await B.admitProtectedBrowser({ bytes: f06.bytes, plaintextPayload: f06.plaintext, observation }, { kind: 'local', clock: () => 1000 });
+  assert.equal(original.status, 'accepted', JSON.stringify(original));
+  const authority = C.createProtectedPayloadReadAuthorityJson(() => true);
+  const admitted = C.admitProtectedPayloadRequestJson(req06());
+  assert.equal(admitted.channel, 'admitted_request', JSON.stringify(admitted));
+  const start = await C.admitProtectedSectionBrowser(original.snapshot, admitted.request, authority);
+  assert.equal(start.status, 'accepted', JSON.stringify(start));
+  const full = { ...start, authority }, { host, effects } = hostFor(full);
+  const whole = await read(full, host);
+  assert.equal(whole.result.envelope.status, 'ready', JSON.stringify(whole));
+  assert.deepEqual(whole.result.envelope.tuple, tuple06);
+  assert.equal(whole.result.envelope.verification.physical_reads, 'none');
+  const catalog = C.bindProtectedPayloadRequest(start.operation, req06('catalog'));
+  const catOut = await read(full, host, catalog.request);
+  assert.equal(catOut.result.envelope.status, 'catalog_only');
+  assert.deepEqual(catOut.result.envelope.tuple, tuple06);
+  const { asset_id, asset_version } = whole.result.envelope.asset;
+  const single = C.bindProtectedPayloadRequest(start.operation, req06('exact_selection', { asset_id, asset_version, judgment_ids: ['j:0'] }));
+  const one = await read(full, host, single.request);
+  assert.equal(one.result.envelope.status, 'ready');
+  const handle = one.result.envelope.content.expansion_handles[0];
+  assert.ok(handle);
+  assert.equal(handle.read_version, 'kdna.read/0.7.0-candidate');
+  const expand = C.bindProtectedPayloadRequest(start.operation, req06('expand', handle.anchor.selection, handle));
+  const expanded = await read(full, host, expand.request);
+  assert.equal(expanded.result.envelope.status, 'ready', JSON.stringify(expanded));
+  assert.deepEqual(expanded.result.envelope.tuple, tuple06);
+  assert.equal(effects.sink, 4);
+  C.disposeProtectedSectionOperation(start.operation);
+});
+test('browser retained section route enforces exact origin-to-request tuple equality across 0.5.0 and 0.6.0', async () => {
+  const f05 = await fixture(), f06 = await fixture06(), { tuple06 } = f06;
+  const req05Json = request('catalog');
+  const req06Json = JSON.stringify({ request_id: 'request:06', tuple: tuple06, budget_bytes: 1000000, mode: 'catalog', selection: null, handle: null });
+  const authority = C.createProtectedPayloadReadAuthorityJson(() => true);
+  // 0.5.0 origin with 0.6.0 request -> protection_failed READ_UNSUPPORTED_VERSION
+  const orig05 = await B.admitProtectedBrowser({ bytes: f05.bytes, plaintextPayload: f05.plaintext, observation }, { kind: 'local', clock: () => 1000 });
+  const mismatch05 = await C.admitProtectedSectionBrowser(orig05.snapshot, C.admitProtectedPayloadRequestJson(req06Json).request, authority);
+  assert.equal(mismatch05.status, 'protection_failed');
+  assert.equal(mismatch05.diagnostic.code, 'READ_UNSUPPORTED_VERSION');
+  // 0.6.0 origin with 0.5.0 request -> protection_failed READ_UNSUPPORTED_VERSION
+  const orig06 = await B.admitProtectedBrowser({ bytes: f06.bytes, plaintextPayload: f06.plaintext, observation }, { kind: 'local', clock: () => 1000 });
+  const mismatch06 = await C.admitProtectedSectionBrowser(orig06.snapshot, C.admitProtectedPayloadRequestJson(req05Json).request, authority);
+  assert.equal(mismatch06.status, 'protection_failed');
+  assert.equal(mismatch06.diagnostic.code, 'READ_UNSUPPORTED_VERSION');
+  // Cross-tuple bindProtectedPayloadRequest rejects with READ_UNSUPPORTED_VERSION
+  const start05 = await open();
+  const bind06On05 = C.bindProtectedPayloadRequest(start05.operation, req06Json);
+  assert.equal(bind06On05.channel, 'read_envelope');
+  assert.equal(bind06On05.envelope.diagnostics[0].code, 'READ_UNSUPPORTED_VERSION');
+  C.disposeProtectedSectionOperation(start05.operation);
+  const orig06b = await B.admitProtectedBrowser({ bytes: f06.bytes, plaintextPayload: f06.plaintext, observation }, { kind: 'local', clock: () => 1000 });
+  const start06 = await C.admitProtectedSectionBrowser(orig06b.snapshot, C.admitProtectedPayloadRequestJson(req06Json).request, authority);
+  assert.equal(start06.status, 'accepted');
+  const bind05On06 = C.bindProtectedPayloadRequest(start06.operation, req05Json);
+  assert.equal(bind05On06.channel, 'read_envelope');
+  assert.equal(bind05On06.envelope.diagnostics[0].code, 'READ_UNSUPPORTED_VERSION');
+  C.disposeProtectedSectionOperation(start06.operation);
+  // Mixed 0.6.0 tuple (0.6.0 container + 0.6.4 read) rejects as READ_MIXED_VERSION_TUPLE
+  const mixed06 = { ...tuple06, read: tuple.read };
+  const mixedAdmitted = C.admitProtectedPayloadRequestJson(JSON.stringify({ request_id: 'req:mixed06', tuple: mixed06, budget_bytes: 1000000, mode: 'catalog', selection: null, handle: null }));
+  assert.equal(mixedAdmitted.envelope.diagnostics[0].code, 'READ_MIXED_VERSION_TUPLE');
+});

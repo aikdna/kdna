@@ -45,7 +45,7 @@ function handleError(hostState, operation, request, record) {
     if (!registered || registered.operation !== operation || jcs(registered.handle) !== jcs(h))
         return 'READ_HANDLE_UNTRUSTED';
     const view = record.view;
-    if (h.core_version !== S.tuple.core || h.ir_version !== S.tuple.ir || h.read_version !== S.tuple.read)
+    if (h.core_version !== view.tuple.core || h.ir_version !== view.tuple.ir || h.read_version !== view.tuple.read)
         return 'READ_HANDLE_VERSION_MISMATCH';
     if (h.snapshot_id !== view.snapshot_id || h.A !== view.digests.A.observed || h.C !== view.digests.C.observed)
         return 'READ_HANDLE_STALE';
@@ -68,7 +68,7 @@ function mint(body, request, record, host) {
         if (!target)
             throw Error('READ_PROJECTION_INVALID');
         const h = {
-            handle_id: 'protected-handle:' + globalThis.crypto.randomUUID(), asset_id: view.asset.asset_id, asset_version: view.asset.asset_version, A: view.digests.A.observed, C: view.digests.C.observed, snapshot_id: view.snapshot_id, core_version: S.tuple.core, ir_version: S.tuple.ir, read_version: S.tuple.read, anchor: request.selection === null ? {
+            handle_id: 'protected-handle:' + globalThis.crypto.randomUUID(), asset_id: view.asset.asset_id, asset_version: view.asset.asset_version, A: view.digests.A.observed, C: view.digests.C.observed, snapshot_id: view.snapshot_id, core_version: view.tuple.core, ir_version: view.tuple.ir, read_version: view.tuple.read, anchor: request.selection === null ? {
                 kind: 'asset'
             } : {
                 kind: 'selection_set', selection: clone(request.selection)
@@ -125,6 +125,8 @@ async function readProtectedSectionBrowser(operation, admitted, authority, host)
         await check('projection');
         S.C.need(S.operation(operation), 'PROTECTION_OPERATION_DISPOSED');
         // Validate a later request against this exact retained catalog, without mutating caller token.
+        if (jcs(request.tuple) !== jcs(view.tuple))
+            return returned(rejected('READ_UNSUPPORTED_VERSION'));
         if (request.selection) {
             if (request.selection.asset_id !== view.asset.asset_id)
                 return returned(rejected('READ_ASSET_MISMATCH'));

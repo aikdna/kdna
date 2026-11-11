@@ -2,14 +2,14 @@
 > This package is one coordinate of the combination listed in the [top-level entry](../../README.md); that entry renders publication state, registry status and the installation route from the release-coordinate matrix.
 
 
-Package `@aikdna/kdna-core` version `0.37.9`, paired with exact Read `0.13.3`.
+Package `@aikdna/kdna-core` version `0.37.10`, paired with exact Read `0.13.4`.
 The compiled browser/Node tuple is Core `kdna.core/0.8.2`,
 Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, Read `0.6.4`,
 and Capsule/Plan/Host/Trace `0.3.1`.
-This version is a distribution-coordinate patch. It pairs with Read `0.13.3`
-and follows the new coordinate in the package-set descriptor version fields
-and generated preimages; no runtime, rule, schema-shape or capability behavior
-changes. Native section
+This version adds native `0.6.0` `ProtectedManifest06Candidate` container
+admission and retained section reading in `/protected-browser` and
+`/protected-sections-browser` alongside the base `0.5.0` tuple, and pairs with
+exact Read `0.13.4`. Native section
 subpaths separately use Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
 [matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
@@ -22,7 +22,7 @@ it stays true for this artifact after later versions appear.
 
 This source follows [`package.json`](package.json). Exact source, package bytes,
 installed dependency identity and registry publication each require their own
-checks. Core `0.37.8` paired with Read `0.13.2`, Core `0.37.7` paired with
+checks. Core `0.37.9` paired with Read `0.13.3`, Core `0.37.8` paired with Read `0.13.2`, Core `0.37.7` paired with
 Read `0.13.1`, Core `0.37.6` paired with Read `0.13.0`, Core `0.37.5`, Core `0.37.4`,
 Read `0.12.1`, Core `0.37.3`, Read `0.12.0`, Core `0.37.2`, Read `0.11.3`,
 Core `0.37.0` and Read `0.11.1` are earlier coordinates that remain installable
@@ -57,7 +57,7 @@ Core admits one immutable container, validates its Manifest and typed Payload, r
 
 The candidate `/protected-sections-browser` entry retains one genuine accepted snapshot from `/protected-browser`'s `admitProtectedBrowser`. Admit the request JSON, create an independently trusted Read authority, then call `admitProtectedSectionBrowser(snapshot, request, authority)` and retain its returned operation and normalized request. Bind later request JSON with `bindProtectedPayloadRequest`; close the operation with `disposeProtectedSectionOperation`. The [generated declarations](src/public-contract/protected-sections-browser.d.ts) define the seven callables and closed inputs.
 
-The original input triple is container bytes, Host-supplied plaintext Payload and an unlock observation. It does not prove decryption or ciphertext/plaintext authentication. This adapter performs no new decryption or physical read; its observation and receipt preserve `host_supplied_triple` and `observation_not_authority`. It uses the independent base tuple above, including container `0.5.0` and Read `kdna.read/0.6.4`; Node native-section witnesses and serialized snapshot copies cannot establish browser origin. Disclosure additionally requires the [Read browser adapter](../kdna-read/README.md#protected-browser-read-candidate) and its independently trusted Host scope.
+The original input triple is container bytes, Host-supplied plaintext Payload and an unlock observation. It does not prove decryption or ciphertext/plaintext authentication. This adapter performs no new decryption or physical read; its observation and receipt preserve `host_supplied_triple` and `observation_not_authority`. It accepts either the base `0.5.0` / `kdna.read/0.6.4` tuple or the `0.6.0` `ProtectedManifest06Candidate` (`CandidateVersionTuple06`) tuple with exact origin-to-request tuple equality; Node native-section witnesses and serialized snapshot copies cannot establish browser origin. Disclosure additionally requires the [Read browser adapter](../kdna-read/README.md#protected-browser-read-candidate) and its independently trusted Host scope.
 
 ```js
 import { admitNode } from '@aikdna/kdna-core/node';

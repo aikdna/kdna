@@ -4,6 +4,24 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.10
+
+- Adds native `0.6.0` `ProtectedManifest06Candidate` container admission and
+  retained section reading in `/protected-browser` and
+  `/protected-sections-browser` alongside the base `0.5.0` tuple, requiring
+  exact origin-to-request tuple equality. Pairs with exact Read `0.13.4` from
+  the same reviewed source commit.
+- Core `0.37.9` remains published under its own identity; its immutable tarball
+  keeps the bytes it shipped with.
+
+## Read 0.13.4
+
+- Moves the exact Core peer pin to `0.37.10` and adds `0.6.0`
+  `ProtectedManifest06Candidate` tuple projection and expansion-handle binding
+  in `/protected-sections-browser` alongside the base `0.5.0` tuple.
+- Read `0.13.3` remains published under its own identity; previously published
+  coordinates and companion pins are unchanged.
+
 ## Core 0.37.9
 
 - Distribution-coordinate patch: pairs with Read `0.13.3` from the same reviewed
