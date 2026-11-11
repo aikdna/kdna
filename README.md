@@ -1,12 +1,12 @@
 # KDNA
 
-English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader](https://aikdna.com/en/reader) · [Documentation](./docs/start-here.md) · [Maturity: Pre-release](./docs/maturity.md)
+English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader](https://aikdna.com/reader/) · [Documentation](./docs/start-here.md) · [Maturity: Pre-release](./docs/maturity.md)
 
 **Open file format and core reference implementation for expressible judgment and judgment systems.**
 
 Prose has documents (`.md`, `.pdf`). Numbers and models have spreadsheets. Talks have slide decks. Linked pages have HTML, and deterministic logic has code. Yet the way a person or team **thinks, weighs trade-offs, sets boundaries, and exercises taste** has lacked an independent file of its own—dissolving instead into chat logs, scattered prompts, and one-off outputs.
 
-As AI makes finished outputs inexpensive to generate, upstream thinking, judgment, and taste become a **“work” in their own right**. KDNA (`.kdna`) gives that work an open, inspectable, versioned file format that people can read in [KDNA Reader](https://aikdna.com/en/reader) and compatible agents can create, password-protect locally, validate, and read with intact boundaries.
+As AI makes finished outputs inexpensive to generate, upstream thinking, judgment, and taste become a **“work” in their own right**. KDNA (`.kdna`) gives that work an open, inspectable, versioned file format that people can read in [KDNA Reader](https://aikdna.com/reader/) and compatible agents can create, password-protect locally, validate, and read with intact boundaries.
 
 > **When simpler tools are enough:** If a plain Markdown note, a few prompt lines, or an existing Skill already solves your task, keep using it. Reach for `.kdna` when a body of judgment needs clear authorship, explicit stop conditions, human review, versioned revision, and portable consumption across tools.
 
@@ -162,7 +162,7 @@ actual task adoption.
 | [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
 | [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read implementation for Apple platforms |
-| [KDNA Reader](https://aikdna.com/en/reader) | Live Web Reader + Apple-notarized macOS desktop app (`0.1.0`) | Free, permanently account-free human reading app with *KDNA Whitepaper* `v1.0.0` built in |
+| [KDNA Reader](https://aikdna.com/reader/) | Live Web Reader + Apple-notarized macOS desktop app (`0.1.0`) | Free, permanently account-free human reading app with *KDNA Whitepaper* `v1.0.0` built in |
 
 Machine consumers should consult [`ecosystem-manifest.json`](./ecosystem-manifest.json) and [`docs/release-coordinates.json`](./docs/release-coordinates.json). Newcomers can also browse [`docs/start-here.md`](./docs/start-here.md) by goal. Preserved walkthroughs for historical published lines (earlier native previews, `0.36.1`, `0.22.0`, `0.11.0`) live in [`docs/historical-published-lines.md`](./docs/historical-published-lines.md).
 

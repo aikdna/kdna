@@ -1,12 +1,12 @@
 # KDNA
 
-[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [KDNA Reader](https://aikdna.com/zh/reader) · [中文文档](./docs/start-here.md) · [认知原石实验室](https://aikdna.cn)
+[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [KDNA Reader](https://aikdna.com/reader/) · [中文文档](./docs/start-here.md) · [认知原石实验室](https://aikdna.cn)
 
 **面向判断与判断系统的开放文件格式及核心参考实现。**
 
 文字与排版有文档（`.md`、`.pdf`），数据与测算有电子表格，现场表达有幻灯片，互联页面有网页（HTML），确定性执行有代码。唯独一个人在真实实践中打磨出的**思考、判断、取舍次序、适用边界与审美品味**，过去一直散落在聊天记录、提示词和一次性成品里，没有属于自己的独立文件形态。
 
-当 AI 让文字、代码和方案的生成越来越轻便，真正稀缺、真正拉开结果差距的，是背后的**思考、判断与品味——它们本身就是“作品”**。KDNA（`.kdna`）为这类作品提供开放、可核验、可演进的文件格式：人可以在 [KDNA Reader](https://aikdna.com/zh/reader) 中先读懂它的主张与边界，兼容的 Agent 也可以在本地创建、口令加密、校验并带着完整前提去采用它。
+当 AI 让文字、代码和方案的生成越来越轻便，真正稀缺、真正拉开结果差距的，是背后的**思考、判断与品味——它们本身就是“作品”**。KDNA（`.kdna`）为这类作品提供开放、可核验、可演进的文件格式：人可以在 [KDNA Reader](https://aikdna.com/reader/) 中先读懂它的主张与边界，兼容的 Agent 也可以在本地创建、口令加密、校验并带着完整前提去采用它。
 
 > **保持克制的选择：** 如果一篇普通 Markdown 文档、几句提示词或现有的 Skill 已经足以解决手头任务，继续使用即可，不必为了格式而迁移。当一套判断需要清晰署名、明确停手边界、人眼审阅、版本对比以及跨工具协作时，`.kdna` 才真正发挥价值。
 
@@ -80,7 +80,7 @@ npx -y @aikdna/kdna-cli@0.43.4 read locked.kdna \
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent 技能包（`kdna-creator`、`kdna-loader`）与本地 stdio MCP 服务
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.0`）
 - [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — 面向 Apple 平台的 Swift Core 实现
-- [KDNA Reader](https://aikdna.com/zh/reader) — 免费、永久免账号的浏览器在线版与 Apple 公证 macOS 桌面阅读器
+- [KDNA Reader](https://aikdna.com/reader/) — 免费、永久免账号的浏览器在线版与 Apple 公证 macOS 桌面阅读器
 
 ---
 

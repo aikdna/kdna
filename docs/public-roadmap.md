@@ -6,7 +6,7 @@ KDNA is an open file format and protocol for expressible judgment and judgment
 systems. It gives implicit, scattered, or hard-won judgment an independent file
 with clear identity, version lineage, byte integrity, optional local password
 encryption, and a scoped reading contract—so people can read and question a work
-in [KDNA Reader](https://aikdna.com/en/reader), and compatible agents can create,
+in [KDNA Reader](https://aikdna.com/reader/), and compatible agents can create,
 verify, and apply it without silently flattening its boundaries.
 
 KDNA does not claim to add model intelligence or guarantee better output. Its
