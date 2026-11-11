@@ -4,7 +4,7 @@
 > [authoring-guide-cli.md](./authoring-guide-cli.md).** This page preserves the
 > historical dev-source / Studio-line authorization workflow.
 
-> **For distributable KDNA assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation. Dev source directories are authoring views and do not by themselves constitute a shippable `.kdna` asset.
+> **For distributable KDNA assets, use [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation. Dev source directories are authoring views and do not by themselves constitute a shippable `.kdna` asset.
 
 ## Quick Start (Dev Source — for experimentation)
 

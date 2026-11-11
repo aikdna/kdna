@@ -57,12 +57,12 @@ delivery and semantic adoption remain unassessed.
 
 StudioCLI `0.14.0` and StudioCore `4.1.0` use their own pinned SDK package pair
 (Core `0.37.2` / Read `0.11.3`) with a different container `0.5.0` / Read `0.6.4` route.
-Use their [source installation and ordinary/protected session guide](https://github.com/aikdna/kdna-studio-cli#readme).
+Use their [source installation and ordinary/protected session guide](https://www.npmjs.com/package/@aikdna/kdna-studio-cli).
 Session authoring, role-specific adoption, revision, save/read/verify and
 explicit protected export retain that route's source and credential contracts.
 Protected consumption and saved-file revision use the separate
 [Studio local Host adapter](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md)
-with the same container0.5 / Read0.6.4 graph. StudioCLI's static read command
+with the same container `0.5` / Read `0.6.4` graph. StudioCLI's static read command
 does not unlock protected files. The adapter requires an independently trusted
 launcher to bind the installation, file, exact digest, purpose, lifetime and
 permissions through a dedicated descriptor; credentials use separate pipes.
@@ -98,8 +98,8 @@ artifacts as current candidates.
 | [kdna](https://github.com/aikdna/kdna) | Exact published Core/Read pair above; complete specifications, generated contracts and conformance sources. Separate auxiliary packages retain the scope below. | npm Core `0.37.0`, Read `0.11.1`; their own contracts and artifacts. |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Published native `0.43.3` stable delivery; Node >=22. Native Plan/load unavailable. | Native previews keep their exact graphs; the earlier `0.36.1` line keeps its own loading contract. Existing versions cannot be overwritten. |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Complete-source MCP `.8` above; Loader/native Creator and explicitly matched Studio Creator. | npm MCP `0.5.0`; not the current native adapter. |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Complete-source `4.1.0`; its own pinned SDK pair, container0.5 session route. | npm `4.1.0`; historical npm `3.0.0` and `4.0.0` retained. |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Complete-source `0.14.0` with that exact StudioCore/SDK graph. | npm `0.14.0`; historical npm `0.11.0` and `0.13.0` retained. |
+| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Complete-source `4.1.0`; its own pinned SDK pair, container `0.5` session route. | npm `4.1.0`; historical npm `3.0.0` and `4.0.0` retained. |
+| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Complete-source `0.14.0` with that exact StudioCore/SDK graph. | npm `0.14.0`; historical npm `0.11.0` and `0.13.0` retained. |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Source/index `0.3.0-rc.component-semantics.1`, verification scope `0.1.5`, with the older pinned SDK/Studio graph. Historical assets retain their own format and may reject under a newer reader. | GitHub release `0.1.1`; source asset index, not an npm SDK. |
 
 This stable wave covers the five main npm packages and the complete source
@@ -208,7 +208,8 @@ source distribution does not bypass them. Actual public acquisition must be
 checked after publication, independently of local source installation.
 
 Scripted content and engineering tests do not establish author confirmation,
-named Agent Host adoption, production accounts, native application release,
-device runtime or human acceptance. Protected flows require the producing
-route's explicit trusted Host, credential channel and readback; failure must
-remain a refusal rather than a plaintext fallback.
+named Agent Host adoption, external grant issuers,
+device runtime or human acceptance. Public, local, and password-protected
+(`0.6.0`) `.kdna` creation and reading are permanently account-free. Protected
+flows require the producing route's explicit trusted Host, credential channel
+and readback; failure must remain a refusal rather than a plaintext fallback.

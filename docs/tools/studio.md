@@ -7,8 +7,8 @@ KDNA Studio is the authoring environment for KDNA assets. Producers use Studio t
 
 The Studio is implemented across two repos:
 
-- [`aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) — the compile pipeline and library
-- [`aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli) — the CLI wrapper
+- [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — the compile pipeline and library
+- [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) — the CLI wrapper
 
 See those repos for the current implementation. This page does not assign a
 blanket maturity level to either component.

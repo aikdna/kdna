@@ -6,7 +6,7 @@
 > with Studio CLI **0.14.0**; the current implementation rejects these older inputs and does not
 > support this loading or project/card workflow. Its `inspect` and `validate` commands have a
 > different contract. For a current asset start with
-> [Core/Read](../core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme),
+> [Core/Read](../core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli),
 > or `npm install -g @aikdna/kdna-cli@0.43.3` and follow the current entry guide.
 
 Use an explicitly selected `.kdna` file. No global KDNA library or automatically

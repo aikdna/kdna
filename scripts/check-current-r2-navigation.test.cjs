@@ -454,13 +454,13 @@ const nativeIdentityMutations = [
   ],
   [
     'Chinese published Core',
-    'README.zh.md',
+    'docs/historical-published-lines.md',
     '其精确依赖为 `@aikdna/kdna-core@0.36.0-rc.r2.7`',
     '其精确依赖为 `@aikdna/kdna-core@0.37.2`',
   ],
   [
     'Chinese published Read',
-    'README.zh.md',
+    'docs/historical-published-lines.md',
     '`@aikdna/kdna-read@0.11.0-rc.r2.7`。该组合',
     '`@aikdna/kdna-read@0.11.3`。该组合',
   ],
@@ -484,7 +484,7 @@ const nativeIdentityMutations = [
   ],
   [
     'Chinese published status',
-    'README.zh.md',
+    'docs/historical-published-lines.md',
     '下面保留已发布原生线的独立历史示例。',
     '下面保留未发布原生线的独立历史示例。',
   ],
@@ -510,7 +510,7 @@ const nativeIdentityMutations = [
 for (const label of ['原生交付说明', '作者示例', '可执行原生配方'])
   nativeIdentityMutations.push([
     `Chinese ${label} fixed published URL`,
-    'README.zh.md',
+    'docs/historical-published-lines.md',
     `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.0-rc.native-sections.2/`,
     `[${label}](https://unpkg.com/@aikdna/kdna-cli@0.39.1-rc.combination.1/`,
   ]);
@@ -537,7 +537,7 @@ const nativeContextAnchors = [
     'Published Core `0.37.0`',
   ],
   [
-    'README.zh.md',
+    'docs/historical-published-lines.md',
     '## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径',
     '这条路径使用包内作者示例与配方。Studio 保留独立创作路径。',
     '下面保留已发布原生线的独立历史示例。',
@@ -1717,10 +1717,10 @@ for (const [file, before, after, issue] of [
     'README.md:current:',
   ],
   [
-    'README.md',
+    'docs/historical-published-lines.md',
     'published stable\nCore `0.37.10` / Read `0.13.4`',
     'the published browser-preview pair',
-    'README.md:current:',
+    'docs/historical-published-lines.md:current:',
   ],
   [
     'docs/start-here.md',

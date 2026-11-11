@@ -1,102 +1,52 @@
-# Why KDNA?
+# Why KDNA
 
-General-purpose models already contain broad knowledge and useful default
-judgment. But a model's defaults are not necessarily the judgment of the
-person, creator, professional, team, or organization using it.
+Prose has documents (`.md`, `.pdf`). Numbers and models have spreadsheets. Talks have slide decks. Linked information has HTML, and deterministic logic has code. Every major form of human work eventually earned a file format shaped around what it actually carries.
 
-KDNA exists so that judgment can be made explicit, carried across models, and
-used through a consistent runtime contract.
+Human **thinking, judgment, trade-offs, boundaries, and taste** have lacked that independent form. People already work with agents every day to write, plan, design, code, and decide—yet their most hard-won judgments remain scattered across chat transcripts, prompts, Markdown notes, and tool-specific habits. A fresh session loses the reasoning. Editing one note leaves another copy stale. A teammate inherits the conclusion without the conditions that keep it safe to apply.
 
-## The Judgment Asset Contract
+As AI makes finished text, code, and drafts inexpensive to generate, what stays scarce—and what truly separates outcomes—is the upstream thinking, judgment, and taste behind them. KDNA (`.kdna`) gives that judgment an independent file format so it can be kept, read, questioned, delivered, adopted, and revised as a **“work”** in its own right.
 
-Facts, memory, Skills, workflows, Policies, Prompts, and evaluations can all
-carry judgment. Their primary contracts differ, and none has an exclusive
-claim over a content type.
+## An answer can sound fluent while erasing the judgment
 
-KDNA makes the following judgment content first-class in one asset:
+General-purpose models are trained to produce broadly acceptable prose. That strength has a hidden cost: asked to “make this clearer,” an agent can return a polished, conventional draft while quietly smoothing away a specific stance, trade-off, or boundary.
 
-- what matters most;
-- which distinctions must not be blurred;
-- what should block action;
-- which trade-offs and values govern a choice;
-- what good work looks like to this author or group;
-- when the judgment does not apply.
+Consider a concrete example recorded by KDNA’s originator, Zhang Ling (张零), from his communication training work (*Minimalist Communication* / 《极简沟通》). In his method, a state quadrant is used to observe the **counterpart’s** present emotion and sense of value. In a later AI-assisted task, an agent kept the exact four-quadrant diagram—but applied it to the **speaker** instead. The framework looked intact; the subject of judgment had silently flipped.
 
-KDNA does not replace data governance, memory, private compute, RAG,
-evaluation infrastructure, fine-tuning, Skills, Prompts, Policies, or
-workflows. The same judgment can remain in any of them. KDNA adds more than one
-kind of value: the creation process itself — clarifying the judgment, forming
-it, and expressing it — is value, and publishing it makes the standard visible
-and usable to others. Independent identity, integrity, authorization, loading,
-and lifecycle add a further layer when the judgment needs them. Reuse and
-loading are not the only sources of value.
+This is not presented as a statistical benchmark. It illustrates a structural problem: **a method can survive in appearance while its core object disappears.** A real judgment system has to make that object—and the cost of altering it—explicit.
 
-## Whose Judgment?
+## Four questions keep a judgment system whole
 
-KDNA is not limited to institutions or credentialed experts.
+| Question | What it makes explicit |
+| --- | --- |
+| What core variable are you watching? | The subject, signal, and focus that must never be silently swapped |
+| What prevails when good goals conflict—and what is given up? | The explicit value ordering and deliberate trade-off |
+| Where must automation stop and return the call to a human? | Applicable limits, unknowns, and failure signals that halt inference or action |
+| How do counterexamples revise the system? | How new evidence, mistakes, and edge cases produce a named revision without erasing lineage |
 
-- An individual can preserve preferences, values, boundaries, and ways of
-  choosing.
-- A creator can preserve taste, voice, editorial standards, and what they
-  refuse to make.
-- A professional can package diagnostic distinctions, risk thresholds, and
-  methods of trade-off.
-- A team or organization can version shared operating standards without
-  baking them into one model or application.
-- An Agent or tool can create a KDNA asset through the same public protocol;
-  author identity does not determine format validity.
+These four parts belong together. A focal variable without boundaries overreaches. A value order closed to counterexamples hardens into dogma. Revision logs without a clear object record activity, not judgment.
 
-Anyone can create and publish a KDNA asset. KDNA Core does not decide whether
-its judgment is true, good, expert, or useful. Optional evidence can describe
-what an asset has been observed to do; it is not a creation license.
+## Try the current CLI workflow in 30 seconds
 
-## One Asset and Multiple Assets
+Every `.kdna` creation, local password encryption (`0.6.0`), validation, scoped reading, and diffing workflow runs locally on Node.js `>=22` and is **permanently account-free**:
 
-A single KDNA asset is the atomic, default path: one scoped judgment asset is
-created, validated, authorized, and loaded for a task.
-
-A KDNA Cluster is an experimental advanced surface under recertification.
-Multiple assets require an explicit Host policy and user-approved candidate
-set. Cluster does not replace the single-asset model, and the single-asset path
-does not silently invoke Cluster routing.
-
-## Open Creation, Contracted Consumption
-
-Open protocol does not mean raw consumption. Authors use the KDNA toolchain to
-create and package assets. Current source consumers use public Core admission
-and Read under independently trusted Host providers. The published CLI 0.36.1
-loading line instead follows:
-
-```text
-inspect → LoadPlan → authorization → load/project → Runtime Capsule → Agent
+```sh
+npx -y @aikdna/kdna-cli@0.43.4 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.43.4 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.43.4 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.43.4 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.43.4 read my-judgments.kdna --mode exact_selection --judgment-id decision:first-dilemma --allow-read --compact
 ```
 
-Direct ZIP extraction, CBOR decoding, or raw payload parsing is a developer
-inspection path, not a compatible Agent consumption path. This distinction is
-part of the published loading line's public, licensed and remote access contract.
-Those access modes do not enable encrypted admission in current Core/Read.
+To read a complete 45-judgment public work with zero installation, open **KDNA Whitepaper v1.0.0** (*《KDNA白皮书》*, `CC BY 4.0`) directly in [KDNA Reader](https://aikdna.com/reader/?sample=kdna-whitepaper).
 
-## What “Verifiable” Means
+## An independent file gives judgment a durable lifecycle
 
-Each implementation verifies only its declared version contract. Current Core
-admission establishes technical validity of captured bytes; it does not
-authenticate provenance or grant permission. The published loading line also
-contains version-specific integrity, provenance and authorization checks. It does not verify that a judgment is true or that
-an author should be trusted. Consumers choose which assets and evidence fit
-their own context.
+KDNA gives an expressible judgment—or system of judgments—clear identity, versions, relationships, required context, and a predictable reading contract. People can read and evaluate a work directly in [KDNA Reader](https://aikdna.com/en/reader) before relying on it. When a work enters a task, compatible tools start from its catalog, select only the judgments relevant to the job, and keep mandatory supporting or qualifying context attached. Authors can keep private working notes separate from shared works, or encrypt sensitive files locally with a password (`kdna protect`)—permanently without any online account.
 
-## Try the published CLI 0.36.1 line
+The goal is never to bottle up an entire human life or clone a personality. One person may maintain separate, focused `.kdna` works for editorial taste, architecture reviews, or teaching. What matters is whether a judgment is expressed clearly enough to be read, challenged, chosen, and improved.
 
-For current source, use [Core/Read](./core-read-current-status.md). The walkthrough below keeps
-its older loading contract and matching assets.
+Technical validation is only one piece of trust: it confirms that exact bytes satisfy the container and reading contract, never that a judgment is true, wise, or right for your situation. That always requires reading the substance, weighing evidence, and exercising human judgment.
 
-```bash
-npm install -g @aikdna/kdna-cli@0.36.1
-kdna demo judgment ./judgment
-kdna pack ./judgment ./judgment.kdna
-kdna validate ./judgment.kdna --runtime
-kdna plan-load ./judgment.kdna --json
-kdna load ./judgment.kdna --profile=compact --as=json
-```
+If a simple Markdown note, a short prompt, or an existing Git workflow already serves your need, keep it. Consider `.kdna` when clear authorship, intact boundaries, human review, versioned evolution, and cross-tool portability genuinely benefit from a shared file format.
 
-→ [Start Here](./start-here.md) · [KDNA and the AI Stack](./kdna-and-ai-stack.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)
+→ [Start Here](./start-here.md) · [KDNA and the AI Stack](./kdna-and-ai-stack.md) · [When to Use KDNA](./when-to-use-kdna.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)

@@ -32,19 +32,19 @@ Core 入场建立捕获字节的技术有效性，不认证作者、不判断内
 | 层级 | 状态 | 含义 |
 |---|---|---|
 | `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前源码提供入场、snapshot 与 Read；版本化格式/加载规范不等于全部能力已实现 |
-| Runtime CLI | Pre-release | 原生 CLI `0.43.3`（精确 Core `0.37.9` / Read `0.13.3`）提供 `init`、`validate-input`、`compile`、`create`、`protect`、`inspect`、`validate`、`read`、`diff`、`source-open`、`source-pack`，Plan/load 不可用；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
+| Runtime CLI | Pre-release | 原生 CLI `0.43.3`（精确 Core `0.37.9` / Read `0.13.3`）提供 `init`、`validate-input`、`compile`、`create`、`protect`、`inspect`、`validate`、`read`、`diff`、`source-open`、`source-pack`、`convert`，Plan/load 不可用；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
 | Studio 创作工具链 | Pre-release | 当前 typed session、保存 bundle 复验与明确 Read；project/card 属于已发布 Studio CLI 0.11.0 |
-| 加密、授权、签名与撤销 | 按精确版本判断 | 普通 root/browser 入场保留保护拒绝；显式 Node 入口按单独合同处理；旧发布能力不自动继承 |
+| 加密、授权、签名与撤销 | 按精确版本判断 | 公开、本地及口令加密（`0.6.0`）作品创建与阅读永久免账号；普通 root/browser 入场保留保护拒绝，显式 Node 入口按单独合同处理 |
 | Remote / Activation 参考实现 | Experimental | Remote 为 HTTP Read handler；Activation 为同进程 store observer，无独立 server/CLI，不代表托管服务 |
 | 多资产、路由、评测表面 | Experimental | 待重新认证的高级实现，不属于默认路径 |
 | Swift、Web、React、编辑器和 Agent 适配 | 各自独立 | 必须检查精确版本、依赖坐标和证据 |
-| `kdna-loader` Skill | Unassessed | 使命保留；旧的广泛发现与静默加载模型不是当前 Host 合同 |
+| `kdna-loader` 与 `kdna-creator` Skill | Pre-release（具名宿主未独立认证） | 基于 `@aikdna/kdna-cli` 对用户显式选定的文件执行按需读取与共创；旧的广泛发现与静默加载模型已废弃 |
 
 ## 从哪里开始
 
 当前源码使用 [Core/Read 指引](./core-read-current-status.md)、
 [CLI README](https://github.com/aikdna/kdna-cli#readme) 和
-[Studio CLI README](https://github.com/aikdna/kdna-studio-cli#readme) 的精确依赖与入口。
+[Studio CLI npm 包](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 的精确依赖与入口。
 源码可用不代表 npm 发布、真人采用或原生 Host 验收。
 
 需要重现旧发布线时，使用 [Start Here](./start-here.md#5-minute-quick-start) 中固定

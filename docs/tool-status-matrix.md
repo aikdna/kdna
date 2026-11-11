@@ -6,9 +6,9 @@ for selected Read, revision and reopened use.
 
 | Current entry | Commands and boundary |
 | --- | --- |
-| Native CLI `0.43.2`, exact Core `0.37.9` / Read `0.13.3` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container0.6, Read0.7-candidate; plan/load unavailable (exit 2). |
+| Native CLI `0.43.3`, exact Core `0.37.9` / Read `0.13.3` | `create`, `inspect`, `validate`, `read`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container `0.6`, Read `0.7-candidate`; plan/load unavailable (exit 2). (`0.43.4` adds `init`, `validate-input`, `compile`, `protect`, and `diff`.) |
 | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.2` / Core `0.37.9` / Read `0.13.3` graph | Optional source preview for operator-bound catalog/read/expand/cancel; direct CLI is the primary route; named Host delivery NOT_RUN; no decryption. |
-| StudioCLI `0.14.0` / StudioCore `4.1.0` on their own Core `0.37.2` / Read `0.11.3` line | Separate container0.5/Read0.6.4 session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
+| StudioCLI `0.14.0` / StudioCore `4.1.0` on their own Core `0.37.2` / Read `0.11.3` line | Separate container `0.5` / Read `0.6.4` session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
 
 The following dated descriptions preserve the older source and published
 observations. They do not describe the current entries above. In particular,
@@ -59,15 +59,14 @@ credential storage. Never mix these forms with `plan-load` or the published
 
 ## Preserved Studio source observation, 2026-09-23 (`@aikdna/kdna-studio-cli@0.17.0-rc.material-edit.1`)
 
-The [Studio CLI source](https://github.com/aikdna/kdna-studio-cli#readme) binds
+The [Studio CLI package](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) historically observed a local candidate binding
 Studio Core `4.5.0-rc.material-edit.1`, Core `0.35.0-rc.source.1` and Read
-`0.10.0-rc.source.1` in its
-[archive/member declarations](https://github.com/aikdna/kdna-studio-cli/blob/main/src/public-bindings.json).
+`0.10.0-rc.source.1` in its local `src/public-bindings.json` archive/member declarations.
 Use Node >=22 and the [fixed complete source delivery](./core-read-current-status.md#choose-and-obtain-one-matching-delivery), including its lock and vendor archives; the standalone npm archive is not that delivery. This local unpublished update does not update official remote source or npm releases.
 Its source commands include `session`, `draft`, `revision`, `verify --bundle` and
 `read --bundle`. Bounded `revision` requires an externally named predecessor
 and expected digest, a later version/timestamp, a new output directory and
-fresh live selection and confirmation; use the [terminal revision guide](https://github.com/aikdna/kdna-studio-cli/blob/main/docs/TERMINAL_AGENT_CREATION.md#saved-source-revision) in the matching source delivery. Draft persistence does not restore a live adoption session:
+fresh live selection and confirmation; use the terminal revision guide (`docs/TERMINAL_AGENT_CREATION.md#saved-source-revision`) in the matching Studio CLI delivery. Draft persistence does not restore a live adoption session:
 selection, current preview and fresh confirmation are still required.
 Live adoption, saved-byte verification and static reopening are distinct
 results; a test callback or serialized evidence is not human acceptance.
@@ -132,7 +131,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 
 | Component | Status |
 |---|---|
-| `kdna-loader` skill | **Unassessed** — mission retained; the previous broad-discovery and silent-loading model is not the current Host contract. |
+| `kdna-loader` / `kdna-creator` skills | **Source channel (`aikdna/kdna-skills`)** — explicit file-first CLI workflows (`inspect -> validate -> read --mode catalog -> read --mode exact_selection` and `init -> validate-input -> compile`); the previous broad-discovery and silent-loading model is retired. |
 | MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current source channel is MCP `0.8.0-rc.native-sections.3` over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
 
 ## Package Boundaries

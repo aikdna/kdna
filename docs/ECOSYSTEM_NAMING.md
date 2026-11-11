@@ -23,8 +23,8 @@ lockfiles, logs, and security reports.
 | Evaluation toolkit | `aikdna/kdna` / `packages/kdna-eval` | `@aikdna/kdna-eval` | none | Experimental issuer-scoped replay, budget, and consumption evaluation |
 | Compatibility bridge | `aikdna/kdna` / `packages/kdna` | `@aikdna/kdna` | `kdna`, `kdna-validate` | Maintained Legacy migration path; not the recommended new integration |
 | Runtime CLI | `aikdna/kdna-cli` | `@aikdna/kdna-cli` | `kdna` | Current `inspect`, `validate`, `read`; published 0.36.1 retains packing/loading |
-| Studio core | `aikdna/kdna-studio-core` | `@aikdna/kdna-studio-core` | none | Authoring SDK kernel |
-| Studio CLI | `aikdna/kdna-studio-cli` | `@aikdna/kdna-studio-cli` | `kdna-studio` | Current typed `session`, `verify`, `read`; published 0.11.0 retains project/card authoring |
+| Studio core | `@aikdna/kdna-studio-core` | `@aikdna/kdna-studio-core` | none | Authoring SDK kernel |
+| Studio CLI | `@aikdna/kdna-studio-cli` | `@aikdna/kdna-studio-cli` | `kdna-studio` | Current typed `session`, `verify`, `read`; published 0.11.0 retains project/card authoring |
 | Skills | `aikdna/kdna-skills` | skill repo | none | Explicit-file Agent and MCP adapters; discovery grants no authority |
 
 ## Ecosystem Integrations In This Release Wave
@@ -41,7 +41,7 @@ release surface and are not named here:
 
 The following commands belong to published CLI **0.36.1** and Studio CLI
 **0.11.0**. Current source uses [Core/Read](./core-read-current-status.md) and typed Studio
-commands from the [Studio README](https://github.com/aikdna/kdna-studio-cli#readme).
+commands from the [Studio README](https://www.npmjs.com/package/@aikdna/kdna-studio-cli).
 
 ```bash
 npm install -g @aikdna/kdna-cli@0.36.1 @aikdna/kdna-studio-cli@0.11.0

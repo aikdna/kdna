@@ -2,7 +2,7 @@
 
 > 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
 > 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
-> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
 
 组织是 KDNA 的一种使用场景，不是 KDNA 的定义。本指南用于验证：一份明确的判断资产能否跨模型保留，并改善一个边界清晰的决策情境。
 

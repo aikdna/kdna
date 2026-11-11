@@ -2,7 +2,7 @@
 
 > Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
-> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
 
 > [中文版](./getting-started.zh.md)
 

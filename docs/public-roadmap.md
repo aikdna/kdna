@@ -2,91 +2,77 @@
 
 ## One definition
 
-KDNA is a judgment-asset container and protocol. It makes implicit, scattered,
-or latent judgment explicit so that it can have independent identity, version,
-integrity, provenance, encryption, authorization, loading, and governance.
-Compatible tools and hosts can create, carry, inspect, authorize, and consume
-that judgment without silently rewriting it.
+KDNA is an open file format and protocol for expressible judgment and judgment
+systems. It gives implicit, scattered, or hard-won judgment an independent file
+with clear identity, version lineage, byte integrity, optional local password
+encryption, and a scoped reading contract—so people can read and question a work
+in [KDNA Reader](https://aikdna.com/en/reader), and compatible agents can create,
+verify, and apply it without silently flattening its boundaries.
 
 KDNA does not claim to add model intelligence or guarantee better output. Its
-core value is making selected judgment portable, verifiable, manageable, and
-usable across tools and ecosystems.
+job is making selected judgment inspectable, portable, versioned, and bounded
+across tools.
 
-## One ecosystem, different responsibilities
+## Permanently account-free foundation
 
-The public repositories form an end-to-end ecosystem whose components have
-different responsibilities, maturity, and release schedules:
+Public, local, and password-protected (`0.6.0`) `.kdna` creation, encryption
+(`kdna protect`), validation, human reading in KDNA Reader, and Agent
+consumption are **permanently account-free** and work offline. No online account
+system is a prerequisite or roadmap item for the KDNA format, CLI, Skills, or
+KDNA Reader.
 
-| Responsibility | Repositories | Mission |
-|---|---|---|
-| Protocol and Core | `kdna` | Container, schema, identity, integrity, encryption, authorization, and loading contracts |
-| Runtime tooling | `kdna-cli` | Inspect, validate, create, read, and revise KDNA assets (`plan`/`load` are unavailable on the current line; they belong to the historical `0.36.1` loading line) |
-| Authoring | `kdna-studio-core`, `kdna-studio-cli` | Make implicit judgment explicit, review it, and export versioned assets |
-| Reference assets | `kdna-assets` | Interoperability fixtures and reference judgment assets |
-| Apple ecosystem | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime, shared application contracts, and native authoring integration |
-| Agent and editor integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent, Skill, and MCP workflows for KDNA creation and consumption; `kdna-vscode` is paused by owner decision and not on the current public surface |
+## One ecosystem, focused responsibilities
+
+The public repositories form an open ecosystem whose components carry distinct
+responsibilities and independent release schedules:
+
+| Responsibility | Public Repositories / Surfaces | Mission |
+| --- | --- | --- |
+| Protocol and Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` / `0.5.0` schemas, digests, local password protection, scoped Read closure, and conformance vectors |
+| Official CLI | `kdna-cli` (`@aikdna/kdna-cli`) | Author (`init`, `validate-input`, `compile`, `create`), password-protect (`protect`), inspect, validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works (`plan`/`load` belong only to the historical `0.36.1` line) |
+| Agent integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP server (`kdna-vscode` remains paused by owner decision) |
+| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with *KDNA Whitepaper* `v1.0.0`, `CC BY 4.0`) and verification checks |
+| Human reading | KDNA Reader ([Web](https://aikdna.com/reader/?sample=kdna-whitepaper) + [macOS](https://aikdna.com/en/downloads)) | Free, permanently account-free reading and review application for public, local, and password-protected `.kdna` works |
+| Studio session packages | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate container `0.5.0` session authoring and protected export line |
+| Apple Swift packages | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime and Apple-platform contracts |
 
 Per [Repository Boundaries](./repository-boundaries.md), web ecosystem packages and remote/activation services (`kdna-web-client`, `kdna-web-server`, `kdna-react`, `create-kdna-web-app`, `kdna-demo-web-viewer`, `kdna-activation-server`, `kdna-remote-server`) are private repositories, not current public repositories or public support commitments.
 
-The website is the public entry point for explaining this ecosystem. A
-component can be experimental, pre-release, inactive, or awaiting evidence
-without losing its mission or being removed from the ecosystem by default.
+## Four questions kept distinct
 
-## What is being corrected
+Ongoing engineering keeps four questions separate:
 
-Current work separates four questions that were previously mixed together:
+1. Is the protocol contract internally sound and unambiguous?
+2. Does a specific tool or integration faithfully implement its declared contract?
+3. What exact compatibility and maturity does a published version promise?
+4. When does a real author or reader genuinely benefit from `.kdna` over a simpler note or prompt?
 
-1. Is the protocol contract internally correct?
-2. Does a particular tool or integration implement its declared contract?
-3. What maturity and compatibility does an exact version promise?
-4. Does a real user need a particular workflow?
-
-Repository existence, test volume, package publication, and one coordinated
-release wave do not answer all four questions. Maturity must be stated per
-component, and integration value must not be inferred from whether it is in the
-next release set.
+Maturity is stated per component and version rather than assumed from repository
+activity or test count alone.
 
 ## Claim boundary
 
-KDNA does not claim to increase intelligence, improve output by a percentage,
-or make one carrier intrinsically superior to another. Those are not protocol
-claims or project-level release gates. An asset owner may assess a specific
-asset for a specific use, but that assessment does not decide whether the
-container, toolchain, authorization model, or ecosystem integrations should
-exist.
+KDNA does not claim to increase model intelligence, improve output by a fixed
+percentage, or replace ordinary Markdown notes, prompts, or Skills when those
+simpler carriers already suffice. Protocol and toolchain verification focuses on:
 
-Protocol and product evidence instead focuses on:
-
-- container identity, version, and byte integrity;
-- faithful preservation of declared judgment and boundaries;
-- encryption, authorization, revocation, and rollback;
-- deterministic validation and accurate load planning;
-- interoperable creation and consumption across supported hosts;
-- explicit, versioned failure when a contract is unsupported.
+- container identity, version lineage, and cryptographic byte integrity;
+- faithful preservation of authored claims, premises, stop boundaries, and anti-misuse rules during scoped reads;
+- offline local password encryption (`0.6.0`), deterministic diffing, and explicit revision;
+- explicit, fail-closed diagnostics when a container or version contract is unsupported.
 
 ## Current priorities
 
-1. Reconcile public claims with exact released versions without erasing the
-   ecosystem's missions.
-2. Fix confirmed protocol, security, schema, projection, and version-integrity
-   defects.
-3. Verify the minimal create-to-consume path and preserve judgment fidelity.
-4. Establish the file-first, user-authorized Host experience: explicit file or
-   attachment, visible active state, and disable/switch/rollback control.
-5. Give every integration an explicit maturity statement and reproducible
-   compatibility evidence.
-6. Publish future Development Preview coordinates component by component when
-   their own gates are satisfied.
-
-No new version may overwrite an existing coordinate. No repository is promoted
-to stable merely because tests pass, and no repository is retired merely
-because it is outside one Preview wave.
+1. Keep the native `0.6.0` authoring, local password protection, human reading, and selective Agent reading loop effortless and rock-solid.
+2. Expand openly licensed `.kdna` reference works in `kdna-assets` with clear authorship and `CC BY 4.0` provenance.
+3. Measure and optimize real-world Agent context budgets across `catalog` and `exact_selection` workflows ([Read cost work package](./read-cost-work-package.md)).
+4. Maintain clear file-first, user-consented Agent host workflows (`kdna-loader` and `kdna-creator`) with zero silent background activation.
+5. Keep every published npm coordinate immutable and byte-verified; new versions advance only after passing conformance and smoke checks without overwriting prior coordinates.
 
 ## Contribution boundary
 
-New work should explain how it contributes to creating, carrying, verifying,
-authorizing, governing, or consuming judgment assets. Intelligence-enhancement
-and generalized superiority claims are out of scope.
-Changes to a repository's mission or lifecycle require an explicit owner
-decision; they cannot be inferred from cleanup, release scoping, or an Agent
-audit.
+Contributions should strengthen how judgment works are authored, verified,
+protected locally, read by humans, or selectively consumed by compatible agents.
+Generalized intelligence-enhancement claims are out of scope. Changes to a
+repository's mission or lifecycle require an explicit maintainer decision
+documented in the repository itself.

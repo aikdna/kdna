@@ -5,7 +5,7 @@
 > [Current line quickstart](./start-here.md#current-line-quickstart-cli-0433).
 > Commands below use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
-> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
 
 Two paths. Start with the verified lifecycle, then author your own judgment.
 
@@ -55,7 +55,7 @@ This proves the format works end-to-end. The output will be minimal — one plac
 - **Historical authoring follow-up**: [30-minute authoring guide](./30-minute-authoring-guide.md)
   keeps the older project/card workflow; current authoring starts from the
   [Current line quickstart](./start-here.md#current-line-quickstart-cli-0433).
-- **Reference assets**: [kdna-assets](https://github.com/aikdna/kdna-assets) is a historical engineering reference. It currently lists no public asset and its release downloads are withdrawn — no public sample asset is obtainable from it yet. No content endorsement.
+- **Public reference work**: [kdna-assets](https://github.com/aikdna/kdna-assets) distributes our first official public `.kdna` judgment work, **KDNA Whitepaper v1.0.0** (*《KDNA白皮书》*, `CC BY 4.0`, `45` judgments, native container `0.6.0`). Read it directly in [KDNA Reader](https://aikdna.com/reader/?sample=kdna-whitepaper) with zero install and no account, or inspect it with the current `@aikdna/kdna-cli` line (`0.36.1` below does not read `0.6.0` containers).
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is
