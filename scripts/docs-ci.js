@@ -74,6 +74,24 @@ check(
   'agent-entry.md shows the same-session multi-select route',
   agentEntry.includes('multi.requests.jsonl') && agentEntry.includes('--session --allow-read'),
 );
+check(
+  'agent-entry.md provides generic 2-line session template with inspect tuple and catalog placeholders',
+  agentEntry.includes('<tuple-object-from-kdna-inspect>') &&
+    agentEntry.includes('<asset-id-from-catalog>') &&
+    agentEntry.includes('<asset-version-from-catalog>') &&
+    agentEntry.includes('"judgment_ids": ["<needed-id-1>", "<needed-id-2>"]'),
+);
+check(
+  'agent-entry.md provides step-by-step route inspect -> catalog -> session read',
+  agentEntry.includes('inspect --json') &&
+    agentEntry.includes('catalog') &&
+    agentEntry.includes('kdna read --session --allow-read'),
+);
+check(
+  'agent-entry.md documents minimal selection rule for judgment_ids',
+  agentEntry.includes('Minimal selection rule') &&
+    agentEntry.includes('never blindly copy all catalog IDs into `judgment_ids`'),
+);
 
 const multiRequestsPath = path.resolve(
   __dirname,
@@ -98,6 +116,22 @@ check(
   'multi.requests.jsonl selects two judgment ids in one request',
   Array.isArray(multiSelection?.selection?.judgment_ids) &&
     multiSelection.selection.judgment_ids.length === 2,
+);
+
+console.log('── Roadmap and maturity alignment');
+
+const publicRoadmap = fs.readFileSync(path.join(DOCS_DIR, 'public-roadmap.md'), 'utf8');
+check(
+  'public-roadmap.md aligns with repository boundaries and does not claim private web/remote repos are public',
+  !publicRoadmap.includes('| Web ecosystem | `kdna-web-client`') &&
+    publicRoadmap.includes('private repositories'),
+);
+
+const maturityDoc = fs.readFileSync(path.join(DOCS_DIR, 'maturity.md'), 'utf8');
+check(
+  'maturity.md documents 0.43.2 primary route inspect -> validate -> read and marks plan-load / Runtime Capsule as retired 0.36.1',
+  maturityDoc.includes('inspect → validate → read') &&
+    maturityDoc.includes('Retired `0.36.1` loading workflow'),
 );
 
 console.log('── Package published and reachable');

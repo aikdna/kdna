@@ -60,6 +60,58 @@ installed CLI's tuple and change only the file path, asset id, asset version and
 judgment ids. Do not edit tuple fields independently: the supported route and
 container format must match what `inspect` reports.
 
+### Generic 2-line session template (for any asset)
+
+To read any `.kdna` asset in a single session without guessing or reading CLI source code, follow this 3-step sequence:
+
+1. `inspect --json`: run `kdna inspect <path.kdna> --json` to get the container `tuple` object.
+2. `catalog`: run `kdna read <path.kdna> --mode catalog --budget 1000000 --allow-read` (or inspect line 1 session catalog output) to discover the available judgment IDs, `asset_id`, and `asset_version`.
+3. Pipe the 2-line JSONL to `kdna read --session --allow-read`.
+
+The schema for the two JSONL requests is:
+
+```text
+{"request_id":"request:1","tuple":<tuple-object-from-kdna-inspect>,"budget_bytes":1000000,"mode":"catalog","selection":null,"handle":null}
+{"request_id":"request:2","tuple":<tuple-object-from-kdna-inspect>,"budget_bytes":1000000,"mode":"exact_selection","selection":{"asset_id":"<asset-id-from-catalog>","asset_version":"<asset-version-from-catalog>","judgment_ids": ["<needed-id-1>", "<needed-id-2>"]},"handle":null}
+```
+
+Line 1 sends a `catalog` request and line 2 sends an `exact_selection` request with `<tuple-object-from-kdna-inspect>`, `<asset-id-from-catalog>`, `<asset-version-from-catalog>`, and `"judgment_ids": ["<needed-id-1>", "<needed-id-2>"]`. Following `inspect --json` -> `catalog` -> pipe 2-line JSONL to `kdna read --session --allow-read` means Agents never need to read CLI source code to discover the session schema.
+
+To construct and pipe this 2-line session directly in shell or script without manual JSON editing, use `node -e`:
+
+```sh
+# Generate the 2-line session input directly from inspect --json and pipe to kdna read
+npx --no-install kdna inspect /absolute/path/to/asset.kdna --json | node -e '
+const fs = require("node:fs");
+const inspect = JSON.parse(fs.readFileSync(0, "utf8"));
+const req1 = {
+  request_id: "req:catalog",
+  tuple: inspect.tuple,
+  budget_bytes: 1000000,
+  mode: "catalog",
+  selection: null,
+  handle: null
+};
+const req2 = {
+  request_id: "req:selection",
+  tuple: inspect.tuple,
+  budget_bytes: 1000000,
+  mode: "exact_selection",
+  selection: {
+    asset_id: inspect.asset.asset_id,
+    asset_version: inspect.asset.asset_version,
+    judgment_ids: ["<needed-id-1>", "<needed-id-2>"]
+  },
+  handle: null
+};
+process.stdout.write(JSON.stringify(req1) + "\n" + JSON.stringify(req2) + "\n");
+' | npx --no-install kdna read /absolute/path/to/asset.kdna --session --allow-read
+```
+
+### Minimal selection rule
+
+After reading `catalog`, select ONLY the judgment IDs needed for the task in `selection.judgment_ids`; never blindly copy all catalog IDs into `judgment_ids` on multi-judgment assets (selecting all IDs is only valid when the task genuinely requires every judgment in a small asset). Unneeded judgments increase token cost and risk introducing irrelevant boundary conditions.
+
 For a task that needs only one judgment, use:
 
 ```sh
