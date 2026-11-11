@@ -12,7 +12,7 @@ request text and the command route must travel together; the sentence alone is
 not a sufficient entry.
 
 > Use the KDNA asset at `<absolute-path>` for this task: `<task>`. Install the
-> published `@aikdna/kdna-cli@0.43.3` and follow the copyable route below:
+> published `@aikdna/kdna-cli@0.43.4` and follow the copyable route below:
 > inspect and validate the file, read the catalog, select every judgment the
 > task needs in one `selection.judgment_ids` request in one session, expand any
 > needed handles in that same session, and report the asset version, CLI version
@@ -33,7 +33,7 @@ values from that asset's catalog.
 mkdir -p kdna-agent-entry && cd kdna-agent-entry
 npm init -y
 npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
-  @aikdna/kdna-cli@0.43.3
+  @aikdna/kdna-cli@0.43.4
 
 curl -fsSLo team-update-1.0.0.kdna \
   https://raw.githubusercontent.com/aikdna/kdna/main/examples/native-team-update/team-update-1.0.0.kdna

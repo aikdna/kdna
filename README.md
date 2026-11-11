@@ -96,7 +96,7 @@ artifact:
 | --- | --- | --- | --- |
 | `@aikdna/kdna-core` | `0.37.10` | `latest` | `29a2500cabfc0cd18e346d6ccfe554944b32eb7d4ef1d07668f0daf7518e4006` |
 | `@aikdna/kdna-read` | `0.13.4` | `latest` | `edc3a2eaa2d1a70289cf43bdfa75155f8f0c4913cc9b7f20ea7a681d8f08bde0` |
-| `@aikdna/kdna-cli` | `0.43.3` | `latest` | `3e520f2902edad53b16373abd798ea361b63d13dcfa05767dd10ec3103ee9015` |
+| `@aikdna/kdna-cli` | `0.43.4` | `latest` | `f5e3f5812f153fedb200c73c8031dc3bf0ae526f870ea1860871105a2b8df527` |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | `76a5e7dcca71b28259e5058d241304912713d72e9defba98ce8a03f7e4d1e22a` |
 | `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | `542270c699eec5cbc468b134b2d7235c312be7551e32f4ce66821b3fb814dfc7` |
 
@@ -122,7 +122,7 @@ above are verified against the official registry.
 | Entry | Exact published package combination | Supported route |
 | --- | --- | --- |
 | Core/Read | Core `0.37.10` / Read `0.13.4` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
-| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
+| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.4` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |
 | [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
 
@@ -134,7 +134,7 @@ The exact published coordinate installs from an empty cache with:
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.3
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
@@ -143,7 +143,7 @@ Historical native CLI `0.39.0-rc.native-sections.2` binds Core
 `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core
 `0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older
 installation. CLI `.2` and `.3` remain published previews; the published stable
-line is `0.43.3`, which must not overwrite either preview. The separate Studio ordinary/protected guide
+line is `0.43.4`, which must not overwrite either preview. The separate Studio ordinary/protected guide
 supplies its own preparation, trusted Host/credential boundary and readback
 instructions; named Host delivery and independent acceptance remain `NOT_RUN`.
 Technical checks and
@@ -156,7 +156,7 @@ actual task adoption.
 
 | Repo / Package | Published Status | Purpose |
 | --- | --- | --- |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.43.3` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, local password protection, explicit Read, diffing, and Source revision; its own exact Core `0.37.9` / Read `0.13.3` pins |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.43.4` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, local password protection, explicit Read, diffing, and Source revision; its own exact Core `0.37.9` / Read `0.13.3` pins |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.3` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP `0.5.0` | Matched published native `0.43.2` / Core `0.37.9` / Read `0.13.3` graph; optional operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (`KDNA Whitepaper` `1.0.0`, `CC BY 4.0`) | Openly licensed `.kdna` judgment works and container/Read verification suite |
 | [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |

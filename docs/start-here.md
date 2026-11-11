@@ -10,7 +10,7 @@ Select one exact dependency graph. The [top-level entry](../README.md) and
 
 | Line | Coordinates and acquisition | Status |
 |---|---|---|
-| Published stable distribution | Core `0.37.10`, Read `0.13.4`, CLI `0.43.3`, Studio Core `4.1.0`, Studio CLI `0.14.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
+| Published stable distribution | Core `0.37.10`, Read `0.13.4`, CLI `0.43.4`, Studio Core `4.1.0`, Studio CLI `0.14.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
 | Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the current published bytes |
 | Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
@@ -19,23 +19,23 @@ runs against the exact published versions. Use
 `--omit=optional` for the bound protected Host graph; otherwise npm may add
 `cbor-extract` and the Host rejects the unbound package.
 
-The [current line quickstart below](#current-line-quickstart-cli-0433) runs
-the published stable CLI `0.43.3` command surface. The older walkthroughs
+The [current line quickstart below](#current-line-quickstart-cli-0434) runs
+the published stable CLI `0.43.4` command surface. The older walkthroughs
 further down preserve CLI `0.36.1` and its historical loading contract; for
 current native or Studio authoring, follow the current source entry, retain
 its lock, and use the reader named by the producing route.
 
-## Current line quickstart (CLI 0.43.3)
+## Current line quickstart (CLI 0.43.4)
 
 Five commands from an empty directory create, check and read a real `.kdna`
-asset with the **current published** CLI — `@aikdna/kdna-cli@0.43.3` with its
+asset with the **current published** CLI — `@aikdna/kdna-cli@0.43.4` with its
 exact Core `0.37.9` / Read `0.13.3` pins. Every command below was re-run from
 a clean directory with an empty npm cache.
 
 ```bash
 mkdir kdna-first-asset && cd kdna-first-asset
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.3
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4
 
 # 1. Create a first asset from the bundled teaching example
 npx --no-install kdna create node_modules/@aikdna/kdna-cli/examples/team-update/author.json --output first-asset.kdna --allow-create
@@ -89,7 +89,7 @@ published line.
 | I want to... | Start here | Time |
 |-------------|-----------|------|
 | **Read our first public `.kdna` work in 10 seconds** | [KDNA Whitepaper v1.0.0 in KDNA Reader](https://aikdna.com/reader/?sample=kdna-whitepaper) (zero install, no account) | 1 min |
-| **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.3)](#current-line-quickstart-cli-0433) | 5 min |
+| **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.4)](#current-line-quickstart-cli-0434) | 5 min |
 | **Use current Core and Read source** | [Current source entry](#current-source-entry) | 5 min |
 | **Try the historical loading line (CLI 0.36.1)** | [Historical walkthrough](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [Current native/Studio routes](#current-source-entry); [published-line authoring guide](./30-minute-authoring-guide.md) | 30 min |
@@ -111,9 +111,9 @@ published line.
 Use the [current support and distribution matrix](./current-release-support.md)
 and [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 The published SDK pair is Core `0.37.10` / Read `0.13.4`.
-The native entry is CLI `0.43.3` with exact Core
+The native entry is CLI `0.43.4` with exact Core
 `0.37.9` / Read `0.13.3`, container `0.6` and
-Read `0.7-candidate`. CLI `0.43.3` and `0.43.2` bind that exact companion graph; the
+Read `0.7-candidate`. CLI `0.43.4` and `0.43.2` bind that exact companion graph; the
 preceding CLI `0.43.1` retains its own Core `0.37.8` / Read `0.13.2`
 pins. Prepare the complete twelve-archive delivery using the
 [CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
@@ -154,7 +154,7 @@ retain their own artifacts and exact dependency graphs. Never substitute
 > **Historical (loading line, CLI 0.36.1).** This section preserves the
 > published 2026-09 loading workflow (`demo` / `pack` / `plan-load` / `load`).
 > On the current line these commands are unavailable (exit 2); start from the
-> [Current line quickstart (CLI 0.43.3)](#current-line-quickstart-cli-0433)
+> [Current line quickstart (CLI 0.43.4)](#current-line-quickstart-cli-0434)
 > instead. This walkthrough preserves the older loading contract and does not
 > establish current Core/Read compatibility or Agent adoption.
 
