@@ -344,7 +344,7 @@ test('adding a stale current identity beside the correct text is refused', () =>
 });
 test('superseded consumer rows stay in dated records while the current guide names the successor', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/core-read-current-status.md'), 'utf8');
-  assert.ok(guide.includes('CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins'));
+  assert.ok(guide.includes('CLI `0.43.4` with its own exact Core `0.37.9` / Read `0.13.3` pins'));
   assert.ok(
     guide.includes(
       'Older local combination/material-edit delivery\nrecords retain their original bytes and scope; they no longer describe these\ncurrent sources.',
@@ -367,7 +367,7 @@ test('the historical quickstart cannot requalify Plan/load as current workflow',
   assert.ok(guide.includes('This guide is pinned to the historical loading line (CLI 0.36.1).'));
   assert.ok(
     guide.includes(
-      'The current CLI `0.43.3` line does not provide the `plan-load` or `load` commands',
+      'The current CLI `0.43.4` line does not provide the `plan-load` or `load` commands',
     ),
   );
   assert.ok(guide.includes('**Historical loading follow-up**'));
@@ -375,8 +375,8 @@ test('the historical quickstart cannot requalify Plan/load as current workflow',
 
   const drifted = changedDocument('docs/try-kdna.md', (text) =>
     text.replace(
-      'The current CLI `0.43.3` line does not provide the `plan-load` or `load` commands',
-      'The current CLI `0.43.3` line provides the `plan-load` and `load` commands',
+      'The current CLI `0.43.4` line does not provide the `plan-load` or `load` commands',
+      'The current CLI `0.43.4` line provides the `plan-load` and `load` commands',
     ),
   );
   assert.ok(
@@ -387,9 +387,9 @@ test('the historical quickstart cannot requalify Plan/load as current workflow',
 
 test('the historical quickstart must route current-line visitors explicitly', () => {
   const guide = fs.readFileSync(path.join(root, 'docs/try-kdna.md'), 'utf8');
-  assert.ok(guide.includes('For the\n> current published line (CLI `0.43.3`), use the'));
+  assert.ok(guide.includes('For the\n> current published line (CLI `0.43.4`), use the'));
   assert.ok(
-    guide.includes('[Current line quickstart](./start-here.md#current-line-quickstart-cli-0433)'),
+    guide.includes('[Current line quickstart](./start-here.md#current-line-quickstart-cli-0434)'),
   );
   assert.equal(guide.includes('What do you want'), false);
 });
@@ -425,7 +425,7 @@ const nativeIdentityMutations = [
   [
     'CLI candidate row',
     'README.md',
-    'CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins',
+    'CLI `0.43.4` with its own exact Core `0.37.9` / Read `0.13.3` pins',
     'CLI `0.39.0-rc.native-sections.2` with its own exact Core `0.37.9` / Read `0.13.3` pins',
   ],
   [
@@ -518,7 +518,7 @@ for (const file of ['README.md', 'README.zh.md'])
   nativeIdentityMutations.push([
     `${file} candidate installed CLI coordinate`,
     file,
-    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.3\n',
+    'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4\n',
     'npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.39.0-rc.native-sections.2\n',
   ]);
 for (const [label, file, before, after] of nativeIdentityMutations)
@@ -603,7 +603,7 @@ test('a copied native recipe is not exempt in another document or a second headi
   // The recipe's own CLI coordinate is an admitted companion preview coordinate.
   // Point the copy at the superseded neighbour so this control still proves that a
   // copied recipe gains no scanning exemption.
-  const staleRecipe = recipe.replace('0.43.3', '0.39.0-rc.native-sections.2');
+  const staleRecipe = recipe.replace('0.43.4', '0.39.0-rc.native-sections.2');
   assert.notEqual(staleRecipe, recipe, 'recipe must name the CLI coordinate');
   for (const file of ['README.md', 'SPEC-INDEX.md']) {
     const result = changedDocument(
