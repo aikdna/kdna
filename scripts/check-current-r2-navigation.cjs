@@ -441,7 +441,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |',
+      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.4` and Core `0.37.9` / Read `0.13.3` pins | Optional complete-source, operator-bound local stdio Read; named Host delivery/adoption `NOT_RUN` |',
     },
     {
       file: 'README.md',
@@ -477,7 +477,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP \`0.8.0-rc.native-sections.3\` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP \`0.5.0\` | Matched published native \`0.43.2\` / Core \`0.37.9\` / Read \`0.13.3\` graph; optional operator-bound local stdio, named Host delivery/adoption \`NOT_RUN\` |`,
+      text: `| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP \`0.8.0-rc.native-sections.3\` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP \`0.5.0\` | Matched published native \`0.43.4\` / Core \`0.37.9\` / Read \`0.13.3\` graph; optional operator-bound local stdio, named Host delivery/adoption \`NOT_RUN\` |`,
     },
     {
       file: 'README.zh.md',
@@ -489,7 +489,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.2` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |',
+      text: '| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.4` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |',
     },
     {
       file: 'README.zh.md',
@@ -537,7 +537,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/core-read-current-status.md',
       role: 'downstream',
       heading: '## Matching consumer routes',
-      text: '| Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete Git source plus bundled graph; one operator-bound local file. The direct CLI is the primary route. npm publication disabled. Actual Host delivery/adoption remains unassessed. |',
+      text: '| Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.4` and Core `0.37.9` / Read `0.13.3` pins | Optional complete Git source plus bundled graph; one operator-bound local file. The direct CLI is the primary route. npm publication disabled. Actual Host delivery/adoption remains unassessed. |',
     },
     {
       file: 'docs/core-read-current-status.md',
@@ -567,7 +567,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/start-here.md',
       role: 'downstream',
       heading: '## Current source entry',
-      text: 'The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is\n`0.8.0-rc.native-sections.3` with its own CLI `0.43.2` / Core `0.37.9` / Read\n`0.13.3` graph. Its npm publication is disabled. The direct official CLI is the\nprimary Agent route; MCP is an optional source preview for an operator-bound\nlocal Host. Named Host delivery remains NOT_RUN, and installing a Skill or\ncopying a process vector does not establish Host activation.',
+      text: 'The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is\n`0.8.0-rc.native-sections.3` with its own CLI `0.43.4` / Core `0.37.9` / Read\n`0.13.3` graph. Its npm publication is disabled. The direct official CLI is the\nprimary Agent route; MCP is an optional source preview for an operator-bound\nlocal Host. Named Host delivery remains NOT_RUN, and installing a Skill or\ncopying a process vector does not establish Host activation.',
     },
     {
       file: 'docs/start-here.md',
@@ -585,7 +585,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'docs/current-release-support.md',
       role: 'downstream',
       heading: '## Native and Studio entry points',
-      text: `The Loader/MCP source candidate \`0.8.0-rc.native-sections.3\` embeds its own\npublished native CLI \`0.43.2\` / Core \`0.37.9\` / Read \`0.13.3\` graph; it is not\nthe CLI \`${released.cli.version}\` graph. Follow its\n[complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).\nThe direct official CLI is the primary Agent route. MCP is an optional\noperator-bound stdio preview; its npm publication is disabled. Named Agent Host\ndelivery and semantic adoption remain unassessed.`,
+      text: `The Loader/MCP source candidate \`0.8.0-rc.native-sections.3\` embeds its own\npublished native CLI \`0.43.4\` / Core \`0.37.9\` / Read \`0.13.3\` graph; it is not\nthe Core \`0.37.10\` / Read \`0.13.4\` graph. Follow its\n[complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).\nThe direct official CLI is the primary Agent route. MCP is an optional\noperator-bound stdio preview; its npm publication is disabled. Named Agent Host\ndelivery and semantic adoption remain unassessed.`,
     },
     {
       file: 'docs/current-release-support.md',

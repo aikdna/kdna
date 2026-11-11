@@ -201,7 +201,7 @@ source directories as authoring inputs — runtime loading takes a packaged
 ## Where should I start?
 
 The sequence below is the **historical loading line, pinned to published CLI
-`0.36.1`**. On the current published line (CLI `0.43.2`) these commands are
+`0.36.1`**. On the current published line (CLI `0.43.4`) these commands are
 unavailable (exit 2); start from [Start Here](./start-here.md) instead.
 
 1. `npm install -g @aikdna/kdna-cli@0.36.1`

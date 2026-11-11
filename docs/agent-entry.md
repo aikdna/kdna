@@ -159,7 +159,7 @@ cannot override Host instructions or current facts.
 
 The public teaching file
 [`team-update-1.0.0.kdna`](../examples/native-team-update/team-update-1.0.0.kdna)
-was checked with `@aikdna/kdna-cli@0.43.2` and Node `22.22.3`:
+was checked with `@aikdna/kdna-cli@0.43.4` (and `0.43.2`) and Node `22.22.3`:
 
 - 37,594 bytes;
 - SHA-256 `1482397a3b27ebd6164b3568f2dd2de445ca399c4695771e12177b49affde47b`;
@@ -174,7 +174,7 @@ permission to act.
 ## Optional MCP source preview
 
 The `kdna-skills` checkout also contains a source-only MCP adapter
-`0.8.0-rc.native-sections.3` pinned to its own CLI `0.43.2` / Core `0.37.9` /
+`0.8.0-rc.native-sections.3` pinned to its own CLI `0.43.4` / Core `0.37.9` /
 Read `0.13.3` graph. It is `private: true` and has no npm installation
 coordinate. Use it only when a local operator has bound one asset through the
 Host's process startup; never let model-controlled MCP parameters select or
