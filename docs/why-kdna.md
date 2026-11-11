@@ -41,7 +41,7 @@ To read a complete 45-judgment public work with zero installation, open **KDNA W
 
 ## An independent file gives judgment a durable lifecycle
 
-KDNA gives an expressible judgment—or system of judgments—clear identity, versions, relationships, required context, and a predictable reading contract. People can read and evaluate a work directly in [KDNA Reader](https://aikdna.com/en/reader) before relying on it. When a work enters a task, compatible tools start from its catalog, select only the judgments relevant to the job, and keep mandatory supporting or qualifying context attached. Authors can keep private working notes separate from shared works, or encrypt sensitive files locally with a password (`kdna protect`)—permanently without any online account.
+KDNA gives an expressible judgment—or system of judgments—clear identity, versions, relationships, required context, and a predictable reading contract. People can read and evaluate a work directly in [KDNA Reader](https://aikdna.com/reader/) before relying on it. When a work enters a task, compatible tools start from its catalog, select only the judgments relevant to the job, and keep mandatory supporting or qualifying context attached. Authors can keep private working notes separate from shared works, or encrypt sensitive files locally with a password (`kdna protect`)—permanently without any online account.
 
 The goal is never to bottle up an entire human life or clone a personality. One person may maintain separate, focused `.kdna` works for editorial taste, architecture reviews, or teaching. What matters is whether a judgment is expressed clearly enough to be read, challenged, chosen, and improved.
 
