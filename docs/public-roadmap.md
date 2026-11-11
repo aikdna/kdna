@@ -25,8 +25,8 @@ different responsibilities, maturity, and release schedules:
 | Reference assets | `kdna-assets` | Interoperability fixtures and reference judgment assets |
 | Apple ecosystem | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime, shared application contracts, and native authoring integration |
 | Agent and editor integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent, Skill, and MCP workflows for KDNA creation and consumption; `kdna-vscode` is paused by owner decision and not on the current public surface |
-| Web ecosystem | `kdna-web-client`, `kdna-web-server`, `kdna-react`, `create-kdna-web-app`, `kdna-demo-web-viewer` | Browser, server, React, scaffolding, and demonstrable end-to-end integration |
-| Authorization and remote use | `kdna-activation-server`, `kdna-remote-server` | Optional entitlement, revocation, and remote consumption deployments |
+
+Per [Repository Boundaries](./repository-boundaries.md), web ecosystem packages and remote/activation services (`kdna-web-client`, `kdna-web-server`, `kdna-react`, `create-kdna-web-app`, `kdna-demo-web-viewer`, `kdna-activation-server`, `kdna-remote-server`) are private repositories, not current public repositories or public support commitments.
 
 The website is the public entry point for explaining this ecosystem. A
 component can be experimental, pre-release, inactive, or awaiting evidence
