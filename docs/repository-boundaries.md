@@ -9,8 +9,7 @@ The public repositories under this organization are the public commitment surfac
 
 - protocol and specifications (`kdna`)
 - CLI, Skills/MCP adapters, Studio Core/CLI, Swift Core and Swift Studio packages
-- the public asset-release repository and the binary-only Work release channel
-  (distribution gated)
+- the public asset-release repository (`kdna-assets`)
 
 Everything documented, linked and versioned on this public surface — READMEs,
 specifications, published npm/PyPI coordinates, releases and the website — is the
@@ -22,6 +21,7 @@ scope, supported versions and limits.
 Some repositories are **private**. They cover areas such as:
 
 - Apple-ecosystem application integration work in progress,
+- the binary-only Work release channel while distribution remains gated,
 - commercial and product experiments,
 - internal operations and coordination.
 

@@ -102,7 +102,7 @@ npx -y @aikdna/kdna-cli@0.43.4 read locked.kdna \
 | --- | --- | --- |
 | Core/Read | Core `0.37.10` / Read `0.13.4` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
 | [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.4` 与其自身精确 Core `0.37.9` / Read `0.13.3` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.2` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.4` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
 | [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。

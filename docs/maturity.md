@@ -14,8 +14,8 @@ wave valueless.
 | Surface | Maturity |
 |---|---|
 | Asset container, manifest, CBOR payload, checksums | Pre-release; exact-version contract under reconciliation |
-| Local `inspect → validate → read` (CLI `0.43.2`) | Pre-release; primary consumption route by exact command and session |
-| Historical `validate → plan-load → load` / Runtime Capsule | Retired `0.36.1` loading workflow; not the current `0.43.2` primary route |
+| Local `inspect → validate → read` (CLI `0.43.4`) | Pre-release; primary consumption route by exact command and session |
+| Historical `validate → plan-load → load` / Runtime Capsule | Retired `0.36.1` loading workflow; not the current `0.43.4` primary route |
 | Studio authoring/export | Pre-release; authoring fidelity under review |
 | Explicit-file single-asset consumption | Pre-release by exact command |
 | Global store, automatic discovery, Skill routing, and multi-asset policy | Published or experimental surfaces under recertification; not the default user contract |

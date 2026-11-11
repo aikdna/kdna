@@ -129,7 +129,7 @@ check(
 
 const maturityDoc = fs.readFileSync(path.join(DOCS_DIR, 'maturity.md'), 'utf8');
 check(
-  'maturity.md documents 0.43.2 primary route inspect -> validate -> read and marks plan-load / Runtime Capsule as retired 0.36.1',
+  'maturity.md documents 0.43.4 primary route inspect -> validate -> read and marks plan-load / Runtime Capsule as retired 0.36.1',
   maturityDoc.includes('inspect → validate → read') &&
     maturityDoc.includes('Retired `0.36.1` loading workflow'),
 );
