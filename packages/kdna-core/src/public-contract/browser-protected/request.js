@@ -58,10 +58,12 @@ function admit(candidateJson) {
         C.need(C.strict.identifier(data.request_id) && C.strict.uint(data.budget_bytes), 'READ_INPUT_INVALID');
         const t = data.tuple;
         C.need(t && typeof t === 'object' && !Array.isArray(t) && Object.keys(t).every(k => Object.hasOwn(S.tuple, k) && typeof t[k] === 'string'), 'READ_INPUT_INVALID');
-        if (Object.keys(t).length !== Object.keys(S.tuple).length || Object.entries(S.tuple).some(([k, v]) => t[k] !== v)) {
-            const baseline = require('../generated-contract.json'), old = [baseline.versionTuple, ...baseline.types.UnsupportedVersionTuple.anyOf.map(x => Object.fromEntries(Object.entries(x.properties).map(([k, v]) => [k, v.const])))];
+        const matchesSupported = S.supportedTuples.some(sup => Object.keys(t).length === Object.keys(sup).length && Object.entries(sup).every(([k, v]) => t[k] === v));
+        if (!matchesSupported) {
+            const baseline = require('../generated-contract.json'), old = baseline.types.UnsupportedVersionTuple.anyOf.map(x => Object.fromEntries(Object.entries(x.properties).map(([k, v]) => [k, v.const])));
             const historical = old.some(value => Object.keys(t).length === Object.keys(value).length && Object.entries(value).every(([k, v]) => t[k] === v));
-            return versionRejection(data, historical ? 'READ_UNSUPPORTED_VERSION' : Object.keys(S.tuple).some(k => k !== 'payload_profile' && t[k] === S.tuple[k]) ? 'READ_MIXED_VERSION_TUPLE' : 'READ_UNSUPPORTED_VERSION');
+            const mixed = S.supportedTuples.some(sup => Object.keys(sup).some(k => k !== 'payload_profile' && t[k] === sup[k]));
+            return versionRejection(data, historical ? 'READ_UNSUPPORTED_VERSION' : mixed ? 'READ_MIXED_VERSION_TUPLE' : 'READ_UNSUPPORTED_VERSION');
         }
         C.validate('BrowserProtectedRequest', data);
         return Object.freeze({
@@ -73,5 +75,5 @@ function admit(candidateJson) {
     }
 }
 module.exports = {
-    admit, failure
+    admit, failure, versionRejection
 };

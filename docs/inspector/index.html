@@ -258,8 +258,8 @@
         <p class="scope-line">
           It reads the current <code>0.6.0</code> native container (<code>kdna.json</code> plus
           <code>sections/pack-N.kdnab</code>) and the older single-<code>payload.kdnab</code>
-          layout. It shows the public manifest, the version tuple, the judgment catalog and
-          payload table digests.
+          layout. It shows the public manifest, the version tuple, the judgment catalog and payload
+          table digests.
         </p>
         <p class="scope-line">
           It does not decode payload frames, verify signatures or keys, or decrypt anything. An
@@ -279,7 +279,7 @@
 
       <footer>
         Static page generated from <code>docs/inspector/inspector-core.mjs</code> (inlined
-        sha256:<code>1554e557c38c3965</code>&hellip;), no external scripts or network
+        sha256:<code>31c47f4db39d4cc3</code>&hellip;), no external scripts or network
         requests. Source and specs: the <code>aikdna/kdna</code> repository.
       </footer>
     </div>
@@ -314,7 +314,10 @@ function fail(code, message) {
 
 async function inflateRaw(bytes) {
   if (typeof DecompressionStream !== 'function') {
-    fail('KDNA_UNSUPPORTED_BROWSER', 'This browser lacks DecompressionStream for deflated entries.');
+    fail(
+      'KDNA_UNSUPPORTED_BROWSER',
+      'This browser lacks DecompressionStream for deflated entries.',
+    );
   }
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -409,7 +412,8 @@ async function inspectKdna(input) {
   const mimeEntry = byName.get('mimetype');
   const manifestEntry = byName.get('kdna.json');
   if (!manifestEntry) fail('KDNA_MANIFEST_MISSING', 'Container has no kdna.json manifest.');
-  if (manifestEntry.size > LIMITS.maxManifestBytes) fail('KDNA_TOO_LARGE', 'Manifest is too large.');
+  if (manifestEntry.size > LIMITS.maxManifestBytes)
+    fail('KDNA_TOO_LARGE', 'Manifest is too large.');
   let manifest;
   try {
     manifest = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(manifestEntry.data));
@@ -421,12 +425,17 @@ async function inspectKdna(input) {
   const notices = [];
   const mimetype = mimeEntry ? new TextDecoder().decode(mimeEntry.data).trim() : null;
   if (mimetype !== KDNA_MIMETYPE) {
-    notices.push({ level: 'warn', text: `mimetype member is ${mimetype ?? 'missing'}, expected ${KDNA_MIMETYPE}.` });
+    notices.push({
+      level: 'warn',
+      text: `mimetype member is ${mimetype ?? 'missing'}, expected ${KDNA_MIMETYPE}.`,
+    });
   }
 
   const payload = isObject(manifest.payload) ? manifest.payload : {};
   const encryption = isObject(manifest.encryption) ? manifest.encryption : null;
-  const encryptedEntries = Array.isArray(encryption?.encrypted_entries) ? encryption.encrypted_entries : [];
+  const encryptedEntries = Array.isArray(encryption?.encrypted_entries)
+    ? encryption.encrypted_entries
+    : [];
   const encrypted = payload.encrypted === true || encryptedEntries.length > 0;
   const rep = isObject(manifest.representation_metadata) ? manifest.representation_metadata : {};
   const tuple = isObject(rep.tuple) ? rep.tuple : null;
@@ -440,17 +449,33 @@ async function inspectKdna(input) {
     for (const t of payload.tables.filter(isObject)) {
       const member = byName.get(t.member);
       let digest = 'unchecked';
-      if (!encrypted && member && Number.isInteger(t.offset_bytes) && Number.isInteger(t.length_bytes)) {
+      if (
+        !encrypted &&
+        member &&
+        Number.isInteger(t.offset_bytes) &&
+        Number.isInteger(t.length_bytes)
+      ) {
         const slice = member.data.subarray(t.offset_bytes, t.offset_bytes + t.length_bytes);
         const hex = await sha256Hex(slice);
         if (hex === null) digest = 'unchecked';
-        else digest = slice.length === t.length_bytes && `sha256:${hex}` === t.digest ? 'ok' : 'mismatch';
+        else
+          digest =
+            slice.length === t.length_bytes && `sha256:${hex}` === t.digest ? 'ok' : 'mismatch';
       } else if (!member) digest = 'member-missing';
-      tables.push({ section_id: t.section_id, table: t.table, member: t.member, rows: t.rows, digest });
+      tables.push({
+        section_id: t.section_id,
+        table: t.table,
+        member: t.member,
+        rows: t.rows,
+        digest,
+      });
     }
   }
   if (tables.some((t) => t.digest === 'mismatch' || t.digest === 'member-missing')) {
-    notices.push({ level: 'error', text: 'One or more payload table digests do not match the manifest; do not trust this file.' });
+    notices.push({
+      level: 'error',
+      text: 'One or more payload table digests do not match the manifest; do not trust this file.',
+    });
   }
 
   let payloadStatus;
@@ -465,7 +490,10 @@ async function inspectKdna(input) {
     });
   } else if (payloadMembers.length === 0) {
     payloadStatus = 'missing';
-    notices.push({ level: 'error', text: 'No payload member (payload.kdnab or sections/*.kdnab) is present.' });
+    notices.push({
+      level: 'error',
+      text: 'No payload member (payload.kdnab or sections/*.kdnab) is present.',
+    });
   } else {
     payloadStatus = 'plain';
     notices.push({
@@ -491,7 +519,11 @@ async function inspectKdna(input) {
       updated_at: manifest.updated_at ?? null,
     },
     tuple,
-    catalog: catalog.map((c) => ({ judgment_id: c.judgment_id, focus: c.focus, parent_ref: c.parent_ref ?? null })),
+    catalog: catalog.map((c) => ({
+      judgment_id: c.judgment_id,
+      focus: c.focus,
+      parent_ref: c.parent_ref ?? null,
+    })),
     payload: {
       status: payloadStatus,
       encrypted,
@@ -569,8 +601,21 @@ async function inspectKdna(input) {
 
       function table(headers, rows) {
         const t = el('table');
-        t.append(el('tr', {}, headers.map((h) => el('th', { text: h }))));
-        for (const row of rows) t.append(el('tr', {}, row.map((c) => el('td', { text: String(c ?? '') }))));
+        t.append(
+          el(
+            'tr',
+            {},
+            headers.map((h) => el('th', { text: h })),
+          ),
+        );
+        for (const row of rows)
+          t.append(
+            el(
+              'tr',
+              {},
+              row.map((c) => el('td', { text: String(c ?? '') })),
+            ),
+          );
         return t;
       }
 
@@ -599,7 +644,10 @@ async function inspectKdna(input) {
         out.push(
           section(
             'Manifest',
-            el('div', {}, [state, el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` })]),
+            el('div', {}, [
+              state,
+              el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` }),
+            ]),
             kv([
               ['File', `${file.name} (${formatBytes(file.size)})`],
               ['Title', s.title],
@@ -643,7 +691,10 @@ async function inspectKdna(input) {
             ['Encoding', report.payload.encoding],
             ['Encryption profile', report.encryption?.profile],
           ]),
-          table(['Member', 'Size'], report.entries.map((e) => [e.name, formatBytes(e.size)])),
+          table(
+            ['Member', 'Size'],
+            report.entries.map((e) => [e.name, formatBytes(e.size)]),
+          ),
         ];
         if (report.payload.tables.length) {
           payloadBits.push(
@@ -669,8 +720,14 @@ async function inspectKdna(input) {
         return el('section', { class: 'card error' }, [
           el('h2', { text: 'Could not read this file' }),
           el('div', { class: 'code', text: `${file.name} — ${code}` }),
-          el('div', { class: 'msg', text: error?.message ?? 'The file could not be read as a KDNA asset.' }),
-          el('div', { class: 'msg', text: 'The inspector fails closed: a structural problem rejects the whole file.' }),
+          el('div', {
+            class: 'msg',
+            text: error?.message ?? 'The file could not be read as a KDNA asset.',
+          }),
+          el('div', {
+            class: 'msg',
+            text: 'The inspector fails closed: a structural problem rejects the whole file.',
+          }),
         ]);
       }
     </script>

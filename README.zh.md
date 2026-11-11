@@ -91,8 +91,8 @@ kdna diff old.kdna new.kdna --format human             # 对比
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.2` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
 | [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
-本仓源码当前携带的 Core `0.37.9` / Read `0.13.3` 已发布在 `latest`，并经逐字节核验；
-上表列出已发布并逐字节核验的组合。
+本仓源码当前携带的候选是 Core `0.37.10` / Read `0.13.4`，尚未发布；在它通过正式发布与取得检查前，
+上表只列出已发布并逐字节核验的组合。
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
 请选择生产该资产的路径所声明的 reader。原生 CLI 的 Plan/load 不可用；

@@ -27,7 +27,10 @@ function fail(code, message) {
 
 async function inflateRaw(bytes) {
   if (typeof DecompressionStream !== 'function') {
-    fail('KDNA_UNSUPPORTED_BROWSER', 'This browser lacks DecompressionStream for deflated entries.');
+    fail(
+      'KDNA_UNSUPPORTED_BROWSER',
+      'This browser lacks DecompressionStream for deflated entries.',
+    );
   }
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -122,7 +125,8 @@ export async function inspectKdna(input) {
   const mimeEntry = byName.get('mimetype');
   const manifestEntry = byName.get('kdna.json');
   if (!manifestEntry) fail('KDNA_MANIFEST_MISSING', 'Container has no kdna.json manifest.');
-  if (manifestEntry.size > LIMITS.maxManifestBytes) fail('KDNA_TOO_LARGE', 'Manifest is too large.');
+  if (manifestEntry.size > LIMITS.maxManifestBytes)
+    fail('KDNA_TOO_LARGE', 'Manifest is too large.');
   let manifest;
   try {
     manifest = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(manifestEntry.data));
@@ -134,12 +138,17 @@ export async function inspectKdna(input) {
   const notices = [];
   const mimetype = mimeEntry ? new TextDecoder().decode(mimeEntry.data).trim() : null;
   if (mimetype !== KDNA_MIMETYPE) {
-    notices.push({ level: 'warn', text: `mimetype member is ${mimetype ?? 'missing'}, expected ${KDNA_MIMETYPE}.` });
+    notices.push({
+      level: 'warn',
+      text: `mimetype member is ${mimetype ?? 'missing'}, expected ${KDNA_MIMETYPE}.`,
+    });
   }
 
   const payload = isObject(manifest.payload) ? manifest.payload : {};
   const encryption = isObject(manifest.encryption) ? manifest.encryption : null;
-  const encryptedEntries = Array.isArray(encryption?.encrypted_entries) ? encryption.encrypted_entries : [];
+  const encryptedEntries = Array.isArray(encryption?.encrypted_entries)
+    ? encryption.encrypted_entries
+    : [];
   const encrypted = payload.encrypted === true || encryptedEntries.length > 0;
   const rep = isObject(manifest.representation_metadata) ? manifest.representation_metadata : {};
   const tuple = isObject(rep.tuple) ? rep.tuple : null;
@@ -153,17 +162,33 @@ export async function inspectKdna(input) {
     for (const t of payload.tables.filter(isObject)) {
       const member = byName.get(t.member);
       let digest = 'unchecked';
-      if (!encrypted && member && Number.isInteger(t.offset_bytes) && Number.isInteger(t.length_bytes)) {
+      if (
+        !encrypted &&
+        member &&
+        Number.isInteger(t.offset_bytes) &&
+        Number.isInteger(t.length_bytes)
+      ) {
         const slice = member.data.subarray(t.offset_bytes, t.offset_bytes + t.length_bytes);
         const hex = await sha256Hex(slice);
         if (hex === null) digest = 'unchecked';
-        else digest = slice.length === t.length_bytes && `sha256:${hex}` === t.digest ? 'ok' : 'mismatch';
+        else
+          digest =
+            slice.length === t.length_bytes && `sha256:${hex}` === t.digest ? 'ok' : 'mismatch';
       } else if (!member) digest = 'member-missing';
-      tables.push({ section_id: t.section_id, table: t.table, member: t.member, rows: t.rows, digest });
+      tables.push({
+        section_id: t.section_id,
+        table: t.table,
+        member: t.member,
+        rows: t.rows,
+        digest,
+      });
     }
   }
   if (tables.some((t) => t.digest === 'mismatch' || t.digest === 'member-missing')) {
-    notices.push({ level: 'error', text: 'One or more payload table digests do not match the manifest; do not trust this file.' });
+    notices.push({
+      level: 'error',
+      text: 'One or more payload table digests do not match the manifest; do not trust this file.',
+    });
   }
 
   let payloadStatus;
@@ -178,7 +203,10 @@ export async function inspectKdna(input) {
     });
   } else if (payloadMembers.length === 0) {
     payloadStatus = 'missing';
-    notices.push({ level: 'error', text: 'No payload member (payload.kdnab or sections/*.kdnab) is present.' });
+    notices.push({
+      level: 'error',
+      text: 'No payload member (payload.kdnab or sections/*.kdnab) is present.',
+    });
   } else {
     payloadStatus = 'plain';
     notices.push({
@@ -204,7 +232,11 @@ export async function inspectKdna(input) {
       updated_at: manifest.updated_at ?? null,
     },
     tuple,
-    catalog: catalog.map((c) => ({ judgment_id: c.judgment_id, focus: c.focus, parent_ref: c.parent_ref ?? null })),
+    catalog: catalog.map((c) => ({
+      judgment_id: c.judgment_id,
+      focus: c.focus,
+      parent_ref: c.parent_ref ?? null,
+    })),
     payload: {
       status: payloadStatus,
       encrypted,

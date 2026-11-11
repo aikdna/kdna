@@ -1,12 +1,12 @@
 # KDNA Read
 
-Package `@aikdna/kdna-read` version `0.13.3`, declaring the exact peer
-`@aikdna/kdna-core@0.37.9`. The browser/Node contract remains
+Package `@aikdna/kdna-read` version `0.13.4`, declaring the exact peer
+`@aikdna/kdna-core@0.37.10`. The browser/Node contract remains
 `kdna.read/0.6.4`, Core `kdna.core/0.8.2` and Canonical IR `0.6.1`;
 the native section route separately uses `kdna.read/0.7.0-candidate`.
-This version is a distribution-coordinate patch prepared for a provenance-bearing
-release. The exact peer moves to `@aikdna/kdna-core@0.37.9`; no runtime,
-projection, contract-rule or capability behavior changes.
+This version adds `0.6.0` `ProtectedManifest06Candidate` tuple projection and
+expansion-handle binding in `/protected-sections-browser` alongside the base
+`0.5.0` tuple, declaring exact peer `@aikdna/kdna-core@0.37.10`.
 Read consumes a genuine private Core snapshot and preserves authored focus,
 form, answer kind, method, core expression, typed Plan/policy and reference
 closures. It does not parse containers or recreate an IR. Source availability
@@ -18,7 +18,7 @@ registry serves, and how to obtain it, is rendered from
 [top-level entry](../../README.md); this package README makes no such claim, so
 it stays true for this artifact after later versions appear.
 
-Read `0.13.2` with exact Core `0.37.8`, Read `0.13.1` with exact Core `0.37.7`,
+Read `0.13.3` with exact Core `0.37.9`, Read `0.13.2` with exact Core `0.37.8`, Read `0.13.1` with exact Core `0.37.7`,
 Read `0.13.0` with exact Core `0.37.6`, Read `0.12.1` with exact Core `0.37.4`,
 Read `0.12.0` with exact Core `0.37.3` and Read `0.11.3` with exact Core
 `0.37.2` are earlier coordinates that remain installable under their own
@@ -100,7 +100,7 @@ Use `@aikdna/kdna-read/protected-sections-browser` with an operation and normali
 
 If the Host hands the result to an external sink, use `commitProtectedSectionTransport` with that one-use delivery token during the delivery callback. It rechecks current authority and Host scope before the sink; the sink acknowledgement must be synchronous literal `true`. Delivery and commit histories describe local handoff, and do not certify remote receipt. Dispose the Core operation when finished; its handles and retained projection authority then close.
 
-This candidate uses `kdna.protected-browser-read/0.1.0-candidate` and the base container `0.5.0` / Read `kdna.read/0.6.4` tuple. The original browser admission consumes Host-supplied container bytes, plaintext and unlock observation; that triple is no proof of decryption or ciphertext/plaintext authentication. This Read performs no new decryption or physical read. Its `host_supplied_triple` observations and receipts confer no authority; current Read authority and independent Host scope govern disclosure. Node native-section witnesses cannot substitute for the genuine browser origin. Browser-engine, installed-consumer and publication acceptance remain separate.
+This candidate uses `kdna.protected-browser-read/0.1.0-candidate` and accepts either the base container `0.5.0` / `kdna.read/0.6.4` tuple or the `0.6.0` `ProtectedManifest06Candidate` (`CandidateVersionTuple06`) tuple when matched to an exact browser-admitted origin. The original browser admission consumes Host-supplied container bytes, plaintext and unlock observation; that triple is no proof of decryption or ciphertext/plaintext authentication. This Read performs no new decryption or physical read. Its `host_supplied_triple` observations and receipts confer no authority; current Read authority and independent Host scope govern disclosure. Node native-section witnesses cannot substitute for the genuine browser origin. Browser-engine, installed-consumer and publication acceptance remain separate.
 
 ## Supplied-content analysis
 

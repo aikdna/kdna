@@ -2,8 +2,8 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1541563,
-    "sha256": "2b4a9fa83f6ce210970e8aca1e79630a0d9ce07e89cd8901ec6c39fd67af4146"
+    "bytes": 1542892,
+    "sha256": "ae45743fa2d43e973f28237ec15d2110ffb1c477267ea311190fe0a1bcbe61b0"
   },
   "historical_original_source": {
     "scope": "new_browser_adapter_has_no_historical_original_contract",
@@ -27,7 +27,7 @@
     },
     "domain": {
       "origin": "Only the exact successful admitProtectedBrowser snapshot registered in this same Core instance; ordinary, copied, foreign, consumed or closed origins reject.",
-      "interpretation": "Complete original base payload/IR admission; catalog is a projection of that complete origin.",
+      "interpretation": "Complete original base 0.5.0 or native 0.6.0 payload/IR admission; catalog is a projection of that complete origin.",
       "physical_reads": "none",
       "provenance": "host_supplied_triple",
       "proof": "observation_not_authority",
@@ -67,10 +67,12 @@
       "BrowserProtectedReadAuthority": "candidate/protected-browser/schemas/BrowserProtectedReadAuthority.json",
       "TrustedBrowserProtectedHost": "candidate/protected-browser/schemas/TrustedBrowserProtectedHost.json",
       "BrowserProtectedDeliveryToken": "candidate/protected-browser/schemas/BrowserProtectedDeliveryToken.json",
-      "BrowserProtectedHostContext": "candidate/protected-browser/schemas/BrowserProtectedHostContext.json"
+      "BrowserProtectedHostContext": "candidate/protected-browser/schemas/BrowserProtectedHostContext.json",
+      "ProtectedManifest06Candidate": "candidate/protected-logical06/ProtectedManifest06Candidate.schema.json",
+      "CanonicalIR06Candidate": "candidate/protected-logical06/CanonicalIR06Candidate.schema.json"
     },
     "rules": {
-      "tuple": "Request tuple must equal the actual immutable base snapshot tuple. Unknown and mixed tuples reject; no candidate06 relabeling.",
+      "tuple": "Request tuple must equal the actual immutable origin snapshot tuple (base 0.5.0 VersionTuple or 0.6.0 CandidateVersionTuple06). Unknown, cross-generation and mixed tuples reject.",
       "authority": "Fresh independent current callback and immutable origin signature-policy check for admission, every read and each lifecycle boundary including transport. Unlock observation never grants read authority.",
       "capture_id": "Ephemeral same-operation retained-origin identity, not a file-descriptor or new physical capture attestation.",
       "ingress": "Request/policy and settled Host observations are primitive JSON text, strict duplicate-key/scalar parsing and generated validators. Opaque tokens are same-instance WeakMap authority. Trusted callback returns retain JavaScript await semantics.",
@@ -81,8 +83,20 @@
       "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
     },
     "package_versions": {
-      "core": "0.37.9",
-      "read": "0.13.3"
+      "core": "0.37.10",
+      "read": "0.13.4"
+    },
+    "candidateVersionTuple06": {
+      "container": "0.6.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.1",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.7.0-candidate"
     }
   },
   "types": {
@@ -1032,7 +1046,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1091,7 +1105,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1167,6 +1181,16 @@
         },
         {
           "$ref": "#/$defs/Call_transport_failure"
+        }
+      ]
+    },
+    "BrowserProtectedCanonicalIR": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CanonicalIR"
+        },
+        {
+          "$ref": "#/$defs/CanonicalIR06Candidate"
         }
       ]
     },
@@ -1365,7 +1389,7 @@
           "const": "catalog_only"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1460,7 +1484,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1555,7 +1579,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1650,7 +1674,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -2008,7 +2032,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -2107,7 +2131,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -2463,7 +2487,7 @@
         "tuple": {
           "anyOf": [
             {
-              "$ref": "#/$defs/VersionTuple"
+              "$ref": "#/$defs/BrowserProtectedTuple"
             },
             {
               "type": "null"
@@ -2623,7 +2647,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -2658,7 +2682,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -2692,7 +2716,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -2733,7 +2757,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "budget_bytes": {
           "$ref": "#/$defs/UInt"
@@ -3007,7 +3031,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -3016,7 +3040,7 @@
           "$ref": "#/$defs/AssetDigests"
         },
         "ir": {
-          "$ref": "#/$defs/CanonicalIR"
+          "$ref": "#/$defs/BrowserProtectedCanonicalIR"
         },
         "ir_digest": {
           "$ref": "#/$defs/Digest"
@@ -3089,6 +3113,16 @@
         "disclosure"
       ],
       "additionalProperties": false
+    },
+    "BrowserProtectedTuple": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        }
+      ]
     },
     "BrowserProtectedUnlockObservation": {
       "type": "object",
@@ -3482,6 +3516,64 @@
       ],
       "additionalProperties": false
     },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
     "CanonicalIR": {
       "type": "object",
       "properties": {
@@ -3491,6 +3583,100 @@
         },
         "tuple": {
           "$ref": "#/$defs/VersionTuple"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReadNode"
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRReference"
+          },
+          "minItems": 0
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRRelationship"
+          },
+          "minItems": 0
+        },
+        "mandatory_closures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MandatoryClosure"
+          },
+          "minItems": 0
+        },
+        "expansion_targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpansionTarget"
+          },
+          "minItems": 0
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRTargetDescriptor"
+          },
+          "minItems": 0
+        },
+        "asset_closure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "unresolved_external": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UnresolvedExternalReference"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "contract",
+        "tuple",
+        "asset",
+        "nodes",
+        "catalog",
+        "references",
+        "relationships",
+        "mandatory_closures",
+        "expansion_targets",
+        "asset_index",
+        "asset_closure",
+        "unresolved_external"
+      ],
+      "additionalProperties": false
+    },
+    "CanonicalIR06Candidate": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -3707,6 +3893,28 @@
           "$ref": "#/$defs/Compared"
         }
       ]
+    },
+    "Compatibility": {
+      "type": "object",
+      "properties": {
+        "min_loader_version": {
+          "$ref": "#/$defs/StrictLoaderVersion"
+        },
+        "profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.5.1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "min_loader_version",
+        "profile",
+        "profile_version"
+      ],
+      "additionalProperties": false
     },
     "ComponentBody": {
       "oneOf": [
@@ -5597,6 +5805,34 @@
         "statement",
         "condition_refs",
         "output_contract_ref"
+      ],
+      "additionalProperties": false
+    },
+    "HistoryDeclaration": {
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial"
+          ]
+        },
+        "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RevisionEntry"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "coverage",
+        "statement",
+        "entries"
       ],
       "additionalProperties": false
     },
@@ -8028,6 +8264,18 @@
       ],
       "additionalProperties": false
     },
+    "ManifestAuthoring": {
+      "type": "object",
+      "properties": {
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "content_digest"
+      ],
+      "additionalProperties": false
+    },
     "ManifestLineage": {
       "type": "object",
       "properties": {
@@ -8045,6 +8293,23 @@
         "source_asset_id",
         "source_version",
         "relationship"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestRuntime": {
+      "type": "object",
+      "properties": {
+        "mandatory_entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeMandatoryEntryName"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mandatory_entries"
       ],
       "additionalProperties": false
     },
@@ -9453,6 +9718,174 @@
         }
       ]
     },
+    "ProtectedManifest06Candidate": {
+      "type": "object",
+      "properties": {
+        "format_version": {
+          "type": "string",
+          "const": "0.6.0"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_uid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "payload.kdnab"
+            },
+            "encoding": {
+              "type": "string",
+              "const": "cbor"
+            },
+            "encrypted": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "path",
+            "encoding",
+            "encrypted"
+          ],
+          "additionalProperties": false
+        },
+        "runtime": {
+          "$ref": "#/$defs/ManifestRuntime"
+        },
+        "creator": {
+          "$ref": "#/$defs/Creator"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authoring": {
+          "$ref": "#/$defs/ManifestAuthoring"
+        },
+        "access": {
+          "type": "string",
+          "const": "licensed"
+        },
+        "license": {
+          "$ref": "#/$defs/License"
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "description": {
+          "$ref": "#/$defs/Text"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "minItems": 0
+        },
+        "lineage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ManifestLineage"
+          },
+          "minItems": 0
+        },
+        "encryption": {
+          "$ref": "#/$defs/EncryptionDescriptor"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "entitlement": {
+          "$ref": "#/$defs/ProtectionEntitlement"
+        },
+        "history": {
+          "$ref": "#/$defs/HistoryDeclaration"
+        },
+        "representation_profile": {
+          "type": "string",
+          "const": "kdna.protected.logical-payload/0.1.0-candidate"
+        }
+      },
+      "required": [
+        "format_version",
+        "asset_id",
+        "asset_uid",
+        "asset_type",
+        "title",
+        "version",
+        "judgment_version",
+        "created_at",
+        "updated_at",
+        "compatibility",
+        "payload",
+        "runtime",
+        "summary",
+        "languages",
+        "history",
+        "representation_profile",
+        "encryption",
+        "entitlement",
+        "access"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "payload": {
+                "properties": {
+                  "encrypted": {
+                    "const": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "encrypted"
+                ]
+              }
+            },
+            "required": [
+              "payload"
+            ]
+          },
+          "then": {
+            "required": [
+              "encryption"
+            ]
+          }
+        }
+      ]
+    },
     "ProtectionEntitlement": {
       "type": "object",
       "properties": {
@@ -10576,6 +11009,25 @@
         "适用限制"
       ]
     },
+    "RuntimeMandatoryEntryName": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntryName"
+        },
+        {
+          "not": {
+            "enum": [
+              "checksums.json",
+              "signature.kdsig",
+              "mimetype"
+            ]
+          }
+        },
+        {
+          "pattern": "^(?!build-receipt\\.json$)(?!reports/)(?!authoring/)"
+        }
+      ]
+    },
     "ScalarKind": {
       "type": "string",
       "enum": [
@@ -11164,6 +11616,11 @@
         "direction"
       ],
       "additionalProperties": false
+    },
+    "StrictLoaderVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "description": "Strict x.y.z loader version requirement (no leading zeros, prerelease suffix, or build metadata) used by Compatibility.min_loader_version; matches the runtime loader gate and the standalone manifest schema."
     },
     "StructuredCondition": {
       "type": "object",

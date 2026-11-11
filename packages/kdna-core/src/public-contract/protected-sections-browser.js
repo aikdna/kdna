@@ -5,11 +5,15 @@ function bindProtectedPayloadRequest(operation, requestJson) {
   if (!record) return R.failure(null);
   const admitted = R.admit(requestJson);
   if (admitted.channel !== 'admitted_request') return admitted;
+  const reqData = S.inspectRequest(admitted.request);
+  if (S.C.strict.canonicalJson(reqData.tuple) !== S.C.strict.canonicalJson(record.view.tuple)) {
+    return R.versionRejection(reqData, 'READ_UNSUPPORTED_VERSION');
+  }
   try {
     const token = S.normalized(S.request(admitted.request), record.view);
     S.pairRequest(token, operation);
     return Object.freeze({ channel: 'admitted_request', request: token });
-  } catch { return R.failure(S.inspectRequest(admitted.request)); }
+  } catch { return R.failure(reqData); }
 }
 module.exports = {
   admitProtectedPayloadRequestJson: R.admit,

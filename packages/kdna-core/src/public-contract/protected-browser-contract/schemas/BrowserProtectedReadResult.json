@@ -891,7 +891,7 @@
           "$ref": "#/$defs/Digest"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1121,7 +1121,7 @@
           "const": "catalog_only"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1216,7 +1216,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1311,7 +1311,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1406,7 +1406,7 @@
           "const": "ready"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1715,7 +1715,7 @@
           "$ref": "#/$defs/Identifier"
         },
         "tuple": {
-          "$ref": "#/$defs/VersionTuple"
+          "$ref": "#/$defs/BrowserProtectedTuple"
         },
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
@@ -1996,7 +1996,7 @@
         "tuple": {
           "anyOf": [
             {
-              "$ref": "#/$defs/VersionTuple"
+              "$ref": "#/$defs/BrowserProtectedTuple"
             },
             {
               "type": "null"
@@ -2309,6 +2309,16 @@
       ],
       "additionalProperties": false
     },
+    "BrowserProtectedTuple": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/VersionTuple"
+        },
+        {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        }
+      ]
+    },
     "BrowserProtectedUnlockObservation": {
       "type": "object",
       "properties": {
@@ -2611,6 +2621,64 @@
       },
       "required": [
         "items"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
       ],
       "additionalProperties": false
     },
