@@ -263,12 +263,13 @@ route** — `kdna create` in `@aikdna/kdna-cli` followed by an operator-bound
 local MCP read — is **unsigned**: `create` writes no `signature.kdsig` member
 and the Read adapter does not verify signatures, so integrity on that route
 rests on the canonical content digest computed at creation, which is not a
-signature or an endorsement. The published browser Inspector page
-(`docs/inspector/`) is narrower still: it inlines
-`@aikdna/kdna-web-client@0.3.0`, reads the published `0.2` container line
-(`payload.kdnab`) only, verifies container shape rather than signatures, and
-reports a current native asset as unreadable by that page with the CLI route to
-use instead.
+signature or an endorsement. The static browser Inspector page
+(`docs/inspector/`) is narrower still: it is generated from the repo-local,
+dependency-free `inspector-core.mjs`, reads the current `0.6.0` native container
+(and the older `payload.kdnab` layout) entirely offline, shows the manifest,
+tuple, catalog and payload table digests, verifies container shape rather than
+signatures, and reports an encrypted / password-protected payload as unreadable
+there.
 
 Core format validity and Creation Engine acceptance are separate results. The
 published Creation Output Boundary describes writer checksum and scoped
