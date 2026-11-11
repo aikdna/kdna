@@ -43,7 +43,8 @@ KDNA Core may verify:
 - whether a compatible implementation preserved required semantics.
 
 Which items a given implementation verifies is version-specific. The current
-published line is CLI `0.43.2` on Core `0.37.9` / Read `0.13.3`; the
+published SDK pair is Core `0.37.10` / Read `0.13.4`, and the current native
+CLI is CLI `0.43.3` (pinned to Core `0.37.9` / Read `0.13.3`); the
 [support matrix](./current-release-support.md) and the exact package receipt
 define its capabilities for the artifact you installed. Admission establishes
 the technical validity of the captured bytes under that contract. It does not
@@ -76,7 +77,8 @@ objects, not substitutes for the distributed asset.
 
 ### Current published line: Core admission then Read
 
-The current published CLI `0.43.2` line (Core `0.37.9` / Read `0.13.3`) uses
+The current published CLI `0.43.3` line (with exact Core `0.37.9` / Read `0.13.3`
+pins) and the published SDK pair Core `0.37.10` / Read `0.13.4` use
 Core admission then Read. It is not a LoadPlan or Runtime Capsule flow:
 
 ```text
@@ -88,7 +90,7 @@ explicit file or authorized attachment
 → Agent use
 ```
 
-Core `0.37.9` and Read `0.13.3` are published stable coordinates; the exact
+Core `0.37.10` and Read `0.13.4` are published stable coordinates; the exact
 peer and artifact binding are recorded in the support matrix. Admission
 establishes the technical validity of the captured bytes; it does not
 authenticate provenance, grant authorization, or enable cryptographic
@@ -113,7 +115,7 @@ explicit file or authorized attachment
 
 In that published line, agents and applications consume the Runtime Capsule.
 LoadPlan and Runtime Capsule admission are unavailable in the current CLI
-`0.43.2` line.
+`0.43.3` line.
 
 Generic ZIP extraction or raw payload decoding is a developer/audit action in
 either state, not a compatible Agent runtime.
@@ -176,7 +178,7 @@ not need to make such a claim.
 One asset is the atomic and default path:
 
 ```text
-current CLI 0.43.2:   select one .kdna → Core admission → Read → use
+current CLI 0.43.3:   select one .kdna → Core admission → Read → use
 historical CLI 0.36.1: select one .kdna → inspect → plan-load → load → use
 ```
 

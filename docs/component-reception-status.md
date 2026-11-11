@@ -27,7 +27,6 @@
 | `@aikdna/kdna-mcp-server` | Fixed CLI `0.38.0-rc.component-semantics.1` / Core / Read candidates | Local stdio candidate, operator-bound | Operator-supplied asset and explicit read permission; catalog, exact selection, mandatory closure | No model-selected paths, no discovery, no permission from `initialize`/tools; native Host delivery and semantic adoption remain unverified |
 | `kdna-skills` (`kdna-loader`, `kdna-creator`) | Loader/MCP candidate `0.7.0-rc.component-semantics.1` | Local source and packed stdio candidate | Explicit local catalog/selection/Read guidance; bounded live creation session adapter | Host delivery and semantic adoption `NOT_RUN`; these remain outside the independently verified packed stdio scope |
 | `aikdna/kdna-assets` | Core/Read/CLI candidates by exact archive and installed-file digest | macOS arm64, Node.js 26.5.0 | Index validation, Core outcome audit, explicit Read audit; separately recorded current candidate | Two historical references remain rejected with `READ_CORE_INVALID`; current candidate has no human review or Release coordinate |
-| `aikdna/kdna-work-releases` | Not a runtime consumer | - | Verifies published artifacts against checksums and minisign signatures when they exist | No installers or update feed published; download endpoints return `410 Gone` |
 
 ## Current source entry points
 

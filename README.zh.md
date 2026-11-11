@@ -41,29 +41,18 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 ### 四步上手：创建 / 读取 / 保护 / 对比
 
-**已发布（`@aikdna/kdna-cli@0.43.2`）：**
+**已发布（`@aikdna/kdna-cli@0.43.3`）：**
 
 ```bash
-npx @aikdna/kdna-cli@0.43.2 create authored.json --allow-create   # 创建
-npx @aikdna/kdna-cli@0.43.2 validate my.kdna                      # 校验
-npx @aikdna/kdna-cli@0.43.2 inspect my.kdna                       # 检查
-npx @aikdna/kdna-cli@0.43.2 read my.kdna                          # 读取
+npx @aikdna/kdna-cli@0.43.3 init --output draft.json                       # 创建：生成输入骨架
+npx @aikdna/kdna-cli@0.43.3 validate-input draft.json                      # 校验草稿字段
+npx @aikdna/kdna-cli@0.43.3 create --draft draft.json --output my.kdna --allow-create
+npx @aikdna/kdna-cli@0.43.3 inspect my.kdna                                # 检查
+npx @aikdna/kdna-cli@0.43.3 validate my.kdna                               # 校验
+npx @aikdna/kdna-cli@0.43.3 read my.kdna --mode exact_selection --judgment-id a,b --allow-read --compact
+npx @aikdna/kdna-cli@0.43.3 protect my.kdna --output locked.kdna --password-file ./pw.txt
+npx @aikdna/kdna-cli@0.43.3 diff old.kdna new.kdna --format human          # 对比
 ```
-
-保护与对比尚未包含在已发布 CLI 中。
-
-**下一版 CLI（尚未发布；本地分支 `feat/cli-create-consume-protect-diff-20261111`）：**
-
-```bash
-kdna init                                   # 创建：生成输入骨架
-kdna validate-input authored.json
-kdna compile authored.json                  # 或：kdna create --draft
-kdna read my.kdna --judgment-id a,b --compact          # 读取选定判断
-kdna protect my.kdna --password-file ./pw.txt          # 保护（本地、可选）
-kdna diff old.kdna new.kdna --format human             # 对比
-```
-
-这些命令在发布前可能变化，请以上方已发布命令为准。
 
 
 > 第一次使用 → [Start Here](./docs/start-here.md)
@@ -86,13 +75,13 @@ kdna diff old.kdna new.kdna --format human             # 对比
 
 | 入口 | 精确已发布组合 | 使用边界 |
 | --- | --- | --- |
-| Core/Read | Core `0.37.9` / Read `0.13.3` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
-| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.2` 与其自身精确 Core `0.37.9` / Read `0.13.3` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
+| Core/Read | Core `0.37.10` / Read `0.13.4` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
+| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.3` 与其自身精确 Core `0.37.9` / Read `0.13.3` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.2` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用 `NOT_RUN` |
 | [Studio 会话](https://github.com/aikdna/kdna-studio-cli#readme) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
-本仓源码当前携带的候选是 Core `0.37.10` / Read `0.13.4`，尚未发布；在它通过正式发布与取得检查前，
-上表只列出已发布并逐字节核验的组合。
+本仓源码当前携带的 Core `0.37.10` / Read `0.13.4` 已发布在 `latest`，并经逐字节核验；
+上表列出已发布并逐字节核验的组合。
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
 请选择生产该资产的路径所声明的 reader。原生 CLI 的 Plan/load 不可用；
@@ -121,7 +110,7 @@ registry 安装路径：
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.2
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.3
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
@@ -141,7 +130,7 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 
 已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
-已发布稳定线是 `0.43.2`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
+已发布稳定线是 `0.43.3`，不能覆盖已经发布的 `.2` 或 `.3`。技术检查和脚本配方不证明真人确认、
 作品适用性或实际任务采用。
 
 ## 已发布原生 CLI 0.39.0-rc.native-sections.2 的独立路径

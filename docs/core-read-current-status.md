@@ -1,28 +1,26 @@
 # Core and Read: current implementation status
 
-Source status: 2026-11-11. Core `0.37.9` and Read `0.13.3` are the published
-stable coordinates; Core `0.37.10` and Read `0.13.4` are the current unpublished
-stable distribution candidates. Source readiness, exact artifact acceptance and
-actual public publication are separate facts.
+Source status: 2026-11-11. Core `0.37.10` and Read `0.13.4` are the published
+stable coordinates. Source readiness, exact artifact acceptance and actual
+public publication are separate facts.
 The [support matrix](current-release-support.md) and
 [stable procedure](release-stable.md) define acquisition and compatibility.
 The next read-cost measurement work is scoped in
 [Read cost measurement work package](./read-cost-work-package.md); it does not
 change the published contracts.
 
-Both Core `0.37.9` and Read `0.13.3` were published from reviewed source commit
-`3c89b8e` with registry `gitHead` and provenance attestations. Core `0.37.9`
-was published by workflow run `39216131010`; that run's registry-visibility
+Both Core `0.37.10` and Read `0.13.4` were published from reviewed source commit
+`a56152f` with registry `gitHead` and provenance attestations. Core `0.37.10`
+was published by workflow run `42989896951`; that run's registry-visibility
 step timed out and the job is red, while the npm publication, artifact bytes,
 `gitHead` and provenance succeeded. The release matrix therefore omits
-`publish_run` for Core rather than claiming a successful run. Read `0.13.3`
-was published by workflow run `39217540825`, which is green.
+`publish_run` for Core rather than claiming a successful run. Read `0.13.4`
+was published by workflow run `42991645832`, which is green.
 
 ## Exact SDK pair and contracts
 
-Published Read `0.13.3` declares Core `0.37.9` as its exact peer.
-Read declares Core `0.37.10` as its exact peer in the current source candidate;
-both declare Node >=20.
+Read declares Core `0.37.10` as its exact peer in the published `0.13.4`
+package and the current source; both declare Node >=20.
 The release procedure produces the exact source commit/tree, archive SHA256,
 SRI and source-member inventory for each final artifact. Those external release
 records bind the installed graph and public channel; this document does not
@@ -58,7 +56,7 @@ production identity service or native credential store.
 
 | Consumer | Current published graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.43.2` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete Git source plus bundled graph; one operator-bound local file. The direct CLI is the primary route. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
 | Studio | StudioCLI `0.14.0` / StudioCore `4.1.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
 
@@ -68,9 +66,9 @@ records retain their original bytes and scope; they no longer describe these
 current sources. No current acquisition route depends on an unnamed
 local archive or a version guessed from an earlier checkout.
 
-The immediately preceding Core `0.37.8` / Read `0.13.2` pair remains
-installable; native CLI `0.43.1` still pins it, while CLI `0.43.2` binds the
-current Core `0.37.9` / Read `0.13.3` pair. The published history also
+The immediately preceding Core `0.37.9` / Read `0.13.3` pair remains
+installable; native CLI `0.43.3` and `0.43.2` bind that pair, while CLI `0.43.1`
+retains its own Core `0.37.8` / Read `0.13.2` pins. The published history also
 retains Core `0.37.0` / Read `0.11.1` and native CLI
 `0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read
 `0.11.0-rc.r2.7`. These are distinct installed graphs. The stable coordinates
