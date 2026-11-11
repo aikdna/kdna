@@ -37,7 +37,7 @@ support to the environment table above.
 | Integration | Owning source contract |
 |---|---|
 | Terminal consumption | [CLI](https://github.com/aikdna/kdna-cli#readme): explicit-file Core admission and bounded public Read |
-| Creation engine and terminal Host | [Studio Core](https://github.com/aikdna/kdna-studio-core#readme) and [Studio CLI](https://github.com/aikdna/kdna-studio-cli#readme): live creation, saved-byte checks and static verification remain separate |
+| Creation engine and terminal Host | [Studio Core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) and [Studio CLI](https://www.npmjs.com/package/@aikdna/kdna-studio-cli): live creation, saved-byte checks and static verification remain separate |
 | Python | [Python Core/Read](../python-sdk/README.md): its own pinned contract, standard-library implementation and measured environment |
 | Agent and MCP | [Skills/MCP](https://github.com/aikdna/kdna-skills#readme): explicit adapters and scoped execution evidence |
 

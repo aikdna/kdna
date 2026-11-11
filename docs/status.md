@@ -40,9 +40,9 @@ an Agent-installed Skill are not protocol requirements.
 | Layer | Status | Public meaning |
 |---|---|---|
 | KDNA Asset Container | Pre-release | Versioned manifest, payload and container rules; ordinary Core admission refuses protected inputs, while explicit Node protection follows its separate contract |
-| Local public-asset runtime | Pre-release | Native CLI `0.43.3` with exact Core `0.37.9` / Read `0.13.3`: `init`, `validate-input`, `compile`, `create`, `protect`, `inspect`, `validate`, `read`, `diff`, `source-open`, `source-pack`; no Plan/load. Published CLI 0.36.1 keeps its loading/packing contract |
-| Authoring toolchain | Pre-release | Current typed Studio session, saved-bundle verification and explicit Read; project/card APIs belong to published Studio CLI 0.11.0 |
-| Licensed access | Candidate | Explicit Node protection admits supported encrypted containers under trusted providers; production accounts and service adoption require separate evidence |
+| Local public-asset runtime | Pre-release | Native CLI `0.43.3` with exact Core `0.37.9` / Read `0.13.3`: `init`, `validate-input`, `compile`, `create`, `protect`, `inspect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`; no Plan/load. Published CLI 0.36.1 keeps its loading/packing contract |
+| Authoring toolchain | Pre-release | Native `0.6.0` draft/compile authoring in `@aikdna/kdna-cli`, plus separate typed `0.5.0` Studio session; project/card APIs belong to published Studio CLI 0.11.0 |
+| Licensed access | Candidate | Explicit Node protection admits supported encrypted containers under trusted providers; public, local, and password-protected (`0.6.0`) `.kdna` creation and reading are permanently account-free |
 | Remote access | Candidate | Current Read adapters require deployment-owned context and policy; published remote loading has a separate contract |
 | Remote and activation references | Experimental | Remote supplies an HTTP Read handler; Activation supplies a co-located store observer, with no standalone server/CLI or AIKDNA-hosted service |
 | Signing and revocation | Version-specific | Published Core 0.22.0 signing APIs remain historical. Ordinary Core admission refuses signatures; explicit Node integrity and grant-status checks follow the protection contract and do not establish a production revocation service |
@@ -51,15 +51,15 @@ an Agent-installed Skill are not protocol requirements.
 | JS Core | Reference implementation | Primary public conformance implementation |
 | Eval package | Experimental | Issuer-scoped replay, budget, and consumption evaluation; not Core authority |
 | `@aikdna/kdna` compatibility package | Legacy compatibility | Maintained migration bridge; not the recommended new integration path |
-| Swift, Agent, editor, React, and Web integrations | Pre-release / experimental / unassessed | Check each repository's exact version and evidence; `kdna-loader` is currently Unassessed |
+| Swift, Agent, editor, React, and Web integrations | Pre-release / experimental / unassessed | Check each repository's exact version and evidence; `kdna-loader` and `kdna-creator` wrap `@aikdna/kdna-cli` over explicit user-selected files, while named Host vendor certification remains separate |
 
 ## Current source entry
 
 Use the [Core/Read guide](./core-read-current-status.md) and the
 [current CLI source README](https://github.com/aikdna/kdna-cli#readme) with its
 exact dependency graph. A source candidate is not an installable npm release.
-Current source creation is described by the
-[Studio CLI](https://github.com/aikdna/kdna-studio-cli#readme); it does not reuse
+Separate `0.5.0` Studio session creation is distributed via
+[`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli); it does not reuse
 the published project/card walkthrough below.
 
 ## Published CLI 0.36.1 walkthrough

@@ -56,9 +56,9 @@ production identity service or native credential store.
 
 | Consumer | Current published graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container0.6 create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.43.3` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6` create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.2` and Core `0.37.9` / Read `0.13.3` pins | Optional complete Git source plus bundled graph; one operator-bound local file. The direct CLI is the primary route. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
-| Studio | StudioCLI `0.14.0` / StudioCore `4.1.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container0.5/Read0.6.4 session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; nativeCLI does not read these assets. |
+| Studio | StudioCLI `0.14.0` / StudioCore `4.1.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container `0.5` / Read `0.6.4` session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; native CLI does not read these assets. |
 
 Use each consumer's own manifest, lock, full archive/member binding and
 installation instructions. Older local combination/material-edit delivery
@@ -90,11 +90,11 @@ executable recipe in the [CLI source](https://github.com/aikdna/kdna-cli#readme)
 It creates/saves, reads selections, revises through official Source, reopens and
 reuses the revised file while preserving the original. For the supported
 protected Studio/browser journey, use the
-[Studio source and guide](https://github.com/aikdna/kdna-studio-cli#readme) with
+[Studio package and guide](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) with
 its exact trusted Host and credential channel. The separate
 [source-only local Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md)
-handles protected container0.5 / Read0.6.4 consumption and saved-file revision;
-StudioCLI's static read/verify does not unlock it, and native container0.6 is a
+handles protected container `0.5` / Read `0.6.4` consumption and saved-file revision;
+Studio CLI's static read/verify does not unlock it, and native container `0.6` is a
 different route. A wrong credential, denied scope,
 wrong snapshot, stale handle, inadequate budget or failed delivery must remain
 an explicit failure; do not fall back to plaintext or a raw parser.

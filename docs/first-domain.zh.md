@@ -2,7 +2,7 @@
 
 > 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
 > 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
-> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
 
 > 简明指南。详细端到端教程见 [First Domain Walkthrough](./first-domain-walkthrough.md)（英文）。
 
@@ -20,7 +20,7 @@ npm i -g @aikdna/kdna-cli@0.36.1
 kdna demo minimal ./my-domain
 ```
 
-这会生成一个非权威的开发源工作区（`mimetype`、`kdna.json`、`payload.kdnab`、`checksums.json`）。阅读更完整的判断结构示例，可查看仓库内 `templates/minimal-domain/` 的 `KDNA_Core.json` 与 `KDNA_Patterns.json`（仅作阅读参考；对模板目录执行 `kdna inspect`/`validate` 会因结构不属于该发布线而 exit 2）。需要可信 `.kdna` 资产时，请使用 [`@aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli)（`kdna-studio create` / `card` / `export`）完成 Human Lock、编译和导出。
+这会生成一个非权威的开发源工作区（`mimetype`、`kdna.json`、`payload.kdnab`、`checksums.json`）。阅读更完整的判断结构示例，可查看仓库内 `templates/minimal-domain/` 的 `KDNA_Core.json` 与 `KDNA_Patterns.json`（仅作阅读参考；对模板目录执行 `kdna inspect`/`validate` 会因结构不属于该发布线而 exit 2）。需要可信 `.kdna` 资产时，请使用 [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli)（`kdna-studio create` / `card` / `export`）完成 Human Lock、编译和导出。
 
 ## 第三步：查看
 
