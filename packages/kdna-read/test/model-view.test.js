@@ -335,3 +335,74 @@ test('a mixture of reduced and inline members is refused, not half-projected',as
     d=>!(d.target.kind==='judgment'&&d.target.id==='qC'));
   assert.throws(()=>projectModelView(mixed,{mode:'exact_selection'}),error=>error.code==='READ_MODEL_VIEW_UNAVAILABLE');
 });
+test('real 0.6 retained-sections-browser exact_selection issues reducibleMember handles and expands identically to retained-sections-node',async()=>{
+  const crypto=require('node:crypto');
+  const migration=req('@aikdna/kdna-core/source-migration-node');
+  const bn=req('@aikdna/kdna-core/sections-bytes-node');
+  const bb=req('@aikdna/kdna-core/sections-bytes-browser');
+  const rnCore=req('@aikdna/kdna-core/retained-sections-node');
+  const rbCore=req('@aikdna/kdna-core/retained-sections-browser');
+  const rnRead=req('@aikdna/kdna-read/retained-sections-node');
+  const rbRead=req('@aikdna/kdna-read/retained-sections-browser');
+  const nativeTuple=require(path.join(coreDir,'src/public-contract/sections/contract.json')).module.versionTuple;
+  const {asset,bytes}=prepared('complex',addMemberGraph);
+  const expectedA='sha256:'+crypto.createHash('sha256').update(bytes).digest('hex');
+  const migReq=migration.admitSourceMigrationRequest({
+    request_id:'mig:retained-browser-parity',tuple:structuredClone(nativeTuple),operation:'migrate_public_source',
+    source_expected_A:expectedA,timeout_ms:60000,signature_policy:{requireSignature:false,expectedPublicKeyHex:null}});
+  assert.equal(migReq.status,'admitted_request');
+  const migrated=await migration.migratePublicSourceNode(bytes,migReq.request,migration.createNativeSourceMigrationAuthority(()=>true));
+  assert.equal(migrated.status,'migrated');
+  const bytes06=new Uint8Array(migrated.bytes);
+  const wholeCandidate={request_id:'admit:06',tuple:nativeTuple,budget_bytes:8000000,mode:'whole_asset',selection:null,handle:null};
+  const nodeAdmitted=await bn.admitSectionBytesNode(bytes06,req('@aikdna/kdna-core/sections-node').admitSectionRequest(wholeCandidate),bn.createNativeSectionByteReadAuthority(()=>true));
+  const browserAdmitted=await bb.admitSectionBytesBrowser(bytes06,bb.admitBrowserSectionRequestJson(JSON.stringify(wholeCandidate)),bb.createNativeBrowserSectionReadAuthority(()=>true));
+  assert.equal(nodeAdmitted.status,'accepted');
+  assert.equal(browserAdmitted.status,'accepted');
+  const makeObs=({request,preparation})=>{
+    const scope=[...new Set([...preparation.intent.projection_node_ids,...preparation.intent.descriptor_node_ids,...preparation.intent.issuable_handle_scopes.flatMap(t=>t.scope)])]
+      .sort((a,b)=>Buffer.compare(Buffer.from(a),Buffer.from(b)));
+    return {host_id:'host:retained',host_epoch:'epoch:1',decision_id:'dec:1',operation_id:preparation.intent.operation_id,
+      request_id:request.request_id,request_digest:preparation.request_digest,origin:preparation.origin,
+      intent_digest:preparation.intent_digest,asset:preparation.asset,tuple:preparation.tuple,scope,
+      issued_at:900,expires_at:2000,current_ms:1000,decision:'allow',policy_id:'policy:retained'};
+  };
+  const nodeHost=rnRead.createTrustedHostReadProvider({observe:makeObs,deliver:()=>true});
+  const browserHost=rbRead.createTrustedHostReadProviderJson(ctx=>JSON.stringify(makeObs(ctx)),()=>true);
+  const selCandidate={request_id:'sel:qA',tuple:nativeTuple,budget_bytes:8000000,mode:'exact_selection',
+    selection:{asset_id:asset.manifest.asset_id,asset_version:asset.manifest.version,judgment_ids:['qA']},handle:null};
+  const nodeSelReq=rnCore.admitRetainedSectionRequest(selCandidate);
+  const browserSelReq=rbCore.admitRetainedSectionRequestJson(JSON.stringify(selCandidate));
+  assert.equal(nodeSelReq.status,'admitted_request');
+  assert.equal(browserSelReq.status,'admitted_request');
+  const nodePrep=await rnCore.prepareRetainedSectionRead(nodeAdmitted.snapshot,nodeSelReq.request,rnCore.createRetainedSectionReadAuthority(()=>true));
+  const browserPrep=await rbCore.prepareRetainedSectionRead(browserAdmitted.snapshot,browserSelReq.request,rbCore.createRetainedSectionReadAuthorityJson(()=>true));
+  assert.equal(nodePrep.status,'prepared');
+  assert.equal(browserPrep.status,'prepared');
+  const nodeRes=await rnRead.readRetainedSection(nodePrep.prepared,nodeHost);
+  const browserRes=await rbRead.readRetainedSection(browserPrep.prepared,browserHost);
+  assert.equal(nodeRes.envelope?.status,'ready',JSON.stringify(nodeRes));
+  assert.equal(browserRes.envelope?.status,'ready',JSON.stringify(browserRes));
+  const nodeBody=projectModelView(nodeRes,{mode:'exact_selection'});
+  const browserBody=projectModelView(browserRes,{mode:'exact_selection'});
+  const scrubHandles=content=>({...content,closure:content.closure.map(e=>e.state==='reduced'?{...e,handle_id:'<minted>'}:e)});
+  assert.deepEqual(scrubHandles(browserBody.content),scrubHandles(nodeBody.content));
+  const reduced=browserBody.content.closure.filter(e=>e.state==='reduced');
+  assert.deepEqual(reduced.map(e=>e.target.id),['qB','qC']);
+  for(const entry of reduced){
+    const browserHandle=browserRes.envelope.content.expansion_handles.find(h=>h.handle_id===entry.handle_id);
+    const nodeEntry=nodeBody.content.closure.find(e=>e.id===entry.id);
+    const nodeHandle=nodeRes.envelope.content.expansion_handles.find(h=>h.handle_id===nodeEntry.handle_id);
+    assert.ok(browserHandle&&nodeHandle);
+    const bExpReq=rbCore.admitRetainedSectionRequestJson(JSON.stringify({request_id:'exp:'+entry.target.id,tuple:nativeTuple,budget_bytes:8000000,mode:'expand',selection:browserRes.envelope.content.selected,handle:browserHandle}));
+    const nExpReq=rnCore.admitRetainedSectionRequest({request_id:'exp:'+entry.target.id,tuple:nativeTuple,budget_bytes:8000000,mode:'expand',selection:nodeRes.envelope.content.selected,handle:nodeHandle});
+    const bExpPrep=await rbCore.prepareRetainedSectionRead(browserAdmitted.snapshot,bExpReq.request,rbCore.createRetainedSectionReadAuthorityJson(()=>true));
+    const nExpPrep=await rnCore.prepareRetainedSectionRead(nodeAdmitted.snapshot,nExpReq.request,rnCore.createRetainedSectionReadAuthority(()=>true));
+    const bExpRes=await rbRead.readRetainedSection(bExpPrep.prepared,browserHost);
+    const nExpRes=await rnRead.readRetainedSection(nExpPrep.prepared,nodeHost);
+    assert.equal(bExpRes.envelope?.status,'ready',JSON.stringify(bExpRes));
+    assert.equal(nExpRes.envelope?.status,'ready',JSON.stringify(nExpRes));
+    assert.deepEqual(bExpRes.envelope.content.closure,nExpRes.envelope.content.closure);
+    assert.deepEqual(bExpRes.envelope.content.references,nExpRes.envelope.content.references);
+  }
+});
