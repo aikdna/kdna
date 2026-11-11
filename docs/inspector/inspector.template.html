@@ -205,6 +205,38 @@
         margin: 0 0 10px;
         max-height: none;
       }
+      .notice {
+        margin: 0 0 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13.5px;
+        color: var(--muted);
+      }
+      .notice.warn {
+        border-color: #d29922;
+        color: #d29922;
+      }
+      .notice.error {
+        border-color: var(--err);
+        color: var(--err);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 4px 8px;
+        border-bottom: 1px solid var(--border);
+        word-break: break-word;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 500;
+      }
     </style>
   </head>
   <body>
@@ -212,44 +244,33 @@
       <header>
         <h1>KDNA Asset Inspector</h1>
         <p class="sub">
-          Open a <code>.kdna</code> file to inspect its container, manifest, and load contract.
+          Open a <code>.kdna</code> file to see its manifest, version tuple and judgment catalog.
         </p>
       </header>
 
       <span class="privacy"
-        ><b>Private by design</b> &mdash; parsing happens entirely in your browser; the file is
-        never uploaded.</span
+        ><b>Private by design</b> &mdash; parsing happens entirely in your browser, offline; the
+        file is never uploaded and no account is needed.</span
       >
 
       <section class="card" id="scope">
-        <h2>Which containers this page reads</h2>
+        <h2>What this page reads</h2>
         <p class="scope-line">
-          This page inlines <code>@aikdna/kdna-web-client@0.3.0</code>: it reads the published
-          <code>0.2</code> container line, which carries <code>payload.kdnab</code>. It verifies
-          container <em>shape</em> locally, and it does not verify signatures, keys or content.
+          It reads the current <code>0.6.0</code> native container (<code>kdna.json</code> plus
+          <code>sections/pack-N.kdnab</code>) and the older single-<code>payload.kdnab</code>
+          layout. It shows the public manifest, the version tuple, the judgment catalog and
+          payload table digests.
         </p>
         <p class="scope-line">
-          Current <strong>native</strong> assets are a different container: they carry their payload
-          as <code>sections/pack-N.kdnab</code> and no <code>payload.kdnab</code>, so this page
-          rejects them with <code>KDNA_PAYLOAD_MISSING</code>. That rejection reports a range limit
-          here, not a defect in the asset. To inspect a native asset, run the official CLI locally:
-        </p>
-        <pre class="scope-code">npx --yes @aikdna/kdna-cli@0.43.2 inspect ./your-asset.kdna</pre>
-        <p class="scope-line">
-          It prints the admitted tuple and digests and uploads nothing. Agent hosts read the same
-          asset through the operator-bound local MCP adapter (<a
-            href="https://github.com/aikdna/kdna-skills/tree/main/mcp-server"
-            >kdna-skills/mcp-server</a
-          >).
+          It does not decode payload frames, verify signatures or keys, or decrypt anything. An
+          encrypted / password-protected payload is reported as such and stays unreadable here. A
+          valid container proves structure, not judgment quality.
         </p>
       </section>
 
       <div id="drop" role="button" tabindex="0" aria-label="Choose or drop a .kdna file">
         <div class="big">Drop a <strong>.kdna</strong> file here, or click to choose one</div>
-        <div class="hint">
-          The container structure, manifest, and load profiles are validated locally and shown
-          below.
-        </div>
+        <div class="hint">The file is read locally and the result is shown below.</div>
       </div>
       <input id="file" type="file" accept=".kdna,application/vnd.kdna.asset" />
       <div id="status" aria-live="polite"></div>
@@ -257,15 +278,14 @@
       <div id="result"></div>
 
       <footer>
-        Inspector uses <code>@aikdna/kdna-web-client@__KDNA_WEB_CLIENT_VERSION__</code> (inlined
-        bundle sha256:<code>__KDNA_WEB_CLIENT_DIGEST__</code>&hellip;). Source and protocol specs:
-        <a href="https://github.com/aikdna/kdna">aikdna/kdna</a>. A valid container proves
-        structure, not judgment quality.
+        Static page generated from <code>docs/inspector/inspector-core.mjs</code> (inlined
+        sha256:<code>__KDNA_INSPECTOR_DIGEST__</code>&hellip;), no external scripts or network
+        requests. Source and specs: the <code>aikdna/kdna</code> repository.
       </footer>
     </div>
 
     <script type="module">
-      /*__KDNA_WEB_CLIENT_BUNDLE__*/
+      /*__KDNA_INSPECTOR_CORE__*/
 
       const drop = document.getElementById('drop');
       const fileInput = document.getElementById('file');
@@ -303,109 +323,134 @@
           else if (key === 'text') node.textContent = value;
           else node.setAttribute(key, value);
         }
-        for (const child of [].concat(children)) {
-          node.append(child);
-        }
+        for (const child of [].concat(children)) node.append(child);
         return node;
       }
 
       function formatBytes(bytes) {
-        if (!Number.isFinite(bytes)) return 'unknown';
         if (bytes < 1024) return `${bytes} B`;
         if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
         return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+      }
+
+      function section(title, ...children) {
+        return el('section', { class: 'card' }, [el('h2', { text: title }), ...children]);
+      }
+
+      function kv(rows) {
+        const dl = el('dl', { class: 'kv' });
+        for (const [key, value] of rows) {
+          if (value === null || value === undefined || value === '') continue;
+          dl.append(el('dt', { text: key }), el('dd', { text: String(value) }));
+        }
+        return dl;
+      }
+
+      function table(headers, rows) {
+        const t = el('table');
+        t.append(el('tr', {}, headers.map((h) => el('th', { text: h }))));
+        for (const row of rows) t.append(el('tr', {}, row.map((c) => el('td', { text: String(c ?? '') }))));
+        return t;
       }
 
       async function inspect(file) {
         result.replaceChildren();
         status.textContent = `Reading ${file.name}…`;
         try {
-          const meta = await readKDNAMetadata(file);
+          const report = await inspectKdna(new Uint8Array(await file.arrayBuffer()));
           status.textContent = '';
-          result.append(renderMetadata(file, meta));
+          result.append(...render(file, report));
         } catch (error) {
           status.textContent = '';
           result.append(renderError(file, error));
         }
       }
 
-      function renderMetadata(file, meta) {
-        const card = el('section', { class: 'card' });
-        card.append(el('h2', { text: 'Asset metadata' }));
-
-        const kv = el('dl', { class: 'kv' });
-        const rows = [
-          ['File', `${file.name} (${formatBytes(meta.fileSize)})`],
-          ['Domain / asset id', meta.domain ?? '—'],
-          ['Version', meta.version ?? '—'],
-          ['Title', meta.title ?? '—'],
-          ['Description', meta.description ?? '—'],
-        ];
-        for (const [label, value] of rows) {
-          kv.append(el('dt', { text: label }));
-          kv.append(el('dd', { text: String(value) }));
-        }
-        kv.append(el('dt', { text: 'Encrypted payload' }));
-        kv.append(
-          el('dd', {}, [
-            el('span', {
-              class: `badge ${meta.encrypted ? 'warn' : 'ok'}`,
-              text: meta.encrypted ? 'yes' : 'no',
-            }),
-          ]),
-        );
-        kv.append(el('dt', { text: 'Load profiles' }));
-        kv.append(
-          el(
-            'dd',
-            {},
-            meta.profiles.length
-              ? meta.profiles.map((profile) => el('span', { class: 'badge', text: profile }))
-              : [el('span', { text: '—' })],
+      function render(file, report) {
+        const s = report.summary;
+        const out = [];
+        const state =
+          report.payload.status === 'encrypted'
+            ? el('span', { class: 'badge warn', text: 'payload encrypted' })
+            : report.payload.status === 'plain'
+              ? el('span', { class: 'badge ok', text: 'payload present' })
+              : el('span', { class: 'badge warn', text: `payload ${report.payload.status}` });
+        out.push(
+          section(
+            'Manifest',
+            el('div', {}, [state, el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` })]),
+            kv([
+              ['File', `${file.name} (${formatBytes(file.size)})`],
+              ['Title', s.title],
+              ['Asset id', s.asset_id],
+              ['Type', s.asset_type],
+              ['Version', s.version],
+              ['Judgment version', s.judgment_version],
+              ['Languages', s.languages.join(', ')],
+              ['Created', s.created_at],
+              ['Updated', s.updated_at],
+              ['Summary', s.summary],
+            ]),
           ),
         );
-        kv.append(el('dt', { text: 'Container entries' }));
-        kv.append(el('dd', { text: meta.entries.join(', ') }));
-        card.append(kv);
-
-        const details = el('details');
-        details.append(el('summary', { text: 'Full manifest (kdna.json)' }));
-        details.append(el('pre', { text: JSON.stringify(meta.manifest, null, 2) }));
-        card.append(details);
-
-        return card;
+        for (const notice of report.notices) {
+          out.push(el('div', { class: `notice ${notice.level}`, text: notice.text }));
+        }
+        if (report.tuple) {
+          out.push(section('Version tuple', kv(Object.entries(report.tuple))));
+        }
+        out.push(
+          section(
+            `Judgment catalog (${report.catalog.length})`,
+            report.catalog.length
+              ? table(
+                  ['Judgment', 'Focus', 'Parent'],
+                  report.catalog.map((c) => [c.judgment_id, c.focus, c.parent_ref ?? '—']),
+                )
+              : el('p', {
+                  class: 'scope-line',
+                  text:
+                    report.payload.status === 'encrypted'
+                      ? 'Not available: the payload is encrypted and cannot be read here.'
+                      : 'The manifest carries no judgment catalog.',
+                }),
+          ),
+        );
+        const payloadBits = [
+          kv([
+            ['Layout', report.payload.layout],
+            ['Encoding', report.payload.encoding],
+            ['Encryption profile', report.encryption?.profile],
+          ]),
+          table(['Member', 'Size'], report.entries.map((e) => [e.name, formatBytes(e.size)])),
+        ];
+        if (report.payload.tables.length) {
+          payloadBits.push(
+            el('div', { class: 'scope-line', text: 'Payload tables' }),
+            table(
+              ['Table', 'Rows', 'Member', 'Digest'],
+              report.payload.tables.map((t) => [t.table, t.rows, t.member, t.digest]),
+            ),
+          );
+        }
+        out.push(section('Container', ...payloadBits));
+        out.push(
+          el('details', {}, [
+            el('summary', { text: 'Raw manifest (kdna.json)' }),
+            el('pre', { text: JSON.stringify(report.manifest, null, 2) }),
+          ]),
+        );
+        return out;
       }
 
       function renderError(file, error) {
-        const card = el('section', { class: 'card error' });
-        card.append(el('h2', { text: 'Rejected' }));
         const code = error && typeof error.code === 'string' ? error.code : 'KDNA_UNKNOWN_ERROR';
-        card.append(el('div', { class: 'code', text: `${file.name} — ${code}` }));
-        card.append(
-          el('div', {
-            class: 'msg',
-            text: error?.message ?? 'The file could not be read as a KDNA asset.',
-          }),
-        );
-        if (code === 'KDNA_PAYLOAD_MISSING') {
-          card.append(
-            el('div', {
-              class: 'msg',
-              text:
-                'This is the expected rejection for a current native container, which stores its ' +
-                'payload as sections/pack-N.kdnab instead of payload.kdnab. Inspect it with the ' +
-                'official CLI instead: npx --yes ' +
-                '@aikdna/kdna-cli@0.43.2 inspect <file>',
-            }),
-          );
-        }
-        card.append(
-          el('div', {
-            class: 'msg',
-            text: 'The inspector fails closed: any structural problem rejects the whole file.',
-          }),
-        );
-        return card;
+        return el('section', { class: 'card error' }, [
+          el('h2', { text: 'Could not read this file' }),
+          el('div', { class: 'code', text: `${file.name} — ${code}` }),
+          el('div', { class: 'msg', text: error?.message ?? 'The file could not be read as a KDNA asset.' }),
+          el('div', { class: 'msg', text: 'The inspector fails closed: a structural problem rejects the whole file.' }),
+        ]);
       }
     </script>
   </body>

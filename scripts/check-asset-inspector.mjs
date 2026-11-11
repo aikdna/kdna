@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Fails closed when docs/inspector/index.html is stale relative to the pinned
-// @aikdna/kdna-web-client devDependency or the template. Rebuilds into a temp
+// Fails closed when docs/inspector/index.html is stale relative to
+// inspector-core.mjs or the template. Rebuilds into a temp
 // copy and byte-compares; never rewrites the committed file.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -47,7 +47,7 @@ try {
     );
     process.exit(1);
   }
-  console.log('check:asset-inspector: index.html matches the pinned kdna-web-client build');
+  console.log('check:asset-inspector: index.html matches inspector-core.mjs and the template');
 } finally {
   fs.rmSync(tmpDir, { recursive: true, force: true });
 }
