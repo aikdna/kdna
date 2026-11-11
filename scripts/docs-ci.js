@@ -68,7 +68,7 @@ check(
 );
 check(
   'agent-entry.md shows the published CLI install coordinate',
-  agentEntry.includes('@aikdna/kdna-cli@0.43.2'),
+  agentEntry.includes('@aikdna/kdna-cli@0.43.3'),
 );
 check(
   'agent-entry.md shows the same-session multi-select route',

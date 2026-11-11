@@ -1,6 +1,6 @@
 # Agent entry: one selected file, one explicit task
 
-Current entry reviewed on 2026-11-10. This page describes one local route for an
+Current entry reviewed on 2026-11-11. This page describes one local route for an
 Agent that already has a tool-capable Host. It is not a Host certification, a
 human-confirmation record or an action authorization.
 
@@ -12,7 +12,7 @@ request text and the command route must travel together; the sentence alone is
 not a sufficient entry.
 
 > Use the KDNA asset at `<absolute-path>` for this task: `<task>`. Install the
-> published `@aikdna/kdna-cli@0.43.2` and follow the copyable route below:
+> published `@aikdna/kdna-cli@0.43.3` and follow the copyable route below:
 > inspect and validate the file, read the catalog, select every judgment the
 > task needs in one `selection.judgment_ids` request in one session, expand any
 > needed handles in that same session, and report the asset version, CLI version
@@ -33,7 +33,7 @@ values from that asset's catalog.
 mkdir -p kdna-agent-entry && cd kdna-agent-entry
 npm init -y
 npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
-  @aikdna/kdna-cli@0.43.2
+  @aikdna/kdna-cli@0.43.3
 
 curl -fsSLo team-update-1.0.0.kdna \
   https://raw.githubusercontent.com/aikdna/kdna/main/examples/native-team-update/team-update-1.0.0.kdna
@@ -174,7 +174,7 @@ permission to act.
 ## Optional MCP source preview
 
 The `kdna-skills` checkout also contains a source-only MCP adapter
-`0.8.0-rc.native-sections.3` pinned to the same CLI `0.43.2` / Core `0.37.9` /
+`0.8.0-rc.native-sections.3` pinned to its own CLI `0.43.2` / Core `0.37.9` /
 Read `0.13.3` graph. It is `private: true` and has no npm installation
 coordinate. Use it only when a local operator has bound one asset through the
 Host's process startup; never let model-controlled MCP parameters select or
