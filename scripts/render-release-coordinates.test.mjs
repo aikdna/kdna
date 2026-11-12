@@ -9,7 +9,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -82,4 +82,14 @@ test('the check is wired into the local chain and into CI', () => {
   assert.match(packageJson.scripts.test, /release:coordinates:check/u);
   const workflow = readFileSync(join(ROOT, '.github', 'workflows', 'ci.yml'), 'utf8');
   assert.match(workflow, /release:coordinates:check|render-release-coordinates\.mjs --check/u);
+});
+
+test('snippet relative links resolve from docs/ without ./docs/ 404 prefix', () => {
+  const snippetText = readFileSync(join(ROOT, SNIPPET), 'utf8');
+  assert.doesNotMatch(snippetText, /\]\(\.\/docs\//u);
+  const links = [...snippetText.matchAll(/\]\((\.\/[^)#]+)(?:#[^)]+)?\)/gu)].map((m) => m[1]);
+  assert.ok(links.length >= 2, 'expected relative links in snippet');
+  for (const rel of links) {
+    assert.ok(existsSync(resolve(ROOT, 'docs', rel)), `expected docs/${rel} to exist from snippet`);
+  }
 });

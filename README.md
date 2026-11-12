@@ -21,11 +21,16 @@ As AI makes finished outputs inexpensive to generate, upstream thinking, judgmen
 
 ## Experience a Real `.kdna` Work in 10 Seconds (Zero Install)
 
-Our first official public judgment work—**KDNA Whitepaper v1.0.0** (*《KDNA白皮书》*, authored by Zhang Ling / 张零 · `CC BY 4.0` · container `0.6.0` · `45` connected judgments · `2,570,249` bytes · SHA-256 `c299a7b95cdcf1eb0f063d0ec1dd98f7efefee5cc13d53ca1f05983e1f2a88e0`)—is live today:
+Our first official public judgment work—**KDNA Whitepaper `v1.0.1`** (*《KDNA白皮书》*, authored by Zhang Ling / 张零 · `CC BY 4.0` · container `0.6.0` · `45` connected judgments)—is available in both Chinese and equivalent English `.kdna` editions:
 
-- **Read in Browser (No Account Required):** [aikdna.com/reader/?sample=kdna-whitepaper](https://aikdna.com/reader/?sample=kdna-whitepaper) (includes English/Chinese UI switch, optional local BYO-API-key AI reading translation in Settings, and unmodified `.kdna` export)
-- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads)
-- **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)
+- **Chinese `.kdna` (`zh-CN`):** `kdna-whitepaper-1.0.1.zh-CN.kdna` (`2,595,031` bytes · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`, creator `张零`)
+- **English `.kdna` (`en`):** `kdna-whitepaper-1.0.1.en.kdna` (`2,711,958` bytes · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`, creator `Zhang Ling`)
+- **Read in Browser (No Account Required · Zero-Egress Sandbox):** [English `v1.0.1`](https://aikdna.com/reader/?sample=kdna-whitepaper-en) · [Chinese `v1.0.1`](https://aikdna.com/reader/?sample=kdna-whitepaper) (includes English/Chinese UI switch and unmodified `.kdna` export)
+- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (supports local `.kdna` inspection plus optional local BYO-API-key AI reading translation)
+- **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (`v1.0.0` historical archive retained alongside `v1.0.1` for `kdna diff` review)
+
+> **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
+> `Download kdna-whitepaper-1.0.1.en.kdna from https://aikdna.com/reader/samples/kdna-whitepaper-en.kdna, run npx -y @aikdna/kdna-cli@0.43.4 read kdna-whitepaper-1.0.1.en.kdna --mode catalog --format human --allow-read to inspect the 45-question catalog, and then read the relevant judgments for my question via --mode exact_selection --judgment-id <id1,id2> --format human --allow-read (always pass --format human or --compact to keep context lean; do not use whole_asset).`
 
 ---
 
@@ -108,6 +113,8 @@ earlier `latest` values stay in the
 This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.
 <!-- release-coordinates:end -->
 
+> **Generation guardrail (`0.6.0` vs. legacy `0.5.0`):** For current container `0.6.0` authoring (`kdna.draft/1` & full `0.6.0`), validation, local password encryption, diffing, and reading, use **`@aikdna/kdna-cli@0.43.4`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` target the separate **legacy container `0.5.0` session line** and are not used for container `0.6.0` works.
+
 ---
 
 ## Current source: choose the matching implementation
@@ -158,11 +165,11 @@ actual task adoption.
 | --- | --- | --- |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.43.4` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, local password protection, explicit Read, diffing, and Source revision; its own exact Core `0.37.9` / Read `0.13.3` pins |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.3` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP `0.5.0` | Matched published native `0.43.4` / Core `0.37.9` / Read `0.13.3` graph; optional operator-bound local stdio, named Host delivery/adoption `NOT_RUN` |
-| [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (`KDNA Whitepaper` `1.0.0`, `CC BY 4.0`) | Openly licensed `.kdna` judgment works and container/Read verification suite |
-| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Terminal creation session; container `0.5.0` / Read `0.6.4`, separate from native CLI |
-| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (`KDNA Whitepaper` `1.0.1` in Chinese & English, `CC BY 4.0`; `1.0.0` archive retained) | Openly licensed `.kdna` judgment works and container/Read verification suite |
+| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Legacy container `0.5.0` / Read `0.6.4` terminal session line (not for current `0.6.0` authoring — use `@aikdna/kdna-cli@0.43.4`) |
+| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Legacy container `0.5.0` Studio session SDK and explicit protected export; its own Host/credential boundary |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read implementation for Apple platforms |
-| [KDNA Reader](https://aikdna.com/reader/) | Live Web Reader + Apple-notarized macOS desktop app (`0.1.0`) | Free, permanently account-free human reading app with *KDNA Whitepaper* `v1.0.0` built in |
+| [KDNA Reader](https://aikdna.com/reader/) | Live Web Reader + Apple-notarized macOS desktop app (`0.1.0`) | Free, permanently account-free human reading app with *KDNA Whitepaper* `v1.0.1` (`zh-CN` & `en`) built in |
 
 Machine consumers should consult [`ecosystem-manifest.json`](./ecosystem-manifest.json) and [`docs/release-coordinates.json`](./docs/release-coordinates.json). Newcomers can also browse [`docs/start-here.md`](./docs/start-here.md) by goal. Preserved walkthroughs for historical published lines (earlier native previews, `0.36.1`, `0.22.0`, `0.11.0`) live in [`docs/historical-published-lines.md`](./docs/historical-published-lines.md).
 

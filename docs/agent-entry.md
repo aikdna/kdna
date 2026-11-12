@@ -1,10 +1,57 @@
 # Agent entry: one selected file, one explicit task
 
-Current entry reviewed on 2026-11-11. This page describes one local route for an
+Current entry reviewed on 2026-11-12. This page describes one local route for an
 Agent that already has a tool-capable Host. It is not a Host certification, a
 human-confirmation record or an action authorization.
 
-## One request
+## Quickest path (`@aikdna/kdna-cli@0.43.4`)
+
+For everyday Agent tasks (Claude Code, Cursor, Codex, OpenCode, Antigravity, etc. on Node.js `>=22`), `kdna read` already performs full container admission and digest verification on every invocation. You only need **two graded CLI calls**:
+
+1. **Browse the catalog in plain text (`--mode catalog --format human --allow-read`)** to inspect all available judgment IDs and question titles (~1,100 tokens even for a 45-judgment work).
+2. **Read only the 1–5 relevant judgments (`--mode exact_selection --judgment-id <id1,id2> --format human --allow-read`, or `--compact` when compact JSON is needed)**—mandatory supporting and qualifying premises travel automatically with your selection (~1,000–3,000 tokens).
+
+> **Copyable starter prompt for your Agent:**
+>
+> Use `@aikdna/kdna-cli@0.43.4` to consult `<path-or-downloaded-file.kdna>` for `<your-question>`. First run `npx -y @aikdna/kdna-cli@0.43.4 read <file.kdna> --mode catalog --format human --allow-read` to browse the catalog; then run `npx -y @aikdna/kdna-cli@0.43.4 read <file.kdna> --mode exact_selection --judgment-id <id1,id2> --format human --allow-read` (or `--compact`) for only the judgments relevant to my task, and cite the asset version, judgment IDs, applicable conditions, and boundaries. Never call `--mode whole_asset` expecting judgment prose inline, never omit `--format human` / `--compact` on multi-judgment works, and do not unzip or binary-probe `.kdna` files. `--allow-read` permits local disclosure only and never authorizes external actions.
+
+```sh
+# Optional: download the official KDNA Whitepaper v1.0.1 (.kdna, CC-BY-4.0)
+# English edition (2,711,958 bytes, container 0.6.0):
+curl -fsSLo kdna-whitepaper-1.0.1.en.kdna \
+  https://aikdna.com/reader/samples/kdna-whitepaper-en.kdna
+# (Chinese edition: https://aikdna.cn/reader/samples/kdna-whitepaper.kdna or https://aikdna.com/reader/samples/kdna-whitepaper.kdna)
+
+# Step 1: Browse the 45-judgment catalog (~1,100 tokens)
+npx -y @aikdna/kdna-cli@0.43.4 read kdna-whitepaper-1.0.1.en.kdna \
+  --mode catalog --format human --allow-read
+
+# Step 2: Selectively read specific judgments with mandatory closure intact
+npx -y @aikdna/kdna-cli@0.43.4 read kdna-whitepaper-1.0.1.en.kdna \
+  --mode exact_selection \
+  --judgment-id judgment:origins,judgment:work-itself \
+  --format human --allow-read
+
+# Need compact structured JSON instead of human Markdown? Pass --compact:
+npx -y @aikdna/kdna-cli@0.43.4 read kdna-whitepaper-1.0.1.en.kdna \
+  --mode exact_selection \
+  --judgment-id judgment:origins,judgment:work-itself \
+  --compact --allow-read
+```
+
+**Three high-frequency pitfalls to avoid:**
+
+- **Always pass `--format human` or `--compact` on multi-judgment works.** Uncompacted canonical JSON envelopes include full graph metadata (35,000+ tokens for 3 linked judgments in a dense work), which can exceed Host tool output limits (~25,000 tokens). `--format human` and `--compact` preserve every claim, reason, condition, exception, misuse warning, and linked-judgment boundary in ~10% of the size.
+- **Never call `--mode whole_asset` to read judgment text.** By contract, `whole_asset` returns governance/catalog metadata and deferred handles with **zero judgment bodies inline**. Always route through `catalog` → `exact_selection`.
+- **Select 1–5 task-relevant judgments per call.** Loading unrelated judgments wastes context and risks judgment contamination across distinct scopes.
+
+---
+
+## Advanced warm-session protocol (`--session` JSONL)
+
+When an automated Host or script performs many consecutive reads against an already-admitted container and wants sub-second warm reads after initial admission, use the `--session` JSONL route below.
+
+### One request
 
 Give the Agent one exact `.kdna` file, the task it should help with, who will
 read the result, and whether the asset may be disclosed to that Host. The
@@ -120,7 +167,7 @@ npx --no-install kdna read /absolute/selected.kdna \
   --asset-id <asset-id-from-catalog> \
   --asset-version <asset-version-from-catalog> \
   --judgment-id <judgment-id-from-catalog> \
-  --budget 1000000 --allow-read
+  --budget 1000000 --format human --allow-read
 ```
 
 `--allow-read` permits this invocation to disclose the selected public content.
