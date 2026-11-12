@@ -465,13 +465,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` and \`0.13.0\` retained | Terminal creation session; container \`0.5.0\` / Read \`0.6.4\`, separate from native CLI |`,
+      text: `| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` and \`0.13.0\` retained | Legacy container \`0.5.0\` / Read \`0.6.4\` terminal session line (not for current \`0.6.0\` authoring — use \`@aikdna/kdna-cli@0.43.4\`) |`,
     },
     {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` and \`4.0.0\` retained | Studio session SDK and explicit protected export; its own Host/credential boundary |`,
+      text: `| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` and \`4.0.0\` retained | Legacy container \`0.5.0\` Studio session SDK and explicit protected export; its own Host/credential boundary |`,
     },
     {
       file: 'README.md',

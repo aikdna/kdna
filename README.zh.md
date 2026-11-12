@@ -21,11 +21,16 @@
 
 ## 10 秒体验真实 `.kdna` 判断作品（零安装 · 永久免账号）
 
-首部官方公开判断作品 **《KDNA 白皮书》v1.0.0**（作者：张零 / Zhang Ling · `CC BY 4.0` · container `0.6.0` · `45` 个关联判断问题 · `2,570,249` 字节 · SHA-256 `c299a7b95cdcf1eb0f063d0ec1dd98f7efefee5cc13d53ca1f05983e1f2a88e0`）现已开放：
+首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · container `0.6.0` · `45` 个关联判断问题）现已提供中英双语 `.kdna` 正式版：
 
-- **浏览器直接精读（无需注册账号）：** [aikdna.com/reader/?sample=kdna-whitepaper](https://aikdna.com/reader/?sample=kdna-whitepaper)（内置中英界面切换、可选本地自带密钥 AI 辅助翻译与 `.kdna` 原件无损保存）
-- **macOS 桌面版（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)
-- **公开参考资产仓库：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)
+- **中文 `.kdna` 正式版（`zh-CN`）：** `kdna-whitepaper-1.0.1.zh-CN.kdna`（`2,595,031` 字节 · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`，创建者 `张零`）
+- **等义英文 `.kdna` 正式版（`en`）：** `kdna-whitepaper-1.0.1.en.kdna`（`2,711,958` 字节 · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`，创建者 `Zhang Ling`）
+- **浏览器直接精读（无需注册账号 · 零外连隐私沙盒）：** [中文 `v1.0.1`](https://aikdna.com/reader/?sample=kdna-whitepaper) · [English `v1.0.1`](https://aikdna.com/reader/?sample=kdna-whitepaper-en)（支持中英界面切换与 `.kdna` 原件无损导出）
+- **macOS 桌面版（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（支持本地 `.kdna` 阅读及可选本地自带密钥 AI 辅助翻译）
+- **公开参考资产仓库：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（保留 `v1.0.0` 历史归档以便通过 `kdna diff` 对照版本演进）
+
+> **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
+> `请先下载首份公开 .kdna 作品《KDNA白皮书》（curl -fsSLo kdna-whitepaper-1.0.1.zh-CN.kdna https://aikdna.cn/reader/samples/kdna-whitepaper.kdna），用 npx -y @aikdna/kdna-cli@0.43.4 read kdna-whitepaper-1.0.1.zh-CN.kdna --mode catalog --format human --allow-read 查看全部 45 个议题目录；再根据我想讨论的问题，用 --mode exact_selection --judgment-id <id1,id2> --format human --allow-read 按需精读对应判断（切勿用 whole_asset 或不加 --compact/--format human 裸读大体积 JSON）。`
 
 ---
 
@@ -76,11 +81,12 @@ npx -y @aikdna/kdna-cli@0.43.4 read locked.kdna \
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | 最小虚构教学样本对（`1.0.0` / `1.1.0`，`CC BY 4.0`），用于演示容器结构与版本差异对比 |
 
 配套公开仓库与阅读器：
-- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli`），用于创建、口令保护、校验、读取与对比 `.kdna` 作品
+- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli`），用于创建（`kdna.draft/1` 与 `0.6.0`）、口令保护、校验、读取与对比 `.kdna` 作品
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent 技能包（`kdna-creator`、`kdna-loader`）与本地 stdio MCP 服务
-- [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.0`）
+- [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.1` 中英双语版及保留的 `v1.0.0` 归档）
+- [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — **旧版 container `0.5.0` 会话线**（不用于当前 container `0.6.0` 作品创作；创建与读取 `0.6.0` 作品请使用 `@aikdna/kdna-cli`）
 - [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — 面向 Apple 平台的 Swift Core 实现
-- [KDNA Reader](https://aikdna.com/reader/) — 免费、永久免账号的浏览器在线版与 Apple 公证 macOS 桌面阅读器
+- [KDNA Reader](https://aikdna.com/reader/) — 免费、永久免账号的浏览器在线版与 Apple 公证 macOS 桌面阅读器（内置《KDNA 白皮书》`v1.0.1` 中英双语版）
 
 ---
 

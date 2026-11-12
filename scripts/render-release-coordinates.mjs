@@ -22,7 +22,7 @@ if (matrix.schema !== 'kdna-release-coordinates/1') {
   throw new Error('release-coordinates.json schema mismatch');
 }
 
-function renderBlock() {
+function renderBlock({ docsPrefix = './docs/' } = {}) {
   const rows = matrix.packages.map(
     (entry) =>
       `| \`${entry.name}\` | \`${entry.version}\` | \`${entry.npm_tag}\` | \`${entry.artifact_sha256}\` |`,
@@ -44,9 +44,9 @@ function renderBlock() {
     // source by scripts/check-published-coordinates.mjs.
     'MCP remains a Git source channel and adds no npm coordinate in this wave.',
     'Exact source commits, release runs, preserved preview',
-    'tags and per-package release identities are in [release-coordinates.json](./docs/release-coordinates.json);',
+    `tags and per-package release identities are in [release-coordinates.json](${docsPrefix}release-coordinates.json);`,
     'earlier `latest` values stay in the',
-    '[distribution history](./docs/current-release-support.md#published-channel-history).',
+    `[distribution history](${docsPrefix}current-release-support.md#published-channel-history).`,
     'This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.',
   ].join('\n');
 }
@@ -63,11 +63,12 @@ function replaceBlock(text, block, label) {
   return `${head}${marker}\n${block}\n${END}${tail}`;
 }
 
-const block = renderBlock();
+const readmeBlock = renderBlock({ docsPrefix: './docs/' });
+const snippetBlock = renderBlock({ docsPrefix: './' });
 const mode = process.argv.includes('--write') ? 'write' : 'check';
 const readme = readFileSync(README_PATH, 'utf8');
-const rendered = replaceBlock(readme, block, 'README.md');
-const snippet = `<!-- Generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand. -->\n\n${block}\n`;
+const rendered = replaceBlock(readme, readmeBlock, 'README.md');
+const snippet = `<!-- Generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand. -->\n\n${snippetBlock}\n`;
 
 if (mode === 'write') {
   writeFileSync(README_PATH, rendered);
