@@ -1,6 +1,6 @@
 # KDNA Brand & Trademark Guidelines
 
-The KDNA name, the AIKDNA name, the KDNA logo, the Knowledge DNA mark, and related visual identity elements ("KDNA Marks") are trademarks of the KDNA project, maintained by the AIKDNA organization. These guidelines define how you may — and may not — use the KDNA Marks.
+The **KDNA** name, the **AIKDNA** name, the KDNA logo, related visual identity elements, and the retired historical phrase "Knowledge DNA" ("KDNA Marks") are trademarks of the KDNA project, maintained by the AIKDNA organization. (**KDNA** is the canonical name of the open judgment-work file format and protocol; "Knowledge DNA" is a retired early-stage origin phrase retained here solely for brand protection.) These guidelines define how you may — and may not — use the KDNA Marks.
 
 ## Core Principle
 
@@ -27,8 +27,8 @@ You may use the KDNA Marks to truthfully refer to the KDNA project, protocol, or
 
 You may use the Marks to describe compatibility, provided the description is accurate and references the specific [COMPATIBILITY.md](./COMPATIBILITY.md) level:
 
-- "This tool is KDNA-Core compatible (SPEC 1.0-rc)."
-- "This domain asset follows the KDNA domain structure."
+- "This tool is compatible with KDNA Container 0.6.0 (`@aikdna/kdna-core`)."
+- "This judgment work follows the KDNA Container 0.6.0 specification."
 
 ### Community Content
 
@@ -110,7 +110,7 @@ separately from the protocol; see [GOVERNANCE.md](./docs/GOVERNANCE.md).
 We take trademark misuse seriously because it directly threatens the coherence of the KDNA standard. If you see misuse of KDNA Marks:
 
 - Open an issue on the main repository with the `trademark` label
-- Or email **security@aikdna.com**
+- Or email **hi@aikdna.com** (or **security@aikdna.com**)
 
 We will review and respond. Our first step is always education and guidance. Legal action is a last resort, reserved for persistent bad-faith misuse that causes genuine ecosystem harm.
 
@@ -124,4 +124,4 @@ KDNA is built to become shared infrastructure for AI agent domain judgment. For 
 
 ## Questions
 
-For questions about use of KDNA Marks, trademark permissions, partnership branding, or official certification: **security@aikdna.com**
+For questions about use of KDNA Marks, trademark permissions, partnership branding, or official certification: **hi@aikdna.com** (or **security@aikdna.com**)

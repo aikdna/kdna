@@ -7,7 +7,7 @@ Please **do not** report security vulnerabilities through public GitHub issues.
 Instead, use one of these private channels:
 
 - **GitHub Private Vulnerability Reporting**: Go to the [Security Advisories](https://github.com/aikdna/kdna/security/advisories/new) page
-- **Email**: security@aikdna.com
+- **Email**: **hi@aikdna.com** or **security@aikdna.com**
 
 We aim to respond within 72 hours and provide a timeline for resolution within 1 week.
 Please do not disclose the vulnerability publicly until we have had a chance to address it.
@@ -18,10 +18,10 @@ We actively support the latest release for security updates.
 
 | Component | Supported Versions |
 |-----------|-------------------|
-| KDNA Protocol | Latest tagged release |
-| kdna-cli | Latest minor release |
-| kdna-studio-cli | Latest minor release |
-| Public examples | Packaged `.kdna` release cards when published |
+| KDNA Protocol & Core (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Latest tagged release (`0.37.10` / `0.13.4`, Container `0.6.0` & `0.5.0`) |
+| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.43.x`, Container `0.6.0`) |
+| Legacy Studio CLI / Core (`@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`) | Latest minor release (`0.14.0` / `4.1.0`, Container `0.5.0` session line) |
+| Public reference works (`aikdna/kdna-assets`) | *KDNA Whitepaper* `v1.0.1` (`kdna-whitepaper-1.0.1.{en,zh-CN}.kdna`, Container `0.6.0`) |
 
 Older versions may receive critical security patches on a case-by-case basis.
 
@@ -30,12 +30,19 @@ Older versions may receive critical security patches on a case-by-case basis.
 Install official KDNA software only from these coordinates:
 
 - **npm** — everything official is published under the **`@aikdna`** scope
-  (for example `@aikdna/kdna-cli`, `@aikdna/kdna-core`). The bare `kdna`
-  package name on npm is an unrelated third-party placeholder; do not install
-  it.
-- **PyPI** — the official Python distribution is **`aikdna`** (import name
-  `kdna`). The `kdna` project name on PyPI is an unrelated third-party
-  placeholder; never `pip install kdna`.
+  (for example `@aikdna/kdna-cli`, `@aikdna/kdna-core`, `@aikdna/kdna-read`).
+  The bare `kdna` package name on npm is an unrelated third-party placeholder;
+  do not install it.
+- **PyPI (`aikdna` — historical `0.1.0` line only)** — the project owns the
+  **`aikdna`** coordinate on PyPI (whereas the bare `kdna` name on PyPI is an
+  unrelated third-party placeholder; never `pip install kdna`). **Important
+  compatibility warning:** the published PyPI package `aikdna==0.6.0` (and the
+  in-repo `python-sdk` `0.8.0rc2` source candidate) targets the **retired
+  historical Container `0.1.0` / Runtime Capsule line** (`kdna.json` +
+  `payload.cbor` + `checksums.sha256`) and **cannot** create, validate, or
+  read current **Container `0.6.0`** `.kdna` works (such as *KDNA Whitepaper*
+  `v1.0.1`). For all Container `0.6.0` workflows, use the official Node.js
+  packages on npm (`@aikdna/kdna-cli`, `@aikdna/kdna-core`, `@aikdna/kdna-read`).
 
 If you find a package that impersonates these names or coordinates, please
 report it through the private channels above.
@@ -43,15 +50,26 @@ report it through the private channels above.
 ## Current source security boundary
 
 The current [Core](./packages/kdna-core/README.md) and
-[Read](./packages/kdna-read/README.md) candidates admit captured bytes into a
+[Read](./packages/kdna-read/README.md) packages admit captured bytes into a
 private snapshot and disclose content only through public Read with independent
 trusted control and Host providers. Technical admission does not authenticate
 an author, establish content quality or grant action permission.
 
-Encryption, signature and checksums-document admission are unavailable in this
-implementation; unsupported metadata fails closed. Runtime Capsule/Plan
-admission and execution are also unavailable. Those limits do not withdraw the
-versioned specifications or change the supported-release policy above.
+- **Local password encryption (`Container 0.6.0`):** Offline password-based
+  AEAD protection (`kdna.encryption.password` / `kdna.envelope.aead`,
+  PBKDF2-HMAC-SHA256 + AES-256-GCM) is supported in `@aikdna/kdna-cli`
+  (`kdna protect` and `kdna read --password-file`), Desktop `KDNA Reader`, and
+  the explicit Node protection entrypoints (`@aikdna/kdna-core/protection-node`
+  and `@aikdna/kdna-read/protection-node`)—permanently without any online
+  account.
+- **Default root/browser admission boundary:** The unprivileged root/browser
+  exports of `@aikdna/kdna-core` and `@aikdna/kdna-read` do not accept secrets
+  or perform implicit I/O; encrypted containers, signatures, and
+  checksums-document admission are refused on the default root/browser surface
+  unless routed through the explicit `/protection-node` contract with an
+  independently trusted provider. Unsupported metadata always fails closed, and
+  optional static Runtime Capsule/Plan reference helpers live separately under
+  `@aikdna/kdna-core/execution`.
 
 ## Published Core 0.22.0 asset signatures
 

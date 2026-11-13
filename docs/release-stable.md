@@ -127,9 +127,9 @@ revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
 The companion release order is Core → Read, then any native CLI release that
-re-pins its vendor archives. Native CLI `0.43.4` (published on 2026-11-11 with
-registry `gitHead` and provenance from source commit `84b1920` by green run
-`43011736606`), `0.43.3` and `0.43.2` retain their own Core `0.37.9` / Read `0.13.3` pins,
+re-pins its vendor archives. Native CLI `0.43.5` (published on 2026-11-13 with
+registry `gitHead` and provenance from source commit `d97445f` by green run
+`43362249506`), `0.43.4`, `0.43.3` and `0.43.2` retain their own Core `0.37.9` / Read `0.13.3` pins,
 while CLI `0.43.1` retains Core `0.37.8` / Read `0.13.2` and remains
 installable. Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their
 own pinned Core `0.37.2` / Read `0.11.3` graph and are not re-pinned by this

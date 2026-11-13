@@ -1,6 +1,6 @@
 # KDNA 创作指南 — 写你的第一份 author-input.json
 
-本指南针对**当前已发布 CLI**（`@aikdna/kdna-cli@0.43.4`）的 `create` 命令输入格式，
+本指南针对**当前已发布 CLI**（`@aikdna/kdna-cli@0.43.5`）的 `create` 命令输入格式，
 记录 CLI 实际执行的准入规则——包括 JSON schema 中看不到的、经实证验证的多条。
 完整可运行最小模板见 [`examples/author-input-minimal.json`](./examples/author-input-minimal.json)
 （2 条判断，约 10 KB）。
@@ -13,7 +13,7 @@
 ```bash
 mkdir my-first-asset && cd my-first-asset
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.5
 # 复制最小模板、编辑后：
 npx --no-install kdna create author-input.json --output my-asset.kdna --allow-create
 npx --no-install kdna inspect my-asset.kdna
@@ -73,7 +73,7 @@ payload.asset.judgment_version   ─┘
 
 ## 规则 3：其余经实证的准入规则
 
-以下规则经 CLI 0.43.4 / Core 0.37.9 实证，**并非全部**在 JSON schema 中可见
+以下规则经 CLI 0.43.5 / Core 0.37.9 实证，**并非全部**在 JSON schema 中可见
 （schema 允许的东西准入层可能拒绝）：
 
 1. **`payload.asset` 无 `asset_uid`**——只有 `asset_id`、`asset_version`、

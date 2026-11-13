@@ -117,6 +117,12 @@
         margin: 0;
         word-break: break-word;
       }
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
       .badge {
         display: inline-block;
         padding: 1px 8px;
@@ -124,7 +130,6 @@
         font-size: 12px;
         border: 1px solid var(--border);
         color: var(--muted);
-        margin-right: 6px;
         font-family: var(--mono);
       }
       .badge.ok {
@@ -229,13 +234,22 @@
       th,
       td {
         text-align: left;
-        padding: 4px 8px;
+        padding: 6px 8px;
         border-bottom: 1px solid var(--border);
-        word-break: break-word;
+        vertical-align: top;
+        word-break: normal;
+        overflow-wrap: break-word;
       }
       th {
         color: var(--muted);
         font-weight: 500;
+        white-space: nowrap;
+      }
+      td:first-child,
+      td:last-child {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        white-space: nowrap;
       }
     </style>
   </head>
@@ -329,9 +343,11 @@
 
       function formatBytes(bytes) {
         if (bytes < 1024) return `${bytes} B`;
-        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MiB (${(bytes / 1_000_000).toFixed(2)} MB)`;
       }
+
+      const LEGACY_TUPLE_KEYS = new Set(['runtime', 'plan', 'host', 'trace']);
 
       function section(title, ...children) {
         return el('section', { class: 'card' }, [el('h2', { text: title }), ...children]);
@@ -391,12 +407,16 @@
         out.push(
           section(
             'Manifest',
-            el('div', {}, [
+            el('div', { class: 'badges' }, [
               state,
+              ' ',
               el('span', { class: 'badge', text: `format ${s.format_version ?? '?'}` }),
             ]),
             kv([
-              ['File', `${file.name} (${formatBytes(file.size)})`],
+              [
+                'File',
+                `${file.name} (${formatBytes(file.size)} · ${file.size.toLocaleString('en-US')} B)`,
+              ],
               ['Title', s.title],
               ['Asset id', s.asset_id],
               ['Type', s.asset_type],
@@ -413,7 +433,23 @@
           out.push(el('div', { class: `notice ${notice.level}`, text: notice.text }));
         }
         if (report.tuple) {
-          out.push(section('Version tuple', kv(Object.entries(report.tuple))));
+          const is060 = (s.format_version ?? report.tuple.container) === '0.6.0';
+          const tupleRows = Object.entries(report.tuple).map(([k, v]) => [
+            k,
+            is060 && LEGACY_TUPLE_KEYS.has(k)
+              ? `${v} (compatibility tuple slot; inactive in 0.6.0 Read)`
+              : v,
+          ]);
+          const tupleChildren = [kv(tupleRows)];
+          if (is060 && Object.keys(report.tuple).some((k) => LEGACY_TUPLE_KEYS.has(k))) {
+            tupleChildren.push(
+              el('p', {
+                class: 'scope-line',
+                text: 'Note: runtime, plan, host, and trace are retained 0.3.1 compatibility tuple slots; Container 0.6.0 uses direct Core admission and scoped Read.',
+              }),
+            );
+          }
+          out.push(section('Version tuple', ...tupleChildren));
         }
         out.push(
           section(

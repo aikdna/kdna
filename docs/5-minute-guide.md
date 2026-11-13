@@ -1,8 +1,8 @@
 # KDNA 5-Minute Guide
 
 > **This guide is pinned to the historical loading line (CLI 0.36.1).** For the
-> current published line (CLI `0.43.4`), use the
-> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0434).
+> current published line (CLI `0.43.5`), use the
+> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0435).
 > Commands below use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
 > For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.

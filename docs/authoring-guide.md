@@ -1,6 +1,6 @@
 # KDNA Authoring Guide
 
-> **For the current published CLI `create` input format (CLI 0.43.4), see
+> **For the current published CLI `create` input format (CLI 0.43.5), see
 > [authoring-guide-cli.md](./authoring-guide-cli.md).** This page preserves the
 > historical dev-source / Studio-line authorization workflow.
 

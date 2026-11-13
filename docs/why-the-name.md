@@ -1,8 +1,6 @@
 # Why the Name KDNA
 
-KDNA is a metaphor for **Knowledge DNA**: selected judgment can be encoded in a
-structured form, copied without silent mutation, identified by version and
-digest, and expressed in more than one compatible Host.
+**KDNA** is the canonical name of the open file format and protocol for expressible judgment and judgment systems. The letters originally drew on the metaphor of **“Knowledge DNA”** (an early origin phrase now retired as a product expansion because KDNA carries explicit *judgment* rather than static knowledge): selected judgment can be encoded in a structured form, copied without silent mutation, identified by version and digest, and expressed across compatible Hosts and tools.
 
 The metaphor does not mean that KDNA contains intelligence, personality, truth,
 or an entire mind. It does not make a model stronger. It gives a bounded

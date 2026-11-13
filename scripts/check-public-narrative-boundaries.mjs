@@ -103,7 +103,7 @@ const REQUIRED_GUARDRAILS = new Map([
       'KDNA does not require a global asset library',
       // Keep these three coordinates in sync with the release matrix. A release
       // that moves the current line updates this page and this gate together.
-      'CLI `0.43.4`',
+      'CLI `0.43.5`',
       'Core `0.37.10`',
       'Read `0.13.4`',
     ],
