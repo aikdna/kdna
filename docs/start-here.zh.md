@@ -22,11 +22,11 @@
 
 首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · Container `0.6.0` · `45` 个关联判断问题）提供中英双语正式版：
 
-- **macOS 桌面阅读器（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（内置中英双语《KDNA 白皮书》`v1.0.1`，支持本地口令解锁、中英界面切换、`.kdna` 原件导出及可选本地自带密钥 AI 辅助阅读翻译，**永久无需注册账号**）
+- **macOS 桌面阅读器（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（内置中英双语《KDNA 白皮书》`v1.0.1`，支持中英界面切换、浅色与深色模式、本地口令解锁、多资产标签页管理及 `.kdna` 原件无损导出，**永久无需注册账号**）
 - **规范 `.kdna` 原件直链下载：**
   - 中文版（`zh-CN`）：[`kdna-whitepaper-1.0.1.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna)（`2,595,031` 字节 · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`）
   - 英文版（`en`）：[`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna)（`2,711,958` 字节 · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`）
-- **官方公开参考作品仓：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（同时保留 `v1.0.0` 归档，便于用 `kdna diff` 对照版本演进）
+- **官方公开参考作品仓：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.1`、演进说明与容器核验套件；`1.0.0` → `1.1.0` 版本 `kdna diff` 示例见 [`examples/native-team-update`](../examples/native-team-update/README.md)）
 
 ---
 

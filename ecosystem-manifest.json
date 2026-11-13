@@ -204,7 +204,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "a1acd14fee9d4e5d0ba7b00c8fe9596e75cc2fd1",
+      "source_commit": "288095e44ea15ae81ef2d830a277b98c11e84f95",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -213,12 +213,12 @@
           "package_json": "mcp-server/package.json",
           "package_name": "@aikdna/kdna-mcp-server",
           "npm_package": null,
-          "version": "0.8.0-rc.native-sections.1",
+          "version": "0.8.0-rc.native-sections.3",
           "lifecycle": "Experimental",
           "release_status": "source-only",
           "dependency_policy": "current",
           "known_limitations": [],
-          "recommended_entrypoint": "npx @aikdna/kdna-mcp-server",
+          "recommended_entrypoint": "node mcp-server/bin/kdna-mcp.mjs --asset <selected.kdna> --allow-read",
           "legacy_replacement": null
         }
       ],

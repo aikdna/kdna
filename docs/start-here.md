@@ -157,10 +157,10 @@ recipe to reopen and revise while preserving the original. It establishes this
 Agent's task use, not a real teammate's confirmation or named MCP Host adoption.
 
 The [Loader/MCP source](https://github.com/aikdna/kdna-skills#readme) is
-`0.8.0-rc.native-sections.3` with its own CLI `0.43.4` / Core `0.37.9` / Read
+`0.8.0-rc.native-sections.3` with its own CLI `0.43.5` / Core `0.37.9` / Read
 `0.13.3` graph. Its npm publication is disabled. The direct official CLI is the
 primary Agent route; MCP is an optional source preview for an operator-bound
-local Host. Named Host delivery remains NOT_RUN, and installing a Skill or
+local Host. Named Host delivery remains unassessed, and installing a Skill or
 copying a process vector does not establish Host activation.
 
 For Studio creation and local protection, use StudioCLI

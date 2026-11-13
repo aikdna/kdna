@@ -641,7 +641,11 @@ for (const [file, before, after] of [
     '已发布的精确坐标可从空缓存安装',
     '这三个精确预览版本现在已在官方 registry 发布',
   ],
-  ['docs/start-here.md', 'Named Host delivery remains NOT_RUN', 'Named Host delivery is accepted'],
+  [
+    'docs/start-here.md',
+    'Named Host delivery remains unassessed',
+    'Named Host delivery is accepted',
+  ],
   [
     'docs/current-release-support.md',
     'All five are unpublished',

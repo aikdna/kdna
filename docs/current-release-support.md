@@ -48,7 +48,7 @@ The example creates and saves, reads exact selections, revises official Source,
 reopens and reuses the revised asset, and preserves the original.
 
 The Loader/MCP source candidate `0.8.0-rc.native-sections.3` embeds its own
-published native CLI `0.43.4` / Core `0.37.9` / Read `0.13.3` graph; it is not
+published native CLI `0.43.5` / Core `0.37.9` / Read `0.13.3` graph; it is not
 the Core `0.37.10` / Read `0.13.4` graph. Follow its
 [complete checkout instructions](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md).
 The direct official CLI is the primary Agent route. MCP is an optional

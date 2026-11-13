@@ -221,9 +221,9 @@ permission to act.
 ## Optional MCP source preview
 
 The `kdna-skills` checkout also contains a source-only MCP adapter
-`0.8.0-rc.native-sections.3` pinned to its own CLI `0.43.4` / Core `0.37.9` /
+`0.8.0-rc.native-sections.3` pinned to its own CLI `0.43.5` / Core `0.37.9` /
 Read `0.13.3` graph. It is `private: true` and has no npm installation
 coordinate. Use it only when a local operator has bound one asset through the
 Host's process startup; never let model-controlled MCP parameters select or
 widen the file. The direct CLI above is the primary route, and named Host
-delivery remains `NOT_RUN`.
+delivery remains unassessed.
