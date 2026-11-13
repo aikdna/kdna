@@ -1,6 +1,6 @@
 # 编写指南
 
-> **当前已发布 CLI 的 `create` 输入格式（CLI 0.43.4）见
+> **当前已发布 CLI 的 `create` 输入格式（CLI 0.43.5）见
 > [authoring-guide-cli.zh.md](./authoring-guide-cli.zh.md)。** 本页保留
 > 历史 dev-source / Studio 线授权工作流。
 

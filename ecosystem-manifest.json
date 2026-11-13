@@ -9,7 +9,7 @@
     "Future",
     "Draft Normative"
   ],
-  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 17 public repositories retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and external asset assessment is optional, scoped, and separate from Core validity.",
+  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 9 public repositories (4 active Container 0.6.0 repositories and 5 preserved legacy pre-0.6.0 compatibility repositories) retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and external asset assessment is optional, scoped, and separate from Core validity.",
   "components": [
     {
       "repository": "aikdna/kdna",
@@ -143,13 +143,13 @@
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
         "asset adoption, external assessment, and real-world outcomes are claimant-scoped evidence and do not decide protocol validity"
       ],
-      "recommended_entrypoint": "kdna plan-load <asset> before kdna load <asset>",
+      "recommended_entrypoint": "npx -y @aikdna/kdna-cli inspect <asset.kdna> ; npx -y @aikdna/kdna-cli read <asset.kdna> --mode catalog --allow-read",
       "legacy_replacement": null
     },
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "84b1920e0daed92b9d4af94a6469a014ed16aa23",
+      "source_commit": "d97445f512b3c8dd28b5a89d5fc44cf13ab1af04",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -158,14 +158,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.43.4",
+          "version": "0.43.5",
           "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.43.4"
+          "published_version": "0.43.5"
         }
       ],
       "lifecycle": "Pre-release",
@@ -194,11 +194,11 @@
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "no public reference asset is published from this repository: the index lists none, and the earlier reference assets - together with their directory downloads - were withdrawn from the current public surface",
-        "the withdrawn bytes remain readable from the repository's Git history and the releases that carried them still host the assets until the Owner approves withdrawing those releases; removal from the current surface is not a claim that they were never published",
-        "the repository package is private validation tooling, so this component is recorded as package-less and binds its release tag and commit instead of artifact evidence"
+        "the current repository main branch and release kdna-whitepaper-1.0.1 publish the bilingual KDNA Whitepaper v1.0.1 (kdna-whitepaper-1.0.1.zh-CN.kdna and kdna-whitepaper-1.0.1.en.kdna, CC BY 4.0, Container 0.6.0, 45 judgments)",
+        "this compatibility-manifest component record remains pinned to the historical 0.1.1 snapshot commit and release tag used by the pre-0.6.0 compatibility lock, where artifacts was empty prior to the v1.0.0/v1.0.1 whitepaper releases",
+        "the repository package is private validation tooling, so this component is recorded as package-less and binds its release tag and commit instead of npm package evidence"
       ],
-      "recommended_entrypoint": "no asset is offered here; the first public asset published from this repository will be the KDNA white paper",
+      "recommended_entrypoint": "download kdna-whitepaper-1.0.1.en.kdna or kdna-whitepaper-1.0.1.zh-CN.kdna from https://github.com/aikdna/kdna-assets or https://aikdna.com/downloads/whitepaper/v1.0.1/ and read via KDNA Reader or npx -y @aikdna/kdna-cli read --mode catalog --allow-read",
       "legacy_replacement": null
     },
     {

@@ -1,5 +1,7 @@
 # Start Here
 
+English | [简体中文](./start-here.zh.md) · [README](../README.md) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Agent Entry](./agent-entry.md)
+
 **Judgment can live in many carriers. KDNA gives a selected judgment system a
 portable asset and loading contract.**
 
@@ -10,7 +12,7 @@ Select one exact dependency graph. The [top-level entry](../README.md) and
 
 | Line | Coordinates and acquisition | Status |
 |---|---|---|
-| Published stable distribution | Core `0.37.10`, Read `0.13.4`, CLI `0.43.4`, Studio Core `4.1.0`, Studio CLI `0.14.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
+| Published stable distribution | Core `0.37.10`, Read `0.13.4`, CLI `0.43.5`, Studio Core `4.1.0`, Studio CLI `0.14.0`; each published from its reviewed source commit with a retained, byte-verified artifact | Published on `latest` |
 | Published previews | See the five exact versions and separate tags in [published channel history](current-release-support.md#published-channel-history) | Existing immutable artifacts; not the current published bytes |
 | Earlier `latest` observation | Core `0.37.0`, Read `0.11.1`, CLI `0.36.1`, Studio Core `3.0.0`, Studio CLI `0.11.0` | Observed on 2026-10-11; each keeps its own graph |
 
@@ -19,23 +21,48 @@ runs against the exact published versions. Use
 `--omit=optional` for the bound protected Host graph; otherwise npm may add
 `cbor-extract` and the Host rejects the unbound package.
 
-The [current line quickstart below](#current-line-quickstart-cli-0434) runs
-the published stable CLI `0.43.4` command surface. The older walkthroughs
+The [current line quickstart below](#current-line-quickstart-cli-0435) runs
+the published stable CLI `0.43.5` command surface. The older walkthroughs
 further down preserve CLI `0.36.1` and its historical loading contract; for
 current native or Studio authoring, follow the current source entry, retain
 its lock, and use the reader named by the producing route.
 
-## Current line quickstart (CLI 0.43.4)
+## Current line quickstart (CLI 0.43.5)
+
+### 30-second interactive & password-protected workflow (`npx`)
+
+With Node.js `>=22`, you can create, validate, selectively read, and password-protect a Container `0.6.0` `.kdna` work directly—**permanently account-free**:
+
+```bash
+# 1. Create a runnable starter draft and pack a Container 0.6.0 .kdna work
+npx -y @aikdna/kdna-cli@0.43.5 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.43.5 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.43.5 create --draft draft.json --output my-judgments.kdna --allow-create
+
+# 2. Validate & selectively read (catalog first -> exact_selection with mandatory context)
+npx -y @aikdna/kdna-cli@0.43.5 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna \
+  --mode exact_selection --judgment-id decision:first-dilemma --allow-read --compact
+
+# 3. Optional local offline password encryption (PBKDF2 + AES-256-GCM; no online account)
+printf '%s' 'a long passphrase' > password.txt
+npx -y @aikdna/kdna-cli@0.43.5 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
+  --mode exact_selection --judgment-id decision:first-dilemma --allow-read --password-file password.txt --format human
+```
+
+### Reproducible pinned install from an empty directory
 
 Five commands from an empty directory create, check and read a real `.kdna`
-asset with the **current published** CLI — `@aikdna/kdna-cli@0.43.4` with its
+asset with the **current published** CLI — `@aikdna/kdna-cli@0.43.5` with its
 exact Core `0.37.9` / Read `0.13.3` pins. Every command below was re-run from
 a clean directory with an empty npm cache.
 
 ```bash
 mkdir kdna-first-asset && cd kdna-first-asset
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.5
 
 # 1. Create a first asset from the bundled teaching example
 npx --no-install kdna create node_modules/@aikdna/kdna-cli/examples/team-update/author.json --output first-asset.kdna --allow-create
@@ -88,8 +115,8 @@ published line.
 
 | I want to... | Start here | Time |
 |-------------|-----------|------|
-| **Read our first public `.kdna` work in 10 seconds** | [KDNA Whitepaper v1.0.0 in KDNA Reader](https://aikdna.com/reader/?sample=kdna-whitepaper) (zero install, no account) | 1 min |
-| **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.4)](#current-line-quickstart-cli-0434) | 5 min |
+| **Read our first public `.kdna` work** | [KDNA Reader for macOS](https://aikdna.com/en/downloads) (*KDNA Whitepaper* `v1.0.1` built in, no account) or download [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna) | 1 min |
+| **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.5)](#current-line-quickstart-cli-0435) | 5 min |
 | **Use current Core and Read source** | [Current source entry](#current-source-entry) | 5 min |
 | **Try the historical loading line (CLI 0.36.1)** | [Historical walkthrough](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [Current native/Studio routes](#current-source-entry); [published-line authoring guide](./30-minute-authoring-guide.md) | 30 min |
@@ -111,11 +138,11 @@ published line.
 Use the [current support and distribution matrix](./current-release-support.md)
 and [matching-source guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
 The published SDK pair is Core `0.37.10` / Read `0.13.4`.
-The native entry is CLI `0.43.4` with exact Core
+The native entry is CLI `0.43.5` with exact Core
 `0.37.9` / Read `0.13.3`, container `0.6` and
-Read `0.7-candidate`. CLI `0.43.4` and `0.43.2` bind that exact companion graph; the
+Read `0.7-candidate`. CLI `0.43.5` and `0.43.2` bind that exact companion graph; the
 preceding CLI `0.43.1` retains its own Core `0.37.8` / Read `0.13.2`
-pins. Prepare the complete twelve-archive delivery using the
+pins. Prepare the complete offline package delivery using the
 [CLI generator](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md).
 Source availability and registry publication are separate facts; the registry
 recipe in the [README](../README.md#current-source-choose-the-matching-implementation)
@@ -154,7 +181,7 @@ retain their own artifacts and exact dependency graphs. Never substitute
 > **Historical (loading line, CLI 0.36.1).** This section preserves the
 > published 2026-09 loading workflow (`demo` / `pack` / `plan-load` / `load`).
 > On the current line these commands are unavailable (exit 2); start from the
-> [Current line quickstart (CLI 0.43.4)](#current-line-quickstart-cli-0434)
+> [Current line quickstart (CLI 0.43.5)](#current-line-quickstart-cli-0435)
 > instead. This walkthrough preserves the older loading contract and does not
 > establish current Core/Read compatibility or Agent adoption.
 
@@ -245,7 +272,7 @@ using a particular API:
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Separate `0.5.0` terminal session CLI for creating and exporting Studio `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent Skills (`kdna-loader`, `kdna-creator`) wrapping `@aikdna/kdna-cli` over explicit user-selected files, plus optional local stdio MCP adapter |
-| [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (including *KDNA Whitepaper* `v1.0.0`, `CC BY 4.0`, readable in [KDNA Reader](https://aikdna.com/reader/?sample=kdna-whitepaper)) |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (including bilingual *KDNA Whitepaper* `v1.0.1`, `CC BY 4.0`, built into [KDNA Reader for macOS](https://aikdna.com/en/downloads)) |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Current Core/Read source has macOS validation and generic iOS compilation; historical 0.20.0 conformance belongs to its own inputs |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Apple authoring kernel; historical 0.4.0 compatibility and current-source verification are separate; see the owning README |
 | [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | Current Read presentation source has macOS builds/tests/consumers and generic iOS compilation; historical 0.5.0 retains its own release scope |

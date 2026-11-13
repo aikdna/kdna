@@ -12,7 +12,7 @@ and read it directly.
 ## Prerequisites
 
 - Node 22 or later;
-- `@aikdna/kdna-cli@0.43.4` (or `0.43.2`) with its exact Core `0.37.9` / Read `0.13.3`
+- `@aikdna/kdna-cli@0.43.5` (or `0.43.2`) with its exact Core `0.37.9` / Read `0.13.3`
   companion graph;
 - an explicit destination filename that does not already exist;
 - permission to write a new file and to disclose the result for this task.
@@ -40,7 +40,7 @@ and read it directly.
 
    ```sh
    npx --no-install kdna convert source-0.5.kdna \
-     --expected-a sha256:<digest-from-inspect> \
+     --expected-a sha256:<source-sha256-from-step-2> \
      --output converted-0.6.kdna \
      --allow-source
    ```

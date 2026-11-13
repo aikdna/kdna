@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-11-11",
+  "updated": "2026-11-13",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
@@ -34,15 +34,15 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.43.4",
+      "version": "0.43.5",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.43.4",
-      "source_commit": "84b1920e0daed92b9d4af94a6469a014ed16aa23",
-      "artifact_sha256": "f5e3f5812f153fedb200c73c8031dc3bf0ae526f870ea1860871105a2b8df527",
-      "publish_run": 43011736606,
-      "release_id": 441598841,
-      "release_published_at": "2026-11-11T11:24:47Z"
+      "release_tag": "0.43.5",
+      "source_commit": "d97445f512b3c8dd28b5a89d5fc44cf13ab1af04",
+      "artifact_sha256": "12c0745c6f055e36d32207604958e337c8d34b5c054bdae7a37b90917833e784",
+      "publish_run": 43362249506,
+      "release_id": 443796750,
+      "release_published_at": "2026-11-13T03:56:37Z"
     },
     {
       "unit": "studio-core",
@@ -75,7 +75,7 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "2175a0ced3fa233c2602eae1fa11361f972b5e73",
+      "main_commit": "288095e44ea15ae81ef2d830a277b98c11e84f95",
       "mcp_package": "@aikdna/kdna-mcp-server",
       "mcp_version": "0.8.0-rc.native-sections.3",
       "npm_coordinate": null,

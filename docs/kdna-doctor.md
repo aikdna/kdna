@@ -1,5 +1,7 @@
 # `kdna doctor` — Diagnostic Boundary
 
+> **Historical / Superseded Guide:** `kdna doctor` belongs to the historical CLI **0.36.1** line. On the current Container `0.6.0` CLI line (`@aikdna/kdna-cli@0.43.5`), use `kdna inspect` and `kdna validate --system` instead (see [Start Here](./start-here.md)).
+
 `@aikdna/kdna-cli` includes `kdna doctor` surfaces for local implementation
 diagnostics. Their results must be interpreted narrowly.
 

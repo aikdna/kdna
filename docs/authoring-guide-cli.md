@@ -1,6 +1,6 @@
 # KDNA Authoring Guide — Writing Your First `author-input.json`
 
-This guide covers the **current published CLI** (`@aikdna/kdna-cli@0.43.4`) `create`
+This guide covers the **current published CLI** (`@aikdna/kdna-cli@0.43.5`) `create`
 command input format. It documents the admission rules the CLI actually enforces —
 including several that are not in the JSON schema and were verified empirically.
 A complete runnable minimal template is at
@@ -16,7 +16,7 @@ For the published loading-line walkthrough (CLI 0.36.1), see
 ```bash
 mkdir my-first-asset && cd my-first-asset
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.4
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.5
 # Copy the minimal template, edit it, then:
 npx --no-install kdna create author-input.json --output my-asset.kdna --allow-create
 npx --no-install kdna inspect my-asset.kdna
@@ -79,7 +79,7 @@ key **must be present**; omitting it is rejected).
 
 ## Rule 3: The other empirically verified admission rules
 
-These were verified against CLI 0.43.4 / Core 0.37.9 and are **not** all visible in
+These were verified against CLI 0.43.5 / Core 0.37.9 and are **not** all visible in
 the JSON schema (the schema allows things the admission layer rejects):
 
 1. **`payload.asset` has no `asset_uid`** — only `asset_id`, `asset_version`,

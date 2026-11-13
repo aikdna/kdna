@@ -1,13 +1,15 @@
 # KDNA with OpenCode
 
+> **Historical / Superseded Guide:** For the current Container `0.6.0` OpenCode workflow (`@aikdna/kdna-cli@0.43.5` and [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)), start at [Agent Entry](../agent-entry.md).
+>
 > This page documents the earlier loading workflow at its last supporting published versions:
 > Runtime CLI **0.36.1** and Studio CLI **0.11.0**. The commands below need those exact versions.
-> The current published stable line is Runtime CLI **0.43.4** (exact Core `0.37.9` / Read `0.13.3`)
+> The current published stable line is Runtime CLI **0.43.5** (exact Core `0.37.9` / Read `0.13.3`)
 > with Studio CLI **0.14.0**; the current implementation rejects these older inputs and does not
 > support this loading or project/card workflow. Its `inspect` and `validate` commands have a
 > different contract. For a current asset start with
 > [Core/Read](../core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli),
-> or `npm install -g @aikdna/kdna-cli@0.43.4` and follow the current entry guide.
+> or `npm install -g @aikdna/kdna-cli@0.43.5` and follow the current entry guide.
 
 Use an explicitly selected `.kdna` file. No global KDNA library or automatically
 installed Skill is required.

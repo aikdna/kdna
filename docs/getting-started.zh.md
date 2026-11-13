@@ -1,5 +1,7 @@
 # KDNA 快速上手指南
 
+> **历史归档指南（已由 Container `0.6.0` 替代）：** 本页保留早期 Runtime CLI **0.36.1** / Studio CLI **0.11.0** 的历史流程。当前 Container `0.6.0` 快速上手（`@aikdna/kdna-cli@0.43.5`）请直接访问 [从这里开始（中文）](./start-here.zh.md)。
+>
 > 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
 > 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
 > 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。

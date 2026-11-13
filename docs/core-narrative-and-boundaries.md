@@ -44,7 +44,7 @@ KDNA Core may verify:
 
 Which items a given implementation verifies is version-specific. The current
 published SDK pair is Core `0.37.10` / Read `0.13.4`, and the current native
-CLI is CLI `0.43.4` (pinned to Core `0.37.9` / Read `0.13.3`); the
+CLI is CLI `0.43.5` (pinned to Core `0.37.9` / Read `0.13.3`); the
 [support matrix](./current-release-support.md) and the exact package receipt
 define its capabilities for the artifact you installed. Admission establishes
 the technical validity of the captured bytes under that contract. It does not
@@ -77,7 +77,7 @@ objects, not substitutes for the distributed asset.
 
 ### Current published line: Core admission then Read
 
-The current published CLI `0.43.4` line (with exact Core `0.37.9` / Read `0.13.3`
+The current published CLI `0.43.5` line (with exact Core `0.37.9` / Read `0.13.3`
 pins) and the published SDK pair Core `0.37.10` / Read `0.13.4` use
 Core admission then Read. It is not a LoadPlan or Runtime Capsule flow:
 
@@ -115,7 +115,7 @@ explicit file or authorized attachment
 
 In that published line, agents and applications consume the Runtime Capsule.
 LoadPlan and Runtime Capsule admission are unavailable in the current CLI
-`0.43.4` line.
+`0.43.5` line.
 
 Generic ZIP extraction or raw payload decoding is a developer/audit action in
 either state, not a compatible Agent runtime.
@@ -178,7 +178,7 @@ not need to make such a claim.
 One asset is the atomic and default path:
 
 ```text
-current CLI 0.43.4:   select one .kdna → Core admission → Read → use
+current CLI 0.43.5:   select one .kdna → Core admission → Read → use
 historical CLI 0.36.1: select one .kdna → inspect → plan-load → load → use
 ```
 

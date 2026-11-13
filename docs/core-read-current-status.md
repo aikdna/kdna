@@ -56,7 +56,7 @@ production identity service or native credential store.
 
 | Consumer | Current published graph | Use and boundary |
 | --- | --- | --- |
-| Native CLI | CLI `0.43.4` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6` create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
+| Native CLI | CLI `0.43.5` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6` create/save/read/source-open/source-pack. Explicit permission, retained same-session handles; no Plan/load or protected-browser credential interface. |
 | Loader/MCP | MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.4` and Core `0.37.9` / Read `0.13.3` pins | Optional complete Git source plus bundled graph; one operator-bound local file. The direct CLI is the primary route. npm publication disabled. Actual Host delivery/adoption remains unassessed. |
 | Studio | StudioCLI `0.14.0` / StudioCore `4.1.0` with its own pinned SDK pair (Core `0.37.2` / Read `0.11.3`) | Container `0.5` / Read `0.6.4` session, fresh role-specific adoption, revision, save/read/verify and explicit protected export. Use Studio's reader; native CLI does not read these assets. |
 
@@ -67,7 +67,7 @@ current sources. No current acquisition route depends on an unnamed
 local archive or a version guessed from an earlier checkout.
 
 The immediately preceding Core `0.37.9` / Read `0.13.3` pair remains
-installable; native CLI `0.43.4`, `0.43.3` and `0.43.2` bind that pair, while CLI `0.43.1`
+installable; native CLI `0.43.5`, `0.43.4`, `0.43.3` and `0.43.2` bind that pair, while CLI `0.43.1`
 retains its own Core `0.37.8` / Read `0.13.2` pins. The published history also
 retains Core `0.37.0` / Read `0.11.1` and native CLI
 `0.39.0-rc.native-sections.2` with Core `0.36.0-rc.r2.7` / Read

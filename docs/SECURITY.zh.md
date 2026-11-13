@@ -1,8 +1,10 @@
 # 安全策略
 
+> **规范安全策略主文档：** 请参阅仓库根目录 [`SECURITY.md`](../SECURITY.md) 了解当前 Container `0.6.0` 安全边界、本地口令加密说明与官方包坐标核验规则。
+
 ## 报告漏洞
 
-如发现 KDNA 工具体系安全漏洞，请私密报告至 security@aikdna.com，72 小时内响应。请勿公开提交 Issue。
+如发现 KDNA 工具体系安全漏洞，请通过 [GitHub 私密安全通告](https://github.com/aikdna/kdna/security/advisories/new) 或发送邮件至 **hi@aikdna.com**（或 **security@aikdna.com**）私密报告，72 小时内响应。请勿公开提交 Issue。
 
 ## 范围
 

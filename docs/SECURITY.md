@@ -1,15 +1,18 @@
 # Security Policy
 
+> **Canonical Security Policy:** See the root [`SECURITY.md`](../SECURITY.md) for current Container `0.6.0` security boundaries, supported coordinates, and official package verification.
+
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability in KDNA tooling (`kdna-cli`,
-`kdna-core`, `kdna-studio-cli`, `kdna-studio-core`, `kdna-skills`,
+`kdna-core`, `kdna-read`, `kdna-studio-cli`, `kdna-studio-core`, `kdna-skills`,
 MCP integrations, or related developer tools), please report it
 privately.
 
 **Do not open a public issue.**
 
-Email: security@aikdna.com
+- **GitHub Private Vulnerability Reporting:** [https://github.com/aikdna/kdna/security/advisories/new](https://github.com/aikdna/kdna/security/advisories/new)
+- **Email:** **hi@aikdna.com** or **security@aikdna.com**
 
 Response time: within 72 hours.
 

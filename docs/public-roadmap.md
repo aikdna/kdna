@@ -6,7 +6,7 @@ KDNA is an open file format and protocol for expressible judgment and judgment
 systems. It gives implicit, scattered, or hard-won judgment an independent file
 with clear identity, version lineage, byte integrity, optional local password
 encryption, and a scoped reading contract—so people can read and question a work
-in [KDNA Reader](https://aikdna.com/reader/), and compatible agents can create,
+in [KDNA Reader](https://aikdna.com/en/downloads), and compatible agents can create,
 verify, and apply it without silently flattening its boundaries.
 
 KDNA does not claim to add model intelligence or guarantee better output. Its
@@ -31,8 +31,8 @@ responsibilities and independent release schedules:
 | Protocol and Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` / `0.5.0` schemas, digests, local password protection, scoped Read closure, and conformance vectors |
 | Official CLI | `kdna-cli` (`@aikdna/kdna-cli`) | Author (`init`, `validate-input`, `compile`, `create`), password-protect (`protect`), inspect, validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works (`plan`/`load` belong only to the historical `0.36.1` line) |
 | Agent integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP server (`kdna-vscode` remains paused by owner decision) |
-| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with *KDNA Whitepaper* `v1.0.0`, `CC BY 4.0`) and verification checks |
-| Human reading | KDNA Reader ([Web](https://aikdna.com/reader/?sample=kdna-whitepaper) + [macOS](https://aikdna.com/en/downloads)) | Free, permanently account-free reading and review application for public, local, and password-protected `.kdna` works |
+| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.1`, `CC BY 4.0`) and verification checks |
+| Human reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Free, permanently account-free macOS desktop reading and review application (with *KDNA Whitepaper* `v1.0.1` built in) for public, local, and password-protected `.kdna` works |
 | Studio session packages | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate container `0.5.0` session authoring and protected export line |
 | Apple Swift packages | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime and Apple-platform contracts |
 

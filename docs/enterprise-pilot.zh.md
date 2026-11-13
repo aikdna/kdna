@@ -1,5 +1,7 @@
 # 团队与组织试点
 
+> **历史归档指南（命令示例已由 Container `0.6.0` 替代）：** 本页命令示例保留早期 Runtime CLI **0.36.1** / Studio CLI **0.11.0** 历史线。当前 Container `0.6.0` 的团队与 Agent 接入流程（`@aikdna/kdna-cli@0.43.5`）请参阅 [从这里开始（中文）](./start-here.zh.md) 与 [Agent 接入指南](./agent-entry.md)。
+>
 > 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
 > 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
 > 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
