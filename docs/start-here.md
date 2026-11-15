@@ -115,7 +115,7 @@ published line.
 
 | I want to... | Start here | Time |
 |-------------|-----------|------|
-| **Read our first public `.kdna` work** | [KDNA Reader for macOS](https://aikdna.com/en/downloads) (*KDNA Whitepaper* `v1.0.1` built in, no account) or download [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna) | 1 min |
+| **Read our first public `.kdna` work** | [KDNA Reader for macOS](https://aikdna.com/en/downloads) (permanently free; free `KDNA ID` for bundled *KDNA Whitepaper* `v1.0.1` & offline Bookshelf, plus account-free Guest Mode) or download [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna) | 1 min |
 | **Try the current published CLI lifecycle** | [Current line quickstart (CLI 0.43.5)](#current-line-quickstart-cli-0435) | 5 min |
 | **Use current Core and Read source** | [Current source entry](#current-source-entry) | 5 min |
 | **Try the historical loading line (CLI 0.36.1)** | [Historical walkthrough](#5-minute-quick-start) | 5 min |

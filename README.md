@@ -19,13 +19,13 @@ As AI makes finished outputs inexpensive to generate, upstream thinking, judgmen
 
 ---
 
-## Experience a Real `.kdna` Work (Permanently Account-Free)
+## Experience a Real `.kdna` Work
 
-Our first official public judgment work—**KDNA Whitepaper `v1.0.1`** (*《KDNA白皮书》*, authored by Zhang Ling / 张零 · `CC BY 4.0` · container `0.6.0` · `45` connected judgments)—is available in both Chinese and equivalent English `.kdna` editions:
+Our first official public judgment work—**KDNA Whitepaper `v1.0.1`** (*《KDNA白皮书》*, authored by Zhang Ling / 张零 · `CC BY 4.0` · container `0.6.0` · `45` connected judgments)—is available in both Chinese and equivalent English `.kdna` editions (open `.kdna` files and `@aikdna/kdna-cli` remain permanently account-free):
 
 - **Chinese `.kdna` (`zh-CN`):** [`kdna-whitepaper-1.0.1.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna) (`2,595,031` bytes · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`, creator `张零`)
 - **English `.kdna` (`en`):** [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna) (`2,711,958` bytes · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`, creator `Zhang Ling`)
-- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (includes both English and Chinese `v1.0.1` editions built in, English/Chinese UI switch, Light/Dark mode, local password unlock, multi-asset tabs, and lossless `.kdna` export — permanently account-free)
+- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free without usage limits: sign in with a free `KDNA ID` to unlock both bundled `v1.0.1` Whitepaper editions and the permanent offline Bookshelf/multi-tab workspace, or use Guest Mode anytime to open and unlock individual local `.kdna` files without signing in)
 - **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.1` editions, SHA-256 digests, provenance/evolution notes, and container/Read verification suite; see [`examples/native-team-update`](./examples/native-team-update/README.md) for a `1.0.0` → `1.1.0` `kdna diff` sample)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
@@ -168,7 +168,7 @@ actual task adoption.
 | [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Legacy container `0.5.0` / Read `0.6.4` terminal session line (not for current `0.6.0` authoring — use `@aikdna/kdna-cli@0.43.5`) |
 | [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Legacy container `0.5.0` Studio session SDK and explicit protected export; its own Host/credential boundary |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read implementation for Apple platforms |
-| [KDNA Reader](https://aikdna.com/en/downloads) | Apple-notarized macOS desktop app (`0.1.0`) | Free, permanently account-free human reading app with *KDNA Whitepaper* `v1.0.1` (`zh-CN` & `en`) built in |
+| [KDNA Reader](https://aikdna.com/en/downloads) | Apple-notarized macOS desktop app (`0.1.0`) | Permanently free without usage limits: sign in with a free `KDNA ID` for bundled *KDNA Whitepaper* `v1.0.1` (`zh-CN` & `en`) and permanent offline Bookshelf, plus account-free single-file Guest Mode |
 
 Machine consumers should consult [`ecosystem-manifest.json`](./ecosystem-manifest.json) and [`docs/release-coordinates.json`](./docs/release-coordinates.json). Newcomers can also browse [`docs/start-here.md`](./docs/start-here.md) by goal. Preserved walkthroughs for historical published lines (earlier native previews, `0.36.1`, `0.22.0`, `0.11.0`) live in [`docs/historical-published-lines.md`](./docs/historical-published-lines.md).
 

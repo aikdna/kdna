@@ -16,10 +16,12 @@ across tools.
 ## Permanently account-free foundation
 
 Public, local, and password-protected (`0.6.0`) `.kdna` creation, encryption
-(`kdna protect`), validation, human reading in KDNA Reader, and Agent
-consumption are **permanently account-free** and work offline. No online account
-system is a prerequisite or roadmap item for the KDNA format, CLI, Skills, or
-KDNA Reader.
+(`kdna protect`), validation, CLI/SDK reading, and Agent consumption are
+**permanently account-free** and work offline. No online account system is a
+prerequisite for the `.kdna` file format, `@aikdna/kdna-cli`, or Agent Skills;
+desktop KDNA Reader remains permanently free without usage limits, offering
+account-free single-file Guest Mode alongside optional free `KDNA ID` sign-in
+for the bundled bilingual Whitepaper and permanent offline Bookshelf.
 
 ## One ecosystem, focused responsibilities
 
@@ -32,7 +34,7 @@ responsibilities and independent release schedules:
 | Official CLI | `kdna-cli` (`@aikdna/kdna-cli`) | Author (`init`, `validate-input`, `compile`, `create`), password-protect (`protect`), inspect, validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works (`plan`/`load` belong only to the historical `0.36.1` line) |
 | Agent integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP server (`kdna-vscode` remains paused by owner decision) |
 | Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.1`, `CC BY 4.0`) and verification checks |
-| Human reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Free, permanently account-free macOS desktop reading and review application (with *KDNA Whitepaper* `v1.0.1` built in) for public, local, and password-protected `.kdna` works |
+| Human reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Permanently free macOS desktop reading and review application without usage limits (free `KDNA ID` unlocks bundled *KDNA Whitepaper* `v1.0.1` and permanent offline Bookshelf; Guest Mode reads individual local `.kdna` files without signing in) |
 | Studio session packages | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate container `0.5.0` session authoring and protected export line |
 | Apple Swift packages | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime and Apple-platform contracts |
 
