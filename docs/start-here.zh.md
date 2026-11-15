@@ -22,7 +22,7 @@
 
 首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · Container `0.6.0` · `45` 个关联判断问题）提供中英双语正式版：
 
-- **macOS 桌面阅读器（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费无限制：登录免费 `KDNA ID` 即享内置中英双语《KDNA 白皮书》`v1.0.1` 与永久离线书架，并提供免登录单文件游客模式打开与解锁任意本地 `.kdna` 作品）
+- **macOS 桌面阅读器（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费无限制：登录免费 `KDNA ID` 即享内置中英双语《KDNA白皮书》与判断资产库，并提供免登录单文件游客模式打开与解锁任意本地 `.kdna` 作品）
 - **规范 `.kdna` 原件直链下载：**
   - 中文版（`zh-CN`）：[`kdna-whitepaper-1.0.1.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna)（`2,595,031` 字节 · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`）
   - 英文版（`en`）：[`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna)（`2,711,958` 字节 · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`）
@@ -128,6 +128,6 @@ npx --no-install kdna read first-asset.kdna --mode exact_selection --asset-id as
 | [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | 官方命令行工具（`@aikdna/kdna-cli`）：创建（`init`、`validate-input`、`compile`、`create`）、本地口令加密（`protect`）、检查（`inspect`、`validate`）、按需读取（`read`）、对比（`diff`）与修订（`source-open`、`source-pack`、`convert`） |
 | [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) | Agent 技能包（`kdna-creator`、`kdna-loader`）及可选本地 stdio MCP 适配器 |
 | [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) | 官方公开 `.kdna` 代表作品与核验套件（含《KDNA 白皮书》`v1.0.1` 中英双语版，`CC BY 4.0`） |
-| [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) | 永久免费无限制的 Apple 公证 macOS 桌面阅读器（登录免费 `KDNA ID` 即享内置《KDNA 白皮书》`v1.0.1` 中英双语版与永久离线书架，并提供免登录单文件游客模式） |
+| [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) | 永久免费无限制的 Apple 公证 macOS 桌面阅读器（登录免费 `KDNA ID` 即享内置《KDNA白皮书》中英双语版与判断资产库，并提供免登录单文件游客模式） |
 | [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | 独立的旧版 Container `0.5.0` 会话线（不用于当前 Container `0.6.0` 作品） |
 | [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) / [`aikdna/kdna-app-shared`](https://github.com/aikdna/kdna-app-shared) / [`aikdna/kdna-studio-swift`](https://github.com/aikdna/kdna-studio-swift) | Apple 平台 Swift 实现与共享基础库 |
