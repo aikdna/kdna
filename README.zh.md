@@ -19,13 +19,13 @@
 
 ---
 
-## 立即体验真实 `.kdna` 判断作品（永久免账号）
+## 立即体验真实 `.kdna` 判断作品
 
-首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · container `0.6.0` · `45` 个关联判断问题）现已提供中英双语 `.kdna` 正式版：
+首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · container `0.6.0` · `45` 个关联判断问题）现已提供中英双语 `.kdna` 正式版（开放 `.kdna` 格式与 `@aikdna/kdna-cli` 永久无需在线账号）：
 
 - **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.1.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna)（`2,595,031` 字节 · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`，创建者 `张零`）
 - **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna)（`2,711,958` 字节 · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`，创建者 `Zhang Ling`）
-- **macOS 桌面版（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（内置中英双语《KDNA 白皮书》`v1.0.1`，支持中英界面切换、浅色与深色模式、本地口令解锁、多资产标签页管理及 `.kdna` 原件无损导出——永久无需注册账号）
+- **macOS 桌面版（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费无限制：登录免费 `KDNA ID` 即享内置中英双语《KDNA 白皮书》`v1.0.1` 与永久离线书架，并提供免登录单文件游客模式离线打开与解锁任意本地 `.kdna` 作品）
 - **公开参考资产仓库：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.1`、SHA-256 校验值、演进说明与容器核验套件；`1.0.0` → `1.1.0` 版本 `kdna diff` 示例见 [`examples/native-team-update`](./examples/native-team-update/README.md)）
 
 > **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
@@ -85,7 +85,7 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.1` 中英双语正式版与容器核验套件）
 - [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — **旧版 container `0.5.0` 会话线**（不用于当前 container `0.6.0` 作品创作；创建与读取 `0.6.0` 作品请使用 `@aikdna/kdna-cli`）
 - [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — 面向 Apple 平台的 Swift Core 实现
-- [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 免费、永久免账号的 Apple 公证 macOS 桌面阅读器（内置《KDNA 白皮书》`v1.0.1` 中英双语版）
+- [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 Apple 公证 macOS 桌面阅读器（登录免费 `KDNA ID` 即享内置《KDNA 白皮书》`v1.0.1` 中英双语版与永久离线书架，并提供免登录单文件游客模式）
 
 ---
 
