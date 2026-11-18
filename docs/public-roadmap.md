@@ -33,12 +33,12 @@ responsibilities and independent release schedules:
 | Protocol and Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` / `0.5.0` schemas, digests, local password protection, scoped Read closure, and conformance vectors |
 | Official CLI | `kdna-cli` (`@aikdna/kdna-cli`) | Author (`init`, `validate-input`, `compile`, `create`), password-protect (`protect`), inspect, validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works (`plan`/`load` belong only to the historical `0.36.1` line) |
 | Agent integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP server (`kdna-vscode` remains paused by owner decision) |
-| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.1`, `CC BY 4.0`) and verification checks |
+| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (bilingual *KDNA Whitepaper* `v1.0.2` / `v1.0.1`, `CC BY 4.0`) and verification checks |
 | Human reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Permanently free macOS desktop reading and review application without usage limits (free `KDNA ID` unlocks bundled *KDNA Whitepaper* and offline Judgment Asset Library; Guest Mode reads individual local `.kdna` files without signing in) |
-| Studio session packages | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate container `0.5.0` session authoring and protected export line |
-| Apple Swift packages | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Swift runtime and Apple-platform contracts |
+| Studio session packages `[Legacy pre-0.6.0 / P5-deferred]` | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate legacy container `0.5.0` session authoring and protected export line (`[Legacy pre-0.6.0 / P5-deferred]`) |
+| Apple Swift packages `[Legacy pre-0.6.0 / P5-deferred]` | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Historical Swift runtime and Apple-platform contracts (`[Legacy pre-0.6.0 / P5-deferred]`) |
 
-Per [Repository Boundaries](./repository-boundaries.md), web ecosystem packages and remote/activation services (`kdna-web-client`, `kdna-web-server`, `kdna-react`, `create-kdna-web-app`, `kdna-demo-web-viewer`, `kdna-activation-server`, `kdna-remote-server`) are private repositories, not current public repositories or public support commitments.
+Per [Repository Boundaries](./repository-boundaries.md), internal web application workspaces, remote/activation infrastructure, and commercial product experiments are private repositories whose names and contents are not public and are not part of the public support commitment.
 
 ## Four questions kept distinct
 
@@ -66,10 +66,9 @@ simpler carriers already suffice. Protocol and toolchain verification focuses on
 ## Current priorities
 
 1. Keep the native `0.6.0` authoring, local password protection, human reading, and selective Agent reading loop effortless and rock-solid.
-2. Expand openly licensed `.kdna` reference works in `kdna-assets` with clear authorship and `CC BY 4.0` provenance.
-3. Measure and optimize real-world Agent context budgets across `catalog` and `exact_selection` workflows ([Read cost work package](./read-cost-work-package.md)).
-4. Maintain clear file-first, user-consented Agent host workflows (`kdna-loader` and `kdna-creator`) with zero silent background activation.
-5. Keep every published npm coordinate immutable and byte-verified; new versions advance only after passing conformance and smoke checks without overwriting prior coordinates.
+2. Measure and optimize real-world Agent context budgets and cold-start read latency across `catalog` and `exact_selection` workflows ([Read cost work package](./read-cost-work-package.md)).
+3. Maintain clear file-first, user-consented Agent host workflows (`kdna-loader` and `kdna-creator`) with zero silent background activation.
+4. Keep every published npm coordinate immutable and byte-verified; new versions advance only after passing conformance and smoke checks without overwriting prior coordinates.
 
 ## Contribution boundary
 

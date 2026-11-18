@@ -14,13 +14,14 @@ const {buildIR}=require('./canonical-ir.js');
 const {digestCanonical,evidence}=require('./digests.js');
 const checksums=require('./section-checksums.js'),signatures=require('./section-signatures.js');
 const definition=require('./sectionbytes/contract.json');
-const validators=require('./sectionbytes/validators.cjs');
+let _validators=null;
+const getValidators=()=>_validators??(_validators=require('./sectionbytes/validators.cjs'));
 const contract=Object.freeze({id:definition.module.id,version:definition.module.version,definition_digest:digestCanonical(definition.module)});
 const tuple=C.contract.module.versionTuple;
 const authorities=new WeakMap();
 function typed(name,value){
  C.strict.assertStrictJson(value);
- if(!validators[name](value))throw new Error('INTERNAL_BYTE_RESULT_SHAPE');
+ if(!getValidators()[name](value))throw new Error('INTERNAL_BYTE_RESULT_SHAPE');
  return C.strict.freeze(value);
 }
 function createNativeSectionByteReadAuthority(callback,signaturePolicy){
@@ -101,10 +102,13 @@ async function admitSectionBytesNode(input,admitted,authority){
   stage='semantic';validateDecodedPayload(manifest,payload);
   // Domain interpretation remains the unchanged Core path. Only representation/read tuple coordinates bind to this candidate.
   const derived={...buildIR(manifest,payload,entries),tuple:structuredClone(tuple)};
-  C.need(digestCanonical(derived)===digestCanonical(restored.ir),'SECTION_DERIVED_IR_MISMATCH');
+  C.strict.freezeVerified(derived);
+  const derivedIrDigest=digestCanonical(derived);
+  C.need(derivedIrDigest===digestCanonical(restored.ir),'SECTION_DERIVED_IR_MISMATCH');
+  C.markFrozenTypeValid('CanonicalIR06Candidate',derived);
   const observations=observeWhole(bytes,entries,manifest,restored.pack_names);assertContentBindings(manifest,observations.C);
   stage='integrity';const checksum_integrity=checksums.verifyChecksums(entries,observations,capture.identity.capture_id,request.digest),signature_integrity=signatures.verify(entries,signaturePolicy,capture.identity.capture_id,request.digest,authorization.signature_read_intent);await capture.assertUnchanged();
-  const verification={signature_integrity,checksum_integrity,capture:{...capture.identity,table_frames:restored.checked_sections.filter(x=>x.section_id.startsWith('table:'))},request_digest:request.digest,checked_sections:restored.checked_sections,unchecked_sections:[],routing_integrity:'checked',runtime_entry_digest:observations.E,whole_container_digest:{profile:'kdna.digest-basis.container-bytes/0.2.0',status:'verified',digest:observations.A},whole_content_digest:{profile:'kdna.digest-basis.content-tree/0.2.0',status:'verified',digest:observations.C},ir_digest:{profile:'CanonicalIR:SHA-256(RFC8785):existing-digestCanonical',status:'verified',digest:digestCanonical(derived)},mode:'whole_asset',semantic_status:'verified_whole_graph'};
+  const verification={signature_integrity,checksum_integrity,capture:{...capture.identity,table_frames:restored.checked_sections.filter(x=>x.section_id.startsWith('table:'))},request_digest:request.digest,checked_sections:restored.checked_sections,unchecked_sections:[],routing_integrity:'checked',runtime_entry_digest:observations.E,whole_container_digest:{profile:'kdna.digest-basis.container-bytes/0.2.0',status:'verified',digest:observations.A},whole_content_digest:{profile:'kdna.digest-basis.content-tree/0.2.0',status:'verified',digest:observations.C},ir_digest:{profile:'CanonicalIR:SHA-256(RFC8785):existing-digestCanonical',status:'verified',digest:derivedIrDigest},mode:'whole_asset',semantic_status:'verified_whole_graph'};
   const expectedC=manifest.content_digest??manifest.authoring?.content_digest??null;const digests={A:evidence('A',observations.A),C:evidence('C',observations.C,expectedC,expectedC?{kind:'manifest_declaration',source_id:manifest.content_digest?'kdna.json':'kdna.json/authoring/content_digest'}:null),E:{...evidence('E',observations.E.digest,checksum_integrity.status==='verified_document_2'?checksum_integrity.expected_entry_set_digest:null,checksum_integrity.status==='verified_document_2'?{kind:'checksums_declaration',source_id:'checksums.json'}:null),profile_version:'0.3.0-candidate'}};
   const data={digests,snapshot_id:'section-snapshot:'+globalThis.crypto.randomUUID(),tuple:structuredClone(tuple),asset:structuredClone(payload.asset),ir:derived,runtime_entry_names:observations.E.member_names,verification};C.validate('WholeSectionSnapshotData06',data);
   const view=C.strict.freeze(data),snapshot=Object.freeze({});snapshots.set(snapshot,view);byteOrigins.add(snapshot);

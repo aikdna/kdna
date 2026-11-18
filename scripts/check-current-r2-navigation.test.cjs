@@ -133,19 +133,19 @@ const mutations = [
   [
     'Core packed README package',
     'packages/kdna-core/README.md',
-    'Package `@aikdna/kdna-core` version `0.37.10`',
+    'Package `@aikdna/kdna-core` version `0.37.11`',
     '0.36.0-rc.r2.4',
   ],
   [
     'Read packed README package',
     'packages/kdna-read/README.md',
-    'Package `@aikdna/kdna-read` version `0.13.4`',
+    'Package `@aikdna/kdna-read` version `0.13.5`',
     '0.11.0-rc.r2.4',
   ],
   [
     'Read packed README exact peer',
     'packages/kdna-read/README.md',
-    '`@aikdna/kdna-core@0.37.10`',
+    '`@aikdna/kdna-core@0.37.11`',
     '0.36.0-rc.r2.4',
   ],
   [
@@ -169,7 +169,7 @@ const mutations = [
   [
     'CoreRead guide exact peer',
     'docs/core-read-current-status.md',
-    'Read declares Core `0.37.10` as its exact peer',
+    'Read declares Core `0.37.11` as its exact peer',
     'Read declares Core `0.36.0-rc.r2.4` as its exact peer',
   ],
   [
@@ -251,13 +251,13 @@ const mutations = [
   [
     'issuer current pair',
     'specs/external-grant-issuer.md',
-    'Core `0.37.10`、Read `0.13.4`',
+    'Core `0.37.11`、Read `0.13.5`',
     '0.36.0-rc.r2.2',
   ],
   [
     'adoption current pair',
     'specs/protection-adoption.md',
-    'Core `0.37.10` and Read',
+    'Core `0.37.11` and Read',
     '0.35.0-rc.source.1',
   ],
   [
@@ -269,7 +269,7 @@ const mutations = [
   [
     'Read middle current pair',
     'specs/read-contract.md',
-    'Core `0.37.10` and Read `0.13.4`',
+    'Core `0.37.11` and Read `0.13.5`',
     '0.36.0-rc.r2.3',
   ],
   ['Read middle binding', 'specs/read-contract.md', 'binding:r2:8', 'binding:r2:3'],
@@ -796,7 +796,7 @@ const bodyRegressions = [
   [
     'crypto tail current pair from an old major/minor family',
     'specs/kdna-crypto-profiles.md',
-    'local package line is Core `0.37.10` / Read `0.13.4`',
+    'local package line is Core `0.37.11` / Read `0.13.5`',
     'local package line is Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`',
   ],
   [
@@ -1493,7 +1493,7 @@ for (const [label, mutate] of [
 test('a promoted document section missing its current stable identity is refused', () => {
   const file = 'specs/read-contract.md',
     original = fs.readFileSync(path.join(root, file), 'utf8');
-  const marker = 'The current exact pair is Core `0.37.10` and Read `0.13.4`';
+  const marker = 'The current exact pair is Core `0.37.11` and Read `0.13.5`';
   assert.ok(original.includes(marker), 'expected the current stable pair statement');
   const changed = original.replace(
     marker,

@@ -45,20 +45,46 @@ function reject(reason = 'READ_INPUT_INVALID', diagnostic = null) {
 // Canonical-JSON byte cost of one scalar. Byte equality with canonicalJson() is a hard
 // requirement elsewhere in this package, so the meter uses the same serialization.
 function scalarBytes(value) {
+  if (value === null || value === true) return 4;
+  if (value === false) return 5;
+  if (typeof value === 'number') return String(value).length;
+  if (typeof value === 'string') {
+    let bytes = 2;
+    for (let i = 0; i < value.length; i++) {
+      const n = value.charCodeAt(i);
+      if (n === 0x22 || n === 0x5c || n === 0x08 || n === 0x09 || n === 0x0a || n === 0x0c || n === 0x0d) bytes += 2;
+      else if (n < 0x20) bytes += 6;
+      else if (n < 0x80) bytes += 1;
+      else if (n < 0x800) bytes += 2;
+      else if (n >= 0xd800 && n <= 0xdbff) { i++; bytes += 4; }
+      else bytes += 3;
+    }
+    return bytes;
+  }
   return encoder.encode(JSON.stringify(value)).length;
 }
 
 function scalarString(value, maximum = MAX_STRING_BYTES, controls = true) {
   if (typeof value !== 'string') return false;
+  if (controls && typeof value.isWellFormed === 'function') {
+    if (!value.isWellFormed()) return false;
+    if (value.length * 3 <= maximum) return true;
+    if (typeof Buffer === 'function') return Buffer.byteLength(value, 'utf8') <= maximum;
+  }
+  let bytes = 0;
   for (let i = 0; i < value.length; i++) {
     const n = value.charCodeAt(i);
     if (n >= 0xd800 && n <= 0xdbff) {
       const next = value.charCodeAt(++i);
       if (!(next >= 0xdc00 && next <= 0xdfff)) return false;
-    } else if (n >= 0xdc00 && n <= 0xdfff) return false;
-    if (!controls && (n <= 0x1f || (n >= 0x7f && n <= 0x9f))) return false;
+      bytes += 4;
+    } else {
+      if (n >= 0xdc00 && n <= 0xdfff) return false;
+      if (!controls && (n <= 0x1f || (n >= 0x7f && n <= 0x9f))) return false;
+      bytes += n < 0x80 ? 1 : n < 0x800 ? 2 : 3;
+    }
   }
-  return encoder.encode(value).length <= maximum;
+  return bytes <= maximum;
 }
 
 function identifier(value) {
@@ -74,8 +100,18 @@ function entryName(value) {
 function uint(value) { return Number.isSafeInteger(value) && value >= 0; }
 function utf8(value) { if (!scalarString(value)) reject(); return encoder.encode(value); }
 function compareUtf8(left, right) {
+  if (left === right) return 0;
+  const min = Math.min(left.length, right.length);
+  let i = 0;
+  for (; i < min; i++) {
+    const ca = left.charCodeAt(i), cb = right.charCodeAt(i);
+    if (ca === cb) { if (ca >= 0xd800) break; continue; }
+    if (ca < 0xd800 && cb < 0xd800) return ca - cb;
+    break;
+  }
+  if (i === min) return left.length - right.length;
   const a = encoder.encode(left), b = encoder.encode(right);
-  for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) return a[i] - b[i];
+  for (let j = 0; j < Math.min(a.length, b.length); j++) if (a[j] !== b[j]) return a[j] - b[j];
   return a.length - b.length;
 }
 
@@ -113,7 +149,9 @@ function parseJson(input) {
         whitespace(); if (text[position] !== '"') reject();
         const key = string(); if (seen.has(key)) reject(); seen.add(key);
         whitespace(); if (text[position++] !== ':') reject();
-        Object.defineProperty(object, key, { value: value(depth + 1), enumerable: true, writable: true, configurable: true });
+        const propVal = value(depth + 1);
+        if (key === '__proto__') Object.defineProperty(object, key, { value: propVal, enumerable: true, writable: true, configurable: true });
+        else object[key] = propVal;
         whitespace(); const end = text[position++];
         if (end === '}') return object;
         if (end !== ',') reject();
@@ -153,18 +191,31 @@ function copyJson(input) {
     if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) reject();
     if (Object.getOwnPropertySymbols(value).length) reject();
     seen.add(value); const result = Array.isArray(value) ? [] : {};
-    if (Array.isArray(value) && value.length > 10000) reject();
+    const isArr = Array.isArray(value);
+    if (isArr && value.length > 10000) reject();
     charge(2);
-    let index = 0;
-    for (const key of Object.keys(value)) {
-      if (!scalarString(key)) reject();
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
-      charge((index ? 1 : 0) + (Array.isArray(value) ? 0 : scalarBytes(key) + 1));
-      Object.defineProperty(result, key, { value: copy(descriptor.value, depth + 1), enumerable: true, writable: true, configurable: true });
-      index++;
+    const keys = Object.keys(value);
+    if (isArr) {
+      if (keys.length !== value.length) reject();
+      for (let i = 0; i < value.length; i++) {
+        if (keys[i] !== String(i)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, i);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        if (i) charge(1);
+        result.push(copy(descriptor.value, depth + 1));
+      }
+    } else {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!scalarString(key)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, key);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        charge((i ? 1 : 0) + scalarBytes(key) + 1);
+        const copied = copy(descriptor.value, depth + 1);
+        if (key === '__proto__') Object.defineProperty(result, key, { value: copied, enumerable: true, writable: true, configurable: true });
+        else result[key] = copied;
+      }
     }
-    if (Array.isArray(value) && (Object.keys(value).length !== value.length || Object.keys(value).some((key,index)=>key!==String(index)))) reject();
     seen.delete(value); return result;
   }
   return copy(input, 0);
@@ -174,17 +225,33 @@ function copyJson(input) {
 // as copyJson: depth, path-based cycle rule (shared siblings stay legal), plain prototypes,
 // data-only properties, no symbols, finite numbers, string caps, canonical array shape.
 // Used by the admission boundary so the snapshot can be frozen in place instead of copied.
+const verifiedFrozen = new WeakMap();
+
 function assertStrictJson(input) {
   // `active` is the path-based cycle rule (identical to copyJson: shared siblings are legal,
   // a genuine cycle is refused). Completed subtree heights preserve depth checks on every
   // alias path while charging each distinct object only once.
   const active = new Set(); const heights = new WeakMap(); let bytes = 0;
+  function chargeVerifiedSubtree(node) {
+    if (heights.has(node)) return;
+    const vf = verifiedFrozen.get(node);
+    heights.set(node, vf.height);
+    bytes += vf.ownBytes;
+    if (bytes > MAX_GRAPH_BYTES) reject();
+    for (let i = 0; i < vf.childObjects.length; i++) chargeVerifiedSubtree(vf.childObjects[i]);
+  }
   function check(value, depth) {
     if (depth > MAX_DEPTH) reject();
     if (value === null || typeof value === 'boolean') { bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
     if (typeof value === 'number') { if (!Number.isFinite(value)) reject(); bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
     if (typeof value === 'string') { if (!scalarString(value)) reject(); bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
     if (typeof value !== 'object' || active.has(value)) reject();
+    const vf = verifiedFrozen.get(value);
+    if (vf !== undefined) {
+      if (depth + vf.height > MAX_DEPTH) reject();
+      chargeVerifiedSubtree(value);
+      return vf.height;
+    }
     const prototype = Object.getPrototypeOf(value);
     if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) reject();
     if (Object.getOwnPropertySymbols(value).length) reject();
@@ -194,21 +261,51 @@ function assertStrictJson(input) {
       return height;
     }
     active.add(value);
-    if (Array.isArray(value) && value.length > 10000) reject();
+    const isArr = Array.isArray(value);
+    if (isArr && value.length > 10000) reject();
+    const beforeBytes = bytes;
     bytes += 2;
-    let index = 0, height = 0;
-    for (const key of Object.keys(value)) {
-      if (!scalarString(key)) reject();
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
-      bytes += (index ? 1 : 0) + (Array.isArray(value) ? 0 : scalarBytes(key) + 1);
-      if (bytes > MAX_GRAPH_BYTES) reject();
-      height = Math.max(height, 1 + check(descriptor.value, depth + 1));
-      index++;
+    const keys = Object.keys(value);
+    let height = 0, allChildrenFrozen = Object.isFrozen(value);
+    const childObjects = allChildrenFrozen ? [] : null;
+    let childBytes = 0;
+    if (isArr) {
+      if (keys.length !== value.length) reject();
+      for (let i = 0; i < value.length; i++) {
+        if (keys[i] !== String(i)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, i);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        if (i) { bytes += 1; if (bytes > MAX_GRAPH_BYTES) reject(); }
+        const dv = descriptor.value;
+        const b0 = bytes;
+        const h = 1 + check(dv, depth + 1);
+        if (dv !== null && typeof dv === 'object') {
+          childBytes += bytes - b0;
+          if (allChildrenFrozen) { if (verifiedFrozen.has(dv)) childObjects.push(dv); else allChildrenFrozen = false; }
+        }
+        if (h > height) height = h;
+      }
+    } else {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!scalarString(key)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, key);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        bytes += (i ? 1 : 0) + scalarBytes(key) + 1;
+        if (bytes > MAX_GRAPH_BYTES) reject();
+        const dv = descriptor.value;
+        const b0 = bytes;
+        const h = 1 + check(dv, depth + 1);
+        if (dv !== null && typeof dv === 'object') {
+          childBytes += bytes - b0;
+          if (allChildrenFrozen) { if (verifiedFrozen.has(dv)) childObjects.push(dv); else allChildrenFrozen = false; }
+        }
+        if (h > height) height = h;
+      }
     }
-    if (Array.isArray(value) && (Object.keys(value).length !== value.length || Object.keys(value).some((key,index)=>key!==String(index)))) reject();
     active.delete(value);
     heights.set(value, height);
+    if (allChildrenFrozen) verifiedFrozen.set(value, { height, ownBytes: (bytes - beforeBytes) - childBytes, childObjects });
     return height;
   }
   check(input, 0);
@@ -271,6 +368,10 @@ if (typeof process === 'object' && process !== null && process.env?.KDNA_CJ_COUN
   });
 }
 
+function isVerifiedFrozen(value) {
+  return verifiedFrozen.has(value);
+}
+
 function freeze(value) {
   if (value && typeof value === 'object' && !Object.isFrozen(value)) {
     for (const item of Object.values(value)) freeze(item);
@@ -289,4 +390,81 @@ function validTimestamp(value) {
   return month>=1&&month<=12&&day>=1&&day<=days[month-1]&&hour<=23&&minute<=59&&second<=59;
 }
 
-module.exports = { reject, scalarString, identifier, entryName, uint, utf8, compareUtf8, parseJson, copyJson, assertStrictJson, canonicalJson, freeze, validTimestamp, MAX_PAYLOAD_BYTES, MAX_GRAPH_BYTES, MAX_DEPTH, MAX_STRING_BYTES };
+function freezeVerified(input) {
+  const active = new Set(); const heights = new WeakMap(); let bytes = 0;
+  function chargeVerifiedSubtree(node) {
+    if (heights.has(node)) return;
+    const vf = verifiedFrozen.get(node);
+    heights.set(node, vf.height);
+    bytes += vf.ownBytes;
+    if (bytes > MAX_GRAPH_BYTES) reject();
+    for (let i = 0; i < vf.childObjects.length; i++) chargeVerifiedSubtree(vf.childObjects[i]);
+  }
+  function walk(value, depth) {
+    if (depth > MAX_DEPTH) reject();
+    if (value === null || typeof value === 'boolean') { bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
+    if (typeof value === 'number') { if (!Number.isFinite(value)) reject(); bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
+    if (typeof value === 'string') { if (!scalarString(value)) reject(); bytes += scalarBytes(value); if (bytes > MAX_GRAPH_BYTES) reject(); return 0; }
+    if (typeof value !== 'object' || active.has(value)) reject();
+    const vf = verifiedFrozen.get(value);
+    if (vf !== undefined) {
+      if (depth + vf.height > MAX_DEPTH) reject();
+      chargeVerifiedSubtree(value);
+      return vf.height;
+    }
+    const prototype = Object.getPrototypeOf(value);
+    if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) reject();
+    if (Object.getOwnPropertySymbols(value).length) reject();
+    if (heights.has(value)) {
+      const height = heights.get(value);
+      if (depth + height > MAX_DEPTH) reject();
+      return height;
+    }
+    active.add(value);
+    const isArr = Array.isArray(value);
+    if (isArr && value.length > 10000) reject();
+    const beforeBytes = bytes;
+    bytes += 2;
+    const keys = Object.keys(value);
+    let height = 0, childBytes = 0;
+    const childObjects = [];
+    if (isArr) {
+      if (keys.length !== value.length) reject();
+      for (let i = 0; i < value.length; i++) {
+        if (keys[i] !== String(i)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, i);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        if (i) { bytes += 1; if (bytes > MAX_GRAPH_BYTES) reject(); }
+        const dv = descriptor.value;
+        const b0 = bytes;
+        const h = 1 + walk(dv, depth + 1);
+        if (dv !== null && typeof dv === 'object') { childBytes += bytes - b0; childObjects.push(dv); }
+        if (h > height) height = h;
+      }
+    } else {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!scalarString(key)) reject();
+        const descriptor = Object.getOwnPropertyDescriptor(value, key);
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject();
+        bytes += (i ? 1 : 0) + scalarBytes(key) + 1;
+        if (bytes > MAX_GRAPH_BYTES) reject();
+        const dv = descriptor.value;
+        const b0 = bytes;
+        const h = 1 + walk(dv, depth + 1);
+        if (dv !== null && typeof dv === 'object') { childBytes += bytes - b0; childObjects.push(dv); }
+        if (h > height) height = h;
+      }
+    }
+    active.delete(value);
+    Object.freeze(value);
+    heights.set(value, height);
+    verifiedFrozen.set(value, { height, ownBytes: (bytes - beforeBytes) - childBytes, childObjects });
+    return height;
+  }
+  walk(input, 0);
+  if (bytes > MAX_GRAPH_BYTES) reject();
+  return input;
+}
+
+module.exports = { reject, scalarString, identifier, entryName, uint, utf8, compareUtf8, parseJson, copyJson, assertStrictJson, canonicalJson, freeze, freezeVerified, isVerifiedFrozen, validTimestamp, MAX_PAYLOAD_BYTES, MAX_GRAPH_BYTES, MAX_DEPTH, MAX_STRING_BYTES };

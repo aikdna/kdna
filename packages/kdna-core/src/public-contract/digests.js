@@ -55,25 +55,98 @@ function* canonicalChunks(value) {
   reject();
 }
 
-function digestCanonical(value) {
-  const { sha256 } = require('@noble/hashes/sha256');
-  const hasher = sha256.create();
-  const encoder = new TextEncoder();
-  const FLUSH_AT = 1 << 16;
-  let buffer = '';
-  for (const chunk of canonicalChunks(value)) {
-    buffer += chunk;
-    if (buffer.length >= FLUSH_AT) {
-      hasher.update(encoder.encode(buffer));
-      buffer = '';
+const { isVerifiedFrozen } = require('./strict-input.js');
+const nodeCrypto = typeof process === 'object' && typeof process?.getBuiltinModule === 'function' ? process.getBuiltinModule('node:crypto') : null;
+const frozenJcsCache = new WeakMap();
+
+function smallFrozenJcs(v, keyCache) {
+  const hit = frozenJcsCache.get(v);
+  if (hit !== undefined) return hit;
+  if (Array.isArray(v)) {
+    let out = '[';
+    for (let i = 0; i < v.length; i++) {
+      if (i) out += ',';
+      const item = v[i];
+      const sub = item !== null && typeof item === 'object' ? smallFrozenJcs(item, keyCache) : JSON.stringify(item);
+      if (sub === null || out.length + sub.length > 65536) return (frozenJcsCache.set(v, null), null);
+      out += sub;
     }
+    out += ']';
+    frozenJcsCache.set(v, out);
+    return out;
   }
-  if (buffer.length > 0) hasher.update(encoder.encode(buffer));
+  const keys = Object.keys(v).sort();
+  let out = '{';
+  for (let i = 0; i < keys.length; i++) {
+    if (i) out += ',';
+    const k = keys[i];
+    let prefix = keyCache.get(k);
+    if (prefix === undefined) { prefix = JSON.stringify(k) + ':'; keyCache.set(k, prefix); }
+    const item = v[k];
+    const sub = item !== null && typeof item === 'object' ? smallFrozenJcs(item, keyCache) : JSON.stringify(item);
+    if (sub === null || out.length + prefix.length + sub.length > 65536) return (frozenJcsCache.set(v, null), null);
+    out += prefix + sub;
+  }
+  out += '}';
+  frozenJcsCache.set(v, out);
+  return out;
+}
+
+function digestCanonical(value) {
+  const FLUSH_AT = 1 << 16;
+  const keyCache = new Map();
+  let buffer = '';
+  const hasher = nodeCrypto ? nodeCrypto.createHash('sha256') : require('@noble/hashes/sha256').sha256.create();
+  const encoder = nodeCrypto ? null : new TextEncoder();
+  const flush = () => {
+    if (!buffer.length) return;
+    if (nodeCrypto) hasher.update(buffer, 'utf8');
+    else hasher.update(encoder.encode(buffer));
+    buffer = '';
+  };
+  const push = chunk => {
+    buffer += chunk;
+    if (buffer.length >= FLUSH_AT) flush();
+  };
+  function walk(v) {
+    if (v !== null && typeof v === 'object' && isVerifiedFrozen(v)) {
+      const cached = smallFrozenJcs(v, keyCache);
+      if (cached !== null) { push(cached); return; }
+    }
+    if (Array.isArray(v)) {
+      push('[');
+      for (let i = 0; i < v.length; i++) { if (i) push(','); walk(v[i]); }
+      push(']');
+      return;
+    }
+    if (v && typeof v === 'object') {
+      const keys = Object.keys(v).sort();
+      push('{');
+      for (let i = 0; i < keys.length; i++) {
+        if (i) push(',');
+        const k = keys[i];
+        let prefix = keyCache.get(k);
+        if (prefix === undefined) { prefix = JSON.stringify(k) + ':'; keyCache.set(k, prefix); }
+        push(prefix);
+        walk(v[k]);
+      }
+      push('}');
+      return;
+    }
+    if (typeof v === 'number') { if (!Number.isFinite(v)) reject(); push(JSON.stringify(v)); return; }
+    if (typeof v === 'string') { if (!scalarString(v)) reject(); push(JSON.stringify(v)); return; }
+    if (v === null || typeof v === 'boolean') { push(v === null ? 'null' : v ? 'true' : 'false'); return; }
+    reject();
+  }
+  walk(value);
+  flush();
+  if (nodeCrypto) return 'sha256:' + hasher.digest('hex');
   return 'sha256:' + Array.from(hasher.digest(), (n) => n.toString(16).padStart(2, '0')).join('');
 }
 
 // Hashing is loaded only at the Core bytes boundary, never by Read's pure root.
 function digest(bytes) {
+  if (nodeCrypto) return 'sha256:' + nodeCrypto.createHash('sha256').update(bytes).digest('hex');
   const { sha256 } = require('@noble/hashes/sha256');
   return 'sha256:' + Array.from(sha256(bytes), n => n.toString(16).padStart(2, '0')).join('');
 }

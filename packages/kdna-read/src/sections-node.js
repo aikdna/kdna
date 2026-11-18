@@ -10,11 +10,11 @@ const {decideBudget}=require('./budget-decision.js');
 const {deliverResult}=require('./delivery.js');
 const {createTrustedHostReadProvider}=require('./embedding.js');
 const {clone,freeze,jcs,correlation,result,transport,diagnostic,assessment}=require('./util.js');
-const contract=require('./sections/contract.json'),V=require('./sections/validators.cjs'),tuple=contract.module.versionTuple;
+const contract=require('./sections/contract.json'),tuple=contract.module.versionTuple;let _V=null;const getV=()=>_V??(_V=require('./sections/validators.cjs'));
 const sectionHandles=require('./section-handles.js');
 let sequence=0;
 function rejected(request,code,state,original=null){const d=diagnostic(code);if(original){d.field=original.field??null;d.subject=original.subject??null;}return {contract:tuple.read,request_id:request.request_id,status:'rejected',tuple:null,asset:null,snapshot_id:null,digests:null,content:null,states:state,diagnostics:[d],omissions:[],assessment:assessment(),receipt:{receipt_id:'receipt:'+request.request_id,request_id:request.request_id,snapshot_id:null,host_id:null,host_epoch:null,decision_id:null,disclosed_at:null,delivery:'not_delivered'},budget:{limit_bytes:request.budget_bytes,required_bytes:'0000000000000000',actual_bytes:'0000000000000000'}};}
-function finish(envelope,request){const count=measure(envelope),ready=['ready','catalog_only'].includes(envelope.status),code=envelope.diagnostics.find(x=>x.severity==='error')?.code??null;const rejection=ready?rejected(request,'READ_BUDGET_INSUFFICIENT',{...envelope.states,core:envelope.states.core==='loaded_scope_valid'?'not_evaluated':envelope.states.core,interpretation:envelope.states.interpretation==='loaded_scope_complete'?'not_evaluated':envelope.states.interpretation}):envelope;const rejectionBytes=ready?measure(rejection,count):count;const decision=decideBudget(request,ready?count:null,rejectionBytes,code);if(decision.kind==='control')return decision.result;const body=decision.kind==='ready'?envelope:rejection;body.budget.required_bytes=decision.required;body.budget.actual_bytes=decision.actual;const out=result('read_envelope',body);if(!V.SectionReadCallResult06(out))throw new TypeError('SECTION_READ_OUTPUT_SHAPE');return out;}
+function finish(envelope,request){const count=measure(envelope),ready=['ready','catalog_only'].includes(envelope.status),code=envelope.diagnostics.find(x=>x.severity==='error')?.code??null;const rejection=ready?rejected(request,'READ_BUDGET_INSUFFICIENT',{...envelope.states,core:envelope.states.core==='loaded_scope_valid'?'not_evaluated':envelope.states.core,interpretation:envelope.states.interpretation==='loaded_scope_complete'?'not_evaluated':envelope.states.interpretation}):envelope;const rejectionBytes=ready?measure(rejection,count):count;const decision=decideBudget(request,ready?count:null,rejectionBytes,code);if(decision.kind==='control')return decision.result;const body=decision.kind==='ready'?envelope:rejection;body.budget.required_bytes=decision.required;body.budget.actual_bytes=decision.actual;const out=result('read_envelope',body);if(!getV().SectionReadCallResult06(out))throw new TypeError('SECTION_READ_OUTPUT_SHAPE');return out;}
 async function readSectionNode(input,candidate,authority,host){
  let request,coreResult,admitted;
  try {admitted=core.admitSectionRequest(candidate);request=core.inspectSectionRequest(admitted);}catch{return freeze(transport('READ_INPUT_INVALID',correlation(null)));}
@@ -78,7 +78,7 @@ async function readSectionNode(input,candidate,authority,host){
  }catch{prepared=fail('READ_CORE_CAPABILITY_UNAVAILABLE');}
  const delivered=await deliverResult(prepared,request.request_id,hosts.get(host)?.deliver);
  if(delivered===prepared&&pending)sectionHandles.commit(pending.state,pending.handles,pending.current,pending.snapshot);
- if(!V.SectionReadCallResult06(delivered))return freeze(transport('READ_CORE_CAPABILITY_UNAVAILABLE',correlation(request.request_id)));
+ if(!getV().SectionReadCallResult06(delivered))return freeze(transport('READ_CORE_CAPABILITY_UNAVAILABLE',correlation(request.request_id)));
  return freeze(delivered);
 }
 module.exports={readSectionNode,createTrustedHostReadProvider};

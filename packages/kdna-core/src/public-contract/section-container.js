@@ -1,5 +1,6 @@
 'use strict';
 
+const { crc32: nativeCrc32 } = require('node:zlib');
 const { entryName, reject } = require('./strict-input.js');
 const decoder = new TextDecoder('utf-8', { fatal: true });
 const LIMITS = Object.freeze({ container: 25 * 1024 * 1024, entries: 128, entry: 8 * 1024 * 1024, total: 12 * 1024 * 1024, ratio: 100 });
@@ -7,7 +8,7 @@ const CRC_TABLE = Uint32Array.from({ length: 256 }, (_, n) => {
   for (let i = 0; i < 8; i++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1;
   return n >>> 0;
 });
-function crc32(bytes) { let n = 0xffffffff; for (const b of bytes) n = CRC_TABLE[(n ^ b) & 255] ^ (n >>> 8); return (n ^ 0xffffffff) >>> 0; }
+function crc32(bytes) { if (typeof nativeCrc32 === 'function') return nativeCrc32(bytes) >>> 0; let n = 0xffffffff; for (const b of bytes) n = CRC_TABLE[(n ^ b) & 255] ^ (n >>> 8); return (n ^ 0xffffffff) >>> 0; }
 function parseSectionContainer(bytes, inflate, metadata) {
   if (!(bytes instanceof Uint8Array) || bytes.length < 22 || bytes.length > LIMITS.container) reject('READ_CORE_INVALID');
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);

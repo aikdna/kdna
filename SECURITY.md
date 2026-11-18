@@ -57,8 +57,9 @@ an author, establish content quality or grant action permission.
 
 - **Local password encryption (`Container 0.6.0`):** Offline password-based
   AEAD protection (`kdna.encryption.password` / `kdna.envelope.aead`,
-  PBKDF2-HMAC-SHA256 + AES-256-GCM) is supported in `@aikdna/kdna-cli`
-  (`kdna protect` and `kdna read --password-file`), Desktop `KDNA Reader`, and
+  `scrypt-sha256` / `argon2id` KDF + `AES-256-KW` key wrapping + `AES-256-GCM`
+  payload encryption per `RFC-0018`) is supported in `@aikdna/kdna-cli`
+  (`kdna protect`, `kdna unprotect`, and `kdna read --password-file`), Desktop `KDNA Reader`, and
   the explicit Node protection entrypoints (`@aikdna/kdna-core/protection-node`
   and `@aikdna/kdna-read/protection-node`)—permanently without any online
   account.

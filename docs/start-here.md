@@ -45,7 +45,7 @@ npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna --mode catalog --allow-rea
 npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna \
   --mode exact_selection --judgment-id decision:first-dilemma --allow-read --compact
 
-# 3. Optional local offline password encryption (PBKDF2 + AES-256-GCM; no online account)
+# 3. Optional local offline password encryption (scrypt-sha256 / argon2id + AES-256-KW + AES-256-GCM; no online account)
 printf '%s' 'a long passphrase' > password.txt
 npx -y @aikdna/kdna-cli@0.43.5 protect my-judgments.kdna --output locked.kdna --password-file password.txt
 npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \

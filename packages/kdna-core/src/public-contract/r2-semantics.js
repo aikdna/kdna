@@ -9,6 +9,7 @@ function validateR2(manifest, payload, entries, scope = null) {
   const r = scope?.registry ?? createRegistry(manifest, payload), { r2_semantics: definition, core_terms: termsRegistry } = require('./generated-contract.json');
   if (!definition) fail('/payload/profile_version');
   const roles = definition.method_roles;
+  const legacyRoleAliases = definition.legacy_method_role_aliases ?? {};
   const activeRecord = record => !scope || record.judgment === null || scope.loadedJudgments.has(record.judgment);
   const activeJudgments = scope ? payload.judgments.filter(j => scope.loadedJudgments.has(j.id)) : payload.judgments;
   const own = (record, target, mandatory = true, kinds = null, referenceRole = null) => r.link(record.target, target, mandatory, kinds, record.path, referenceRole);
@@ -115,12 +116,14 @@ function validateR2(manifest, payload, entries, scope = null) {
   function methodRoles(method, components, field) {
     const spec = roles[method];
     if (!spec) fail(field);
+    const aliases = legacyRoleAliases[method] ?? null;
     const required = spec.required, allowed = new Set([...required,...spec.optional]);
     const used = new Set();
     for (const c of components) {
-      if (!allowed.has(c.role) || used.has(c.role)) fail(field);
+      const canonicalRole = aliases && Object.hasOwn(aliases, c.role) ? aliases[c.role] : c.role;
+      if (!allowed.has(canonicalRole) || used.has(canonicalRole)) fail(field);
       if (c.method.term !== method) fail(field);
-      used.add(c.role);
+      used.add(canonicalRole);
     }
     if (required.some(role => !used.has(role))) fail(field);
   }

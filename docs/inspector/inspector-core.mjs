@@ -7,10 +7,12 @@
 
 export const KDNA_MIMETYPE = 'application/vnd.kdna.asset';
 export const LIMITS = Object.freeze({
-  maxContainerBytes: 64 * 1024 * 1024,
-  maxEntries: 256,
-  maxEntryBytes: 64 * 1024 * 1024,
+  maxContainerBytes: 25 * 1024 * 1024,
+  maxEntries: 128,
+  maxEntryBytes: 8 * 1024 * 1024,
+  maxTotalBytes: 12 * 1024 * 1024,
   maxManifestBytes: 4 * 1024 * 1024,
+  maxRatio: 100,
 });
 
 export class InspectError extends Error {
@@ -57,6 +59,7 @@ export async function readZip(input) {
   const decoder = new TextDecoder('utf-8', { fatal: true });
   const entries = [];
   const seen = new Set();
+  let totalSize = 0;
   for (let n = 0; n < total; n++) {
     if (p + 46 > buf.length || view.getUint32(p, true) !== 0x02014b50) {
       fail('KDNA_BAD_ZIP', 'Corrupt ZIP central directory.');
@@ -87,6 +90,16 @@ export async function readZip(input) {
     if (seen.has(name)) fail('KDNA_BAD_ZIP', `Duplicate entry: ${name}`);
     seen.add(name);
     if (size > LIMITS.maxEntryBytes) fail('KDNA_TOO_LARGE', `Entry ${name} is too large.`);
+    if ((compSize === 0 && size !== 0) || (compSize > 0 && size / compSize > LIMITS.maxRatio)) {
+      fail('KDNA_TOO_LARGE', `Entry ${name} exceeds compression ratio bound.`);
+    }
+    totalSize += size;
+    if (totalSize > LIMITS.maxTotalBytes) {
+      fail('KDNA_TOO_LARGE', `Container uncompressed bytes exceed ${LIMITS.maxTotalBytes}.`);
+    }
+    if (name.startsWith('sections/') && method !== 0) {
+      fail('KDNA_BAD_ZIP', `Section member ${name} must be stored uncompressed (method 0).`);
+    }
     if (local + 30 > buf.length || view.getUint32(local, true) !== 0x04034b50) {
       fail('KDNA_BAD_ZIP', `Bad local header for ${name}.`);
     }

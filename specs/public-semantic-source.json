@@ -90,7 +90,7 @@
     {
       "path": "specs/public-contract-decisions.json",
       "bytes": 50853,
-      "sha256": "5b18b8a5588b95a7f7f219fd36a5680c4a4d194648572ba829fe433a3a4a0967"
+      "sha256": "f79139c6b4355383c9a05f5d879e77ab1be5f299d4fedacf40cbbeb50e94fbd0"
     },
     {
       "path": "specs/public-source-map.json",
@@ -100,12 +100,12 @@
     {
       "path": "specs/public-version-policy.md",
       "bytes": 13173,
-      "sha256": "9fb4ddcfa53a08e6669be6fa192df16cb88d653bea10d3faa679cd878783cd14"
+      "sha256": "ed4a82404c53703df63e5880a778fb0db9b0d85c591874ac1b5d7544ff9c8b38"
     },
     {
       "path": "specs/read-contract.md",
       "bytes": 11841,
-      "sha256": "ae38106e30f0e6c45e74a3ead6bdb00e588f3e0c6d049648529f64351cab355f"
+      "sha256": "282138eea6485a6026a89b05cc46e72ed89ff32053da32ff1219df38a49d429d"
     },
     {
       "path": "specs/execution-contract-0.3.md",
@@ -2206,6 +2206,9 @@
         },
         "digest": {
           "$ref": "#/$defs/Digest"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -2331,6 +2334,9 @@
             "$ref": "#/$defs/NonEmptyText"
           },
           "minItems": 0
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -10820,6 +10826,75 @@
     "RoleName": {
       "type": "string",
       "enum": [
+        "personal_preference",
+        "experience_notes",
+        "preference_shift",
+        "lesson",
+        "reference_experience",
+        "applicable_cases",
+        "exceptions",
+        "observed_basis",
+        "criteria",
+        "observation_limits",
+        "features",
+        "category_definition",
+        "matching_rule",
+        "confusable_cases",
+        "criterion",
+        "comparison_method",
+        "decision_rule",
+        "baseline_floor",
+        "options",
+        "factors",
+        "priority_rule",
+        "accepted_cost",
+        "priority_shift",
+        "premise",
+        "derivation",
+        "key_assumptions",
+        "candidate_set",
+        "elimination_criteria",
+        "retention_rule",
+        "special_cases",
+        "phenomenon",
+        "causal_link",
+        "candidate_causes",
+        "distinguishing_basis",
+        "counterfactual_cases",
+        "inputs_and_meaning",
+        "formula_or_relation",
+        "assumptions",
+        "bounds",
+        "error_notes",
+        "initial_conditions",
+        "change_assumptions",
+        "progression",
+        "branching_scenarios",
+        "inflection_signals",
+        "materials_used",
+        "evidence_link",
+        "contrary_evidence",
+        "weighing_rationale",
+        "subject_interpreted",
+        "interpretive_link",
+        "context",
+        "cues",
+        "alternative_readings",
+        "target",
+        "signal",
+        "adjustment_rule",
+        "stop_condition",
+        "conflict_handling",
+        "reference_case",
+        "correspondence",
+        "transfer_rule",
+        "key_differences",
+        "non_transferable_limits",
+        "method_description",
+        "basis",
+        "relation",
+        "notes",
+        "limits",
         "个人感受",
         "体验说明",
         "偏好变化",
@@ -12427,6 +12502,9 @@
             "$ref": "#/$defs/NonEmptyText"
           },
           "minItems": 1
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -12518,6 +12596,9 @@
               ]
             }
           ]
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -30822,8 +30903,8 @@
   },
   "engineering": {
     "package_versions": {
-      "core": "0.37.10",
-      "read": "0.13.4"
+      "core": "0.37.11",
+      "read": "0.13.5"
     },
     "adapter_bindings": {
       "ReadCallResult": "readNode/readBrowser",
@@ -32238,7 +32319,7 @@
   "transport_admission": {
     "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.2.1",
-    "package_version": "0.13.4",
+    "package_version": "0.13.5",
     "public_subpath": "@aikdna/kdna-read/transport",
     "function": "admitReadTransportResponse",
     "schema_path": "specs/read-transport-admission-0.2.1.schema.json",
@@ -35294,7 +35375,7 @@
     "specification": {
       "path": "specs/protection-admission.md",
       "bytes": 38234,
-      "sha256": "fae2fbbb729fc024771455bbe444eda819b29faeecae89a4eea645e05136a110"
+      "sha256": "f75edfc200d164a61746153b793b994130a234ca0a44163690c3e646f22793ff"
     },
     "non_schema_rules": [
       {
@@ -35646,8 +35727,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.10",
-        "@aikdna/kdna-read": "0.13.4"
+        "@aikdna/kdna-core": "0.37.11",
+        "@aikdna/kdna-read": "0.13.5"
       }
     },
     "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
@@ -36121,8 +36202,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.10",
-        "@aikdna/kdna-read": "0.13.4"
+        "@aikdna/kdna-core": "0.37.11",
+        "@aikdna/kdna-read": "0.13.5"
       }
     }
   },
@@ -36943,8 +37024,8 @@
         "read": "kdna.read/0.6.4"
       },
       "package_versions": {
-        "@aikdna/kdna-core": "0.37.10",
-        "@aikdna/kdna-read": "0.13.4"
+        "@aikdna/kdna-core": "0.37.11",
+        "@aikdna/kdna-read": "0.13.5"
       }
     }
   },
@@ -37389,169 +37470,169 @@
     "method_roles": {
       "feeling": {
         "required": [
-          "个人感受"
+          "personal_preference"
         ],
         "optional": [
-          "体验说明",
-          "偏好变化"
+          "experience_notes",
+          "preference_shift"
         ]
       },
       "experience": {
         "required": [
-          "经验要点"
+          "lesson"
         ],
         "optional": [
-          "参考经历",
-          "适用情形",
-          "例外情况"
+          "reference_experience",
+          "applicable_cases",
+          "exceptions"
         ]
       },
       "observation": {
         "required": [
-          "观察依据"
+          "observed_basis"
         ],
         "optional": [
-          "判定口径",
-          "观察限制"
+          "criteria",
+          "observation_limits"
         ]
       },
       "recognition": {
         "required": [
-          "识别特征",
-          "类别定义",
-          "匹配办法"
+          "features",
+          "category_definition",
+          "matching_rule"
         ],
         "optional": [
-          "易混淆情况"
+          "confusable_cases"
         ]
       },
       "criteria_comparison": {
         "required": [
-          "判断标准",
-          "对照办法",
-          "归结办法"
+          "criterion",
+          "comparison_method",
+          "decision_rule"
         ],
         "optional": [
-          "底线要求",
-          "例外情况"
+          "baseline_floor",
+          "exceptions"
         ]
       },
       "tradeoff": {
         "required": [
-          "候选方案",
-          "比较因素",
-          "取舍原则"
+          "options",
+          "factors",
+          "priority_rule"
         ],
         "optional": [
-          "不可兼得之处",
-          "优先变化"
+          "accepted_cost",
+          "priority_shift"
         ]
       },
       "inference": {
         "required": [
-          "判断前提",
-          "推导关系"
+          "premise",
+          "derivation"
         ],
         "optional": [
-          "关键假设",
-          "例外情况"
+          "key_assumptions",
+          "exceptions"
         ]
       },
       "elimination": {
         "required": [
-          "候选范围",
-          "排除条件",
-          "保留办法"
+          "candidate_set",
+          "elimination_criteria",
+          "retention_rule"
         ],
         "optional": [
-          "特殊情况处理"
+          "special_cases"
         ]
       },
       "causal_analysis": {
         "required": [
-          "待解释现象",
-          "原因关系"
+          "phenomenon",
+          "causal_link"
         ],
         "optional": [
-          "候选原因",
-          "区分依据",
-          "反向情况"
+          "candidate_causes",
+          "distinguishing_basis",
+          "counterfactual_cases"
         ]
       },
       "calculation": {
         "required": [
-          "输入与含义",
-          "计算关系"
+          "inputs_and_meaning",
+          "formula_or_relation"
         ],
         "optional": [
-          "计算假设",
-          "取值边界",
-          "误差说明"
+          "assumptions",
+          "bounds",
+          "error_notes"
         ]
       },
       "simulation": {
         "required": [
-          "起点条件",
-          "变化假设",
-          "演变关系"
+          "initial_conditions",
+          "change_assumptions",
+          "progression"
         ],
         "optional": [
-          "情景分叉",
-          "转折信号"
+          "branching_scenarios",
+          "inflection_signals"
         ]
       },
       "evidence_analysis": {
         "required": [
-          "所用材料",
-          "材料与判断的联系"
+          "materials_used",
+          "evidence_link"
         ],
         "optional": [
-          "反向材料",
-          "材料取舍"
+          "contrary_evidence",
+          "weighing_rationale"
         ]
       },
       "interpretation": {
         "required": [
-          "解读对象",
-          "解释关系"
+          "subject_interpreted",
+          "interpretive_link"
         ],
         "optional": [
-          "相关语境",
-          "理解线索",
-          "替代解读"
+          "context",
+          "cues",
+          "alternative_readings"
         ]
       },
       "feedback": {
         "required": [
-          "调整目标",
-          "反馈信号",
-          "调整办法"
+          "target",
+          "signal",
+          "adjustment_rule"
         ],
         "optional": [
-          "停止条件",
-          "冲突处理"
+          "stop_condition",
+          "conflict_handling"
         ]
       },
       "analogy": {
         "required": [
-          "参照对象",
-          "对应关系",
-          "借用办法"
+          "reference_case",
+          "correspondence",
+          "transfer_rule"
         ],
         "optional": [
-          "关键差异",
-          "不可迁移之处"
+          "key_differences",
+          "non_transferable_limits"
         ]
       },
       "other": {
         "required": [
-          "方法说明",
-          "判断依据",
-          "作用关系"
+          "method_description",
+          "basis",
+          "relation"
         ],
         "optional": [
-          "补充说明",
-          "适用限制"
+          "notes",
+          "limits"
         ]
       }
     },
@@ -37725,6 +37806,111 @@
       "closure": "A mandatory component -> typed target edge uses the existing typed fixed-point closure in every Read/expansion/execution supply. Cycles deduplicate; component content_ref cycles remain invalid.",
       "duplicates": "Reject repeated component_ref/role/typed target; preserve different author roles.",
       "authority": "Static support only; no execution, permission, retrieval or interpretation of arbitrary role text."
+    },
+    "legacy_method_role_aliases": {
+      "feeling": {
+        "个人感受": "personal_preference",
+        "体验说明": "experience_notes",
+        "偏好变化": "preference_shift"
+      },
+      "experience": {
+        "经验要点": "lesson",
+        "参考经历": "reference_experience",
+        "适用情形": "applicable_cases",
+        "例外情况": "exceptions"
+      },
+      "observation": {
+        "观察依据": "observed_basis",
+        "判定口径": "criteria",
+        "观察限制": "observation_limits"
+      },
+      "recognition": {
+        "识别特征": "features",
+        "类别定义": "category_definition",
+        "匹配办法": "matching_rule",
+        "易混淆情况": "confusable_cases"
+      },
+      "criteria_comparison": {
+        "判断标准": "criterion",
+        "对照办法": "comparison_method",
+        "归结办法": "decision_rule",
+        "底线要求": "baseline_floor",
+        "例外情况": "exceptions"
+      },
+      "tradeoff": {
+        "候选方案": "options",
+        "比较因素": "factors",
+        "取舍原则": "priority_rule",
+        "不可兼得之处": "accepted_cost",
+        "优先变化": "priority_shift"
+      },
+      "inference": {
+        "判断前提": "premise",
+        "推导关系": "derivation",
+        "关键假设": "key_assumptions",
+        "例外情况": "exceptions"
+      },
+      "elimination": {
+        "候选范围": "candidate_set",
+        "排除条件": "elimination_criteria",
+        "保留办法": "retention_rule",
+        "特殊情况处理": "special_cases"
+      },
+      "causal_analysis": {
+        "待解释现象": "phenomenon",
+        "原因关系": "causal_link",
+        "候选原因": "candidate_causes",
+        "区分依据": "distinguishing_basis",
+        "反向情况": "counterfactual_cases"
+      },
+      "calculation": {
+        "输入与含义": "inputs_and_meaning",
+        "计算关系": "formula_or_relation",
+        "计算假设": "assumptions",
+        "取值边界": "bounds",
+        "误差说明": "error_notes"
+      },
+      "simulation": {
+        "起点条件": "initial_conditions",
+        "变化假设": "change_assumptions",
+        "演变关系": "progression",
+        "情景分叉": "branching_scenarios",
+        "转折信号": "inflection_signals"
+      },
+      "evidence_analysis": {
+        "所用材料": "materials_used",
+        "材料与判断的联系": "evidence_link",
+        "反向材料": "contrary_evidence",
+        "材料取舍": "weighing_rationale"
+      },
+      "interpretation": {
+        "解读对象": "subject_interpreted",
+        "解释关系": "interpretive_link",
+        "相关语境": "context",
+        "理解线索": "cues",
+        "替代解读": "alternative_readings"
+      },
+      "feedback": {
+        "调整目标": "target",
+        "反馈信号": "signal",
+        "调整办法": "adjustment_rule",
+        "停止条件": "stop_condition",
+        "冲突处理": "conflict_handling"
+      },
+      "analogy": {
+        "参照对象": "reference_case",
+        "对应关系": "correspondence",
+        "借用办法": "transfer_rule",
+        "关键差异": "key_differences",
+        "不可迁移之处": "non_transferable_limits"
+      },
+      "other": {
+        "方法说明": "method_description",
+        "判断依据": "basis",
+        "作用关系": "relation",
+        "补充说明": "notes",
+        "适用限制": "limits"
+      }
     }
   },
   "component_semantics_legacy": {
@@ -41369,8 +41555,8 @@
       },
       "package_versions": [
         {
-          "core": "0.37.10",
-          "read": "0.13.4"
+          "core": "0.37.11",
+          "read": "0.13.5"
         }
       ],
       "preservation": "The released Core 0.37.0 / Read 0.11.1 pair and its three binding-7 schemas remain unchanged historical coordinates. This candidate adds retained browser protected projection and independent lifecycle; registry, consumer acceptance and publication are separate evidence."
@@ -42572,8 +42758,8 @@
           "truth": "Integrity fields record original browser admission checksums/signature and A/C/E; retained projection does not claim AEAD/password authentication, new digest/domain/signature validation or physical IO. Read contract is independently kdna.protected-browser-read/0.1.0-candidate with ordinary projected content fields plus explicit browser verification."
         },
         "package_versions": {
-          "core": "0.37.10",
-          "read": "0.13.4"
+          "core": "0.37.11",
+          "read": "0.13.5"
         },
         "candidateVersionTuple06": {
           "container": "0.6.0",

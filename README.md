@@ -15,7 +15,7 @@ As AI makes finished outputs inexpensive to generate, upstream thinking, judgmen
 | **Structure** | Flat prose; conclusions, stories, and caveats blur together | Explicit questions, claims, reasoning methods, applicable conditions, stop boundaries, and anti-misuse rules |
 | **Task Reading** | Dumps the whole note into context or truncates arbitrarily | `catalog` first → `exact_selection` of only the judgments a task needs, keeping mandatory supporting/qualifying closure intact |
 | **Evolution** | Silent in-place edits overwrite prior reasoning | Named versions (`1.0.0` → `1.1.0`) inspectable in plain text via `kdna diff --format human` before adoption |
-| **Confidentiality** | Plaintext files on disk | Optional local offline password encryption (`kdna protect`, PBKDF2 + AES-256-GCM)—**permanently account-free** |
+| **Confidentiality** | Plaintext files on disk | Optional local offline password encryption (`kdna protect`, `scrypt-sha256` / `argon2id` + `AES-256-KW` + `AES-256-GCM` per `RFC-0018`)—**permanently account-free** |
 
 ---
 
@@ -130,7 +130,13 @@ above are verified against the official registry.
 | Core/Read | Core `0.37.10` / Read `0.13.4` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
 | [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.5` with its own exact Core `0.37.9` / Read `0.13.3` pins | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` with its own native CLI `0.43.5` and Core `0.37.9` / Read `0.13.3` pins | Optional complete-source, operator-bound local stdio Read; named Host delivery/adoption unassessed |
-| [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
+| [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | `[Legacy pre-0.6.0 / P5-deferred]` Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
+
+The maintained source carries the candidate pair Core `0.37.11` / Read `0.13.5`,
+which the registry does not serve yet; until it does, the table above lists only
+the published and byte-verified combination. The [current support
+matrix](./docs/current-release-support.md) keeps the superseded snapshot
+statements for the record.
 
 The two container routes (`0.6.0` via `@aikdna/kdna-cli` and `0.5.0` via Studio) have separate reader and source APIs. Native CLI Plan/load remains unavailable; Core `/execution` supplies optional native execution 0.3.1 static Plan/Capsule and Host reference APIs, and full protocol specifications are indexed in [SPEC-INDEX.md](./SPEC-INDEX.md#kdna-public-specification-index). For offline multi-package host setup and reproducible scripts, see the [CLI delivery guide](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md), [author example](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md), [executable recipe](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs), and [synthetic weekly-update case](./examples/native-team-update/README.md).
 
@@ -165,9 +171,9 @@ actual task adoption.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.43.5` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, local password protection, explicit Read, diffing, and Source revision; its own exact Core `0.37.9` / Read `0.13.3` pins |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source; MCP `0.8.0-rc.native-sections.3` npm-unpublished by policy, delivered through GitHub releases; historical npm MCP `0.5.0` | Matched published native `0.43.5` / Core `0.37.9` / Read `0.13.3` graph; optional operator-bound local stdio, named Host delivery/adoption unassessed |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (`KDNA Whitepaper` `1.0.1` in Chinese & English, `CC BY 4.0`) | Openly licensed `.kdna` judgment works and container/Read verification suite |
-| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | Legacy container `0.5.0` / Read `0.6.4` terminal session line (not for current `0.6.0` authoring — use `@aikdna/kdna-cli@0.43.5`) |
-| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | Legacy container `0.5.0` Studio session SDK and explicit protected export; its own Host/credential boundary |
-| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | Swift-native Core/Read implementation for Apple platforms |
+| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | `[Legacy pre-0.6.0 / P5-deferred]` container `0.5.0` / Read `0.6.4` terminal session line (not for current `0.6.0` authoring — use `@aikdna/kdna-cli@0.43.5`) |
+| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | `[Legacy pre-0.6.0 / P5-deferred]` container `0.5.0` Studio session SDK and explicit protected export; its own Host/credential boundary |
+| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | `[Legacy pre-0.6.0 / P5-deferred]` Swift-native Core/Read implementation for Apple platforms (alongside `kdna-app-shared` and `kdna-studio-swift`) |
 | [KDNA Reader](https://aikdna.com/en/downloads) | Apple-notarized macOS desktop app | Permanently free without usage limits: sign in with a free `KDNA ID` for bundled *KDNA Whitepaper* (`zh-CN` & `en`) and offline Judgment Asset Library, plus account-free single-file Guest Mode |
 
 Machine consumers should consult [`ecosystem-manifest.json`](./ecosystem-manifest.json) and [`docs/release-coordinates.json`](./docs/release-coordinates.json). Newcomers can also browse [`docs/start-here.md`](./docs/start-here.md) by goal. Preserved walkthroughs for historical published lines (earlier native previews, `0.36.1`, `0.22.0`, `0.11.0`) live in [`docs/historical-published-lines.md`](./docs/historical-published-lines.md).

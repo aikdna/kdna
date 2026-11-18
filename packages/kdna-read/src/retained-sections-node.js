@@ -4,7 +4,7 @@ const crypto=require('node:crypto');
 const coreRequire=createRequire(require.resolve('@aikdna/kdna-core/package.json'));
 const S=coreRequire('./src/public-contract/retained-state.js');
 const C=coreRequire('./src/public-contract/retained-common.js');
-const V=coreRequire('./src/public-contract/retained/validators.cjs');
+let _V=null;const getV=()=>_V??(_V=coreRequire('./src/public-contract/retained/validators.cjs'));
 const {hosts}=require('./brands.js');
 const {createTrustedHostReadProvider}=require('./embedding.js');
 const {scopeBody,handleRegistered}=require('./host-gate.js');
@@ -32,7 +32,7 @@ function finish(envelope,record) {
   const body=decision.kind==='ready'?envelope:rejected;
   body.budget.required_bytes=decision.required;body.budget.actual_bytes=decision.actual;
   const out=result('read_envelope',body);
-  if (!V.RetainedSectionReadCallResult06(out)) throw new TypeError('RETAINED_READ_OUTPUT_SHAPE');
+  if (!getV().RetainedSectionReadCallResult06(out)) throw new TypeError('RETAINED_READ_OUTPUT_SHAPE');
   return out;
 }
 async function observe(host,record) {

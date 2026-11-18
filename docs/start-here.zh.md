@@ -50,7 +50,7 @@ npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
-# 3. 本地离线口令加密（PBKDF2 + AES-256-GCM，无任何在线账号依赖）
+# 3. 本地离线口令加密（scrypt-sha256 / argon2id + AES-256-KW + AES-256-GCM，无任何在线账号依赖）
 printf '%s' 'a long passphrase' > password.txt
 npx -y @aikdna/kdna-cli@0.43.5 protect my-judgments.kdna --output locked.kdna --password-file password.txt
 npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \

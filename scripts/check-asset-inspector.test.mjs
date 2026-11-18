@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { inspectKdna, InspectError } from '../docs/inspector/inspector-core.mjs';
+import { inspectKdna, InspectError, LIMITS } from '../docs/inspector/inspector-core.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => new Uint8Array(fs.readFileSync(path.join(ROOT, rel)));
@@ -64,6 +64,11 @@ test('inspector fails closed on non-containers and tampered tables', async () =>
   tampered[at + marker.length + 40] ^= 0xff;
   const report = await inspectKdna(tampered);
   assert.ok(report.notices.some((n) => n.level === 'error'));
+  assert.equal(LIMITS.maxContainerBytes, 25 * 1024 * 1024);
+  assert.equal(LIMITS.maxEntries, 128);
+  assert.equal(LIMITS.maxEntryBytes, 8 * 1024 * 1024);
+  assert.equal(LIMITS.maxTotalBytes, 12 * 1024 * 1024);
+  assert.equal(LIMITS.maxRatio, 100);
 });
 
 test('generated page is fresh, offline, account-free and syntactically valid', () => {

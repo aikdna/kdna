@@ -11,7 +11,7 @@ function restoreWholeFrames(entries,publicManifest){
     const tableRows={}, tableFrames=[], loaded=[], checked=[];
     function frame(row,category) {
       const m=members.get(row.member); C.need(m&&Number.isSafeInteger(row.offset_bytes+row.length_bytes)&&row.offset_bytes+row.length_bytes<=m.length,'FRAME_RANGE');
-      const b=Buffer.from(entries[row.member]).subarray(row.offset_bytes,row.offset_bytes+row.length_bytes); C.need(C.sha(b)===row.digest,'SECTION_DIGEST'); const v=C.decode(b); checked.push(row.section_id); return v;
+      const b=entries[row.member].subarray(row.offset_bytes,row.offset_bytes+row.length_bytes); C.need(C.sha(b)===row.digest,'SECTION_DIGEST'); const v=C.decode(b); checked.push(row.section_id); return v;
     }
     let ti=0;
     for(const table of Object.keys(C.tableKeys)) {
@@ -50,17 +50,18 @@ function restoreWholeFrames(entries,publicManifest){
     C.need(packEnds.size===[...members.keys()].filter(x=>x.startsWith('sections/')).length,'PACK_COVERAGE');for(const [name,len]of packEnds)C.need(members.get(name)?.length===len,'PACK_SPAN_COVERAGE');
     const nodes=new Map(),expansions=[];
     for(const row of ordered)  {
-      const stored=frame(row,'content');const value=row.kind==='xref'?Codec.decodeFrame(stored):stored;C.keys(value,['section_id','kind','records']);C.need(value.section_id===row.section_id&&value.kind===row.kind&&Array.isArray(value.records),'FRAME_SHAPE'); loaded.push(row.section_id);
-      if(row.kind==='xref') { C.need(value.records.length===row.entry_count&&value.records.length<=1024,'XREF_ENTRY_COUNT'); const ordinal=Number(row.section_id.split(':')[1]);for(const x of value.records){C.validate('ExpansionTarget',x);C.need(x.scope.every(id=>nodeMap.has(id)),'XREF_SCOPE');if(ordinal===0)C.need(x.anchor.kind==='asset','XREF_ANCHOR');else C.need(x.anchor.kind==='judgment'&&x.anchor.selection.judgment_id===catalogIds[ordinal-1]&&x.anchor.selection.asset_id===manifest.asset.asset_id&&x.anchor.selection.asset_version===manifest.asset.asset_version,'XREF_ANCHOR');}expansions.push(...value.records); }
+      const stored=frame(row,'content');const value=row.kind==='xref'?Codec.decodeFrame(stored):stored;C.strict.freezeVerified(value);C.keys(value,['section_id','kind','records']);C.need(value.section_id===row.section_id&&value.kind===row.kind&&Array.isArray(value.records),'FRAME_SHAPE'); loaded.push(row.section_id);
+      if(row.kind==='xref') { C.need(value.records.length===row.entry_count&&value.records.length<=1024,'XREF_ENTRY_COUNT'); const ordinal=Number(row.section_id.split(':')[1]);for(const x of value.records){C.validateKnownStrict('ExpansionTarget',x);C.need(x.scope.every(id=>nodeMap.has(id)),'XREF_SCOPE');if(ordinal===0)C.need(x.anchor.kind==='asset','XREF_ANCHOR');else C.need(x.anchor.kind==='judgment'&&x.anchor.selection.judgment_id===catalogIds[ordinal-1]&&x.anchor.selection.asset_id===manifest.asset.asset_id&&x.anchor.selection.asset_version===manifest.asset.asset_version,'XREF_ANCHOR');}expansions.push(...value.records); }
       else {
         const expected=tableRows.node_sections.filter(x=>x.section_id===row.section_id).map(x=>x.node_ref).sort(C.utf8),actual=value.records.map(n=>n.id).sort(C.utf8); C.need(JSON.stringify(expected)===JSON.stringify(actual),'FRAME_NODE_COVERAGE');
         if(row.kind==='volume') {C.need(value.records.length<=512,'VOLUME_CHUNK');C.sortedUnique(value.records.map(n=>n.id));}
-        for(const n of value.records) {C.validate('IRReadNode',n);C.need(!nodes.has(n.id),'DUPLICATE_RECORD');C.need(row.kind==='volume'?n.owner_judgment_id===null:'topic:'+n.owner_judgment_id===row.section_id,'NODE_OWNER');nodes.set(n.id,n);}
+        for(const n of value.records) {C.validateKnownStrict('IRReadNode',n);C.need(!nodes.has(n.id),'DUPLICATE_RECORD');C.need(row.kind==='volume'?n.owner_judgment_id===null:'topic:'+n.owner_judgment_id===row.section_id,'NODE_OWNER');nodes.set(n.id,n);}
       }
     }
 
  const outputNodes=manifest.node_order.map(id=>{C.need(nodes.has(id),'REQUIRED_NODE_MISSING');return nodes.get(id);});
  const {node_order,ir_digest_claim,runtime_entry_names,...components}=meta;
- return {ir:{...components,nodes:outputNodes,expansion_targets:expansions},checked_sections:[...ordered,...tableFrames].map(({section_id,member,offset_bytes,length_bytes,digest})=>({section_id,member,offset_bytes,length_bytes,digest})),pack_names:[...packEnds.keys()],source_ir_digest_claim:ir_digest_claim,source_runtime_entry_names:runtime_entry_names};
+ const ir={...components,nodes:outputNodes,expansion_targets:expansions};C.strict.freezeVerified(ir);
+ return {ir,checked_sections:[...ordered,...tableFrames].map(({section_id,member,offset_bytes,length_bytes,digest})=>({section_id,member,offset_bytes,length_bytes,digest})),pack_names:[...packEnds.keys()],source_ir_digest_claim:ir_digest_claim,source_runtime_entry_names:runtime_entry_names};
 }
 module.exports={restoreWholeFrames};

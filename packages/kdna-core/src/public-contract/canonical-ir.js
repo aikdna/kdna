@@ -31,7 +31,14 @@ function buildIR(manifest,payload,entries) {
   if (payload.declarations.boundaries) assetValue.declarations.boundaries = {state:payload.declarations.boundaries.state};
   registry.get(registry.asset).value = assetValue;
   const nodes = [], nodeMap = new Map(), references = [];
-  const stableId = (role,identity) => role + ':' + digest(utf8(canonicalJson([payload.asset,identity]))).slice(7,47);
+  const assetJson = canonicalJson(payload.asset);
+  const fastRefJson = t => (t && typeof t === 'object' && !Array.isArray(t) && Object.keys(t).length === 2 && typeof t.id === 'string' && typeof t.kind === 'string') ? '{"id":' + JSON.stringify(t.id) + ',"kind":' + JSON.stringify(t.kind) + '}' : canonicalJson(t);
+  const stableId = (role,identity) => {
+    const enc = Array.isArray(identity)
+      ? '[' + identity.map(x => typeof x === 'boolean' || typeof x === 'string' ? JSON.stringify(x) : fastRefJson(x)).join(',') + ']'
+      : fastRefJson(identity);
+    return role + ':' + digest(utf8('[' + assetJson + ',' + enc + ']')).slice(7,47);
+  };
   for (const record of registry.ordered) {
     const role = record.value?.kind === 'emission_list' && record.target.kind === 'contract' ? 'emission_list_contract' : ROLES[record.target.kind] ?? record.target.kind;
     const node = {id:stableId(role,record.target),role,target:copyJson(record.target),owner:copyJson(record.owner),owner_judgment_id:record.judgment,value:copyJson(record.value)};
@@ -72,25 +79,32 @@ function buildIR(manifest,payload,entries) {
     if (record.target.kind === 'example') return v.title;
     return v.name ?? v.role ?? record.target.kind + ':' + record.target.id;
   }
-  const asset_index = registry.ordered.map(record => ({target:copyJson(record.target),owner:copyJson(record.owner),display_name:display(record),node_ref:nodeFor(record.target).id}));
-  const expansion_targets = [];
+  const cloneRef = t => Object.hasOwn(t, 'asset') ? copyJson(t) : { kind: t.kind, id: t.id };
+  const asset_index = registry.ordered.map(record => ({target:cloneRef(record.target),owner:cloneRef(record.owner),display_name:display(record),node_ref:nodeFor(record.target).id}));
+  const expansion_targets = [], assetAnchor = Object.freeze({kind:'asset'});
   const scopeFor = seeds => registry.closure(seeds).map(record => nodeFor(record.target).id);
-  for (const record of registry.ordered) expansion_targets.push({anchor:{kind:'asset'},target:copyJson(record.target),scope:scopeFor([registry.asset,record.target])});
+  for (const record of registry.ordered) expansion_targets.push({anchor:assetAnchor,target:cloneRef(record.target),scope:scopeFor([registry.asset,record.target])});
   // A question discovers its necessary closure and the optional references of
   // those objects. Asset ownership alone is not a relationship to every question.
   // Do not traverse optional edges recursively: an optional related question's
   // own optional neighborhood belongs to that question or the asset anchor.
   for (const judgment of payload.judgments) {
     const seeds = [registry.asset,ref('judgment',judgment.id)], mandatory = registry.closure(seeds);
-    const available = new Set(mandatory.map(record => registry.identity(record.target)));
+    const mandatoryKeys = new Set(mandatory.map(record => registry.identity(record.target)));
+    const mandatoryScope = Object.freeze(mandatory.map(record => nodeFor(record.target).id));
+    const jAnchor = Object.freeze({kind:'judgment',selection:Object.freeze(selection(judgment.id))});
+    const available = new Set(mandatoryKeys);
     for (const record of mandatory) {
       if (record.target.kind === 'asset') continue;
       for (const targetKey of registry.edges.get(registry.identity(record.target)).keys()) available.add(targetKey);
     }
-    for (const record of registry.ordered) if (available.has(registry.identity(record.target))) expansion_targets.push({anchor:{kind:'judgment',selection:selection(judgment.id)},target:copyJson(record.target),scope:scopeFor([...seeds,record.target])});
+    for (const record of registry.ordered) {
+      const rk = registry.identity(record.target);
+      if (available.has(rk)) expansion_targets.push({anchor:jAnchor,target:cloneRef(record.target),scope:mandatoryKeys.has(rk)?mandatoryScope:scopeFor([...seeds,record.target])});
+    }
   }
   const ir = {contract:versionTuple.ir,tuple:versionTuple,asset:payload.asset,nodes,catalog,references,relationships:payload.relationships,mandatory_closures,expansion_targets,asset_closure,asset_index,unresolved_external:registry.unresolved};
-  validate('CanonicalIR',ir);
+  validate('CanonicalIR',{...ir,expansion_targets:expansion_targets.slice(0,1)},true);
   checkInterpretationComplete(payload,visit);
   return ir;
 }
