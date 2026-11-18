@@ -3,48 +3,47 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-11-13",
+  "updated": "2026-11-18",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
       "unit": "core",
       "name": "@aikdna/kdna-core",
-      "version": "0.37.10",
-      "candidate_version": "0.37.11",
+      "version": "0.37.11",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "0.37.10",
-      "source_commit": "a56152fa78971517798408f65cb07eb7d37caf10",
-      "artifact_sha256": "29a2500cabfc0cd18e346d6ccfe554944b32eb7d4ef1d07668f0daf7518e4006",
-      "release_id": 441427802,
-      "release_published_at": "2026-11-11T08:48:00Z"
+      "release_tag": "0.37.11",
+      "source_commit": "9cf8ed60a1a0d6e94c0e58c37c2879e3dc63cc2a",
+      "artifact_sha256": "affd3db862a02daaacd9ada91ec365ff93d9f6c2592e62df9e01888d36bb2e4a",
+      "release_id": 449611531,
+      "release_published_at": "2026-11-18T06:38:48Z",
+      "publish_run": 44252869729
     },
     {
       "unit": "read",
       "name": "@aikdna/kdna-read",
-      "version": "0.13.4",
-      "candidate_version": "0.13.5",
+      "version": "0.13.5",
       "npm_tag": "latest",
       "repository": "aikdna/kdna",
-      "release_tag": "read/0.13.4",
-      "source_commit": "a56152fa78971517798408f65cb07eb7d37caf10",
-      "artifact_sha256": "edc3a2eaa2d1a70289cf43bdfa75155f8f0c4913cc9b7f20ea7a681d8f08bde0",
-      "release_id": 441439952,
-      "release_published_at": "2026-11-11T09:01:12Z",
-      "publish_run": 42991645832
+      "release_tag": "read/0.13.5",
+      "source_commit": "9cf8ed60a1a0d6e94c0e58c37c2879e3dc63cc2a",
+      "artifact_sha256": "a7eb0064ad028a73394a4cc9d189dd22f52f046e30a31c6e50bea1490915fc89",
+      "release_id": 449621481,
+      "release_published_at": "2026-11-18T06:52:16Z",
+      "publish_run": 44254542110
     },
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.43.5",
+      "version": "0.44.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.43.5",
-      "source_commit": "d97445f512b3c8dd28b5a89d5fc44cf13ab1af04",
-      "artifact_sha256": "12c0745c6f055e36d32207604958e337c8d34b5c054bdae7a37b90917833e784",
-      "publish_run": 43362249506,
-      "release_id": 443796750,
-      "release_published_at": "2026-11-13T03:56:37Z"
+      "release_tag": "0.44.0",
+      "source_commit": "5276c606e67636b83737917ee5efc1d4b9cb66f6",
+      "artifact_sha256": "382cb0fc07935333a2671e28d0ce2af6cd723896dd14ea6e3e2fec79d7608636",
+      "publish_run": 44255642656,
+      "release_id": 449628276,
+      "release_published_at": "2026-11-18T07:01:17Z"
     },
     {
       "unit": "studio-core",
@@ -77,11 +76,16 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "288095e44ea15ae81ef2d830a277b98c11e84f95",
+      "main_commit": "de0c9e75661558aaefd8329ad93205a34e6d2ad3",
       "mcp_package": "@aikdna/kdna-mcp-server",
-      "mcp_version": "0.8.0-rc.native-sections.3",
-      "npm_coordinate": null,
-      "delivery": "Git source channel only; the current MCP release candidate is delivered through GitHub releases, and no MCP npm coordinate belongs to this wave"
+      "mcp_version": "0.8.0",
+      "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.0",
+      "release_tag": "kdna-mcp-server-0.8.0",
+      "artifact_sha256": "867b7f1d1ff7326aaa3f256e06ec33eeba5f7dea93d00932081ad90406c69713",
+      "publish_run": 44256772734,
+      "release_id": 449635084,
+      "release_published_at": "2026-11-18T07:10:09Z",
+      "delivery": "Agent Skills in Git source channel plus optional published local stdio MCP adapter @aikdna/kdna-mcp-server@0.8.0 on latest"
     }
   ],
   "preserved_preview_tags": {

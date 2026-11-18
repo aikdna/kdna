@@ -42,7 +42,7 @@ function renderBlock({ docsPrefix = './docs/' } = {}) {
     // the exact refs to the matrix: a rendered sentence must not be able to rot
     // between two refreshes. The values themselves stay checked against their live
     // source by scripts/check-published-coordinates.mjs.
-    'MCP remains a Git source channel and adds no npm coordinate in this wave.',
+    'Agent Skills (`aikdna/kdna-skills`) are delivered from Git, alongside the optional local stdio MCP adapter coordinate recorded in the matrix.',
     'Exact source commits, release runs, preserved preview',
     `tags and per-package release identities are in [release-coordinates.json](${docsPrefix}release-coordinates.json);`,
     'earlier `latest` values stay in the',

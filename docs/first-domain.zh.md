@@ -1,6 +1,6 @@
 # 你的第一个 KDNA 领域
 
-> **历史归档指南（已由 Container `0.6.0` 替代）：** 本页保留早期 Runtime CLI **0.36.1** / Studio CLI **0.11.0** 的历史流程。当前 Container `0.6.0` 的创建、口令保护与按需读取（`@aikdna/kdna-cli@0.43.5`）请前往 [从这里开始（中文）](./start-here.zh.md) 与 [CLI 创作指南（中文）](./authoring-guide-cli.zh.md)。
+> **历史归档指南（已由 Container `0.6.0` 替代）：** 本页保留早期 Runtime CLI **0.36.1** / Studio CLI **0.11.0** 的历史流程。当前 Container `0.6.0` 的创建、口令保护与按需读取（`@aikdna/kdna-cli@0.44.0`）请前往 [从这里开始（中文）](./start-here.zh.md) 与 [CLI 创作指南（中文）](./authoring-guide-cli.zh.md)。
 >
 > 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
 > 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。

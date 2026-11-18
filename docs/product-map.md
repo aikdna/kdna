@@ -24,6 +24,6 @@ and where to obtain it right now.
 
 ## Closest entry for a first evaluation
 
-- **Human desktop reading:** Download [KDNA Reader for macOS](https://aikdna.com/en/downloads) (with bilingual *KDNA Whitepaper* `v1.0.1` built in) or download [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna) directly.
+- **Human desktop reading:** Download [KDNA Reader for macOS](https://aikdna.com/en/downloads) (with bilingual *KDNA Whitepaper* `v1.0.2` built in) or download [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) directly.
 - **Developer & Agent CLI quickstart (30 seconds):** Start at [`../README.md`](../README.md#30-second-developer--agent-quickstart) or [`./start-here.md`](./start-here.md).
 - **Exact package versions & SHA-256 matrix:** See [`./current-release-support.md`](./current-release-support.md) and [`./release-coordinates.json`](./release-coordinates.json).

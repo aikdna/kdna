@@ -1,16 +1,12 @@
 # Exact stable Core and Read release
 
-Core `0.37.10` and Read `0.13.4` were published as stable coordinates for the
-npm `latest` tag on 2026-11-11. This document describes the preparation and
+Core `0.37.11` and Read `0.13.5` were published as stable coordinates for the
+npm `latest` tag on 2026-11-18. This document describes the preparation and
 publication gates that produced them; the same procedure applies to later
-candidates. Core `0.37.11` and Read `0.13.5` are the current stable distribution
-candidates, and the command, tag, approval and acquisition examples below name
-them. Both published coordinates carry registry `gitHead` and provenance from source commit
-`a56152f`. Core was published by workflow run `42989896951`; that run is red at
-its registry-visibility step even though the npm publication, artifact bytes,
-`gitHead` and provenance succeeded. The release matrix omits Core `publish_run`
-rather than claiming a successful run. Read was published by green workflow run
-`42991645832`. The [channel history](current-release-support.md#published-channel-history)
+candidates. The command, tag, approval and acquisition examples below name that
+pair. Both carry registry `gitHead` and provenance from source commit
+`9cf8ed6`. Core was published by green workflow run `44252869729` and Read was
+published by green workflow run `44254542110`. The [channel history](current-release-support.md#published-channel-history)
 retains the earlier previews and observed `latest` values. A stable npm version
 is a distribution coordinate, not a claim that the entire ecosystem is GA.
 
@@ -128,15 +124,14 @@ revision/reopen/reuse journey, protected route and real named Host continuation
 need their own execution records; an export smoke does not establish them.
 
 The companion release order is Core → Read, then any native CLI release that
-re-pins its vendor archives. Native CLI `0.43.5` (published on 2026-11-13 with
-registry `gitHead` and provenance from source commit `d97445f` by green run
-`43362249506`), `0.43.4`, `0.43.3` and `0.43.2` retain their own Core `0.37.9` / Read `0.13.3` pins,
-while CLI `0.43.1` retains Core `0.37.8` / Read `0.13.2` and remains
+re-pins its vendor archives. Native CLI `0.44.0` (published on 2026-11-18 with
+registry `gitHead` and provenance from source commit `5276c60` by green run
+`44255642656`) binds Core `0.37.11` / Read `0.13.5`, while `0.43.5`, `0.43.4`, `0.43.3` and `0.43.2` retain their own Core `0.37.9` / Read `0.13.3` pins and CLI `0.43.1` retains Core `0.37.8` / Read `0.13.2` and remains
 installable. Studio Core `4.1.0` / Studio CLI `0.14.0` remain on their
 own pinned Core `0.37.2` / Read `0.11.3` graph and are not re-pinned by this
 Core/Read release. The earlier native CLI `0.43.0` and Studio Core `4.0.0` /
 Studio CLI `0.13.0` records remain historical. Complete MCP/Creator and protected Host source
-deliveries bind new archives separately; this wave adds no MCP npm package.
+deliveries re-pin their bundled archives separately (with `@aikdna/kdna-mcp-server@0.8.0` bound to CLI `0.44.0` / Core `0.37.11` / Read `0.13.5`).
 Historical Python, Conformance, Eval, compatibility and asset channels retain
 their independently declared scope.
 

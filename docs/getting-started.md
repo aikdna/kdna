@@ -1,6 +1,6 @@
 # Getting Started with KDNA
 
-> **Historical / Superseded Guide:** This page preserves the historical Runtime CLI **0.36.1** / Studio CLI **0.11.0** walkthrough. For the current Container `0.6.0` quickstart (`@aikdna/kdna-cli@0.43.5`), start at [Start Here](./start-here.md).
+> **Historical / Superseded Guide:** This page preserves the historical Runtime CLI **0.36.1** / Studio CLI **0.11.0** walkthrough. For the current Container `0.6.0` quickstart (`@aikdna/kdna-cli@0.44.0`), start at [Start Here](./start-here.md).
 >
 > Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
