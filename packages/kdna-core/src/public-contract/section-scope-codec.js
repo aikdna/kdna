@@ -12,18 +12,18 @@ function encodeFrame(plain){
   decodeFrame(stored);return stored;
 }
 function decodeFrame(stored){
-  try{C.shape('ExperimentalStoredXrefFrame06',stored);}catch(e){if(C.isFailure(e)||e.reason==='READ_INPUT_INVALID')C.need(false,'XREF_DICTIONARY_SHAPE');throw e;}
+  try{C.strict.freezeVerified(stored);C.validateKnownStrict('ExperimentalStoredXrefFrame06',stored);}catch(e){if(C.isFailure(e)||e.reason==='READ_INPUT_INVALID')C.need(false,'XREF_DICTIONARY_SHAPE');throw e;}
   const unique=new Set();
   for(const scope of stored.scope_dictionary){const key=JSON.stringify(scope);C.need(!unique.has(key),'XREF_DICTIONARY_DUPLICATE');unique.add(key);}
   const used=new Set(),records=[];let next=0;
   for(const x of stored.records){
     const i=x.scope_index;C.need(i<stored.scope_dictionary.length,'XREF_DICTIONARY_REF');
     if(!used.has(i)){C.need(i===next,'XREF_DICTIONARY_ORDER');used.add(i);next++;}
-    const restored={anchor:x.anchor,target:x.target,scope:stored.scope_dictionary[i].slice()};
-    try{C.validate('ExpansionTarget',restored);}catch(e){if(C.isFailure(e)||e.reason==='READ_INPUT_INVALID')C.need(false,'XREF_RECONSTRUCTED_INVALID');throw e;}
+    const restored={anchor:x.anchor,target:x.target,scope:stored.scope_dictionary[i]};
+    C.strict.freezeVerified(restored);C.markFrozenTypeValid('ExpansionTarget',restored);
     records.push(restored);
   }
   C.need(used.size===stored.scope_dictionary.length,'XREF_DICTIONARY_UNUSED');
-  return {section_id:stored.section_id,kind:'xref',records};
+  return C.strict.freezeVerified({section_id:stored.section_id,kind:'xref',records});
 }
 module.exports={encodeFrame,decodeFrame};

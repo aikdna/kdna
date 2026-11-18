@@ -47,20 +47,41 @@ function reject(reason = 'READ_INPUT_INVALID', diagnostic = null) {
 // Canonical-JSON byte cost of one scalar. Byte equality with canonicalJson() is a hard
 // requirement elsewhere in this package, so the meter uses the same serialization.
 function scalarBytes(value) {
+  if (value === null || value === true) return 4;
+  if (value === false) return 5;
+  if (typeof value === 'number') return String(value).length;
+  if (typeof value === 'string') {
+    let bytes = 2;
+    for (let i = 0; i < value.length; i++) {
+      const n = value.charCodeAt(i);
+      if (n === 0x22 || n === 0x5c || n === 0x08 || n === 0x09 || n === 0x0a || n === 0x0c || n === 0x0d) bytes += 2;
+      else if (n < 0x20) bytes += 6;
+      else if (n < 0x80) bytes += 1;
+      else if (n < 0x800) bytes += 2;
+      else if (n >= 0xd800 && n <= 0xdbff) { i++; bytes += 4; }
+      else bytes += 3;
+    }
+    return bytes;
+  }
   return encoder.encode(JSON.stringify(value)).length;
 }
 
 function scalarString(value, maximum = MAX_STRING_BYTES, controls = true) {
   if (typeof value !== 'string') return false;
+  let bytes = 0;
   for (let i = 0; i < value.length; i++) {
     const n = value.charCodeAt(i);
     if (n >= 0xd800 && n <= 0xdbff) {
       const next = value.charCodeAt(++i);
       if (!(next >= 0xdc00 && next <= 0xdfff)) return false;
-    } else if (n >= 0xdc00 && n <= 0xdfff) return false;
-    if (!controls && (n <= 0x1f || (n >= 0x7f && n <= 0x9f))) return false;
+      bytes += 4;
+    } else {
+      if (n >= 0xdc00 && n <= 0xdfff) return false;
+      if (!controls && (n <= 0x1f || (n >= 0x7f && n <= 0x9f))) return false;
+      bytes += n < 0x80 ? 1 : n < 0x800 ? 2 : 3;
+    }
   }
-  return encoder.encode(value).length <= maximum;
+  return bytes <= maximum;
 }
 
 function identifier(value) {
@@ -76,8 +97,18 @@ function entryName(value) {
 function uint(value) { return Number.isSafeInteger(value) && value >= 0; }
 function utf8(value) { if (!scalarString(value)) reject(); return encoder.encode(value); }
 function compareUtf8(left, right) {
+  if (left === right) return 0;
+  const min = Math.min(left.length, right.length);
+  let i = 0;
+  for (; i < min; i++) {
+    const ca = left.charCodeAt(i), cb = right.charCodeAt(i);
+    if (ca === cb) { if (ca >= 0xd800) break; continue; }
+    if (ca < 0xd800 && cb < 0xd800) return ca - cb;
+    break;
+  }
+  if (i === min) return left.length - right.length;
   const a = encoder.encode(left), b = encoder.encode(right);
-  for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) return a[i] - b[i];
+  for (let j = 0; j < Math.min(a.length, b.length); j++) if (a[j] !== b[j]) return a[j] - b[j];
   return a.length - b.length;
 }
 

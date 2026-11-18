@@ -1,7 +1,8 @@
 'use strict';
 const C = require('./section-common.js');
 const contract = require('./creation06/contract.json');
-const validators = require('./creation06/validators.cjs');
+let _validators = null;
+const getValidators = () => _validators ?? (_validators = require('./creation06/validators.cjs'));
 const failures = new WeakSet();
 function need(ok, code = 'CREATION_TYPED_SHAPE') {
   if (!ok) {
@@ -39,6 +40,7 @@ function scalars(value, shape, depth = 0) {
 }
 function validate(name, value) {
   C.strict.assertStrictJson(value);
+  const validators = getValidators();
   need(typeof validators[name] === 'function' && validators[name](value));
   scalars(value, contract.types[name]);
   return value;

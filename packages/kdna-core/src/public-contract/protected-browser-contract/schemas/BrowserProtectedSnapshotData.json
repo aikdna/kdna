@@ -5586,6 +5586,9 @@
             "$ref": "#/$defs/NonEmptyText"
           },
           "minItems": 0
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -7455,6 +7458,75 @@
     "RoleName": {
       "type": "string",
       "enum": [
+        "personal_preference",
+        "experience_notes",
+        "preference_shift",
+        "lesson",
+        "reference_experience",
+        "applicable_cases",
+        "exceptions",
+        "observed_basis",
+        "criteria",
+        "observation_limits",
+        "features",
+        "category_definition",
+        "matching_rule",
+        "confusable_cases",
+        "criterion",
+        "comparison_method",
+        "decision_rule",
+        "baseline_floor",
+        "options",
+        "factors",
+        "priority_rule",
+        "accepted_cost",
+        "priority_shift",
+        "premise",
+        "derivation",
+        "key_assumptions",
+        "candidate_set",
+        "elimination_criteria",
+        "retention_rule",
+        "special_cases",
+        "phenomenon",
+        "causal_link",
+        "candidate_causes",
+        "distinguishing_basis",
+        "counterfactual_cases",
+        "inputs_and_meaning",
+        "formula_or_relation",
+        "assumptions",
+        "bounds",
+        "error_notes",
+        "initial_conditions",
+        "change_assumptions",
+        "progression",
+        "branching_scenarios",
+        "inflection_signals",
+        "materials_used",
+        "evidence_link",
+        "contrary_evidence",
+        "weighing_rationale",
+        "subject_interpreted",
+        "interpretive_link",
+        "context",
+        "cues",
+        "alternative_readings",
+        "target",
+        "signal",
+        "adjustment_rule",
+        "stop_condition",
+        "conflict_handling",
+        "reference_case",
+        "correspondence",
+        "transfer_rule",
+        "key_differences",
+        "non_transferable_limits",
+        "method_description",
+        "basis",
+        "relation",
+        "notes",
+        "limits",
         "个人感受",
         "体验说明",
         "偏好变化",
@@ -7739,6 +7811,9 @@
               ]
             }
           ]
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -7775,6 +7850,9 @@
             "$ref": "#/$defs/NonEmptyText"
           },
           "minItems": 1
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [
@@ -7817,6 +7895,9 @@
         },
         "digest": {
           "$ref": "#/$defs/Digest"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
         }
       },
       "required": [

@@ -43,7 +43,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.10"
+          "version": "0.37.11"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -53,7 +53,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.4"
+          "version": "0.13.5"
         },
         {
           "path": "packages/kdna/package.json",
@@ -84,7 +84,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.37.10"
+          "declared": "0.37.11"
         },
         {
           "path": "packages/kdna/package.json",
@@ -107,7 +107,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "f19698d311f51e27fc837a9b6f3f2ffa047a77db625165d9801dd5d34e781f74",
+          "sha256": "80409e93212016bee382a2c4153d644fc3da034305890b5d67d7fc33566cf431",
           "local_archives": []
         }
       ],
@@ -212,9 +212,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.37.10",
+          "version": "0.37.11",
           "member_count": 465,
-          "members_sha256": "72f17ce5dcf4996a15cc955da8d6b06f19c7e3e55aa4d6fd6999859a742e1a3d",
+          "members_sha256": "68bc61d89dd0d5507d17744e3d16d739a005a8c77a22dbc2d065a4b835e33bd0",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -735,9 +735,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.13.4",
+          "version": "0.13.5",
           "member_count": 99,
-          "members_sha256": "6d353afec71335d24dc1d8145ed95921693ff025510a785c09543078cb38aca1",
+          "members_sha256": "fe3a37b2869e65af8978bc0fcabc752e8e6c52b4401bcf7c5c07a986b939fa7d",
           "paths": [
             "LICENSE",
             "NOTICE",

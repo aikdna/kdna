@@ -14,14 +14,25 @@ function createRegistry(manifest, payload) {
   const asset = ref('asset', manifest.asset_uid), records = new Map(), ordered = [];
   const edges = new Map(), referenceRoles = new Map(), unresolved = [];
   // Records own stable typed targets; retain the canonical key already checked by add.
-  const recordKeys = new WeakMap();
+  const recordKeys = new WeakMap(), recordIndices = new Map(), localKeys = new Map();
+  let reachEpoch = 0, cachedEpoch = -1, reachBits = null;
   const local = target => !target.asset || sameAsset(target.asset, payload.asset);
-  const identity = target => key(local(target) ? ref(target.kind, target.id) : target);
+  const identity = target => {
+    if (local(target) && typeof target?.kind === 'string' && typeof target?.id === 'string') {
+      const ck = target.kind + '\u0000' + target.id;
+      let hit = localKeys.get(ck);
+      if (hit === undefined) { hit = key(ref(target.kind, target.id)); localKeys.set(ck, hit); }
+      return hit;
+    }
+    return key(local(target) ? ref(target.kind, target.id) : target);
+  };
   function add(kind, id, value, owner = asset, judgment = null, path = '/payload', activation = null) {
     const target = ref(kind, id), idKey = identity(target);
     if (records.has(idKey)) fail(path, id);
     const record = { target, owner, value, judgment, path, activation };
+    recordIndices.set(idKey, ordered.length);
     records.set(idKey, record); ordered.push(record); recordKeys.set(record, idKey); edges.set(idKey, new Map()); referenceRoles.set(idKey,new Map());
+    reachEpoch++;
     return record;
   }
   function get(target, kinds = null, field = '/payload') {
@@ -40,8 +51,8 @@ function createRegistry(manifest, payload) {
       else unresolved.push({ source: from, target, mandatory });
       return null;
     }
-    const list = edges.get(fromKey), targetKey = identity(target);
-    list.set(targetKey, Boolean(list.get(targetKey) || mandatory));
+    const list = edges.get(fromKey), targetKey = identity(target), prev = list.get(targetKey), nextMandatory = Boolean(prev || mandatory);
+    list.set(targetKey, nextMandatory); if (prev !== nextMandatory) reachEpoch++;
     // Closure needs one boolean per endpoint pair; public references also retain
     // separately declared meanings such as a lifecycle replacement on that pair.
     const byTarget=referenceRoles.get(fromKey), roles=byTarget.get(targetKey)??new Map();
@@ -89,15 +100,39 @@ function createRegistry(manifest, payload) {
     return { kind:'judgment', id:value.judgment_id, asset:value.asset };
   }
   function closure(seeds) {
-    const selected = new Set(), queue = seeds.map(identity);
-    for (let i = 0; i < queue.length; i++) {
-      const current = queue[i];
-      if (selected.has(current)) continue;
-      if (!records.has(current)) fail();
-      selected.add(current);
-      for (const [next, mandatory] of edges.get(current)) if (mandatory) queue.push(next);
+    const words = (ordered.length + 31) >>> 5;
+    if (cachedEpoch !== reachEpoch) { reachBits = new Map(); cachedEpoch = reachEpoch; }
+    function bitsFor(startKey) {
+      let bits = reachBits.get(startKey);
+      if (bits !== undefined) return bits;
+      if (!records.has(startKey)) fail();
+      bits = new Uint32Array(words);
+      const queue = [startKey];
+      for (let i = 0; i < queue.length; i++) {
+        const current = queue[i], idx = recordIndices.get(current);
+        const w = idx >>> 5, m = 1 << (idx & 31);
+        if (bits[w] & m) continue;
+        bits[w] |= m;
+        for (const [next, mandatory] of edges.get(current)) if (mandatory) queue.push(next);
+      }
+      reachBits.set(startKey, bits);
+      return bits;
     }
-    return ordered.filter(r => selected.has(recordKeys.get(r)));
+    const combined = new Uint32Array(words);
+    for (const seed of seeds) {
+      const sb = bitsFor(identity(seed));
+      for (let w = 0; w < words; w++) combined[w] |= sb[w];
+    }
+    const out = [];
+    for (let w = 0; w < words; w++) {
+      let mask = combined[w];
+      while (mask) {
+        const bit = 31 - Math.clz32(mask & -mask);
+        out.push(ordered[(w << 5) + bit]);
+        mask &= mask - 1;
+      }
+    }
+    return out;
   }
   return { asset, records, ordered, edges, referenceRoles, unresolved, identity, local, add, get, link, qualified, closure };
 }

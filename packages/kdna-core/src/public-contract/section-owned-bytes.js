@@ -19,9 +19,9 @@ function ownBytes(value){
  // Integer-indexed exotic Uint8Array elements are intrinsically dense enumerable data.
  // Source03 excludes non-enumerable own string decorations from byte meaning.
  // Enumerable extra names remain invalid; no caller property value/getter is read.
- const names=Object.keys(value);
- C.need(names.length===length,'READ_INPUT_INVALID');
- for(let i=0;i<names.length;i++)C.need(names[i]===String(i),'READ_INPUT_INVALID');
+ // Per ES §10.4.5.6 [[OwnPropertyKeys]], indices 0..length-1 are non-configurable
+ // enumerable own keys in order, so any extra enumerable own string key strictly increases Object.keys(value).length.
+ C.need(Object.keys(value).length===length,'READ_INPUT_INVALID');
  const owned=Buffer.alloc(length);
  Uint8Array.prototype.set.call(owned,value);
  return owned;

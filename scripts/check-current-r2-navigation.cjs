@@ -447,7 +447,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Current source: choose the matching implementation',
-      text: `| [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI \`${released['studio-cli'].version}\` / StudioCore \`${released['studio-core'].version}\` on their own pinned Core \`0.37.2\` / Read \`0.11.3\` line | Complete-source session creation, revision, save/read/verify and explicit protected export; container \`0.5.0\`, Read \`0.6.4\` |`,
+      text: `| [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI \`${released['studio-cli'].version}\` / StudioCore \`${released['studio-core'].version}\` on their own pinned Core \`0.37.2\` / Read \`0.11.3\` line | \`[Legacy pre-0.6.0 / P5-deferred]\` Complete-source session creation, revision, save/read/verify and explicit protected export; container \`0.5.0\`, Read \`0.6.4\` |`,
     },
     {
       file: 'README.md',
@@ -465,13 +465,13 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` and \`0.13.0\` retained | Legacy container \`0.5.0\` / Read \`0.6.4\` terminal session line (not for current \`0.6.0\` authoring — use \`@aikdna/kdna-cli@${released.cli.version}\`) |`,
+      text: `| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI \`${released['studio-cli'].version}\` on \`${channelTag}\`; historical npm \`0.11.0\` and \`0.13.0\` retained | \`[Legacy pre-0.6.0 / P5-deferred]\` container \`0.5.0\` / Read \`0.6.4\` terminal session line (not for current \`0.6.0\` authoring — use \`@aikdna/kdna-cli@${released.cli.version}\`) |`,
     },
     {
       file: 'README.md',
       role: 'downstream',
       heading: '## Ecosystem',
-      text: `| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` and \`4.0.0\` retained | Legacy container \`0.5.0\` Studio session SDK and explicit protected export; its own Host/credential boundary |`,
+      text: `| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore \`${released['studio-core'].version}\` on \`${channelTag}\`; historical npm \`3.0.0\` and \`4.0.0\` retained | \`[Legacy pre-0.6.0 / P5-deferred]\` container \`0.5.0\` Studio session SDK and explicit protected export; its own Host/credential boundary |`,
     },
     {
       file: 'README.md',
@@ -495,7 +495,7 @@ function retainedIdentityContexts(released, channelTag) {
       file: 'README.zh.md',
       role: 'downstream',
       heading: '## 当前源码：选择匹配的实现',
-      text: `| [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI \`${released['studio-cli'].version}\` / StudioCore \`${released['studio-core'].version}\` 在各自固定的 Core \`0.37.2\` / Read \`0.11.3\` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container \`0.5.0\` / Read \`0.6.4\` |`,
+      text: `| [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI \`${released['studio-cli'].version}\` / StudioCore \`${released['studio-core'].version}\` 在各自固定的 Core \`0.37.2\` / Read \`0.11.3\` 线上 | \`[Legacy pre-0.6.0 / P5-deferred]\` 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container \`0.5.0\` / Read \`0.6.4\` |`,
     },
     {
       file: 'docs/historical-published-lines.md',

@@ -3,14 +3,14 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1542892,
-    "sha256": "ae45743fa2d43e973f28237ec15d2110ffb1c477267ea311190fe0a1bcbe61b0"
+    "bytes": 1548507,
+    "sha256": "61d5753cbcf47266bfe5233587a5c424dbf32501fcaccb98d6c8cb7bf46f7ceb"
   },
   "producer": {
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 168574,
-      "sha256": "5952ffc3856f9fdf368ce688ebc82c1aadd27779aa6e7691526ea88679ece4b2"
+      "sha256": "05579268aaa36c59273dc4ab5b268d34f8ac5ceb3697945f887118819655e0e4"
     },
     "scripts": [
       {
@@ -565,8 +565,8 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetReadResult06.json",
-      "bytes": 255834,
-      "sha256": "c33e81ba7bc533012e86387af31744b9c23d40033b4089324c2a7652160923b3"
+      "bytes": 257874,
+      "sha256": "5d8a83c641bdd949573220e76d1c9c77dd83a03d605560a3de035e12d19427ab"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDescriptor06.json",
@@ -575,18 +575,18 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/validators.cjs",
-      "bytes": 2904422,
-      "sha256": "da5a3546a4596ba3ea8c9837233454a4ba7ce7bddc589e2bdf1d8aa90dc1606e"
+      "bytes": 2913049,
+      "sha256": "2049003fc9ac389c6d629079bd55101b2dbf4d6c68291418c478b20f51b6351b"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/types.d.ts",
-      "bytes": 83956,
-      "sha256": "b5b44384ccd5ab33154c4bd436069162093163c6b0e30872ca8e50b00e19097f"
+      "bytes": 85361,
+      "sha256": "0f6b42ef69ffd989fba6ff0106b3706bdc28c3235943d142cf1b0fd7279ddfd2"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/contract.json",
-      "bytes": 307339,
-      "sha256": "6a883ef950d14d648a278978ee333647b9701e8ff024230708d3c772053a4c98"
+      "bytes": 309379,
+      "sha256": "a59cb13860071e51e8235a628d919be79883d50e7cc51578837ac0e02d925be0"
     },
     {
       "path": "packages/kdna-core/src/public-contract/packageset06/api.d.ts",

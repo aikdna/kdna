@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.37.11 (2026-11-18)
+
+- Migrates canonical `method_roles` to language-neutral ASCII identifiers while
+  preserving admission compatibility for legacy Chinese role identifiers, adds
+  optional human-readable `name` fields on `Material`, `ScopedDeclaration` and
+  `SourceRef`, and lazy-loads generated section validators for fast cold-start
+  admission. Pairs with Read `0.13.5`.
+- Core `0.37.10` and earlier coordinates remain installable under their own
+  identities.
+
 ## 0.37.10 (2026-11-11)
 
 - Adds native `0.6.0` `ProtectedManifest06Candidate` container admission and

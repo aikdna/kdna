@@ -1,5 +1,45 @@
 # KDNA Core Specification
 
+## Current Architecture Overview — Container `0.6.0` & R2 Semantic Line
+
+Current KDNA production judgment works (such as *KDNA Whitepaper* `v1.0.2` / `v1.0.1`) use the **Container `0.6.0`** section-framed distribution format and the **R2** semantic contract family, defined machine-readably in [`specs/public-semantic-source.json`](specs/public-semantic-source.json) and indexed in [`SPEC-INDEX.md`](SPEC-INDEX.md#kdna-public-specification-index):
+
+| Layer | Current Coordinate | Role |
+|---|---|---|
+| **Distribution Container** | `format_version: "0.6.0"` (public section packs) / `ProtectedManifest06Candidate` (encrypted `payload.kdnab`) | Immutable `.kdna` ZIP archive (`mimetype` stored first at offset `0`, `kdna.json`, stored `sections/pack-N.kdnab` CBOR frames or encrypted `payload.kdnab`, `checksums.json`, optional `signature.kdsig` & `attachments/`) |
+| **Judgment Payload** | `kdna.payload.judgment` `0.5.1` (`kdna.r2-semantics/1`) | Scoped judgments (`focus`, `core_expression`, `method` with language-neutral ASCII `method_roles` + legacy role compatibility, `boundaries`, `exceptions`, `misuse`, `reasons`, `materials`, `shared_declarations`, `sources`, `relationships`) |
+| **Canonical IR** | `kdna.canonical-ir/0.6.1` | Deterministic typed node graph (`asset_index`, `catalog`, `mandatory_closures`, `expansion_targets`, RFC 8785 JCS SHA-256 `ir_digest`) |
+| **Scoped Read Protocol** | `kdna.read/0.7.0-candidate` (native sections) / `kdna.read/0.6.4` (base) | Progressive disclosure (`catalog` → `exact_selection` with mandatory `support`/`qualify`/`conflict` closure → `expand` handles) under explicit Host consent and byte budgets |
+| **Local Password Encryption** | `kdna.encryption.password` / `kdna.envelope.aead` ([`RFC-0018`](rfcs/RFC-0018-envelope-aead.md)) | Permanently account-free offline protection: `scrypt-sha256` or `argon2id` KDF → `AES-256-KW` CEK wrapping → `AES-256-GCM` AEAD payload encryption bound to manifest AAD |
+
+```mermaid
+flowchart LR
+  subgraph Container["Immutable .kdna Container (0.6.0)"]
+    M["mimetype (stored)"]
+    J["kdna.json (Manifest + Catalog)"]
+    S["sections/pack-N.kdnab (CBOR Frames)"]
+    E["payload.kdnab (RFC-0018 AEAD Envelope)"]
+    C["checksums.json / signature.kdsig"]
+  end
+  subgraph Core["@aikdna/kdna-core"]
+    A["Container & Digest Admission (A / C / E)"]
+    K["RFC-0018 Unlock (scrypt/argon2id + AES-256-KW + AES-256-GCM)"]
+    IR["Canonical IR 0.6.1 + R2 Closure"]
+  end
+  subgraph Read["@aikdna/kdna-read + Host Gate"]
+    CAT["catalog (45-question index)"]
+    SEL["exact_selection (Selected + Mandatory Closure)"]
+    EXP["expand (Deferred Handle Resolution)"]
+  end
+  M & J & S & C --> A --> IR
+  E --> K --> A
+  IR --> CAT --> SEL --> EXP
+```
+
+---
+
+## Historical `0.1.0` Baseline Contract (Preserved)
+
 Status: Active original 0.1 contract. The unpublished grammar.3 implementation and native execution 0.2 contract are separately indexed in [SPEC-INDEX](SPEC-INDEX.md#current-unpublished-grammar3-candidate); the 0.1 normative line below is preserved.
 
 Container coordinate: `format_version: "0.1.0"`

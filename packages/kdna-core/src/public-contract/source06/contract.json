@@ -2,8 +2,8 @@
   "candidate_only": true,
   "source": {
     "path": "specs/public-semantic-source.json",
-    "bytes": 1542892,
-    "sha256": "ae45743fa2d43e973f28237ec15d2110ffb1c477267ea311190fe0a1bcbe61b0"
+    "bytes": 1548507,
+    "sha256": "61d5753cbcf47266bfe5233587a5c424dbf32501fcaccb98d6c8cb7bf46f7ceb"
   },
   "historical_original_source": {
     "scope": "historical_original_contract_source_identity_not_current_generator_input",

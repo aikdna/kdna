@@ -11,8 +11,8 @@
       "inspectAdmittedPackageSet",
       "verifyPackageSetHandoff"
     ],
-    "core_version": "0.37.10",
-    "definition_digest": "sha256:e949a9428ee539d3cf6475434ff785b51249a17d9e554d911b8b686a0c7b6d28",
+    "core_version": "0.37.11",
+    "definition_digest": "sha256:41c8b0f71f56c5a22c3767944ee3580bd9b7a2424636707b280e417e6eb9da51",
     "limits": {
       "maxMembers": 10000,
       "maxTotalSourceBytes": 104857600
@@ -39,7 +39,7 @@
       "sealPackageSetHandoff",
       "admitPackageSetHandoff"
     ],
-    "read_version": "0.13.4"
+    "read_version": "0.13.5"
   },
   "key_sets": {
     "HandoffMember": {
@@ -739,7 +739,7 @@
           "type": "array"
         },
         "core_version": {
-          "const": "0.37.10",
+          "const": "0.37.11",
           "type": "string"
         },
         "definition_digest": {
@@ -769,7 +769,7 @@
           "type": "array"
         },
         "read_version": {
-          "const": "0.13.4",
+          "const": "0.13.5",
           "type": "string"
         }
       },

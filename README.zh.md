@@ -15,7 +15,7 @@
 | **内在结构** | 线性纯文本，结论、背景故事与例外条件混杂 | 显式区分具体问题、核心主张、推理机制、适用条件、停手边界与防误用说明 |
 | **任务读取** | 整篇塞入上下文，或按长度盲目截断 | 先读 `catalog` 目录，再按需精确读取（`exact_selection`）目标判断及其必需前提与边界 |
 | **版本演进** | 原地静默覆盖，难以追溯改了哪条取舍 | 明确版本号（如 `1.0.0` → `1.1.0`），升级前可用 `kdna diff --format human` 逐项核对差异 |
-| **私密保护** | 本地明文裸露 | 支持本地离线口令加密（`kdna protect`，PBKDF2 + AES-256-GCM），**永久无需在线账号** |
+| **私密保护** | 本地明文裸露 | 支持本地离线口令加密（`kdna protect`，基于 `RFC-0018` 的 `scrypt-sha256` / `argon2id` + `AES-256-KW` + `AES-256-GCM`），**永久无需在线账号** |
 
 ---
 
@@ -83,8 +83,8 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli`），用于创建（`kdna.draft/1` 与 `0.6.0`）、口令保护、校验、读取与对比 `.kdna` 作品
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent 技能包（`kdna-creator`、`kdna-loader`）与本地 stdio MCP 服务
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.1` 中英双语正式版与容器核验套件）
-- [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — **旧版 container `0.5.0` 会话线**（不用于当前 container `0.6.0` 作品创作；创建与读取 `0.6.0` 作品请使用 `@aikdna/kdna-cli`）
-- [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — 面向 Apple 平台的 Swift Core 实现
+- [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — **`[Legacy pre-0.6.0 / P5-deferred]` 旧版 container `0.5.0` 会话线**（不用于当前 container `0.6.0` 作品创作；创建与读取 `0.6.0` 作品请使用 `@aikdna/kdna-cli`）
+- [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — **`[Legacy pre-0.6.0 / P5-deferred]`** 面向 Apple 平台的旧版 Swift Core 实现（与 `kdna-app-shared`、`kdna-studio-swift` 同属延后维护旧线）
 - [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 Apple 公证 macOS 桌面阅读器（登录免费 `KDNA ID` 即享内置《KDNA白皮书》中英双语版与判断资产库，并提供免登录单文件游客模式）
 
 ---
@@ -108,7 +108,10 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 | Core/Read | Core `0.37.10` / Read `0.13.4` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
 | [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.5` 与其自身精确 Core `0.37.9` / Read `0.13.3` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
 | [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.5` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用尚未评估 |
-| [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
+| [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | `[Legacy pre-0.6.0 / P5-deferred]` 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
+
+本仓源码当前携带的候选是 Core `0.37.11` / Read `0.13.5`，尚未发布；在它通过正式发布与取得检查前，
+上表只列出已发布并逐字节核验的组合。
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
 原生 CLI 的 Plan/load 不可用；Core `/execution` 的原生 0.3.1 Plan/Capsule 与显式 Host 参考 API 是独立入口。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md)有自己的输入和可信 provider 边界。离线交付包与可复现脚本见 [交付生成说明](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)、[作者示例](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md)、[可执行配方](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs) 及[合成周报案例](./examples/native-team-update/README.md)。

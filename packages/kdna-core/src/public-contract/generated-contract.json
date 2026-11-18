@@ -493,6 +493,111 @@
     "authored_emission_input": "Only the owning policy supplies its complete nonempty ordered EmissionListValue to its dedicated merge input. No other port, result, candidate, literal, ordinary link or output may use EmissionListContract.",
     "feedback_boundary": "The feedback label alone does not require a Plan. Saved inter-round state, coordination, explicit flow or composite method composition does; a complete single-step adjustment remains legal without a Plan.",
     "id": "kdna.r2-semantics/1",
+    "legacy_method_role_aliases": {
+      "analogy": {
+        "不可迁移之处": "non_transferable_limits",
+        "借用办法": "transfer_rule",
+        "关键差异": "key_differences",
+        "参照对象": "reference_case",
+        "对应关系": "correspondence"
+      },
+      "calculation": {
+        "取值边界": "bounds",
+        "计算假设": "assumptions",
+        "计算关系": "formula_or_relation",
+        "误差说明": "error_notes",
+        "输入与含义": "inputs_and_meaning"
+      },
+      "causal_analysis": {
+        "候选原因": "candidate_causes",
+        "区分依据": "distinguishing_basis",
+        "原因关系": "causal_link",
+        "反向情况": "counterfactual_cases",
+        "待解释现象": "phenomenon"
+      },
+      "criteria_comparison": {
+        "例外情况": "exceptions",
+        "判断标准": "criterion",
+        "对照办法": "comparison_method",
+        "底线要求": "baseline_floor",
+        "归结办法": "decision_rule"
+      },
+      "elimination": {
+        "保留办法": "retention_rule",
+        "候选范围": "candidate_set",
+        "排除条件": "elimination_criteria",
+        "特殊情况处理": "special_cases"
+      },
+      "evidence_analysis": {
+        "反向材料": "contrary_evidence",
+        "所用材料": "materials_used",
+        "材料与判断的联系": "evidence_link",
+        "材料取舍": "weighing_rationale"
+      },
+      "experience": {
+        "例外情况": "exceptions",
+        "参考经历": "reference_experience",
+        "经验要点": "lesson",
+        "适用情形": "applicable_cases"
+      },
+      "feedback": {
+        "停止条件": "stop_condition",
+        "冲突处理": "conflict_handling",
+        "反馈信号": "signal",
+        "调整办法": "adjustment_rule",
+        "调整目标": "target"
+      },
+      "feeling": {
+        "个人感受": "personal_preference",
+        "体验说明": "experience_notes",
+        "偏好变化": "preference_shift"
+      },
+      "inference": {
+        "例外情况": "exceptions",
+        "关键假设": "key_assumptions",
+        "判断前提": "premise",
+        "推导关系": "derivation"
+      },
+      "interpretation": {
+        "替代解读": "alternative_readings",
+        "理解线索": "cues",
+        "相关语境": "context",
+        "解读对象": "subject_interpreted",
+        "解释关系": "interpretive_link"
+      },
+      "observation": {
+        "判定口径": "criteria",
+        "观察依据": "observed_basis",
+        "观察限制": "observation_limits"
+      },
+      "other": {
+        "作用关系": "relation",
+        "判断依据": "basis",
+        "方法说明": "method_description",
+        "补充说明": "notes",
+        "适用限制": "limits"
+      },
+      "recognition": {
+        "匹配办法": "matching_rule",
+        "易混淆情况": "confusable_cases",
+        "类别定义": "category_definition",
+        "识别特征": "features"
+      },
+      "simulation": {
+        "变化假设": "change_assumptions",
+        "情景分叉": "branching_scenarios",
+        "演变关系": "progression",
+        "起点条件": "initial_conditions",
+        "转折信号": "inflection_signals"
+      },
+      "tradeoff": {
+        "不可兼得之处": "accepted_cost",
+        "优先变化": "priority_shift",
+        "候选方案": "options",
+        "取舍原则": "priority_rule",
+        "比较因素": "factors"
+      }
+    },
     "manifest_selector": {
       "compatibility.profile": "kdna.payload.judgment",
       "compatibility.profile_version": "0.5.1",
@@ -520,169 +625,169 @@
     "method_roles": {
       "analogy": {
         "optional": [
-          "关键差异",
-          "不可迁移之处"
+          "key_differences",
+          "non_transferable_limits"
         ],
         "required": [
-          "参照对象",
-          "对应关系",
-          "借用办法"
+          "reference_case",
+          "correspondence",
+          "transfer_rule"
         ]
       },
       "calculation": {
         "optional": [
-          "计算假设",
-          "取值边界",
-          "误差说明"
+          "assumptions",
+          "bounds",
+          "error_notes"
         ],
         "required": [
-          "输入与含义",
-          "计算关系"
+          "inputs_and_meaning",
+          "formula_or_relation"
         ]
       },
       "causal_analysis": {
         "optional": [
-          "候选原因",
-          "区分依据",
-          "反向情况"
+          "candidate_causes",
+          "distinguishing_basis",
+          "counterfactual_cases"
         ],
         "required": [
-          "待解释现象",
-          "原因关系"
+          "phenomenon",
+          "causal_link"
         ]
       },
       "criteria_comparison": {
         "optional": [
-          "底线要求",
-          "例外情况"
+          "baseline_floor",
+          "exceptions"
         ],
         "required": [
-          "判断标准",
-          "对照办法",
-          "归结办法"
+          "criterion",
+          "comparison_method",
+          "decision_rule"
         ]
       },
       "elimination": {
         "optional": [
-          "特殊情况处理"
+          "special_cases"
         ],
         "required": [
-          "候选范围",
-          "排除条件",
-          "保留办法"
+          "candidate_set",
+          "elimination_criteria",
+          "retention_rule"
         ]
       },
       "evidence_analysis": {
         "optional": [
-          "反向材料",
-          "材料取舍"
+          "contrary_evidence",
+          "weighing_rationale"
         ],
         "required": [
-          "所用材料",
-          "材料与判断的联系"
+          "materials_used",
+          "evidence_link"
         ]
       },
       "experience": {
         "optional": [
-          "参考经历",
-          "适用情形",
-          "例外情况"
+          "reference_experience",
+          "applicable_cases",
+          "exceptions"
         ],
         "required": [
-          "经验要点"
+          "lesson"
         ]
       },
       "feedback": {
         "optional": [
-          "停止条件",
-          "冲突处理"
+          "stop_condition",
+          "conflict_handling"
         ],
         "required": [
-          "调整目标",
-          "反馈信号",
-          "调整办法"
+          "target",
+          "signal",
+          "adjustment_rule"
         ]
       },
       "feeling": {
         "optional": [
-          "体验说明",
-          "偏好变化"
+          "experience_notes",
+          "preference_shift"
         ],
         "required": [
-          "个人感受"
+          "personal_preference"
         ]
       },
       "inference": {
         "optional": [
-          "关键假设",
-          "例外情况"
+          "key_assumptions",
+          "exceptions"
         ],
         "required": [
-          "判断前提",
-          "推导关系"
+          "premise",
+          "derivation"
         ]
       },
       "interpretation": {
         "optional": [
-          "相关语境",
-          "理解线索",
-          "替代解读"
+          "context",
+          "cues",
+          "alternative_readings"
         ],
         "required": [
-          "解读对象",
-          "解释关系"
+          "subject_interpreted",
+          "interpretive_link"
         ]
       },
       "observation": {
         "optional": [
-          "判定口径",
-          "观察限制"
+          "criteria",
+          "observation_limits"
         ],
         "required": [
-          "观察依据"
+          "observed_basis"
         ]
       },
       "other": {
         "optional": [
-          "补充说明",
-          "适用限制"
+          "notes",
+          "limits"
         ],
         "required": [
-          "方法说明",
-          "判断依据",
-          "作用关系"
+          "method_description",
+          "basis",
+          "relation"
         ]
       },
       "recognition": {
         "optional": [
-          "易混淆情况"
+          "confusable_cases"
         ],
         "required": [
-          "识别特征",
-          "类别定义",
-          "匹配办法"
+          "features",
+          "category_definition",
+          "matching_rule"
         ]
       },
       "simulation": {
         "optional": [
-          "情景分叉",
-          "转折信号"
+          "branching_scenarios",
+          "inflection_signals"
         ],
         "required": [
-          "起点条件",
-          "变化假设",
-          "演变关系"
+          "initial_conditions",
+          "change_assumptions",
+          "progression"
         ]
       },
       "tradeoff": {
         "optional": [
-          "不可兼得之处",
-          "优先变化"
+          "accepted_cost",
+          "priority_shift"
         ],
         "required": [
-          "候选方案",
-          "比较因素",
-          "取舍原则"
+          "options",
+          "factors",
+          "priority_rule"
         ]
       }
     },
@@ -8298,6 +8403,9 @@
         "kind": {
           "$ref": "#/$defs/MaterialKind"
         },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
         "resource_ref": {
           "$ref": "#/$defs/Identifier"
         },
@@ -12613,6 +12721,75 @@
     },
     "RoleName": {
       "enum": [
+        "personal_preference",
+        "experience_notes",
+        "preference_shift",
+        "lesson",
+        "reference_experience",
+        "applicable_cases",
+        "exceptions",
+        "observed_basis",
+        "criteria",
+        "observation_limits",
+        "features",
+        "category_definition",
+        "matching_rule",
+        "confusable_cases",
+        "criterion",
+        "comparison_method",
+        "decision_rule",
+        "baseline_floor",
+        "options",
+        "factors",
+        "priority_rule",
+        "accepted_cost",
+        "priority_shift",
+        "premise",
+        "derivation",
+        "key_assumptions",
+        "candidate_set",
+        "elimination_criteria",
+        "retention_rule",
+        "special_cases",
+        "phenomenon",
+        "causal_link",
+        "candidate_causes",
+        "distinguishing_basis",
+        "counterfactual_cases",
+        "inputs_and_meaning",
+        "formula_or_relation",
+        "assumptions",
+        "bounds",
+        "error_notes",
+        "initial_conditions",
+        "change_assumptions",
+        "progression",
+        "branching_scenarios",
+        "inflection_signals",
+        "materials_used",
+        "evidence_link",
+        "contrary_evidence",
+        "weighing_rationale",
+        "subject_interpreted",
+        "interpretive_link",
+        "context",
+        "cues",
+        "alternative_readings",
+        "target",
+        "signal",
+        "adjustment_rule",
+        "stop_condition",
+        "conflict_handling",
+        "reference_case",
+        "correspondence",
+        "transfer_rule",
+        "key_differences",
+        "non_transferable_limits",
+        "method_description",
+        "basis",
+        "relation",
+        "notes",
+        "limits",
         "个人感受",
         "体验说明",
         "偏好变化",
@@ -12872,6 +13049,9 @@
           "const": "role",
           "type": "string"
         },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
         "subject": {
           "$ref": "#/$defs/Subject"
         },
@@ -12966,6 +13146,9 @@
           ],
           "type": "string"
         },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
         "subject": {
           "$ref": "#/$defs/Subject"
         },
@@ -13013,6 +13196,9 @@
           "$ref": "#/$defs/Identifier"
         },
         "identity": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "name": {
           "$ref": "#/$defs/NonEmptyText"
         },
         "version": {

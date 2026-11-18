@@ -144,9 +144,19 @@ test('the method role table is the exact registry, freshly copied and deeply fro
  assert.equal(table.contract_id,'kdna.r2-semantics/1');
  assert.deepEqual(table.roles,contract.r2_semantics.method_roles);
  assert.equal(Object.keys(table.roles).length,16);
- assert.deepEqual(table.roles.feeling,{required:['个人感受'],optional:['体验说明','偏好变化']});
+ assert.deepEqual(table.roles.feeling,{required:['personal_preference'],optional:['experience_notes','preference_shift']});
  assert.ok(Object.isFrozen(table)&&Object.isFrozen(table.roles)&&Object.isFrozen(table.roles.feeling)&&Object.isFrozen(table.roles.feeling.required));
  assert.throws(()=>{table.roles.feeling.required.push('注入');},TypeError);
  const second=getMethodRoleTable();
  assert.notEqual(second,table);assert.deepEqual(second,table);
+});
+
+test('canonical ASCII method_roles and legacy Chinese method_roles both admit cleanly while rejecting mixed duplicates',async()=>{
+ const ascii=F.blank(tuple);ascii.payload.judgments[0].method.components[0].role='personal_preference';
+ const aRes=await admit(ascii);assert.equal(aRes.status,'accepted');
+ const legacy=F.blank(tuple);legacy.payload.judgments[0].method.components[0].role='个人感受';
+ const lRes=await admit(legacy);assert.equal(lRes.status,'accepted');
+ const dup=F.blank(tuple);dup.payload.judgments[0].method.components[0].role='personal_preference';
+ dup.payload.judgments[0].method.components.push({...structuredClone(dup.payload.judgments[0].method.components[0]),id:'j:0:c2',role:'个人感受'});
+ const dRes=await admit(dup);assert.equal(dRes.status,'rejected');assert.equal(dRes.reason,'READ_CORE_INVALID');
 });

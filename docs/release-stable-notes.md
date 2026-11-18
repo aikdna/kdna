@@ -4,6 +4,25 @@ These notes describe the reviewed stable distribution candidates. Publication
 requires the exact source, retained artifacts and independently approved release
 record. Registry acquisition and downstream adoption are separate observations.
 
+## Core 0.37.11
+
+- Migrates canonical `r2_semantics.method_roles` to language-neutral ASCII
+  identifiers while retaining full admission compatibility for legacy Chinese
+  role identifiers, adds optional human-readable `name` metadata on structural
+  `Material`, `ScopedDeclaration` and `SourceRef` entities, and lazy-loads
+  section validators with sub-second cold-start admission. Pairs with exact Read
+  `0.13.5` from the same reviewed source commit.
+- Core `0.37.10` remains published under its own identity; its immutable tarball
+  keeps the bytes it shipped with.
+
+## Read 0.13.5
+
+- Moves the exact Core peer pin to `0.37.11`, aligns generated `RoleName` and
+  entity-name section schemas, and lazy-loads generated section/retained
+  validators on first read invocation.
+- Read `0.13.4` remains published under its own identity; previously published
+  coordinates and companion pins are unchanged.
+
 ## Core 0.37.10
 
 - Adds native `0.6.0` `ProtectedManifest06Candidate` container admission and

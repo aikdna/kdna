@@ -1,7 +1,9 @@
 'use strict';
 
-const { reject, scalarString, copyJson, MAX_PAYLOAD_BYTES } = require('./strict-input.js');
+const { reject, scalarString, MAX_PAYLOAD_BYTES } = require('./strict-input.js');
 const decoder = new TextDecoder('utf-8', { fatal: true });
+let _cborDecoder = null;
+const getCborDecoder = () => _cborDecoder ?? (_cborDecoder = new (require('cbor-x/decode-no-eval').Decoder)({ useRecords: false, mapsAsObjects: true, structuredClone: false }));
 
 function exactInteger(integer) {
   const number = Number(integer);
@@ -17,7 +19,7 @@ function decodePayload(bytes) {
   // because each visited CBOR item consumes at least one input byte.
   if (bytes.length > MAX_PAYLOAD_BYTES) reject('READ_CORE_INVALID');
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  let offset = 0;
+  let offset = 0, saw64BitInt = false;
   function take(length) {
     if (!Number.isSafeInteger(length) || length < 0 || offset + length > bytes.length) reject('READ_CORE_INVALID');
     const start = offset; offset += length; return start;
@@ -28,6 +30,7 @@ function decodePayload(bytes) {
     if (info === 25) return view.getUint16(take(2));
     if (info === 26) return view.getUint32(take(4));
     if (info === 27) {
+      saw64BitInt = true;
       const n = view.getBigUint64(take(8)), value = Number(n);
       if (BigInt(value) !== n) reject('READ_CORE_INVALID');
       return value;
@@ -39,6 +42,7 @@ function decodePayload(bytes) {
     const initial = view.getUint8(take(1)), major = initial >> 5, info = initial & 31;
     if (major === 0 || major === 1) {
       if (info === 27) {
+        saw64BitInt = true;
         const integer = view.getBigUint64(take(8));
         // For major 1, the encoded argument is not the resulting number.
         // Keep -1-n exact before testing binary64 representability.
@@ -60,7 +64,10 @@ function decodePayload(bytes) {
       const object = {}, keys = new Set();
       for (let i = 0; i < length; i++) {
         const key = value(depth + 1); if (typeof key !== 'string' || keys.has(key)) reject('READ_CORE_INVALID');
-        keys.add(key); Object.defineProperty(object, key, { value: value(depth + 1), enumerable: true, writable: true, configurable: true });
+        keys.add(key);
+        const v = value(depth + 1);
+        if (key === '__proto__') Object.defineProperty(object, key, { value: v, enumerable: true, writable: true, configurable: true });
+        else object[key] = v;
       }
       return object;
     }
@@ -80,25 +87,39 @@ function decodePayload(bytes) {
     reject('READ_CORE_INVALID');
   }
   const inspected = value(0); if (offset !== bytes.length) reject('READ_CORE_INVALID');
-  // The production CBOR codec independently decodes after raw duplicate/limit checks.
-  const { Decoder } = require('cbor-x/decode-no-eval');
   // Keep the codec's exact signed BigInt until its final value is known. Its
   // int64AsNumber option can round a major-1 argument before subtracting one.
   // Only this fresh codec result is normalized; copyJson remains unchanged.
   function normalizeCodecIntegers(value, depth = 0) {
     if (depth > 64) reject('READ_CORE_INVALID');
     if (typeof value === 'bigint') return exactInteger(value);
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        const next = normalizeCodecIntegers(value[i], depth + 1);
+        if (next !== value[i]) value[i] = next;
+      }
+      return value;
+    }
     if (value !== null && typeof value === 'object') {
-      for (const key of Object.keys(value)) {
-        const descriptor = Object.getOwnPropertyDescriptor(value, key);
-        if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject('READ_CORE_INVALID');
-        Object.defineProperty(value, key, { ...descriptor, value: normalizeCodecIntegers(descriptor.value, depth + 1) });
+      const keys = Object.keys(value);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (key === '__proto__') {
+          const descriptor = Object.getOwnPropertyDescriptor(value, key);
+          if (!descriptor || !Object.hasOwn(descriptor, 'value')) reject('READ_CORE_INVALID');
+          const next = normalizeCodecIntegers(descriptor.value, depth + 1);
+          if (next !== descriptor.value) Object.defineProperty(value, key, { ...descriptor, value: next });
+        } else {
+          const cur = value[key], next = normalizeCodecIntegers(cur, depth + 1);
+          if (next !== cur) value[key] = next;
+        }
       }
     }
     return value;
   }
-  const decoded = copyJson(normalizeCodecIntegers(new Decoder({ useRecords: false, mapsAsObjects: true, structuredClone: false }).decode(bytes)));
-  if (JSON.stringify(inspected) !== JSON.stringify(decoded)) reject('READ_CORE_INVALID');
-  return decoded;
+  const decoded = getCborDecoder().decode(bytes);
+  const rawDecoded = saw64BitInt ? normalizeCodecIntegers(decoded) : decoded;
+  if (JSON.stringify(inspected) !== JSON.stringify(rawDecoded)) reject('READ_CORE_INVALID');
+  return inspected;
 }
 module.exports = { decodePayload };

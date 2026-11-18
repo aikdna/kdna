@@ -3,7 +3,8 @@ const { parseJson, canonicalJson, compareUtf8 } = require('./strict-input.js');
 const { digest, runtimeEntryNames } = require('./digests.js');
 const { fail } = require('./protection-declaration.js');
 const { verifySignatureBundle, parseSignatureBundle, signContentDigest, serializeSignatureBundle } = require('../signature.js');
-const { ChecksumsDocument1: checksumsShape } = require('./protection-validators.generated.js');
+let _checksumsShape = null;
+const checksumsShape = value => (_checksumsShape ?? (_checksumsShape = require('./protection-validators.generated.js').ChecksumsDocument1))(value);
 // Precisely the independent kdsig 0.1 content domain; never substitute C0.2/E0.2.
 function signatureContentPreimage(entries) {
   const rows = [];
