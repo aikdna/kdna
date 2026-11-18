@@ -1,8 +1,8 @@
 # Try KDNA in 5 Minutes
 
 > **This guide is pinned to the historical loading line (CLI 0.36.1).** For the
-> current published line (CLI `0.43.5`), use the
-> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0435).
+> current published line (CLI `0.44.0`), use the
+> [Current line quickstart](./start-here.md#current-line-quickstart-cli-0440).
 > Commands below use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
 > Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
 > For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://www.npmjs.com/package/@aikdna/kdna-studio-cli); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
@@ -51,15 +51,15 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Historical loading follow-up**: [15-minute agent guide](./15-minute-agent-guide.md)
   also belongs to the CLI `0.36.1` line; it does not describe current CLI
-  `0.43.5` delivery.
+  `0.44.0` delivery.
 - **Historical authoring follow-up**: [30-minute authoring guide](./30-minute-authoring-guide.md)
   keeps the older project/card workflow; current authoring starts from the
-  [Current line quickstart](./start-here.md#current-line-quickstart-cli-0435).
-- **Public reference work**: [kdna-assets](https://github.com/aikdna/kdna-assets) distributes our first official public `.kdna` judgment work, **KDNA Whitepaper `v1.0.1`** (*《KDNA白皮书》*, `CC BY 4.0`, `45` judgments). Read it in [KDNA Reader for macOS](https://aikdna.com/en/downloads) (permanently free without usage limits; free `KDNA ID` unlocks the bundled Whitepaper & offline Judgment Asset Library, with account-free Guest Mode for single local `.kdna` files), download [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna), or inspect it with the current `@aikdna/kdna-cli` line (`0.36.1` above does not read `0.6.0` containers).
+  [Current line quickstart](./start-here.md#current-line-quickstart-cli-0440).
+- **Public reference work**: [kdna-assets](https://github.com/aikdna/kdna-assets) distributes our first official public `.kdna` judgment work, **KDNA Whitepaper `v1.0.2`** (*《KDNA白皮书》*, `CC BY 4.0`, `45` judgments). Read it in [KDNA Reader for macOS](https://aikdna.com/en/downloads) (permanently free without usage limits; free `KDNA ID` unlocks the bundled Whitepaper & offline Judgment Asset Library, with account-free Guest Mode for single local `.kdna` files), download [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna), or inspect it with the current `@aikdna/kdna-cli` line (`0.36.1` above does not read `0.6.0` containers).
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is
 
-KDNA is an open file format for packaging domain judgment and loading it into AI agents. On this historical line, `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain. The current CLI `0.43.5` line does not provide the `plan-load` or `load` commands; use the [Current line quickstart](./start-here.md#current-line-quickstart-cli-0435) for its create/inspect/validate workflow.
+KDNA is an open file format for packaging domain judgment and loading it into AI agents. On this historical line, `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain. The current CLI `0.44.0` line does not provide the `plan-load` or `load` commands; use the [Current line quickstart](./start-here.md#current-line-quickstart-cli-0440) for its create/inspect/validate workflow.
 
 KDNA Core is content-neutral. It validates file structure and loading contracts; publishers and callers decide content quality, distribution, and runtime policy.

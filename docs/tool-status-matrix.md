@@ -1,13 +1,13 @@
 # KDNA Tool Status Matrix
 
-Current published entry: 2026-10-24. Use the [support matrix](current-release-support.md)
+Current published entry: 2026-11-18. Use the [support matrix](current-release-support.md)
 for exact channel availability and the [actual Agent task](../examples/native-team-update/README.md)
 for selected Read, revision and reopened use.
 
 | Current entry | Commands and boundary |
 | --- | --- |
-| Native CLI `0.43.5`, exact Core `0.37.9` / Read `0.13.3` | `init`, `validate-input`, `compile`, `create`, `protect`, `inspect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container `0.6`, Read `0.7-candidate`; plan/load unavailable (exit 2). |
-| MCP `0.8.0-rc.native-sections.3` with its own CLI `0.43.5` / Core `0.37.9` / Read `0.13.3` graph | Optional source preview for operator-bound catalog/read/expand/cancel; direct CLI is the primary route; named Host delivery unassessed; optional operator-bound `--password-file`/`--password-fd`. |
+| Native CLI `0.44.0`, exact Core `0.37.11` / Read `0.13.5` | `init`, `validate-input`, `compile`, `create`, `protect`, `unprotect`, `inspect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`; explicit local permissions (`--allow-create` / `--allow-read` / `--allow-source` with exact `--expected-a`), container `0.6`, Read `0.7-candidate`; plan/load unavailable (exit 2). |
+| MCP `0.8.0` (`@aikdna/kdna-mcp-server@0.8.0`) with its own CLI `0.44.0` / Core `0.37.11` / Read `0.13.5` graph | Optional published npm & source adapter for operator-bound catalog/read/expand/cancel; direct CLI is the primary route; named Host delivery unassessed; optional operator-bound `--password-file`/`--password-fd`. |
 | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own Core `0.37.2` / Read `0.11.3` line | Separate container `0.5` / Read `0.6.4` session creation/revision/export; ordinary static read/verify. Protected saved-file Read/Source revision uses the [separate trusted Host](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/references/studio-protected-host.md). |
 
 The following dated descriptions preserve the older source and published
@@ -132,7 +132,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 | Component | Status |
 |---|---|
 | `kdna-loader` / `kdna-creator` skills | **Source channel (`aikdna/kdna-skills`)** — explicit file-first CLI workflows (`inspect -> validate -> read --mode catalog -> read --mode exact_selection` and `init -> validate-input -> compile`); the previous broad-discovery and silent-loading model is retired. |
-| MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current source channel is MCP `0.8.0-rc.native-sections.3` over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
+| MCP server adapter | **Stale marker (2026-10-10):** the combination named in this row is a superseded local observation, not the current entry. The current adapter is MCP `0.8.0` (`@aikdna/kdna-mcp-server@0.8.0`) over the same native graph as the row at the top of this page; the [canonical entry](https://github.com/aikdna/kdna-skills#readme) is unchanged. Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
 
 ## Package Boundaries
 

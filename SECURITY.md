@@ -18,10 +18,11 @@ We actively support the latest release for security updates.
 
 | Component | Supported Versions |
 |-----------|-------------------|
-| KDNA Protocol & Core (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Latest tagged release (`0.37.10` / `0.13.4`, Container `0.6.0` & `0.5.0`) |
-| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.43.x`, Container `0.6.0`) |
+| KDNA Protocol & Core (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Latest tagged release (`0.37.11` / `0.13.5`, Container `0.6.0` & `0.5.0`) |
+| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.44.x`, Container `0.6.0`) |
+| Official MCP Server (`@aikdna/kdna-mcp-server`) | Latest minor release (`0.8.x`, Container `0.6.0`) |
 | Legacy Studio CLI / Core (`@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`) | Latest minor release (`0.14.0` / `4.1.0`, Container `0.5.0` session line) |
-| Public reference works (`aikdna/kdna-assets`) | *KDNA Whitepaper* `v1.0.1` (`kdna-whitepaper-1.0.1.{en,zh-CN}.kdna`, Container `0.6.0`) |
+| Public reference works (`aikdna/kdna-assets`) | *KDNA Whitepaper* `v1.0.2` (`kdna-whitepaper-1.0.2.{en,zh-CN}.kdna`, Container `0.6.0`) |
 
 Older versions may receive critical security patches on a case-by-case basis.
 
@@ -41,7 +42,7 @@ Install official KDNA software only from these coordinates:
   historical Container `0.1.0` / Runtime Capsule line** (`kdna.json` +
   `payload.cbor` + `checksums.sha256`) and **cannot** create, validate, or
   read current **Container `0.6.0`** `.kdna` works (such as *KDNA Whitepaper*
-  `v1.0.1`). For all Container `0.6.0` workflows, use the official Node.js
+  `v1.0.2`). For all Container `0.6.0` workflows, use the official Node.js
   packages on npm (`@aikdna/kdna-cli`, `@aikdna/kdna-core`, `@aikdna/kdna-read`).
 
 If you find a package that impersonates these names or coordinates, please

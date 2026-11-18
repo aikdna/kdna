@@ -21,15 +21,15 @@
 
 ## 立即体验真实 `.kdna` 判断作品
 
-首部官方公开判断作品 **《KDNA 白皮书》`v1.0.1`**（作者：张零 / Zhang Ling · `CC BY 4.0` · `45` 个关联判断问题）现已提供中英双语 `.kdna` 正式版（开放 `.kdna` 格式与 `@aikdna/kdna-cli` 永久无需在线账号）：
+首部官方公开判断作品 **《KDNA 白皮书》`v1.0.2`**（作者：张零 / Zhang Ling · `CC BY 4.0` · `45` 个关联判断问题）现已提供中英双语 `.kdna` 正式版（开放 `.kdna` 格式与 `@aikdna/kdna-cli` 永久无需在线账号）：
 
-- **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.1.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna)（`2,595,031` 字节 · SHA-256 `9f01c10bc06771c6d28c0543cda9aa64118ae470d75a0178ea023b73b812a92b`，创建者 `张零`）
-- **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.1.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.en.kdna)（`2,711,958` 字节 · SHA-256 `9db199060f5d957b9aaeee38546dfed68b56d9a3a6f479eb2cc93181fba3580e`，创建者 `Zhang Ling`）
+- **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)（`2,725,359` 字节 · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`，创建者 `张零`）
+- **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna)（`2,843,386` 字节 · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`，创建者 `Zhang Ling`）
 - **macOS 桌面版（Apple Silicon · Developer ID 签名与 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费无限制：登录免费 `KDNA ID` 即享内置中英双语《KDNA白皮书》与判断资产库，并提供免登录单文件游客模式离线打开与解锁任意本地 `.kdna` 作品）
-- **公开参考资产仓库：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.1`、SHA-256 校验值、演进说明与容器核验套件；`1.0.0` → `1.1.0` 版本 `kdna diff` 示例见 [`examples/native-team-update`](./examples/native-team-update/README.md)）
+- **公开参考资产仓库：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.2` 及保留归档 `v1.0.1`、SHA-256 校验值、演进说明与容器核验套件；`1.0.0` → `1.1.0` 版本 `kdna diff` 示例见 [`examples/native-team-update`](./examples/native-team-update/README.md)）
 
 > **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
-> `请先下载首份公开 .kdna 作品《KDNA白皮书》（curl -fsSLo kdna-whitepaper-1.0.1.zh-CN.kdna https://aikdna.com/downloads/whitepaper/v1.0.1/kdna-whitepaper-1.0.1.zh-CN.kdna），用 npx -y @aikdna/kdna-cli@0.43.5 read kdna-whitepaper-1.0.1.zh-CN.kdna --mode catalog --format human --allow-read 查看全部 45 个议题目录；再根据我想讨论的问题，用 --mode exact_selection --judgment-id <id1,id2> --format human --allow-read 按需精读对应判断（切勿用 whole_asset 或不加 --compact/--format human 裸读大体积 JSON）。`
+> `请先下载首份公开 .kdna 作品《KDNA白皮书》（curl -fsSLo kdna-whitepaper-1.0.2.zh-CN.kdna https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna），用 npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.zh-CN.kdna --mode catalog --format human --allow-read 查看全部 45 个议题目录；再根据我想讨论的问题，用 --mode exact_selection --judgment-id <id1,id2> --format human --allow-read 按需精读对应判断（切勿用 whole_asset 或不加 --compact/--format human 裸读大体积 JSON）。`
 
 ---
 
@@ -39,22 +39,22 @@
 
 ```sh
 # 1. 创建：生成可立即编译的示例草稿，并打包为 0.6.0 的 .kdna 作品
-npx -y @aikdna/kdna-cli@0.43.5 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.43.5 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.43.5 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.44.0 create --draft draft.json --output my-judgments.kdna --allow-create
 
 # 2. 校验与按需读取：校验容器完整性，先浏览目录，再读取目标判断及其必需前提与边界
-npx -y @aikdna/kdna-cli@0.43.5 validate my-judgments.kdna
-npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.43.5 read my-judgments.kdna \
+npx -y @aikdna/kdna-cli@0.44.0 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
 # 3. 本地口令加密保护（离线 AEAD 加密，无任何在线账号依赖）
 printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.43.5 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
+npx -y @aikdna/kdna-cli@0.44.0 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.44.0 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --password-file password.txt --format human
@@ -82,7 +82,7 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 配套公开仓库与阅读器：
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli`），用于创建（`kdna.draft/1` 与 `0.6.0`）、口令保护、校验、读取与对比 `.kdna` 作品
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent 技能包（`kdna-creator`、`kdna-loader`）与本地 stdio MCP 服务
-- [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.1` 中英双语正式版与容器核验套件）
+- [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 代表作品仓（含《KDNA 白皮书》`v1.0.2` 中英双语正式版、保留归档 `v1.0.1` 与容器核验套件）
 - [`@aikdna/kdna-studio-cli`](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) / [`@aikdna/kdna-studio-core`](https://www.npmjs.com/package/@aikdna/kdna-studio-core) — **`[Legacy pre-0.6.0 / P5-deferred]` 旧版 container `0.5.0` 会话线**（不用于当前 container `0.6.0` 作品创作；创建与读取 `0.6.0` 作品请使用 `@aikdna/kdna-cli`）
 - [`aikdna/kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) — **`[Legacy pre-0.6.0 / P5-deferred]`** 面向 Apple 平台的旧版 Swift Core 实现（与 `kdna-app-shared`、`kdna-studio-swift` 同属延后维护旧线）
 - [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 Apple 公证 macOS 桌面阅读器（登录免费 `KDNA ID` 即享内置《KDNA白皮书》中英双语版与判断资产库，并提供免登录单文件游客模式）
@@ -105,13 +105,13 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 
 | 入口 | 精确已发布组合 | 使用边界 |
 | --- | --- | --- |
-| Core/Read | Core `0.37.10` / Read `0.13.4` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
-| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.43.5` 与其自身精确 Core `0.37.9` / Read `0.13.3` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0-rc.native-sections.3` 与其自身的 CLI `0.43.5` 及 Core `0.37.9` / Read `0.13.3` | 可选的完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用尚未评估 |
+| Core/Read | Core `0.37.11` / Read `0.13.5` | 普通与 Host 解锁的受保护浏览器 SDK、声明的 Node 参考入口；Node >=20 |
+| [原生 CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.44.0` 与其自身精确 Core `0.37.11` / Read `0.13.5` | container `0.6.0` / Read `0.7.0-candidate`；创建、保存、检查、验证、会话读取和 Source 修订；Node >=22 |
+| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0` 与其自身的 CLI `0.44.0` 及 Core `0.37.11` / Read `0.13.5` | 可选的已发布 npm 与完整源码、本地 operator 绑定的 stdio Read；具名 Host 交付与采用尚未评估 |
 | [Studio 会话](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` 在各自固定的 Core `0.37.2` / Read `0.11.3` 线上 | `[Legacy pre-0.6.0 / P5-deferred]` 完整源码会话创作、修订、保存/读取/复验和显式保护导出；container `0.5.0` / Read `0.6.4` |
 
-本仓源码当前携带的候选是 Core `0.37.11` / Read `0.13.5`，尚未发布；在它通过正式发布与取得检查前，
-上表只列出已发布并逐字节核验的组合。
+本仓源码当前携带的 Core `0.37.11` / Read `0.13.5` 已发布在 `latest`，并经逐字节核验；
+上表列出已发布并逐字节核验的组合。
 
 两条容器路径使用不同的读取与 Source API，共享 SDK 包版本不代表资产可互换。
 原生 CLI 的 Plan/load 不可用；Core `/execution` 的原生 0.3.1 Plan/Capsule 与显式 Host 参考 API 是独立入口。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md)有自己的输入和可信 provider 边界。离线交付包与可复现脚本见 [交付生成说明](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)、[作者示例](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md)、[可执行配方](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs) 及[合成周报案例](./examples/native-team-update/README.md)。
@@ -122,13 +122,13 @@ npx -y @aikdna/kdna-cli@0.43.5 read locked.kdna \
 mkdir kdna-native-example
 cd kdna-native-example
 npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.43.5
+npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.44.0
 node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
 ```
 
 已发布 Core `0.37.0` / Read `0.11.1`、原生 CLI `.2` 和加载 CLI `0.36.1`
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
-已发布稳定线是 `0.43.5`，不能覆盖已经发布的 `.2` 或 `.3`。
+已发布稳定线是 `0.44.0`，不能覆盖已经发布的 `.2` 或 `.3`。
 
 ## 已发布旧线
 

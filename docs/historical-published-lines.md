@@ -1,6 +1,6 @@
 # Historical Published Lines
 
-> **Historical Compatibility Reference:** These examples and walkthroughs belong strictly to earlier published package lines (earlier native preview lines, `@aikdna/kdna-cli@0.36.1`, `@aikdna/kdna-core@0.22.0`, and `@aikdna/kdna-studio-cli@0.11.0`). They are preserved here for auditability and reproducible historical verification—never mix them with the current published line (`@aikdna/kdna-cli`, `@aikdna/kdna-core@0.37.10`, `@aikdna/kdna-read@0.13.4`). For current authoring and reading, start at [`../README.md`](../README.md) or [`./start-here.md`](./start-here.md).
+> **Historical Compatibility Reference:** These examples and walkthroughs belong strictly to earlier published package lines (earlier native preview lines, `@aikdna/kdna-cli@0.36.1`, `@aikdna/kdna-core@0.22.0`, and `@aikdna/kdna-studio-cli@0.11.0`). They are preserved here for auditability and reproducible historical verification—never mix them with the current published line (`@aikdna/kdna-cli`, `@aikdna/kdna-core@0.37.11`, `@aikdna/kdna-read@0.13.5`). For current authoring and reading, start at [`../README.md`](../README.md) or [`./start-here.md`](./start-here.md).
 
 ---
 
@@ -41,7 +41,7 @@ published workflow; it is not a current Core/Read quickstart.
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
 against it on 2026-09-13. The current Core/Read pair is the published stable
-Core `0.37.10` / Read `0.13.4`.
+Core `0.37.11` / Read `0.13.5`.
 It has a different asset contract. The current native CLI route also has
 different command forms, so this published walkthrough does not select that
 new graph. Keep its exact historical dependencies. See
