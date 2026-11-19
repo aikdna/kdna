@@ -116,6 +116,9 @@ This wave keeps every already-published preview tag unchanged, and **R2** remain
 
 ---
 
+<details>
+<summary><strong>Exact Published Matrix &amp; Legacy Compatibility (0.5.0 / Studio / Historical Lines)</strong></summary>
+
 ## Current source: choose the matching implementation
 
 The [current support and distribution matrix](./docs/current-release-support.md)
@@ -160,6 +163,8 @@ instructions; named Host delivery and independent acceptance remain unassessed.
 Technical checks and
 scripted examples do not establish human confirmation, editorial fitness or
 actual task adoption.
+
+</details>
 
 ---
 
