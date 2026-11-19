@@ -8,14 +8,16 @@
 
 ## 范围
 
-本策略覆盖 KDNA 工具体系（kdna-cli、kdna-core、kdna-studio、kdna-registry、kdna-vscode）。领域判断内容的安全由 KDNA 安全框架和风险政策管理。
+本策略覆盖 KDNA 开源工具与协议实现（`@aikdna/kdna-core`、`@aikdna/kdna-read`、`@aikdna/kdna-cli`、`@aikdna/kdna-mcp-server`、`kdna-skills` 及历史归档包）。`.kdna` 文件中的领域判断内容是否适用具体场景，由作者与使用者自行评估负责。
 
 ## 支持的版本
 
-| 工具 | 版本 | 支持 |
-|------|------|:--:|
-| @aikdna/kdna-cli | >=0.16.0 | 活跃 |
-| @aikdna/kdna-core | >=0.3.0 | 活跃 |
-| @aikdna/kdna-studio-core | >=1.0.0 | 活跃 |
+| 工具 | 版本 | 状态 |
+| --- | --- | :---: |
+| `@aikdna/kdna-core` | `0.37.11`（Container `0.6.0` & `0.5.0`） | 活跃 |
+| `@aikdna/kdna-read` | `0.13.5`（按需读取协议） | 活跃 |
+| `@aikdna/kdna-cli` | `0.44.x`（Container `0.6.0`） | 活跃 |
+| `@aikdna/kdna-mcp-server` | `0.8.x`（Container `0.6.0`） | 活跃 |
+| `@aikdna/kdna-studio-cli` / `@aikdna/kdna-studio-core` | `0.14.0` / `4.1.0`（旧版 `0.5.0` 归档线） | 历史归档 |
 
-详见英文原版：[SECURITY.md](https://github.com/aikdna/kdna/blob/main/docs/SECURITY.md)
+详见英文原版：[SECURITY.md](./SECURITY.md) 与根目录 [`SECURITY.md`](../SECURITY.md)。

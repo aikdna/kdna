@@ -45,10 +45,11 @@
 ### 方式一：通过 `kdna init` 快速起稿
 
 ```bash
-# 1. 生成可运行的示例草稿（支持 interview / extract / research 模式）
+# 1. 生成可运行的示例草稿（支持 minimal / interview / works / research 模式）
 npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
 
-# 2. 按你的真实判断修改 draft.json 后，先做结构检查
+# 2. 按你的真实判断修改 draft.json（核心字段：focus / statement / applies_when / boundaries / method / reasons / example）后检查结构
+#    （注意：kdna.draft/1 草稿不包含 exceptions / misuse / relationships；如需添加，请先运行 `kdna compile draft.json --output author-input.json` 转为方式二的完整结构源）
 npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
 
 # 3. 打包成 Container 0.6.0 的 .kdna 文件

@@ -45,10 +45,12 @@ You do not need to hand-write JSON from scratch. The easiest path is to let your
 ### Option A: Quickstart via `kdna init` (`kdna.draft/1`)
 
 ```bash
-# 1. Generate a starter draft (modes: interview | extract | research)
+# 1. Generate a starter draft (modes: minimal | interview | works | research)
 npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
 
-# 2. Edit draft.json with your judgments, reasons, boundaries, and relationships, then check it
+# 2. Edit draft.json with your judgments, reasons, boundaries, method, and example, then check it
+#    (Note: kdna.draft/1 accepts core judgment fields only; to add exceptions, misuse, or
+#    relationships, run `kdna compile draft.json --output author-input.json` first — see Option B.)
 npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
 
 # 3. Compile into a Container 0.6.0 .kdna file
