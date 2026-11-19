@@ -219,5 +219,111 @@ for (const root of publicDocRoots) {
   }
 }
 
+console.log('── Repo-wide Markdown local link & anchor integrity');
+
+const REPO_ROOT = path.resolve(__dirname, '..');
+const trackedMdFiles = execFileSync('git', ['ls-files', '*.md'], {
+  cwd: REPO_ROOT,
+  encoding: 'utf8',
+})
+  .split('\n')
+  .filter((rel) => rel && !rel.startsWith('specs/history/pre-r2/'));
+
+const slugCache = new Map();
+function headingSlugsFor(filePath) {
+  if (slugCache.has(filePath)) return slugCache.get(filePath);
+  const text = fs.readFileSync(filePath, 'utf8');
+  const slugs = new Set();
+  const counts = new Map();
+  let inFence = false;
+  for (const line of text.split(/\r?\n/u)) {
+    if (/^\s*```/u.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const match = /^#{1,6}\s+(.*?)\s*$/u.exec(line);
+    if (!match) continue;
+    const cleaned = match[1]
+      .replace(/\s+#+\s*$/u, '')
+      .replace(/!\[([^\]]*)\]\([^)]*\)/gu, '$1')
+      .replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1')
+      .replace(/<[^>]+>/gu, '')
+      .replace(/`/gu, '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+      .replace(/\s+/gu, '-');
+    const prev = counts.get(cleaned);
+    if (prev === undefined) {
+      counts.set(cleaned, 0);
+      slugs.add(cleaned);
+    } else {
+      const next = prev + 1;
+      counts.set(cleaned, next);
+      slugs.add(`${cleaned}-${next}`);
+    }
+  }
+  slugCache.set(filePath, slugs);
+  return slugs;
+}
+
+const mdLinkPattern = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/gu;
+const selfRepoUrlPattern =
+  /https?:\/\/(?:github\.com\/aikdna\/kdna\/(?:blob|tree)\/main|raw\.githubusercontent\.com\/aikdna\/kdna\/main)\/([^\s"')`<>#]+)/gu;
+let checkedLocalLinks = 0;
+let checkedRepoUrls = 0;
+
+for (const rel of trackedMdFiles) {
+  const fullPath = path.join(REPO_ROOT, rel);
+  const content = fs.readFileSync(fullPath, 'utf8');
+  let inFence = false;
+  const lines = content.split(/\r?\n/u);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^\s*```/u.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const withoutInlineCode = line.replace(/`[^`]+`/gu, '');
+    mdLinkPattern.lastIndex = 0;
+    for (const match of withoutInlineCode.matchAll(mdLinkPattern)) {
+      let target = match[1];
+      if (/^(?:https?:|mailto:|tel:|data:|javascript:)/iu.test(target)) continue;
+      if (target.startsWith('<') && target.endsWith('>')) target = target.slice(1, -1);
+      const hashIndex = target.indexOf('#');
+      const pathPart = hashIndex >= 0 ? target.slice(0, hashIndex) : target;
+      const anchor = hashIndex >= 0 ? target.slice(hashIndex + 1) : null;
+      const resolved = !pathPart
+        ? fullPath
+        : pathPart.startsWith('/')
+          ? path.resolve(REPO_ROOT, pathPart.slice(1))
+          : path.resolve(path.dirname(fullPath), pathPart);
+      checkedLocalLinks++;
+      if (!fs.existsSync(resolved)) {
+        check(`${rel}:${i + 1} → ${target}`, false, 'broken local link target');
+      } else if (anchor && fs.statSync(resolved).isFile() && resolved.endsWith('.md')) {
+        const slugs = headingSlugsFor(resolved);
+        if (!slugs.has(anchor.toLowerCase())) {
+          check(`${rel}:${i + 1} → ${target}`, false, `missing anchor #${anchor}`);
+        }
+      }
+    }
+    selfRepoUrlPattern.lastIndex = 0;
+    for (const match of withoutInlineCode.matchAll(selfRepoUrlPattern)) {
+      const targetRel = match[1].replace(/[.,;:]+$/u, '');
+      checkedRepoUrls++;
+      if (!fs.existsSync(path.join(REPO_ROOT, targetRel))) {
+        check(`${rel}:${i + 1} → aikdna/kdna:${targetRel}`, false, 'broken self-repo main URL');
+      }
+    }
+  }
+}
+check(
+  `repo-wide markdown links verified (${trackedMdFiles.length} files, ${checkedLocalLinks} local links, ${checkedRepoUrls} self-repo URLs)`,
+  true,
+);
+
 console.log(`\n${failures === 0 ? 'All docs checks passed.' : `${failures} check(s) failed.`}`);
 process.exit(failures === 0 ? 0 : 1);

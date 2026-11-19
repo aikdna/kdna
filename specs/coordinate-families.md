@@ -114,9 +114,9 @@ and digest prefixes: `SPEC-INDEX.md` (5324 B, `06e92111ff2e…`),
 `specs/public-source-map.json` (11770 B, `ca31b1d316b7…`),
 `specs/public-version-policy.md` (8252 B, `930a8a6d6b4c…`) and
 `specs/read-contract.md` (53070 B, `be15bddcebc3…`). The complete hashes remain in
-that line's machine record. The 2026-09-13 input table is separately preserved in
-[Core/Read status](../docs/core-read-current-status.md); none is normalized to
-current bytes.
+that line's machine record. The 2026-09-13 input table is preserved in
+Git history; current release support and history live in
+[Current Release Support](../docs/current-release-support.md).
 
 ## Python's preserved consumer binding
 
@@ -155,6 +155,6 @@ acceptance; the same rule applies separately to all other toolchain consumers.
 This page records current source identities and preserves history. It does not
 modify protocol definitions, publish packages, authenticate execution claims,
 accept an installed consumer, declare the protocol finally accepted or certify
-asset/Reader content. The dated registry table in
-[version and capability matrix](../docs/version-and-capability-matrix.md) remains
-a separate 2026-09-13 observation.
+asset/Reader content. Current published coordinates are recorded in
+[release-coordinates.json](../docs/release-coordinates.json) (the historical
+2026-09-13 observation table remains in Git history).

@@ -2,10 +2,11 @@
 
 Status: **Compatibility pointer**
 
-The current load-profile contract is
-[`docs/core/load-profiles.md`](../docs/core/load-profiles.md). That document
-defines the closed `index`, `compact`, `scenario`, and `full` profiles and the
-exact projection behavior of the reference Core implementation.
+The historical `0.1.0` runtime projection profiles (`index`, `compact`,
+`scenario`, and `full`) are documented in
+[`kdna-runtime-projection.md`](./kdna-runtime-projection.md). Active Container
+`0.6.0` selective reading uses [`read-contract.md`](./read-contract.md)
+(`catalog` → `exact_selection` → `expand`).
 
 This filename is retained for older links. It does not define a separate
 Cluster allocator, automatic semantic routing system, risk-based profile

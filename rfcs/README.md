@@ -16,7 +16,7 @@ Current initial RFC set:
 - [RFC-0008: Encrypted and Licensed KDNA Assets](./RFC-0008-encrypted-licensed-kdna-assets.md)
 - [RFC-0009: Password-Protected KDNA Assets](./RFC-0009-password-protected-kdna-assets.md)
 - [RFC-0010: KDNA Fidelity Protocol](../specs/fidelity-protocol.md)
-- [RFC-0011: KDNA Product Runtime](../docs/product-runtime.md)
+- RFC-0011: KDNA Product Runtime *(withdrawn historical draft, preserved in Git history)*
 - [RFC-0012: KDNA Artifact Contract](../specs/RFC-0012-artifact-contract.md)
 - [RFC-0014: KDNA Asset Authorization, Entitlement, and LoadPlan](./RFC-0014-asset-authorization-and-loadplan.md)
 - [RFC-0018: KDNA Canonical Envelope Profile — `kdna.envelope.aead`](./RFC-0018-envelope-aead.md) — draft pre-release candidate for the first public envelope wire contract. Three known-answer test vectors live at `conformance/envelope-aead/`. The unversioned `scrypt-sha256` KDF is mandatory, `argon2id` is optional, and `profile_version: 0.1.0` carries the wire coordinate. The profile non-collapse invariant forbids silent cross-KDF or cross-AEAD migration.

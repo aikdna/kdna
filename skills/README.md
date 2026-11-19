@@ -14,7 +14,7 @@ For current explicit-file consumption, use the canonical
 [Loader Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md).
 Obtain the exact Loader/MCP combination and complete installation inputs stated
 there; copying a Skill alone does not install a runtime or grant permission.
-The [source/version guide](../docs/core-read-current-status.md) separates local
+The [source/version guide](../docs/current-release-support.md) separates local
 unpublished candidates, remote source and published history.
 
 The canonical adapter accepts one explicitly selected file. It does not scan a

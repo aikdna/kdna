@@ -63,7 +63,7 @@ application/vnd.kdna.asset
 | `signature.kdsig` | Optional Ed25519 signature bundle; if present, verification failure MUST reject the asset |
 | `attachments/` | Optional supplementary files governed by manifest and loader policy |
 
-Authoring drafts, build logs, credentials, and temporary plaintext MUST NOT appear in a distributed `.kdna` archive. Runtimes MUST reject path traversal and unrecognized top-level authoring files.
+Authoring drafts, build logs, credentials, and temporary plaintext MUST NOT appear in a distributed `.kdna` archive. Container admission explicitly rejects path traversal as well as `build-receipt.json`, `reports/*`, and `authoring/*`.
 
 ---
 
@@ -74,10 +74,10 @@ The payload encodes one bounded judgment system with explicit authorship, scope,
 - **Asset-level declarations**: `highest_question`, `scope`, `kernel` (`purpose`, `foundation_refs`), `shared_declarations` (`worldview`, `value_order`), asset-level `boundaries` (`limit`, `exclude`, `out_of_domain`), `attributions`, `sources`, and `history`.
 - **Judgments**: Each judgment unit carries a stable `id`, `focus` (the concrete question it addresses), `scope`, `core_expression`, structured `method` (`components` with language-neutral ASCII `method_roles`), `reasons` (`support` / `calibration`), `materials` (premises, cases, source citations), `boundaries`, `exceptions`, `misuse` warnings, and `result`.
 - **Typed relationships**: Explicit links between judgments using four core relationship kinds:
-  - `support` (upstream premise supporting a claim)
-  - `qualify` (upstream qualifier limiting interpretation)
-  - `conflict` (explicit tension between two competing judgments)
-  - `complement` (related peer perspective kept in the catalog without bloating context)
+  - `support` (`supporter` → `claim`: supporting judgment required whenever `claim` is selected)
+  - `qualify` (`qualifier` → `qualified`: qualifying judgment required whenever `qualified` is selected)
+  - `conflict` (`side_a` ↔ `side_b`: undirected explicit tension required in both directions)
+  - `complement` (`supplement` → `base`: related peer perspective kept optional in the catalog without expanding mandatory closure)
 
 Loaders MUST preserve every selected field verbatim without silently trimming, reordering, or rewriting the author's claims, boundaries, or exceptions.
 
@@ -85,13 +85,14 @@ Loaders MUST preserve every selected field verbatim without silently trimming, r
 
 ## 4. Integrity Digests & Verification
 
-The specification distinguishes three separate SHA-256 digests:
+The specification distinguishes four separate SHA-256 digests (`@aikdna/kdna-core`):
 
-| Symbol | Scope |
-| --- | --- |
-| **A** | SHA-256 of the immutable `.kdna` archive bytes |
-| **C** | SHA-256 of the decoded canonical judgment payload / IR bytes |
-| **E** | Canonical runtime entry-set digest recorded in `checksums.json` |
+| Symbol | Profile | Scope |
+| --- | --- | --- |
+| **A** | `kdna.digest-basis.container-bytes/0.2.0` | SHA-256 of the raw immutable `.kdna` ZIP archive bytes |
+| **C** | `kdna.digest-basis.content-tree/0.2.0` | SHA-256 of the canonicalized container content tree (`KDNA-CONTENT-TREE\00.2.0\0` over UTF-8 sorted admitted container entries excluding `checksums.json` and `signature.kdsig`; `.json` entries serialized via RFC 8785 JCS with `kdna.json`'s `content_digest` and `authoring.content_digest` omitted; binary entries hashed verbatim) |
+| **E** | `kdna.digest-basis.runtime-entry-set/0.3.0-candidate` (`0.6.0` sections) / `0.2.0` (`0.5.0` payload) | SHA-256 over the sorted runtime entry set (`kdna.json`, all `sections/*` packs [or `payload.kdnab` in `0.5.0`], and `manifest.runtime.mandatory_entries`, excluding `checksums.json`, `signature.kdsig`, and `mimetype`); recorded in `checksums.json` |
+| **`ir_digest`** | `CanonicalIR:SHA-256(RFC8785)` | SHA-256 of the RFC 8785 JCS canonical serialization of the derived `CanonicalIR` (`kdna.canonical-ir/0.6.1`) |
 
 Validation verifies container layout, manifest schema, payload/section structure, checksums (when present), optional signatures (when present), and compatibility coordinates. Passing format validation confirms byte integrity and schema conformance; evaluating whether a judgment fits a real-world situation always belongs to human reviewers and callers.
 
@@ -99,15 +100,17 @@ Validation verifies container layout, manifest schema, payload/section structure
 
 ## 5. Selective Read Protocol (`catalog` → `exact_selection` → `expand`)
 
-Compatible runtimes disclose judgment content progressively under explicit Host consent (`--allow-read`) and declared byte budgets:
+Compatible runtimes disclose judgment content progressively under explicit Host consent (`--allow-read`) and declared byte budgets (`budget_bytes`):
 
-1. **`catalog`**: Returns asset metadata and the list of judgment IDs and `focus` questions without dumping full judgment bodies.
-2. **`exact_selection`**: Given one or more `judgment_ids`, returns the requested judgment bodies together with their deterministic **mandatory closure**:
-   - asset-level shared declarations, foundations, and global boundaries;
-   - every upstream `support` and `qualify` judgment;
+1. **`catalog`** (`status: "catalog_only"`): Returns `catalog` (judgment IDs, `focus` questions, `node_ref`, optional `lifecycle`) and `asset_index` without returning judgment bodies (`digests: null`).
+2. **`exact_selection`**: Given `selection: { asset_id, asset_version, judgment_ids }`, returns the requested judgment bodies together with their deterministic **mandatory closure**:
+   - applicable asset-level `shared_declarations`, `foundation`/`premise` materials, and global `boundaries`;
+   - judgment-local `boundaries`, `exceptions` (including `replace_limit` replacements), `misuse` warnings, `lifecycle.superseded_by` replacements, and required `dependencies`;
+   - supporting (`support`) and qualifying (`qualify`) judgments whenever the target (`claim` / `qualified`) judgment is selected;
    - both sides of any `conflict` relationship involving a selected judgment;
-   - peer `complement` judgments surfaced as catalog pointers (`outside_selection`) without bloating context.
-3. **`expand`**: Resolves optional deferred handles within the same retained session.
+   - minted `expansion_handles` for deferred optional targets (such as `complement` peers or examples).
+3. **`expand`**: Resolves a minted `expansion_handle` bound to the same `snapshot_id`, `host_id`, and `host_epoch` within its expiry window (`<= 3,600,000 ms`).
+4. **`whole_asset`**: Admits and verifies the full container (`A`, `C`, `E`, `ir_digest`) and returns the asset overview, global declarations, and deferred `expansion_handles` (without dumping judgment bodies inline).
 
 Reading a `.kdna` file delivers structured judgment text only. It never grants permission to write files, access networks, or trigger external actions.
 
@@ -115,10 +118,10 @@ Reading a `.kdna` file delivers structured judgment text only. It never grants p
 
 ## 6. Local Password Encryption (`RFC-0018`) & External Grants (`RFC-0019`)
 
-Private `.kdna` works can be encrypted locally with a passphrase (`kdna protect`) without any online account or server:
+Private `.kdna` works can be encrypted locally with a passphrase (`kdna protect`) without any online account or server (`kdna.envelope.aead`, `profile_version: "0.1.0"`):
 
-- **KDF**: `scrypt-sha256` or `argon2id`
-- **Key Wrapping**: `AES-256-KW`
+- **KDF**: `scrypt-sha256` (mandatory baseline) or `argon2id` (optional profile)
+- **Key Wrapping**: `AES-256-KW` (RFC 3394)
 - **Payload AEAD**: `AES-256-GCM` bound to manifest Additional Authenticated Data (AAD)
 - **Memory discipline**: Decrypted plaintext and content-encryption keys stay in volatile memory and MUST NOT be written to logs, caches, or temporary files.
 

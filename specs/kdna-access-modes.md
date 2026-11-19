@@ -122,4 +122,3 @@ See also:
 - [`kdna-crypto-profiles.md`](./kdna-crypto-profiles.md)
 - [`kdna-secret-store.md`](./kdna-secret-store.md)
 - [`kdna-runtime-projection.md`](./kdna-runtime-projection.md)
-- [`../docs/REMOTE_MODE.md`](../docs/REMOTE_MODE.md)
