@@ -97,6 +97,9 @@ npx -y @aikdna/kdna-cli@0.44.0 read locked.kdna \
 
 ---
 
+<details>
+<summary><strong>精确已发布组合与历史兼容线（0.5.0 / Studio / 归档说明）</strong></summary>
+
 ## 当前源码：选择匹配的实现
 
 详见[当前支持与分发矩阵](./docs/current-release-support.md)和
@@ -130,9 +133,11 @@ node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@ai
 保留各自的精确依赖图和产物。不要向旧安装注入新的 SDK 对；当前原生创作/Source
 已发布稳定线是 `0.44.0`，不能覆盖已经发布的 `.2` 或 `.3`。
 
-## 已发布旧线
+### 已发布旧线
 
 旧版发布线（早期原生预览线、`0.36.1`、`0.22.0`、`0.11.0`）的独立归档示例已移至 [`docs/historical-published-lines.md`](./docs/historical-published-lines.md)。
+
+</details>
 
 ---
 
