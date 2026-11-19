@@ -13,7 +13,7 @@ entities, lazy-loads section validators for fast cold-start admission, and
 pairs with exact Read `0.13.5`. Native section
 subpaths separately use Container `0.6.0` and Read `0.7.0-candidate`. See the
 [specification index](../../SPEC-INDEX.md) and
-[matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
+[matching-delivery guide](../../docs/current-release-support.md).
 
 This file states the identity of the version it ships with. Which coordinate a
 registry serves, and how to obtain it, is rendered from
@@ -94,7 +94,7 @@ The producer API operates on bytes only, with no filesystem extraction, attachme
 See the monorepo's single `specs/public-semantic-source.json` and
 [`specs/public-generation-manifest.json`](../../specs/public-generation-manifest.json)
 for the exact accepted design inputs, generated closure and aggregate digest, and
-[`docs/core-read-current-status.md`](../../docs/core-read-current-status.md) for
+[`docs/current-release-support.md`](../../docs/current-release-support.md) for
 the dated implementation status. Independent acceptance records are internal
 evidence and are not part of this package or this repository. Native 0.3.1 Capsule/Plan admission and configured Host orchestration are implemented by `/execution`; external identity/verification services, durable Host policy, actual output transport delivery and cross-language parity require their own evidence.
 

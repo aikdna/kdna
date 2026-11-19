@@ -27,7 +27,7 @@ identities.
 The source identity comes from [`package.json`](package.json).
 The exact native and Studio companion graphs and separately published
 historical coordinates are listed in the [top-level entry](../../README.md). See also the
-[matching-delivery guide](../../docs/core-read-current-status.md#choose-and-obtain-one-matching-delivery).
+[matching-delivery guide](../../docs/current-release-support.md).
 A source README edit does not replace a fixed archive or renew its acceptance.
 Use the manifest and member inventory delivered with the exact installed graph.
 
@@ -62,7 +62,7 @@ The declarations and schema mirror come from the single public semantic source.
 The packages do not ship the conformance test issuer. See
 [`conformance/README.md`](../../conformance/README.md) for the public suite
 routes and
-[`docs/core-read-current-status.md`](../../docs/core-read-current-status.md)
+[`docs/current-release-support.md`](../../docs/current-release-support.md)
 for the dated implementation status and the remaining external proof limits.
 Independent acceptance records are internal evidence and are not part of this
 package or this repository.

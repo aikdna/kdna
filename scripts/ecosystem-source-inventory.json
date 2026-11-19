@@ -46,11 +46,6 @@
           "version": "0.37.11"
         },
         {
-          "path": "packages/kdna-eval/package.json",
-          "name": "@aikdna/kdna-eval",
-          "version": "0.3.2"
-        },
-        {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
           "version": "0.13.5"
@@ -107,7 +102,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "80409e93212016bee382a2c4153d644fc3da034305890b5d67d7fc33566cf431",
+          "sha256": "958560315438db1e71225f8bd27409a74d8f8d9ac982986319a3cda2870b0ff9",
           "local_archives": []
         }
       ],
@@ -214,7 +209,7 @@
           "name": "@aikdna/kdna-core",
           "version": "0.37.11",
           "member_count": 465,
-          "members_sha256": "68bc61d89dd0d5507d17744e3d16d739a005a8c77a22dbc2d065a4b835e33bd0",
+          "members_sha256": "2bdb472ac31a3333e7900465f9646d427863161d2e1c11497512f9e5d71d804e",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -685,59 +680,11 @@
           "install_scope": "source-package-member-inspection"
         },
         {
-          "directory": "packages/kdna-eval",
-          "name": "@aikdna/kdna-eval",
-          "version": "0.3.2",
-          "member_count": 38,
-          "members_sha256": "94e3a2cefad9e5aef5f41794685ceedf7e55d5024efc9ce4e9449fd7abdbcf62",
-          "paths": [
-            "CHANGELOG.md",
-            "README.md",
-            "package.json",
-            "src/assay.d.ts",
-            "src/assay.js",
-            "src/assay.mjs",
-            "src/cluster-assay.d.ts",
-            "src/cluster-assay.js",
-            "src/cluster-assay.mjs",
-            "src/consume.d.ts",
-            "src/consume.js",
-            "src/consume.mjs",
-            "src/consumer-index.d.ts",
-            "src/consumer-index.js",
-            "src/consumer-index.mjs",
-            "src/cost.d.ts",
-            "src/cost.js",
-            "src/cost.mjs",
-            "src/evaluate.js",
-            "src/evidence-canonical.js",
-            "src/gates.d.ts",
-            "src/gates.js",
-            "src/gates.mjs",
-            "src/index.js",
-            "src/index.mjs",
-            "src/loader.d.ts",
-            "src/loader.js",
-            "src/loader.mjs",
-            "src/replay.d.ts",
-            "src/replay.js",
-            "src/replay.mjs",
-            "src/route-card.d.ts",
-            "src/route-card.js",
-            "src/route-card.mjs",
-            "src/route.d.ts",
-            "src/route.js",
-            "src/route.mjs",
-            "src/types.d.ts"
-          ],
-          "install_scope": "source-package-member-inspection"
-        },
-        {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
           "version": "0.13.5",
           "member_count": 99,
-          "members_sha256": "fe3a37b2869e65af8978bc0fcabc752e8e6c52b4401bcf7c5c07a986b939fa7d",
+          "members_sha256": "47d0e0d9ceddd725d2e96ad5636dfbe9de950bd1255b3ddb26119c6542ebb5eb",
           "paths": [
             "LICENSE",
             "NOTICE",

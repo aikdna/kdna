@@ -356,7 +356,7 @@ test('stable publisher only sends approved retained bytes with exact stable iden
 test('both stable jobs route prepare, smoke, collision guard, retained publication and public verification through shared authority', () => {
   const text = fs.readFileSync(path.join(__dirname, '../.github/workflows/publish.yml'), 'utf8');
   for (const [unit, next] of [
-    ['core', 'eval'],
+    ['core', 'conformance'],
     ['read', 'compat'],
   ]) {
     const job = text.slice(

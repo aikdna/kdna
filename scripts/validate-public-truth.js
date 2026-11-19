@@ -92,8 +92,7 @@ function checkRetiredNpmBoundaries() {
   const evidenceGenerator = readText(
     path.join(repoRoot, 'scripts', 'generate-release-evidence.js'),
   );
-  const maintenance = readText(path.join(repoRoot, 'docs', 'open-source-maintenance-baseline.md'));
-  const statusMatrix = readText(path.join(repoRoot, 'docs', 'tool-status-matrix.md'));
+  const releaseSupport = readText(path.join(repoRoot, 'docs', 'current-release-support.md'));
   const deprecatedRecords = packageRecords(manifest).filter(
     ({ packageRecord }) => packageRecord.release_status === 'deprecated',
   );
@@ -132,7 +131,7 @@ function checkRetiredNpmBoundaries() {
     ]) {
       if (text.includes(coordinate)) fail(coordinate, `${label} still exposes publication`);
     }
-    if (!maintenance.includes(coordinate) || !statusMatrix.includes(coordinate)) {
+    if (!releaseSupport.includes(coordinate)) {
       fail(coordinate, 'retired lifecycle is missing from current public status documentation');
     }
     if (!packageRecord.legacy_replacement || packageRecord.dependency_policy !== 'frozen') {
@@ -162,11 +161,11 @@ function checkCompatibilityBoundary() {
   }
 
   const workflow = readText(path.join(repoRoot, '.github', 'workflows', 'publish.yml'));
-  const maintenance = readText(path.join(repoRoot, 'docs', 'open-source-maintenance-baseline.md'));
+  const releaseSupport = readText(path.join(repoRoot, 'docs', 'current-release-support.md'));
   const packageReadme = readText(path.join(repoRoot, 'packages', 'kdna', 'README.md'));
   for (const [label, text] of [
     ['publish workflow', workflow],
-    ['maintenance baseline', maintenance],
+    ['release support doc', releaseSupport],
     ['package README', packageReadme],
   ]) {
     if (!text.includes('@aikdna/kdna')) {

@@ -275,41 +275,9 @@ test('release evidence generator retains and binds the real npm pack artifact', 
   assert.equal(packDryRun[0]?.filename, artifact.filename);
 });
 
-test('eval workflow gates the exact tag, commit, and evidence before publish', () => {
-  for (const name of ['publish-eval']) {
-    const job = workflowJob(name);
-    assert.match(job, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
-    assert.match(job, /fetch-depth: 0/u);
-    assert.match(job, /fetch-tags: true/u);
-    for (const binding of [
-      'RELEASE_EVENT_ACTION',
-      'RELEASE_TAG_NAME',
-      'RELEASE_IS_DRAFT',
-      'RELEASE_IS_PRERELEASE',
-    ]) {
-      assert.match(job, new RegExp(`^      ${binding}:`, 'mu'));
-    }
-
-    const releaseCheck = job.indexOf('release:check');
-    const evidenceGeneration = job.indexOf('release:evidence --');
-    const evidenceCheck = job.indexOf('release:evidence:check');
-    const artifactSelection = job.indexOf('name: Select the verified Eval artifact');
-    const publication = job.indexOf('name: Publish');
-    assert.ok(releaseCheck > -1, `${name} must run release:check`);
-    assert.ok(evidenceGeneration > releaseCheck, `${name} evidence must follow source checks`);
-    assert.ok(evidenceCheck > evidenceGeneration, `${name} must verify generated evidence`);
-    assert.ok(
-      artifactSelection > evidenceCheck,
-      `${name} must select the artifact only after verification`,
-    );
-    assert.ok(publication > artifactSelection, `${name} publish must follow every release gate`);
-    assert.match(job, /EVAL_RELEASE_ARTIFACT/u);
-    assert.match(job, /npm publish "\.\/\$EVAL_RELEASE_ARTIFACT" --provenance --access public/u);
-    assert.doesNotMatch(job, /npm publish "\$EVAL_RELEASE_ARTIFACT" --provenance --access public/u);
-    assert.doesNotMatch(job, /working-directory: packages\/kdna-eval/u);
-  }
+test('publish workflow excludes removed eval and agent jobs', () => {
   assert.doesNotMatch(
     PUBLISH_WORKFLOW,
-    /publish-agent|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
+    /publish-eval|publish-agent|working-directory: packages\/kdna-eval|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
   );
 });

@@ -22,6 +22,8 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Conformance vector package |
 | `@aikdna/kdna` | `0.14.0` | `latest` | Legacy compatibility alias (`0.36.1` line) |
 
+Retired private packages kept in source history only (not published to npm): `@aikdna/agent`, `@aikdna/kdna-artifact-engine`, and `@aikdna/kdna-fidelity-core`. Use `@aikdna/kdna-core@0.37.11` and `@aikdna/kdna-read@0.13.5` for all current integrations.
+
 ## Published channel history
 
 Earlier published versions and preview tags remain immutable on npm with their original integrity digests and dependency graphs:

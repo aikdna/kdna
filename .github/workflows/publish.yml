@@ -103,55 +103,6 @@ jobs:
           rm -f "$CORE_RELEASE_EVIDENCE" "$CORE_RELEASE_ARTIFACT"
           "$KDNA_TRUSTED_NPM_TARBALL"
 
-  publish-eval:
-    if: github.event_name == 'release' && github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == false && startsWith(github.event.release.tag_name, 'eval/')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    env:
-      RELEASE_EVENT_ACTION: ${{ github.event.action }}
-      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
-      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
-      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-          ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
-        with:
-          node-version: 22
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - name: Verify exact eval tag and source commit
-        run: npm --workspace @aikdna/kdna-eval run release:check
-      - run: npm --workspace @aikdna/kdna-eval test
-      - run: npm --workspace @aikdna/kdna-eval run typecheck
-      - name: Build and retain the exact Eval package artifact
-        run: npm run release:evidence -- --package=eval
-      - name: Verify eval release evidence
-        run: npm --workspace @aikdna/kdna-eval run release:evidence:check
-      - name: Select the verified Eval artifact
-        run: |
-          ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
-          echo "EVAL_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
-        with:
-          name: kdna-eval-release-evidence
-          path: release-evidence/
-      - name: Publish @aikdna/kdna-eval
-        run: |
-          VERSION=$(node -p "require('./packages/kdna-eval/package.json').version")
-          if npm view "@aikdna/kdna-eval@$VERSION" version >/dev/null 2>&1; then
-            echo "@aikdna/kdna-eval@$VERSION is already published; skipping."
-            exit 0
-          fi
-          npm publish "./$EVAL_RELEASE_ARTIFACT" --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   publish-conformance:
     if: >-
       github.repository == 'aikdna/kdna' &&
