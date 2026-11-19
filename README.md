@@ -1,21 +1,19 @@
 # KDNA
 
-English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Discussions](https://github.com/aikdna/kdna/discussions) · [Documentation](./docs/start-here.md) · [Maturity: Pre-release](./docs/maturity.md)
+English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Discussions](https://github.com/aikdna/kdna/discussions) · [Documentation](./docs/start-here.md) · [Status](./docs/status.md)
 
-**Open file format and core reference implementation for expressible judgment and judgment systems.**
+**An open file format for human thinking, judgment, and taste.**
 
-Prose has documents (`.md`, `.pdf`). Numbers and models have spreadsheets. Talks have slide decks. Linked pages have HTML, and deterministic logic has code. Yet the way a person or team **thinks, weighs trade-offs, sets boundaries, and exercises taste** has lacked an independent file of its own—dissolving instead into chat logs, scattered prompts, and one-off outputs.
+Prose has documents (`.md`, `.pdf`). Numbers have spreadsheets. Talks have slide decks. Linked pages have HTML, and deterministic logic has code. Yet the way a person or team **thinks, weighs trade-offs, exercises taste, and knows where to stop** has never had an independent file format of its own—dissolving instead into chat logs, scattered notes, and one-off outputs.
 
-As AI makes finished outputs inexpensive to generate, upstream thinking, judgment, and taste become a **“work” in their own right**. KDNA (`.kdna`) gives that work an open, inspectable, versioned file format that people can read in [KDNA Reader](https://aikdna.com/en/downloads) and compatible agents can create, password-protect locally, validate, and read with intact boundaries.
+As AI makes finished text, interfaces, and code easy to generate, the upstream thinking, judgment, and taste behind them become a **“work” in their own right**. KDNA (`.kdna`) gives that work its own open, portable, versioned file—whether it holds six focused judgments on a single craft or forty-five connected judgments across a full domain. People can open and review it directly in [KDNA Reader](https://aikdna.com/en/downloads), and any compatible AI Agent can read the relevant judgments together with their premises and stop boundaries.
 
-> **When simpler tools are enough:** If a plain Markdown note, a few prompt lines, or an existing Skill already solves your task, keep using it. Reach for `.kdna` when a body of judgment needs clear authorship, explicit stop conditions, human review, versioned revision, and portable consumption across tools.
+### What a `.kdna` Work Carries
 
-| Dimension | `CLAUDE.md` / System Prompt / Plain Markdown | `.kdna` Judgment Work |
-| --- | --- | --- |
-| **Structure** | Flat prose; conclusions, stories, and caveats blur together | Explicit questions, claims, reasoning methods, applicable conditions, stop boundaries, and anti-misuse rules |
-| **Task Reading** | Dumps the whole note into context or truncates arbitrarily | `catalog` first → `exact_selection` of only the judgments a task needs, keeping mandatory supporting/qualifying closure intact |
-| **Evolution** | Silent in-place edits overwrite prior reasoning | Named versions (`1.0.0` → `1.1.0`) inspectable in plain text via `kdna diff --format human` before adoption |
-| **Confidentiality** | Plaintext files on disk | Optional local offline password encryption (`kdna protect`, `scrypt-sha256` / `argon2id` + `AES-256-KW` + `AES-256-GCM` per `RFC-0018`)—**permanently account-free** |
+- **Structured judgment, not flat prose** — Each judgment names the concrete question it answers, the core claim, the reasoning and method behind it, real trade-offs, where it applies, where it stops, and common misuses.
+- **Selective reading with intact context** — Agents browse the `catalog` first, then load only the relevant judgments via `exact_selection`, with supporting premises, qualifying limits, and conflicting tensions delivered intact.
+- **Human-readable and Agent-portable** — One local file opens cleanly in KDNA Reader for human review and runs across Claude Code, Cursor, Codex, OpenCode, Antigravity, or any compatible tool without vendor lock-in.
+- **Explicit versions and offline privacy** — Revisions advance cleanly (`1.0.0` → `1.1.0`) and compare in plain text via `kdna diff --format human`. Private works can be password-encrypted offline (`kdna protect`, `RFC-0018`)—**permanently account-free**.
 
 ---
 
@@ -25,25 +23,25 @@ Our first official public judgment work—**KDNA Whitepaper `v1.0.2`** (*《KDNA
 
 - **Chinese `.kdna` (`zh-CN`):** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna) (`2,725,359` bytes · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`, creator `张零`)
 - **English `.kdna` (`en`):** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (`2,843,386` bytes · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`, creator `Zhang Ling`)
-- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free without usage limits: sign in with a free `KDNA ID` to unlock both bundled Whitepaper editions and the offline Judgment Asset Library/multi-tab workspace, or use Guest Mode anytime to open and unlock individual local `.kdna` files without signing in)
-- **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive retained, SHA-256 digests, provenance/evolution notes, and container/Read verification suite; see [`examples/native-team-update`](./examples/native-team-update/README.md) for a `1.0.0` → `1.1.0` `kdna diff` sample)
+- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free without usage limits; read local `.kdna` files offline anytime, or sign in with a free `KDNA ID` for the bundled bilingual Whitepaper and synced Judgment Asset Library)
+- **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive, SHA-256 digests, and verification checks)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
-> `Download kdna-whitepaper-1.0.2.en.kdna from https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna, run npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.en.kdna --mode catalog --format human --allow-read to inspect the 45-question catalog, and then read the relevant judgments for my question via --mode exact_selection --judgment-id <id1,id2> --format human --allow-read (always pass --format human or --compact to keep context lean; do not use whole_asset).`
+> `Download kdna-whitepaper-1.0.2.en.kdna from https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna, run npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.en.kdna --mode catalog --format human --allow-read to browse the 45-question catalog, and then read the relevant judgments for my question via --mode exact_selection --judgment-id <id1,id2> --format human --allow-read (always pass --format human or --compact; do not use whole_asset).`
 
 ---
 
-## 30-Second Developer & Agent Quickstart
+## 30-Second Quickstart
 
-Requires **Node.js `>=22`**. Every workflow below—creation, local password encryption (container `0.6.0`), validation, scoped reading, and version comparison—is **permanently account-free** and runs offline once installed:
+Requires **Node.js `>=22`**. Creation, local password encryption (container `0.6.0`), validation, selective reading, and diffing are **permanently account-free** and work offline once installed:
 
 ```sh
-# 1. Create: generate a runnable starter draft and pack a 0.6.0 .kdna work
+# 1. Create a starter draft and pack a 0.6.0 .kdna work
 npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
 npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
 npx -y @aikdna/kdna-cli@0.44.0 create --draft draft.json --output my-judgments.kdna --allow-create
 
-# 2. Validate & Read: inspect container integrity, browse the catalog, then read selected judgments with full context
+# 2. Validate and read selectively (catalog first, then exact_selection with intact premises)
 npx -y @aikdna/kdna-cli@0.44.0 validate my-judgments.kdna
 npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna --mode catalog --allow-read --format human
 npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna \
@@ -60,31 +58,38 @@ npx -y @aikdna/kdna-cli@0.44.0 read locked.kdna \
   --allow-read --password-file password.txt --format human
 ```
 
-- **Agent Entry Point (Claude Code, Codex, Cursor, OpenCode, Antigravity):** Start at [`docs/agent-entry.md`](./docs/agent-entry.md) and [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills).
-- **Guides & Architecture:** [Why KDNA](./docs/why-kdna.md) · [Start Here](./docs/start-here.md) · [Core Narrative & Boundaries](./docs/core-narrative-and-boundaries.md) · [Public Roadmap](./docs/public-roadmap.md)
+- **Start here:** [Start Here](./docs/start-here.md) · [Why KDNA](./docs/why-kdna.md) · [Authoring Guide](./docs/authoring-guide.md) · [Agent Entry](./docs/agent-entry.md)
+- **Protocol & roadmap:** [Core Specification](./SPEC.md) · [Judgment Systems](./docs/judgment-systems.md) · [Core Narrative & Boundaries](./docs/core-narrative-and-boundaries.md) · [Public Roadmap](./docs/public-roadmap.md)
 
 ---
 
-## Repository Architecture
+## Design Principles
 
-This monorepo maintains the open KDNA specifications (**R2** contract line, native execution 0.3.1), conformance vectors, and reference npm packages under `packages/`:
+1. **Clear scope of validation.** `kdna validate` verifies file integrity and format structure; whether a judgment fits your real-world situation is always decided by people with evidence and context.
+2. **Reading is not action permission.** Reading a `.kdna` file delivers structured judgment text; system permissions (editing files, calling APIs, executing actions) always remain with the user and Host.
+3. **Visible evolution.** Updating a work creates an explicit new version (`1.0.0` → `1.1.0`) whose changes can be reviewed directly via `kdna diff --format human`.
 
-| Package / Directory | Responsibility |
+---
+
+## Repository Structure & Ecosystem
+
+This repository maintains the open KDNA specifications (Container `0.6.0`, R2 semantic line), conformance test vectors, and reference packages under `packages/`:
+
+| Package / Directory | Role |
 | --- | --- |
-| [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` & `0.5.0` admission, canonicalization, integrity digests, creation packing, and local password encryption |
-| [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | Scoped Read protocol (`catalog`, `exact_selection` with mandatory `supports`/`qualifies` context, retained expansion handles, and protected-container admission) |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Deterministic conformance suites and cross-implementation rules |
-| [`conformance/`](./conformance) & [`fixtures/`](./fixtures) | Versioned positive/negative `.kdna` fixtures and contract test vectors |
-| [`specs/`](./specs) & [`rfcs/`](./rfcs) | Normative specifications ([`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)) and design RFCs |
-| [`examples/native-team-update`](./examples/native-team-update/README.md) | Minimal synthetic `1.0.0` / `1.1.0` teaching pair (`CC BY 4.0`) illustrating structure and explicit version diffing |
+| [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` & `0.5.0` admission, canonical IR, integrity digests, packing, and local password encryption |
+| [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | Selective Read protocol (`catalog`, `exact_selection` with mandatory context closure, expansion handles, and protected unlock) |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Deterministic conformance test suites and cross-implementation checks |
+| [`conformance/`](./conformance) & [`fixtures/`](./fixtures) | Versioned positive and negative `.kdna` test vectors |
+| [`specs/`](./specs) & [`rfcs/`](./rfcs) | Normative schemas ([`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)) and design RFCs |
+| [`examples/native-team-update`](./examples/native-team-update/README.md) | Minimal synthetic `1.0.0` / `1.1.0` fixture pair for testing CLI reading and `kdna diff` |
 
----
+Companion public repositories and apps:
 
-## Three Architectural Boundaries
-
-1. **Container validity is not content truth.** Passing `kdna validate` confirms that exact bytes satisfy the container and Read specifications. Whether a judgment is accurate, ethical, or appropriate for your task requires human review and real evidence (see [Maturity & Evidence](./docs/maturity.md)).
-2. **Reading content never grants system authority.** Admitting or reading a `.kdna` file delivers structured judgment text; it never authorizes file writes, network requests, payments, external actions, or silent carryover across unrelated tasks.
-3. **Revisions never overwrite silently.** Updating a judgment work produces an explicit version (`1.0.0` → `1.1.0`, inspectable via `kdna diff --format human`) so readers and tools can review differences before adopting changes. See [`docs/migration-checklist.md`](./docs/migration-checklist.md) for explicit `0.5.0` → `0.6.0` conversion.
+- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — Official CLI (`@aikdna/kdna-cli`) for creating, password-protecting, validating, selectively reading, diffing, and revising Container `0.6.0` works
+- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter
+- [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`)
+- [KDNA Reader](https://aikdna.com/en/downloads) — Free, Apple-notarized macOS desktop app for reading, reviewing, and exploring `.kdna` works
 
 ---
 
@@ -112,75 +117,7 @@ earlier `latest` values stay in the
 This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.
 <!-- release-coordinates:end -->
 
-> **Generation guardrail (`0.6.0` vs. legacy `0.5.0`):** For current container `0.6.0` authoring (`kdna.draft/1` & full `0.6.0`), validation, local password encryption, diffing, and reading, use **`@aikdna/kdna-cli@0.44.0`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` target the separate **legacy container `0.5.0` session line** and are not used for container `0.6.0` works.
-
----
-
-<details>
-<summary><strong>Exact Published Matrix &amp; Legacy Compatibility (0.5.0 / Studio / Historical Lines)</strong></summary>
-
-## Current source: choose the matching implementation
-
-The [current support and distribution matrix](./docs/current-release-support.md)
-and [Core/Read status](./docs/core-read-current-status.md) distinguish source,
-package bytes, container contracts and actual public availability. The
-published stable
-Core `0.37.11` / Read `0.13.5` pair and companion coordinates in the matrix
-above are verified against the official registry.
-
-| Entry | Exact published package combination | Supported route |
-| --- | --- | --- |
-| Core/Read | Core `0.37.11` / Read `0.13.5` | Ordinary and Host-unlocked protected browser SDK; declared Node reference exports; Node >=20 |
-| [Native CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.44.0` with its own exact Core `0.37.11` / Read `0.13.5` pins | Container `0.6.0`, Read `0.7.0-candidate`: create, save, inspect, validate, retained read and Source revision; Node >=22 |
-| [Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.0` with its own native CLI `0.44.0` and Core `0.37.11` / Read `0.13.5` pins | Optional published npm & complete-source operator-bound local stdio Read; named Host delivery/adoption unassessed |
-| [Studio session](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | StudioCLI `0.14.0` / StudioCore `4.1.0` on their own pinned Core `0.37.2` / Read `0.11.3` line | `[Legacy pre-0.6.0 / P5-deferred]` Complete-source session creation, revision, save/read/verify and explicit protected export; container `0.5.0`, Read `0.6.4` |
-
-The maintained source and the Core/Read row above are the same published
-combination Core `0.37.11` / Read `0.13.5`. The [current support
-matrix](./docs/current-release-support.md) keeps the superseded snapshot
-statements for the record.
-
-The two container routes (`0.6.0` via `@aikdna/kdna-cli` and `0.5.0` via Studio) have separate reader and source APIs. Native CLI Plan/load remains unavailable; Core `/execution` supplies optional native execution 0.3.1 static Plan/Capsule and Host reference APIs, and full protocol specifications are indexed in [SPEC-INDEX.md](./SPEC-INDEX.md#kdna-public-specification-index). For offline multi-package host setup and reproducible scripts, see the [CLI delivery guide](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md), [author example](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md), [executable recipe](https://github.com/aikdna/kdna-cli/blob/main/examples/native-workflow.cjs), and [synthetic weekly-update case](./examples/native-team-update/README.md).
-
-The exact published coordinate installs from an empty cache with:
-
-```sh
-mkdir kdna-native-example
-cd kdna-native-example
-npm init -y
-npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund --registry=https://registry.npmjs.org @aikdna/kdna-cli@0.44.0
-node node_modules/@aikdna/kdna-cli/examples/native-workflow.cjs node_modules/@aikdna/kdna-cli/examples/team-update/author.json ./team-update-output
-```
-
-Published Core `0.37.0` / Read `0.11.1` retain their own contracts and artifacts.
-Historical native CLI `0.39.0-rc.native-sections.2` binds Core
-`0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`; loading CLI `0.36.1` binds Core
-`0.21.0` and `cbor-x` `1.6.4`. Do not inject a new SDK pair into either older
-installation. CLI `.2` and `.3` remain published previews; the published stable
-line is `0.44.0`, which must not overwrite either preview. The separate Studio ordinary/protected guide
-supplies its own preparation, trusted Host/credential boundary and readback
-instructions; named Host delivery and independent acceptance remain unassessed.
-Technical checks and
-scripted examples do not establish human confirmation, editorial fitness or
-actual task adoption.
-
-</details>
-
----
-
-## Ecosystem
-
-| Repo / Package | Published Status | Purpose |
-| --- | --- | --- |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Published CLI `0.44.0` on `latest`; native previews and the earlier `0.36.1` loading line retained | Native authoring, local password protection, explicit Read, diffing, and Source revision; its own exact Core `0.37.11` / Read `0.13.5` pins |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Loader/Creator source plus published MCP `0.8.0` on `latest`; historical npm MCP `0.5.0` | Matched published native `0.44.0` / Core `0.37.11` / Read `0.13.5` graph; optional operator-bound local stdio, named Host delivery/adoption unassessed |
-| [kdna-assets](https://github.com/aikdna/kdna-assets) | Official public `.kdna` reference works (`KDNA Whitepaper` `1.0.2` in Chinese & English, `CC BY 4.0`, `1.0.1` archive retained) | Openly licensed `.kdna` judgment works and container/Read verification suite |
-| [kdna-studio-cli](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) | Published StudioCLI `0.14.0` on `latest`; historical npm `0.11.0` and `0.13.0` retained | `[Legacy pre-0.6.0 / P5-deferred]` container `0.5.0` / Read `0.6.4` terminal session line (not for current `0.6.0` authoring — use `@aikdna/kdna-cli@0.44.0`) |
-| [kdna-studio-core](https://www.npmjs.com/package/@aikdna/kdna-studio-core) | Published StudioCore `4.1.0` on `latest`; historical npm `3.0.0` and `4.0.0` retained | `[Legacy pre-0.6.0 / P5-deferred]` container `0.5.0` Studio session SDK and explicit protected export; its own Host/credential boundary |
-| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `v0.21.0`; current source has its own binding | `[Legacy pre-0.6.0 / P5-deferred]` Swift-native Core/Read implementation for Apple platforms (alongside `kdna-app-shared` and `kdna-studio-swift`) |
-| [KDNA Reader](https://aikdna.com/en/downloads) | Apple-notarized macOS desktop app | Permanently free without usage limits: sign in with a free `KDNA ID` for bundled *KDNA Whitepaper* (`zh-CN` & `en`) and offline Judgment Asset Library, plus account-free single-file Guest Mode |
-
-Machine consumers should consult [`ecosystem-manifest.json`](./ecosystem-manifest.json) and [`docs/release-coordinates.json`](./docs/release-coordinates.json). Newcomers can also browse [`docs/start-here.md`](./docs/start-here.md) by goal. Preserved walkthroughs for historical published lines (earlier native previews, `0.36.1`, `0.22.0`, `0.11.0`) live in [`docs/historical-published-lines.md`](./docs/historical-published-lines.md).
+> **Note:** For all current Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.44.0`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
 
 ---
 
@@ -193,7 +130,7 @@ node scripts/render-release-coordinates.mjs --check
 node scripts/check-packaged-readme.mjs
 ```
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for governance and proposal guidelines, and [`SECURITY.md`](./SECURITY.md) for vulnerability reporting.
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) to contribute, and [`SECURITY.md`](./SECURITY.md) for security reporting.
 
 ## License
 

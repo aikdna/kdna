@@ -1,52 +1,34 @@
 # Why KDNA
 
-Prose has documents (`.md`, `.pdf`). Numbers and models have spreadsheets. Talks have slide decks. Linked information has HTML, and deterministic logic has code. Every major form of human work eventually earned a file format shaped around what it actually carries.
+Prose has documents (`.md`, `.pdf`). Numbers and models have spreadsheets. Talks have slide decks. Linked pages have HTML, and deterministic logic has code. Every enduring form of human work eventually earned a file format shaped around what it actually carries.
 
-Human **thinking, judgment, trade-offs, boundaries, and taste** have lacked that independent form. People already work with agents every day to write, plan, design, code, and decide—yet their most hard-won judgments remain scattered across chat transcripts, prompts, Markdown notes, and tool-specific habits. A fresh session loses the reasoning. Editing one note leaves another copy stale. A teammate inherits the conclusion without the conditions that keep it safe to apply.
+Human **thinking, judgment, trade-offs, boundaries, and taste** have lacked that independent form. People already work with AI every day to write, design, plan, code, and decide—yet the real judgment behind good outcomes stays scattered across chat transcripts, one-off instructions, and half-remembered habits. Open a new session and the reasoning disappears. Switch tools and you start explaining your taste from scratch. Share a conclusion with a teammate and the conditions that made it safe get left behind.
 
-As AI makes finished text, code, and drafts inexpensive to generate, what stays scarce—and what truly separates outcomes—is the upstream thinking, judgment, and taste behind them. KDNA (`.kdna`) gives that judgment an independent file format so it can be kept, read, questioned, delivered, adopted, and revised as a **“work”** in its own right.
+As AI makes finished prose, layouts, and code effortless to produce, what remains rare—and truly defines the quality of the outcome—is the upstream thinking, judgment, and taste behind them. KDNA (`.kdna`) gives that judgment its own open file format so it can be kept, read by humans, shared, carried across AI tools, and evolved over time as a **“work”** in its own right.
 
-## An answer can sound fluent while erasing the judgment
+## Smooth answers can quietly erase real judgment
 
-General-purpose models are trained to produce broadly acceptable prose. That strength has a hidden cost: asked to “make this clearer,” an agent can return a polished, conventional draft while quietly smoothing away a specific stance, trade-off, or boundary.
+Modern AI models are trained to sound polished and broadly agreeable. That strength comes with a quiet side effect: asked to “improve” a draft or “help decide,” a model often keeps the surface polish while flattening the author's actual stance, trade-off priority, or stopping line.
 
-Consider a concrete structural failure mode documented in *KDNA Whitepaper* `v1.0.2` (`judgment:origins`). Suppose an author's diagnostic method defines an evaluation matrix whose strict rule is to observe the **counterpart's** real-time constraints and risk exposure before proposing any action. In a later AI-assisted revision, an agent keeps the exact four-cell matrix and terminology—but silently applies it to evaluate the **proposer's own** internal readiness instead. The framework looks intact on the surface, yet the core object of judgment has silently flipped.
+Consider a concrete example recorded in *KDNA Whitepaper* `v1.0.2` (`judgment:origins`). A diagnostic method defines a four-cell matrix whose strict purpose is to examine the **other party's** real constraints and risk exposure before taking action. During an AI-assisted rewrite, the model preserved the exact matrix and vocabulary—yet quietly flipped the subject to evaluate the **proposer's own** internal readiness instead. The text looked cleaner than ever, while the core object of judgment had vanished.
 
-This is not presented as a statistical benchmark. It illustrates a structural problem: **a method can survive in appearance while its core object disappears.** A real judgment system has to make that object—and the cost of altering it—explicit.
+A real judgment work prevents that drift by keeping four things explicit and inseparable:
 
-## Four questions keep a judgment system whole
-
-| Question | What it makes explicit |
+| Question | What a `.kdna` work preserves |
 | --- | --- |
-| What core variable are you watching? | The subject, signal, and focus that must never be silently swapped |
-| What prevails when good goals conflict—and what is given up? | The explicit value ordering and deliberate trade-off |
-| Where must automation stop and return the call to a human? | Applicable limits, unknowns, and failure signals that halt inference or action |
-| How do counterexamples revise the system? | How new evidence, mistakes, and edge cases produce a named revision without erasing lineage |
+| **What are you actually watching?** | The core question, focal object, and signals that must not be silently swapped |
+| **When good goals collide, what wins?** | Explicit trade-off priorities and what you deliberately give up |
+| **Where must it stop?** | Applicable conditions, exceptions, misuse warnings, and the line where a human takes over |
+| **How does it grow?** | Named revisions (`1.0.0` → `1.1.0`) when real counterexamples sharpen your thinking |
 
-These four parts belong together. A focal variable without boundaries overreaches. A value order closed to counterexamples hardens into dogma. Revision logs without a clear object record activity, not judgment.
+These four elements work together. A rule without boundaries gets over-applied. A taste without reasons can't be taught or questioned. A conclusion without version history silently drifts over time.
 
-## Try the current CLI workflow in 30 seconds
+## A format for judgment—from six focused choices to a full system
 
-Every `.kdna` creation, local password encryption (`0.6.0`), validation, scoped reading, and diffing workflow runs locally on Node.js `>=22` and is **permanently account-free**:
+A `.kdna` work does not try to clone a person's entire mind. One person can keep separate, focused `.kdna` files for essay editing, UI taste, code review, or business negotiation. Whether a work captures six sharp judgments on a single craft or forty-five connected judgments across a broad topic, storing it as a `.kdna` file makes it:
 
-```sh
-npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.44.0 create --draft draft.json --output my-judgments.kdna --allow-create
-npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna --mode exact_selection --judgment-id decision:first-dilemma --allow-read --compact
-```
+- **Readable by humans first** in [KDNA Reader](https://aikdna.com/en/downloads), so you, your team, or your students can inspect the claims, reasoning, and boundaries directly.
+- **Selectively readable by AI Agents** (`catalog` → `exact_selection`), bringing along supporting premises and limits whenever a judgment is used.
+- **Yours to keep and protect locally**, with built-in offline password encryption (`kdna protect`) and zero account lock-in.
 
-To read a complete 45-judgment public work, open **KDNA Whitepaper `v1.0.2`** (*《KDNA白皮书》*, `CC BY 4.0`) in [KDNA Reader for macOS](https://aikdna.com/en/downloads) (where both English and Chinese editions are built in), download [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (or from [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)), or read it selectively via `@aikdna/kdna-cli`.
-
-## An independent file gives judgment a durable lifecycle
-
-KDNA gives an expressible judgment—or system of judgments—clear identity, versions, relationships, required context, and a predictable reading contract. People can read and evaluate a work directly in [KDNA Reader](https://aikdna.com/en/downloads) or via `kdna read` before relying on it. When a work enters a task, compatible tools start from its catalog, select only the judgments relevant to the job, and keep mandatory supporting or qualifying context attached. Authors can keep private working notes separate from shared works, or encrypt sensitive files locally with a password (`kdna protect`)—permanently without any online account.
-
-The goal is never to bottle up an entire human life or clone a personality. One person may maintain separate, focused `.kdna` works for editorial taste, architecture reviews, or teaching. What matters is whether a judgment is expressed clearly enough to be read, challenged, chosen, and improved.
-
-Technical validation is only one piece of trust: it confirms that exact bytes satisfy the container and reading contract, never that a judgment is true, wise, or right for your situation. That always requires reading the substance, weighing evidence, and exercising human judgment.
-
-If a simple Markdown note, a short prompt, or an existing Git workflow already serves your need, keep it. Consider `.kdna` when clear authorship, intact boundaries, human review, versioned evolution, and cross-tool portability genuinely benefit from a shared file format.
-
-→ [Start Here](./start-here.md) · [KDNA and the AI Stack](./kdna-and-ai-stack.md) · [When to Use KDNA](./when-to-use-kdna.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)
+→ [Start Here](./start-here.md) · [Judgment Systems](./judgment-systems.md) · [Authoring Guide](./authoring-guide.md) · [Why the Name KDNA](./why-the-name.md)

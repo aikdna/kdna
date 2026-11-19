@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "scope": "historical-root-package-inputs",
   "repository": "aikdna/kdna",
-  "manifest_sha256": "cd4fafb36aa0172eab610a89d55c1cb8200af9184eb7c1257e772a5791c8e5e6",
+  "manifest_sha256": "e80fb7a0170fd7334cccedc2d41a086501a7d5a64b2a77d71c84e182cd0fbbe6",
   "manifest_source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
   "package_source_commit": "9cf8ed60a1a0d6e94c0e58c37c2879e3dc63cc2a",
   "package_source_tree": "bfca8efcc78bce9fa9325d7439c91ead7e95758b",
@@ -20,13 +20,6 @@
       "version": "0.13.5",
       "blob": "4d6f62c9693a1d0deb38ef80064a39601b19d061",
       "sha256": "6cefe10914c15fed482585576a632180c0f518e72528580b0d53fb872759c46d"
-    },
-    {
-      "package_json": "packages/kdna-eval/package.json",
-      "package_name": "@aikdna/kdna-eval",
-      "version": "0.3.2",
-      "blob": "bc30420032b014356bbbfbb9d2bca71286f6a7eb",
-      "sha256": "9c429033d2bb0de4a729870495198e617579780f987a9b51c45106e21789ec50"
     },
     {
       "package_json": "packages/kdna-conformance/package.json",

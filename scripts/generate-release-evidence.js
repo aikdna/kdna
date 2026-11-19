@@ -21,10 +21,6 @@ const knownPackages = {
     label: 'compat',
     path: path.join(repoRoot, 'packages', 'kdna'),
   },
-  eval: {
-    label: 'eval',
-    path: path.join(repoRoot, 'packages', 'kdna-eval'),
-  },
   read: {
     label: 'read',
     path: path.join(repoRoot, 'packages', 'kdna-read'),

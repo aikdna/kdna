@@ -50,20 +50,6 @@
           "legacy_replacement": null
         },
         {
-          "package_json": "packages/kdna-eval/package.json",
-          "package_name": "@aikdna/kdna-eval",
-          "npm_package": "@aikdna/kdna-eval",
-          "version": "0.3.2",
-          "lifecycle": "Experimental",
-          "release_status": "active",
-          "dependency_policy": "current",
-          "known_limitations": [
-            "evaluation output is issuer-scoped evidence and does not become KDNA Core authority"
-          ],
-          "recommended_entrypoint": "npm install @aikdna/kdna-eval",
-          "legacy_replacement": null
-        },
-        {
           "package_json": "packages/kdna-conformance/package.json",
           "package_name": "@aikdna/kdna-conformance",
           "npm_package": "@aikdna/kdna-conformance",

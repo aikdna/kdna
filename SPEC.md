@@ -1,22 +1,27 @@
 # KDNA Core Specification
 
-## Current Architecture Overview — Container `0.6.0` & R2 Semantic Line
+KDNA (`.kdna`) is an open, portable file format for expressible human thinking, judgment, trade-offs, boundaries, and taste. This document summarizes the active **Container `0.6.0`** and **R2** semantic line.
 
-Current KDNA production judgment works (such as *KDNA Whitepaper* `v1.0.2` / `v1.0.1`) use the **Container `0.6.0`** section-framed distribution format and the **R2** semantic contract family, defined machine-readably in [`specs/public-semantic-source.json`](specs/public-semantic-source.json) and indexed in [`SPEC-INDEX.md`](SPEC-INDEX.md#kdna-public-specification-index):
+Normative machine-readable definitions live in [`specs/public-semantic-source.json`](specs/public-semantic-source.json), JSON Schemas live in [`specs/`](specs/) and [`schema/`](schema/), and the full specification map is indexed in [`SPEC-INDEX.md`](SPEC-INDEX.md#kdna-public-specification-index). Reference implementations live in [`@aikdna/kdna-core`](packages/kdna-core/) and [`@aikdna/kdna-read`](packages/kdna-read/).
+
+---
+
+## 1. Architecture Overview (Container `0.6.0` & R2)
 
 | Layer | Current Coordinate | Role |
-|---|---|---|
-| **Distribution Container** | `format_version: "0.6.0"` (public section packs) / `ProtectedManifest06Candidate` (encrypted `payload.kdnab`) | Immutable `.kdna` ZIP archive (`mimetype` stored first at offset `0`, `kdna.json`, stored `sections/pack-N.kdnab` CBOR frames or encrypted `payload.kdnab`, `checksums.json`, optional `signature.kdsig` & `attachments/`) |
-| **Judgment Payload** | `kdna.payload.judgment` `0.5.1` (`kdna.r2-semantics/1`) | Scoped judgments (`focus`, `core_expression`, `method` with language-neutral ASCII `method_roles` + legacy role compatibility, `boundaries`, `exceptions`, `misuse`, `reasons`, `materials`, `shared_declarations`, `sources`, `relationships`) |
+| --- | --- | --- |
+| **Distribution Container** | `format_version: "0.6.0"` (public section packs) / `ProtectedManifest06Candidate` (encrypted `payload.kdnab`) | Immutable `.kdna` ZIP archive (`mimetype` stored uncompressed at offset `0`, `kdna.json`, stored `sections/pack-N.kdnab` CBOR frames or encrypted `payload.kdnab`, `checksums.json`, optional `signature.kdsig` & `attachments/`) |
+| **Judgment Payload** | `kdna.payload.judgment` `0.5.1` (`kdna.r2-semantics/1`) | Scoped judgments (`focus`, `core_expression`, `method` with language-neutral ASCII `method_roles`, `boundaries`, `exceptions`, `misuse`, `reasons`, `materials`, `shared_declarations`, `sources`, `relationships`) |
 | **Canonical IR** | `kdna.canonical-ir/0.6.1` | Deterministic typed node graph (`asset_index`, `catalog`, `mandatory_closures`, `expansion_targets`, RFC 8785 JCS SHA-256 `ir_digest`) |
-| **Scoped Read Protocol** | `kdna.read/0.7.0-candidate` (native sections) / `kdna.read/0.6.4` (base) | Progressive disclosure (`catalog` → `exact_selection` with mandatory `support`/`qualify`/`conflict` closure → `expand` handles) under explicit Host consent and byte budgets |
-| **Local Password Encryption** | `kdna.encryption.password` / `kdna.envelope.aead` ([`RFC-0018`](rfcs/RFC-0018-envelope-aead.md)) | Permanently account-free offline protection: `scrypt-sha256` or `argon2id` KDF → `AES-256-KW` CEK wrapping → `AES-256-GCM` AEAD payload encryption bound to manifest AAD |
+| **Selective Read Protocol** | `kdna.read/0.7.0-candidate` (native sections) / `kdna.read/0.6.4` (base) | Progressive disclosure (`catalog` → `exact_selection` with mandatory `support`/`qualify`/`conflict` closure → `expand` handles) under explicit Host permission and byte budgets |
+| **Local Password Encryption** | `kdna.encryption.password` / `kdna.envelope.aead` ([`RFC-0018`](rfcs/RFC-0018-envelope-aead.md)) | Account-free offline protection: `scrypt-sha256` or `argon2id` KDF → `AES-256-KW` CEK wrapping → `AES-256-GCM` AEAD payload encryption bound to manifest AAD |
+| **Optional Offline Signature** | `kdsig.ed25519` ([`RFC-0021`](rfcs/RFC-0021-signature-track.md)) | Optional Ed25519 signature bundle (`signature.kdsig`), verified offline and fail-closed when present |
 
 ```mermaid
 flowchart LR
   subgraph Container["Immutable .kdna Container (0.6.0)"]
     M["mimetype (stored)"]
-    J["kdna.json (Manifest + Catalog)"]
+    J["kdna.json (Manifest + Section Table)"]
     S["sections/pack-N.kdnab (CBOR Frames)"]
     E["payload.kdnab (RFC-0018 AEAD Envelope)"]
     C["checksums.json / signature.kdsig"]
@@ -27,7 +32,7 @@ flowchart LR
     IR["Canonical IR 0.6.1 + R2 Closure"]
   end
   subgraph Read["@aikdna/kdna-read + Host Gate"]
-    CAT["catalog (45-question index)"]
+    CAT["catalog (question index)"]
     SEL["exact_selection (Selected + Mandatory Closure)"]
     EXP["expand (Deferred Handle Resolution)"]
   end
@@ -38,241 +43,92 @@ flowchart LR
 
 ---
 
-## Historical `0.1.0` Baseline Contract (Preserved)
+## 2. Distribution Container (`0.6.0`)
 
-Status: Active original 0.1 contract. The unpublished grammar.3 implementation and native execution 0.2 contract are separately indexed in [SPEC-INDEX](SPEC-INDEX.md#current-unpublished-grammar3-candidate); the 0.1 normative line below is preserved.
-
-Container coordinate: `format_version: "0.1.0"`
-
-Payload coordinate: `compatibility.profile_version: "0.1.0"`
-
-KDNA is a portable judgment-asset protocol for AI runtimes. This specification
-defines the distribution container and the responsibility boundaries needed to
-verify, authorize, project, deliver, and trace one asset. It does not define how
-an author extracts judgment from source material, and it does not certify that
-an asset's judgment is correct.
-
-Normative schemas live in [`schema/`](schema/). The reference implementation is
-[`@aikdna/kdna-core`](packages/kdna-core/).
-
-## 1. Distribution container
-
-A runtime asset is one immutable `.kdna` ZIP file. Its first entry is
-`mimetype`, stored without compression, with the exact bytes:
+A `.kdna` work is one immutable ZIP archive whose first entry MUST be `mimetype`, stored without compression (method `0`) at offset `0`, containing the exact UTF-8 bytes:
 
 ```text
 application/vnd.kdna.asset
 ```
 
-Required protocol entries are:
+### Standard Entries
 
-| Entry | Responsibility |
-|---|---|
-| `mimetype` | Unambiguous container detection |
-| `kdna.json` | Public identity, compatibility, access, and payload metadata |
-| `payload.kdnab` | CBOR-encoded judgment payload or encrypted envelope |
+| Entry | Role |
+| --- | --- |
+| `mimetype` | Unambiguous format identification (`application/vnd.kdna.asset`) |
+| `kdna.json` | Manifest: asset identity, versions, creator/license metadata, compatibility tuple, section layout/tables (public `0.6.0`) or protection envelope metadata (encrypted `0.6.0`) |
+| `sections/pack-N.kdnab` | CBOR-framed section packs storing structured judgments, materials, declarations, relationships, and precomputed indices (unencrypted `0.6.0`) |
+| `payload.kdnab` | Encrypted AEAD envelope (`RFC-0018`) for password-protected or licensed works |
+| `checksums.json` | Per-entry SHA-256 integrity manifest and canonical runtime entry-set digest (**E**) |
+| `signature.kdsig` | Optional Ed25519 signature bundle; if present, verification failure MUST reject the asset |
+| `attachments/` | Optional supplementary files governed by manifest and loader policy |
 
-Optional protocol entries are:
+Authoring drafts, build logs, credentials, and temporary plaintext MUST NOT appear in a distributed `.kdna` archive. Runtimes MUST reject path traversal and unrecognized top-level authoring files.
 
-| Entry | Responsibility |
-|---|---|
-| `checksums.json` | Runtime entry-set integrity evidence; emitted by official Creation Writers |
-| `attachments/` | Supplementary bytes governed by the manifest and loader policy |
-| `signature.kdsig` | Asset signature bundle (`kdsig.ed25519`, RFC-0021 M1); verified offline and fail-closed when present |
+---
 
-The absence of `checksums.json` is not a format error. When the entry is
-present, its schema and declared digests MUST verify. An exporter that presents
-itself as an official KDNA Creation Writer MUST emit the canonical four-entry
-baseline: the three required protocol entries plus `checksums.json`.
+## 3. Judgment Payload (`kdna.payload.judgment/0.5.1`)
 
-The absence of `signature.kdsig` is not a format error. When the entry is
-present, its bundle MUST verify against the canonical content digest under
-RFC-0021 M1; verification failure MUST reject the asset.
+The payload encodes one bounded judgment system with explicit authorship, scope, and relationships:
 
-Authoring source files, reports, build receipts, credentials, and decrypted
-plaintext are not distribution entries. Runtimes MUST reject forbidden
-top-level authoring entries and path traversal.
+- **Asset-level declarations**: `highest_question`, `scope`, `kernel` (`purpose`, `foundation_refs`), `shared_declarations` (`worldview`, `value_order`), asset-level `boundaries` (`limit`, `exclude`, `out_of_domain`), `attributions`, `sources`, and `history`.
+- **Judgments**: Each judgment unit carries a stable `id`, `focus` (the concrete question it addresses), `scope`, `core_expression`, structured `method` (`components` with language-neutral ASCII `method_roles`), `reasons` (`support` / `calibration`), `materials` (premises, cases, source citations), `boundaries`, `exceptions`, `misuse` warnings, and `result`.
+- **Typed relationships**: Explicit links between judgments using four core relationship kinds:
+  - `support` (upstream premise supporting a claim)
+  - `qualify` (upstream qualifier limiting interpretation)
+  - `conflict` (explicit tension between two competing judgments)
+  - `complement` (related peer perspective kept in the catalog without bloating context)
 
-## 2. Manifest
+Loaders MUST preserve every selected field verbatim without silently trimming, reordering, or rewriting the author's claims, boundaries, or exceptions.
 
-`kdna.json` MUST validate against
-[`schema/manifest.schema.json`](schema/manifest.schema.json). The required
-fields are:
+---
 
-```json
-{
-  "format_version": "0.1.0",
-  "asset_id": "kdna:example:decision",
-  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
-  "asset_type": "domain",
-  "title": "Example decision judgment",
-  "version": "1.0.0",
-  "judgment_version": "1.0.0",
-  "created_at": "2026-07-15T00:00:00Z",
-  "updated_at": "2026-07-15T00:00:00Z",
-  "compatibility": {
-    "min_loader_version": "0.20.0",
-    "profile": "kdna.payload.judgment",
-    "profile_version": "0.1.0"
-  },
-  "payload": {
-    "path": "payload.kdnab",
-    "encoding": "cbor",
-    "encrypted": false
-  },
-  "access": "public"
-}
-```
+## 4. Integrity Digests & Verification
 
-`creator` is optional provenance. Its absence does not block format validity or
-loading. When present, `creator.name` MUST be non-empty. Provenance is not a
-trust or quality claim.
+The specification distinguishes three separate SHA-256 digests:
 
-`access`, when present, is exactly one of:
+| Symbol | Scope |
+| --- | --- |
+| **A** | SHA-256 of the immutable `.kdna` archive bytes |
+| **C** | SHA-256 of the decoded canonical judgment payload / IR bytes |
+| **E** | Canonical runtime entry-set digest recorded in `checksums.json` |
 
-- `public`: no entitlement is required;
-- `licensed`: authorization is required before plaintext projection;
-- `remote`: local plaintext projection is not permitted.
+Validation verifies container layout, manifest schema, payload/section structure, checksums (when present), optional signatures (when present), and compatibility coordinates. Passing format validation confirms byte integrity and schema conformance; evaluating whether a judgment fits a real-world situation always belongs to human reviewers and callers.
 
-Unknown access values and removed aliases fail closed.
+---
 
-## 3. Judgment payload
+## 5. Selective Read Protocol (`catalog` → `exact_selection` → `expand`)
 
-An unencrypted `payload.kdnab` is strict CBOR and MUST validate against
-[`schema/payload-profile.schema.json`](schema/payload-profile.schema.json).
-The payload declares:
+Compatible runtimes disclose judgment content progressively under explicit Host consent (`--allow-read`) and declared byte budgets:
 
-```json
-{
-  "profile": "kdna.payload.judgment",
-  "profile_version": "0.1.0",
-  "core": {
-    "axioms": [
-      {
-        "statement": "Prefer the reversible option while required evidence is incomplete.",
-        "applies_when": ["choosing between reversible and irreversible actions"]
-      }
-    ]
-  }
-}
-```
+1. **`catalog`**: Returns asset metadata and the list of judgment IDs and `focus` questions without dumping full judgment bodies.
+2. **`exact_selection`**: Given one or more `judgment_ids`, returns the requested judgment bodies together with their deterministic **mandatory closure**:
+   - asset-level shared declarations, foundations, and global boundaries;
+   - every upstream `support` and `qualify` judgment;
+   - both sides of any `conflict` relationship involving a selected judgment;
+   - peer `complement` judgments surfaced as catalog pointers (`outside_selection`) without bloating context.
+3. **`expand`**: Resolves optional deferred handles within the same retained session.
 
-`highest_question` is an optional authoring concept, but when present it is
-non-empty. Every payload contains at least one non-empty judgment statement
-and identifies its problem domain, role, boundary, or applicability. This is a
-content-neutral minimum: it does not require a human author or claim that the
-judgment is correct.
+Reading a `.kdna` file delivers structured judgment text only. It never grants permission to write files, access networks, or trigger external actions.
 
-`worldview`, `value_order`, `judgment_role`, axioms, boundaries, patterns,
-scenarios, cases, self-checks, and failure modes are judgment content. A loader
-MUST preserve every validated field selected by the requested projection. It
-MUST NOT silently trim, reorder, reinterpret, or invent that content.
+---
 
-How a source book, thinker, expert, or dataset becomes this payload is an
-authoring concern outside the runtime protocol.
+## 6. Local Password Encryption (`RFC-0018`) & External Grants (`RFC-0019`)
 
-## 4. Format validity and creation acceptance
+Private `.kdna` works can be encrypted locally with a passphrase (`kdna protect`) without any online account or server:
 
-Core reports whether an asset is **Format Valid**: its container, manifest,
-payload, integrity evidence when present, compatibility, authorization, and
-projection satisfy the public technical contracts. Format validity is
-content-neutral. It does not prove who formed or confirmed the judgment,
-whether the judgment represents a person or organization, whether its sources
-are sufficient, or whether it passed semantic tests.
+- **KDF**: `scrypt-sha256` or `argon2id`
+- **Key Wrapping**: `AES-256-KW`
+- **Payload AEAD**: `AES-256-GCM` bound to manifest Additional Authenticated Data (AAD)
+- **Memory discipline**: Decrypted plaintext and content-encryption keys stay in volatile memory and MUST NOT be written to logs, caches, or temporary files.
 
-A Creation Engine may separately report **Creation Accepted** under its own
-declared creation mode, scope, source, confirmation, and semantic-test
-contracts. Creation acceptance does not change Core validity, and Core validity
-does not imply creation acceptance. Compilers and loaders MUST NOT synthesize a
-human confirmation or infer creation acceptance from successful validation.
+Unknown crypto profiles, algorithms, AAD fields, or failed authentication tags MUST fail closed. See [`RFC-0018`](rfcs/RFC-0018-envelope-aead.md) and [`RFC-0019`](rfcs/RFC-0019-account-device-external-key-grant.md).
 
-Official Creation Writer output is intentionally stricter than the minimum
-Core payload. It explicitly declares the highest question, scoped worldview,
-ordered value priorities, judgment role, and global boundaries, and it emits
-`checksums.json`. These authoring requirements do not make the same fields
-universal Core requirements for assets produced by other compatible writers.
-See [Creation Output Boundary](specs/creation-output-boundary.md).
+---
 
-## 5. Digest responsibility
+## 7. Conformance Suites
 
-The protocol distinguishes three digests:
-
-| Symbol | Meaning |
-|---|---|
-| **A** | SHA-256 of the immutable packaged `.kdna` bytes |
-| **C** | SHA-256 of decoded judgment payload bytes |
-| **E** | Canonical runtime entry-set digest recorded by `checksums.json`, when present |
-
-A, C, and E are not interchangeable. A signed entitlement that binds an asset
-MUST bind A. When `checksums.json` is present, it carries E and per-entry
-evidence; it does not retroactively become A. A Core-valid three-entry asset
-has no declared E evidence.
-
-## 6. Validation and authorization
-
-Validation independently reports container format, manifest schema, payload,
-checksums, and load-contract results. The checksums gate succeeds without
-evidence when the optional entry is absent, and verifies the evidence when it
-is present. `overall_valid` is true only when every applicable gate succeeds.
-
-`planLoad` performs no plaintext projection. It returns a content-neutral plan
-that says whether loading is ready, blocked, needs authorization input, or
-requires a remote runtime. A caller-supplied status string is never sufficient
-authorization. Password or external account/device authorization MUST verify
-the corresponding cryptographic contract before a licensed asset becomes
-ready.
-
-Decrypted plaintext and content-encryption keys remain in volatile memory and
-MUST NOT be written to logs, traces, reports, caches, or temporary files.
-
-## 7. Runtime projection
-
-An authorized JSON load emits the sole public Runtime Capsule defined by
-[`specs/runtime-capsule.schema.json`](specs/runtime-capsule.schema.json). Its
-contract coordinate is `0.1.0` and its type is `kdna.runtime-capsule`.
-
-The Capsule preserves:
-
-- asset identity and judgment version;
-- A, C, and E evidence with explicit comparison state;
-- signature and access evidence;
-- the selected projection profile and context;
-- load facts that were actually observed.
-
-Producing a Capsule proves delivery of a verified projection. It does not prove
-that a model semantically understood or faithfully applied the judgment.
-
-## 8. Agent Host and trace boundary
-
-The stable ConsumptionPlan, Agent Host request/receipt, and JudgmentTrace
-schemas live in [`specs/`](specs/) and have executable vectors in
-[`conformance/runtime-contract/`](conformance/runtime-contract/).
-
-The evidence chain distinguishes:
-
-1. projection built;
-2. Capsule delivered;
-3. Host execution observed;
-4. semantic consumption observed, not observed, or unproven;
-5. behavioral conformity separately evaluated.
-
-No implementation may collapse these states into a claim that an agent
-"consumed" or "followed" KDNA when only delivery or process completion was
-observed.
-
-## 9. Cryptographic profiles
-
-The stable password envelope is defined by
-[`RFC-0018`](rfcs/RFC-0018-envelope-aead.md). The account/device external key
-grant is defined by
-[`RFC-0019`](rfcs/RFC-0019-account-device-external-key-grant.md). Unknown
-profiles, versions, algorithms, fields required by their AAD, or failed
-authentication MUST fail closed.
-
-## 10. Conformance
-
-A conforming implementation MUST pass the relevant executable suites without
-editing their committed vectors:
+A conforming implementation MUST pass the repository's executable test and conformance suites without modifying committed vectors:
 
 ```bash
 npm test
@@ -283,7 +139,8 @@ npm run conformance:runtime-contract
 npm run audit:post-cutover
 ```
 
-The checked-out public tree and the published Core tarball describe one stable
-contract. Git-tracked history and migration material remain subject to the
-same post-cutover naming audit as current runtime source; their presence does
-not make removed shapes runtime-valid.
+---
+
+## 8. Historical Note (`0.1.0` & `0.5.0`)
+
+Earlier `0.1.0` (`LoadPlan` / `Runtime Capsule` / CLI `0.36.1`) and `0.5.0` (Studio session) container contracts are preserved in Git history, [`SPEC-INDEX.md`](SPEC-INDEX.md#kdna-public-specification-index), and [`docs/current-release-support.md`](docs/current-release-support.md). All new `.kdna` works use Container `0.6.0`.

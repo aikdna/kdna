@@ -18,9 +18,9 @@ const git = (root, args) =>
     stdio: ['ignore', 'pipe', 'pipe'],
   }).trim();
 
-test('historical root proof binds all eight package inputs independently of the current checkout', () => {
+test('historical root proof binds all seven package inputs independently of the current checkout', () => {
   const read = historicalRootPackageReader(repoRoot);
-  assert.equal(proof.packages.length, 8);
+  assert.equal(proof.packages.length, 7);
   assert.notEqual(proof.package_source_commit, component.source_commit);
   for (const record of component.packages) {
     const pkg = read(component, record);

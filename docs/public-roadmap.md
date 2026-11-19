@@ -1,79 +1,33 @@
 # KDNA Public Roadmap
 
-## One definition
+## One Definition
 
-KDNA is an open file format and protocol for expressible judgment and judgment
-systems. It gives implicit, scattered, or hard-won judgment an independent file
-with clear identity, version lineage, byte integrity, optional local password
-encryption, and a scoped reading contract—so people can read and question a work
-in [KDNA Reader](https://aikdna.com/en/downloads), and compatible agents can create,
-verify, and apply it without silently flattening its boundaries.
+KDNA (`.kdna`) is an open file format and selective reading protocol for expressible human thinking, judgment, trade-offs, boundaries, and taste. It gives a person's or team's judgment an independent file with clear authorship, explicit version lineage, byte integrity, optional local password encryption, and a selective reading contract—so people can read and review it directly in [KDNA Reader](https://aikdna.com/en/downloads), and compatible Agents can read the relevant judgments with their premises and stop boundaries intact.
 
-KDNA does not claim to add model intelligence or guarantee better output. Its
-job is making selected judgment inspectable, portable, versioned, and bounded
-across tools.
+## Permanently Account-Free Foundation
 
-## Permanently account-free foundation
+Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free without usage limits, reading any local `.kdna` file offline with optional free `KDNA ID` sign-in for the synced Judgment Asset Library.
 
-Public, local, and password-protected (`0.6.0`) `.kdna` creation, encryption
-(`kdna protect`), validation, CLI/SDK reading, and Agent consumption are
-**permanently account-free** and work offline. No online account system is a
-prerequisite for the `.kdna` file format, `@aikdna/kdna-cli`, or Agent Skills;
-desktop KDNA Reader remains permanently free without usage limits, offering
-account-free single-file Guest Mode alongside optional free `KDNA ID` sign-in
-for the bundled bilingual Whitepaper and offline Judgment Asset Library.
+## Public Ecosystem Responsibilities
 
-## One ecosystem, focused responsibilities
-
-The public repositories form an open ecosystem whose components carry distinct
-responsibilities and independent release schedules:
-
-| Responsibility | Public Repositories / Surfaces | Mission |
+| Area | Public Repository / App | Mission |
 | --- | --- | --- |
-| Protocol and Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` / `0.5.0` schemas, digests, local password protection, scoped Read closure, and conformance vectors |
-| Official CLI | `kdna-cli` (`@aikdna/kdna-cli`) | Author (`init`, `validate-input`, `compile`, `create`), password-protect (`protect`), inspect, validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works (`plan`/`load` belong only to the historical `0.36.1` line) |
-| Agent integration | `kdna-skills` (`kdna-vscode` paused 2026-10-24) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP server (`kdna-vscode` remains paused by owner decision) |
-| Public reference works | `kdna-assets` | Openly licensed `.kdna` judgment works (bilingual *KDNA Whitepaper* `v1.0.2` / `v1.0.1`, `CC BY 4.0`) and verification checks |
-| Human reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Permanently free macOS desktop reading and review application without usage limits (free `KDNA ID` unlocks bundled *KDNA Whitepaper* and offline Judgment Asset Library; Guest Mode reads individual local `.kdna` files without signing in) |
-| Studio session packages `[Legacy pre-0.6.0 / P5-deferred]` | `@aikdna/kdna-studio-core`, `@aikdna/kdna-studio-cli` | Separate legacy container `0.5.0` session authoring and protected export line (`[Legacy pre-0.6.0 / P5-deferred]`) |
-| Apple Swift packages `[Legacy pre-0.6.0 / P5-deferred]` | `kdna-core-swift`, `kdna-app-shared`, `kdna-studio-swift` | Historical Swift runtime and Apple-platform contracts (`[Legacy pre-0.6.0 / P5-deferred]`) |
+| Protocol & Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` schemas, digests, local password protection, selective Read closure, and conformance suites |
+| Official CLI | `kdna-cli` (`@aikdna/kdna-cli@0.44.0`) | Author (`init`, `validate-input`, `create`), protect (`protect`), validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works |
+| Agent Integration | `kdna-skills` | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter |
+| Public Works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.2`, `CC BY 4.0`) |
+| Human Reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Free macOS desktop app for reading, reviewing, and exploring `.kdna` works |
+| Archived Legacy Lines | `kdna-studio-*`, `kdna-core-swift`, etc. | Preserved historical `pre-0.6.0` packages; not used for new `0.6.0` works |
 
-Per [Repository Boundaries](./repository-boundaries.md), internal web application workspaces, remote/activation infrastructure, and commercial product experiments are private repositories whose names and contents are not public and are not part of the public support commitment.
+Internal web application workspaces, cloud sync infrastructure, and unpublished experiments remain in private repositories outside the public API commitment.
 
-## Four questions kept distinct
+## Current Priorities
 
-Ongoing engineering keeps four questions separate:
+1. **Grow high-craft public `.kdna` exemplar works** across real domains (writing craft, visual taste, engineering review, classical single-angle decision frameworks, and everyday standards) that anyone can open in KDNA Reader and test directly with their own AI Agent.
+2. **Keep the `0.6.0` authoring, protection, reading, and diffing loop effortless** across CLI, Agent Skills, and KDNA Reader.
+3. **Maintain explicit, user-consented Agent workflows** (`kdna-loader` and `kdna-creator`) with transparent asset visibility and zero silent background activation.
+4. **Keep every published npm coordinate immutable and byte-verified**, advancing versions only after passing full conformance checks without overwriting existing coordinates.
 
-1. Is the protocol contract internally sound and unambiguous?
-2. Does a specific tool or integration faithfully implement its declared contract?
-3. What exact compatibility and maturity does a published version promise?
-4. When does a real author or reader genuinely benefit from `.kdna` over a simpler note or prompt?
+## Contributing
 
-Maturity is stated per component and version rather than assumed from repository
-activity or test count alone.
-
-## Claim boundary
-
-KDNA does not claim to increase model intelligence, improve output by a fixed
-percentage, or replace ordinary Markdown notes, prompts, or Skills when those
-simpler carriers already suffice. Protocol and toolchain verification focuses on:
-
-- container identity, version lineage, and cryptographic byte integrity;
-- faithful preservation of authored claims, premises, stop boundaries, and anti-misuse rules during scoped reads;
-- offline local password encryption (`0.6.0`), deterministic diffing, and explicit revision;
-- explicit, fail-closed diagnostics when a container or version contract is unsupported.
-
-## Current priorities
-
-1. Keep the native `0.6.0` authoring, local password protection, human reading, and selective Agent reading loop effortless and rock-solid.
-2. Measure and optimize real-world Agent context budgets and cold-start read latency across `catalog` and `exact_selection` workflows ([Read cost work package](./read-cost-work-package.md)).
-3. Maintain clear file-first, user-consented Agent host workflows (`kdna-loader` and `kdna-creator`) with zero silent background activation.
-4. Keep every published npm coordinate immutable and byte-verified; new versions advance only after passing conformance and smoke checks without overwriting prior coordinates.
-
-## Contribution boundary
-
-Contributions should strengthen how judgment works are authored, verified,
-protected locally, read by humans, or selectively consumed by compatible agents.
-Generalized intelligence-enhancement claims are out of scope. Changes to a
-repository's mission or lifecycle require an explicit maintainer decision
-documented in the repository itself.
+Contributions should strengthen how judgment works are authored, verified, locally protected, read by humans, or selectively consumed by compatible Agents. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) and [GitHub Discussions](https://github.com/aikdna/kdna/discussions).

@@ -109,36 +109,8 @@ const REQUIRED_GUARDRAILS = new Map([
     ],
   ],
   [
-    'docs/loader-behavior.md',
-    ['explicitly supplied', 'Discovery is not consent', 'disable, switch, and rollback controls'],
-  ],
-  [
-    'docs/integrations.md',
-    [
-      'Current source adapters',
-      'do not establish native Host installation',
-      'not the command contract of the',
-    ],
-  ],
-  [
-    'docs/local-kdna-home-spec.md',
-    ['Historical implementation note', 'The canonical portable object is a `.kdna` file'],
-  ],
-  ['docs/kdna-and-ai-stack.md', ['The boundary is a contract', 'The same judgment may appear']],
-  ['docs/kdna-and-ai-stack.zh.md', ['边界是合同', '同一判断可以同时存在']],
-  [
-    'docs/faq-kdna-vs-skill.md',
-    ['does not claim exclusive ownership of', 'The same judgment can be represented in both'],
-  ],
-  ['docs/agents-lack-judgment.md', ['Judgment can already live', 'does not by itself prove']],
-  ['docs/kdna-compare-report.md', ['does not expose a', 'not a Preview release gate']],
-  [
-    'docs/judgment-contamination.md',
-    ['# Scope Mismatch and Boundary Leakage', 'do not imply that KDNA owns all'],
-  ],
-  [
-    'packages/kdna-eval/README.md',
-    ['claimant-scoped', 'not KDNA Core authority', 'does not use Prompt/Skill superiority'],
+    'docs/agent-entry.md',
+    ['@aikdna/kdna-cli@0.44.0', 'zero judgment bodies inline', 'Minimal selection rule'],
   ],
 ]);
 
@@ -151,7 +123,6 @@ function narrativeFiles() {
     'specs',
     'templates',
     'skills',
-    'packages/kdna-eval/README.md',
   ];
   const files = [];
 

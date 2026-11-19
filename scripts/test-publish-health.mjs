@@ -27,7 +27,7 @@ const ecosystemManifest = JSON.parse(
 
 test('release-health policy is complete, unique, and structurally valid', () => {
   assert.equal(validatePolicy(policy), policy);
-  assert.equal(policy.packages.length, 9);
+  assert.equal(policy.packages.length, 8);
   assert.deepEqual(
     new Set(policy.packages.map((entry) => entry.npm_package)),
     new Set([
@@ -37,7 +37,6 @@ test('release-health policy is complete, unique, and structurally valid', () => 
       '@aikdna/kdna-studio-core',
       '@aikdna/kdna-core',
       '@aikdna/kdna-read',
-      '@aikdna/kdna-eval',
       '@aikdna/kdna-conformance',
       '@aikdna/kdna',
     ]),
@@ -171,21 +170,8 @@ test('natural and prefixed canonical tags are exact', () => {
   assert.throws(() => canonicalTag({ type: 'prefix', value: '' }, '1.2.3'));
 });
 
-test('Eval accepts one exact historical coordinate without perpetuating it', () => {
-  const evalPolicy = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna-eval');
-  assert.deepEqual(candidateTags(evalPolicy, '0.3.1'), ['eval/0.3.1']);
-  assert.deepEqual(candidateTags(evalPolicy, '0.3.2'), ['eval/0.3.2']);
-  assert.equal(
-    legacyTagDigest(evalPolicy, '0.3.1'),
-    '711abd8fd04f2b1466e8c0f331a1139cbe67361fec6c8c3c2957adc7b786c4b4',
-  );
-  assert.equal(legacyTagDigest(evalPolicy, '0.3.2'), null);
-});
-
-test('all other packages use only their canonical coordinate', () => {
-  for (const entry of policy.packages.filter(
-    (candidate) => candidate.npm_package !== '@aikdna/kdna-eval',
-  )) {
+test('all packages use only their canonical coordinate', () => {
+  for (const entry of policy.packages) {
     assert.deepEqual(candidateTags(entry, '9.8.7'), [canonicalTag(entry.canonical_tag, '9.8.7')]);
   }
 });

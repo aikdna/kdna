@@ -38,7 +38,6 @@ const PACKAGES = [
   { dir: 'packages/kdna-core', readme: 'packages/kdna-core/README.md' },
   { dir: 'packages/kdna-conformance', readme: 'packages/kdna-conformance/README.md' },
   { dir: 'packages/kdna', readme: 'packages/kdna/README.md' },
-  { dir: 'packages/kdna-eval', readme: 'packages/kdna-eval/README.md' },
 ];
 
 const findings = [];

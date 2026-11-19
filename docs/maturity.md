@@ -1,71 +1,24 @@
-# KDNA Maturity Disclosure
+# KDNA Maturity Overview
 
-> **Current product maturity: Pre-release.** This page separates exact-version
-> protocol validity, component maturity, and optional asset evidence.
+**Current maturity: Pre-release (`0.x`).** The Container `0.6.0` format, core packages, CLI `0.44.0`, Agent Skills, and KDNA Reader for macOS form a working end-to-end loop, while the protocol and ecosystem continue to mature toward `1.0`.
 
-## What Pre-release Means
+## Component Status
 
-KDNA has published 0.x protocol, toolchain, and integration snapshots, but the
-ecosystem is correcting contract and narrative inconsistencies before its next
-Development Preview. A released package proves that exact artifact exists; it
-does not make the whole ecosystem stable or make components outside one release
-wave valueless.
+| Surface | Maturity | Notes |
+| --- | --- | --- |
+| Container `0.6.0`, manifest, CBOR sections, checksums | Pre-release (Active) | Verified by executable conformance suites |
+| Local `inspect → validate → read` (CLI `0.44.0`) | Pre-release (Active) | Primary consumption route (`catalog` → `exact_selection`) |
+| Local password protection (`RFC-0018`, `kdna protect`) | Pre-release (Active) | Offline, account-free AEAD encryption |
+| KDNA Reader (macOS, Apple Silicon) | Public Free Release | Signed & Apple-notarized desktop app |
+| Agent Skills (`kdna-creator`, `kdna-loader`) & local MCP | Pre-release (Active) | Explicit user-selected file workflow |
+| Historical `validate → plan-load → load` / Runtime Capsule | Retired `0.36.1` loading workflow | Preserved in history only; replaced by `0.44.0` `read` |
+| Studio `0.5.0` session line & Swift `pre-0.6.0` repos | Legacy (Archived) | Preserved for older projects; use `0.6.0` for new works |
 
-| Surface | Maturity |
-|---|---|
-| Asset container, manifest, CBOR payload, checksums | Pre-release; exact-version contract under reconciliation |
-| Local `inspect → validate → read` (CLI `0.44.0`) | Pre-release; primary consumption route by exact command and session |
-| Historical `validate → plan-load → load` / Runtime Capsule | Retired `0.36.1` loading workflow; not the current `0.44.0` primary route |
-| Studio authoring/export | Pre-release; authoring fidelity under review |
-| Explicit-file single-asset consumption | Pre-release by exact command |
-| Global store, automatic discovery, Skill routing, and multi-asset policy | Published or experimental surfaces under recertification; not the default user contract |
-| Signing, revocation, licensed and encrypted lifecycle | Pre-release; security contracts under review |
-| Remote and activation reference servers | Pre-release integrations; self-hosted |
-| Swift, Agent, editor, React, and Web integrations | Pre-release, experimental, or unassessed by repository and exact version |
+## Four Separate Layers of Confidence
 
-## Four Things That Must Not Be Collapsed
+1. **Format validity** — the `.kdna` file passes container, schema, and checksum checks.
+2. **Authorship & integrity** — SHA-256 digests and optional Ed25519 signatures match the exact file bytes.
+3. **Human review** — readers open the work (for example in KDNA Reader) and verify that its reasoning, trade-offs, and boundaries make sense.
+4. **Real-world fit** — the user decides whether a specific work fits their actual task and standards.
 
-1. **Format validity** — the asset follows the KDNA container and schema.
-2. **Integrity and provenance** — bytes, digests, and optional signatures agree.
-3. **Behavior evidence** — an optional evaluation observed a result.
-4. **Product readiness** — a specific application or deployment accepts the
-   operational risk.
-
-Storage, attachment, authorization, applicability, and load are also separate
-events. No maturity label collapses them into automatic consent.
-
-Passing one layer does not imply the others. KDNA Core never converts these
-facts into a judgment that the content is correct, high-quality, or officially
-recommended.
-
-## Asset Creation and Publication
-
-Anyone can create, package, publish, modify, and distribute a KDNA asset
-through the public protocol and toolchain. Evidence, review, signature,
-registry listing, or AIKDNA approval are not creation requirements.
-
-Authors choose whether an asset is public, licensed, or remote. Consumers
-choose which authors, evidence, signatures, and policies they require.
-
-## Package Versions and the Asset Format
-
-Toolchain packages use their own release versions. Those package versions are
-not separate KDNA product formats. Active user documentation describes one
-current KDNA Asset Container; schema and protocol documents carry the technical
-compatibility identifiers needed by implementations.
-
-## Not Required by the Core Container
-
-- a hosted registry or universal discovery service;
-- a marketplace, billing service, or mandatory commercial platform;
-- a hosted remote loading endpoint;
-- universal content ranking, certification, or recommendation;
-- a guarantee that an asset improves every model or task;
-- a complete memory, learning, evaluation, or deployment platform.
-
-Optional services and integrations may exist without becoming mandatory parts
-of the container protocol. Their value and maturity are assessed through their
-own contracts, users, and release evidence.
-
-For a specific package, use its release notes and CI evidence. For product
-boundaries, see [Core Narrative and Boundaries](./core-narrative-and-boundaries.md).
+Format validation guarantees technical integrity; human review and real practice always decide whether a judgment work is right for you. See [Core Narrative and Boundaries](./core-narrative-and-boundaries.md).

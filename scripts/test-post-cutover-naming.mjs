@@ -536,7 +536,6 @@ test('a generation token injected only into any publishable tarball surface fail
     'packages/kdna',
     'packages/kdna-conformance',
     'packages/kdna-core',
-    'packages/kdna-eval',
     'packages/kdna-read',
   ]);
   const records = roots.map((root) => ({
