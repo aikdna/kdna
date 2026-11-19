@@ -98,4 +98,4 @@ In the published Core 0.22.0 line, `.kdna` assets support the optional `signatur
 
 ## Security Model
 
-For the KDNA Protocol security architecture, see [GOVERNANCE.md](./docs/GOVERNANCE.md).
+For the KDNA Protocol security architecture, see [docs/SECURITY.md](./docs/SECURITY.md).

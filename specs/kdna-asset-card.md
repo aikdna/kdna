@@ -90,8 +90,8 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "benchmark_count": 2,
     "latest_benchmark_id": "kdna.benchmark.decision-state",
     "latest_benchmark_date": "2026-05-19",
-    "comparison_report_url": "https://github.com/aikdna/kdna/blob/main/benchmarks/decision-state-comparison-report.md",
-    "raw_outputs_url": "https://github.com/aikdna/kdna/tree/main/benchmarks/raw",
+    "comparison_report_url": "https://example.org/kdna-domain/benchmarks/comparison-report.md",
+    "raw_outputs_url": "https://example.org/kdna-domain/benchmarks/raw",
     "failure_cases_published": true,
     "model_versions_tested": ["claude-3-5-sonnet-20241022", "kimi-for-coding"],
     "evaluation_history": []

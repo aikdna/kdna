@@ -65,8 +65,9 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 ## Consumption extensions
 
 The Core format remains independent from consumption policy. See
-[`docs/consumption-runtime.md`](../docs/consumption-runtime.md) for the public
-sidecar boundary and the reference runtime workflow.
+[`specs/read-contract.md`](./read-contract.md) and
+[`docs/core-narrative-and-boundaries.md`](../docs/core-narrative-and-boundaries.md)
+for the public boundary and selective reading contract.
 
 ### Crypto & Identity
 

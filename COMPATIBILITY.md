@@ -71,7 +71,7 @@ This project is **KDNA-Core compatible** (SPEC 1.0-rc).
 It supports loading and validating KDNA_Core.json and KDNA_Patterns.json.
 ```
 
-Official certification is managed through the registry governance process (see [GOVERNANCE.md](./docs/GOVERNANCE.md)).
+Official certification is managed through the project's public governance and boundary policy (see [core-narrative-and-boundaries.md](./docs/core-narrative-and-boundaries.md)).
 
 ## Rationale
 
@@ -79,4 +79,4 @@ Standards survive when compatibility is clear. KDNA's value to the ecosystem dep
 
 ---
 
-*This policy is maintained by the KDNA project. Changes follow the governance process in [GOVERNANCE.md](./docs/GOVERNANCE.md).*
+*This policy is maintained by the KDNA project. Changes follow the public narrative and boundary policy in [core-narrative-and-boundaries.md](./docs/core-narrative-and-boundaries.md).*

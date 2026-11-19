@@ -11,9 +11,7 @@ They have therefore been retired rather than maintained as a live RFC.
 For current, public-facing guidance, use:
 
 - [KDNA SPEC](../SPEC.md) for the canonical asset protocol.
-- [Consumption runtime guide](../docs/consumption-runtime.md) for the
-  supported selection, composition, projection, trace, evaluation, and review
-  workflow.
+- [Read contract](./read-contract.md) and [Core narrative and boundaries](../docs/core-narrative-and-boundaries.md) for the selective reading and review workflow.
 - [Authoring guide](../docs/authoring-guide.md) for creating and validating an
   asset.
 - [Human lock](./human-lock.md) and [load profiles](./load-profiles.md) for

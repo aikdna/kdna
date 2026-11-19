@@ -35,7 +35,7 @@ A **protocol fork** typically:
 
 Protocol forks are not prohibited, but they create fragmentation. When multiple similar "DNA" standards exist, users are confused, tool builders must choose sides, and the ecosystem weakens.
 
-**We encourage protocol-level changes to be proposed through the KDNA governance process before creating a parallel public standard.** If you believe KDNA's core structure, schema, or validation rules need fundamental changes, open a proposal via [GOVERNANCE.md](./docs/GOVERNANCE.md). Innovation that strengthens the standard benefits everyone; innovation that fragments it benefits no one.
+**We encourage protocol-level changes to be proposed through the KDNA community process before creating a parallel public standard.** If you believe KDNA's core structure, schema, or validation rules need fundamental changes, review [core-narrative-and-boundaries.md](./docs/core-narrative-and-boundaries.md) and open a proposal via [CONTRIBUTING.md](./CONTRIBUTING.md). Innovation that strengthens the standard benefits everyone; innovation that fragments it benefits no one.
 
 ## Requirements for Public Forks
 
@@ -60,4 +60,4 @@ KDNA's goal is to grow as a coherent open standard for domain judgment — not a
 
 ---
 
-*This policy is maintained by the KDNA project. Changes follow the governance process in [GOVERNANCE.md](./docs/GOVERNANCE.md).*
+*This policy is maintained by the KDNA project. Changes follow the public narrative and boundary policy in [core-narrative-and-boundaries.md](./docs/core-narrative-and-boundaries.md).*

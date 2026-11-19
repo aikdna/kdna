@@ -101,7 +101,7 @@ The KDNA logo may **not** be used:
 
 Format validity or a conformance-test result does not grant the right to use
 "Certified KDNA" or "Official KDNA" marks. Mark permissions are governed
-separately from the protocol; see [GOVERNANCE.md](./docs/GOVERNANCE.md).
+separately from the protocol; see [core-narrative-and-boundaries.md](./docs/core-narrative-and-boundaries.md).
 
 ---
 
