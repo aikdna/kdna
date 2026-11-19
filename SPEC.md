@@ -55,13 +55,13 @@ application/vnd.kdna.asset
 
 | Entry | Role |
 | --- | --- |
-| `mimetype` | Unambiguous format identification (`application/vnd.kdna.asset`) |
-| `kdna.json` | Manifest: asset identity, versions, creator/license metadata, compatibility tuple, section layout/tables (public `0.6.0`) or protection envelope metadata (encrypted `0.6.0`) |
-| `sections/pack-N.kdnab` | CBOR-framed section packs storing structured judgments, materials, declarations, relationships, and precomputed indices (unencrypted `0.6.0`) |
-| `payload.kdnab` | Encrypted AEAD envelope (`RFC-0018`) for password-protected or licensed works |
-| `checksums.json` | Per-entry SHA-256 integrity manifest and canonical runtime entry-set digest (**E**) |
-| `signature.kdsig` | Optional Ed25519 signature bundle; if present, verification failure MUST reject the asset |
-| `attachments/` | Optional supplementary files governed by manifest and loader policy |
+| `mimetype` | Required: unambiguous format identification (`application/vnd.kdna.asset`) |
+| `kdna.json` | Required: manifest (asset identity, versions, creator/license metadata, compatibility tuple, section layout/tables for public `0.6.0` or protection envelope metadata for encrypted `0.6.0`) |
+| `sections/pack-N.kdnab` | Required (public `0.6.0`): CBOR-framed section packs storing structured judgments, materials, declarations, relationships, and precomputed indices |
+| `payload.kdnab` | Required (encrypted `0.6.0`): encrypted AEAD envelope (`RFC-0018`) for password-protected or licensed works |
+| `checksums.json` | Optional: per-entry SHA-256 integrity manifest (`kdna.checksums.document/2`) and canonical runtime entry-set digest (**E**); not emitted by default by `kdna create`, but when present MUST verify fail-closed |
+| `signature.kdsig` | Optional: Ed25519 signature bundle (`kdsig.ed25519`); when present, verification failure MUST reject the asset |
+| `attachments/` | Optional: supplementary files governed by manifest and loader policy |
 
 Authoring drafts, build logs, credentials, and temporary plaintext MUST NOT appear in a distributed `.kdna` archive. Container admission explicitly rejects path traversal as well as `build-receipt.json`, `reports/*`, and `authoring/*`.
 
@@ -96,6 +96,8 @@ The specification distinguishes four separate SHA-256 digests (`@aikdna/kdna-cor
 
 Validation verifies container layout, manifest schema, payload/section structure, checksums (when present), optional signatures (when present), and compatibility coordinates. Passing format validation confirms byte integrity and schema conformance; evaluating whether a judgment fits a real-world situation always belongs to human reviewers and callers.
 
+> **Historical note on `docs/CANONICALIZATION.md`:** [`docs/CANONICALIZATION.md`](docs/CANONICALIZATION.md) preserves the retired `0.1.0` text-concatenation digest specification for historical reference only (byte-pinned by repository format-ownership checks). Active Container `0.6.0` implementations MUST compute **C** using the binary length-prefixed `KDNA-CONTENT-TREE\00.2.0\0` preimage (excluding both `checksums.json` and `signature.kdsig`) implemented in [`packages/kdna-core/src/public-contract/browser-native/digests.js`](packages/kdna-core/src/public-contract/browser-native/digests.js).
+
 ---
 
 ## 5. Selective Read Protocol (`catalog` → `exact_selection` → `expand`)
@@ -105,10 +107,10 @@ Compatible runtimes disclose judgment content progressively under explicit Host 
 1. **`catalog`** (`status: "catalog_only"`): Returns `catalog` (judgment IDs, `focus` questions, `node_ref`, optional `lifecycle`) and `asset_index` without returning judgment bodies (`digests: null`).
 2. **`exact_selection`**: Given `selection: { asset_id, asset_version, judgment_ids }`, returns the requested judgment bodies together with their deterministic **mandatory closure**:
    - applicable asset-level `shared_declarations`, `foundation`/`premise` materials, and global `boundaries`;
-   - judgment-local `boundaries`, `exceptions` (including `replace_limit` replacements), `misuse` warnings, `lifecycle.superseded_by` replacements, and required `dependencies`;
+   - judgment-local `boundaries`, `exceptions` (including `replace_limit` replacements), `misuse` warnings, `lifecycle.superseded_by` replacement judgments, and required `dependencies` (`dependency.required === true`, including required `judgment_result` producer judgments or `source` producers);
    - supporting (`support`) and qualifying (`qualify`) judgments whenever the target (`claim` / `qualified`) judgment is selected;
    - both sides of any `conflict` relationship involving a selected judgment;
-   - minted `expansion_handles` for deferred optional targets (such as `complement` peers or examples).
+   - relationship declaration nodes (including `complement` declarations) attached to a selected judgment; any participant judgment referenced by an included relationship whose body is not in the supplied closure appears in the response `catalog` and is explicitly marked in `omissions` with reason `outside_selection`, with minted `expansion_handles` for deferred optional targets.
 3. **`expand`**: Resolves a minted `expansion_handle` bound to the same `snapshot_id`, `host_id`, and `host_epoch` within its expiry window (`<= 3,600,000 ms`).
 4. **`whole_asset`**: Admits and verifies the full container (`A`, `C`, `E`, `ir_digest`) and returns the asset overview, global declarations, and deferred `expansion_handles` (without dumping judgment bodies inline).
 
