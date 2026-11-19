@@ -222,7 +222,7 @@ test('release artifact inspection rejects unsafe paths, symlinks, and wrong pack
 });
 
 test('release evidence generator retains and binds the real npm pack artifact', () => {
-  execFileSync(process.execPath, [EVIDENCE_GENERATOR_PATH, '--package=eval'], {
+  execFileSync(process.execPath, [EVIDENCE_GENERATOR_PATH, '--package=compat'], {
     cwd: REPO_ROOT,
     encoding: 'utf8',
     maxBuffer: 8 * 1024 * 1024,
@@ -248,9 +248,9 @@ test('release evidence generator retains and binds the real npm pack artifact', 
   assert.doesNotThrow(() =>
     assertEvidenceBinding({
       manifest: { ...manifest, source_commit: SHA, git_dirty: false },
-      label: 'eval',
-      packageName: '@aikdna/kdna-eval',
-      version: '0.3.2',
+      label: 'compat',
+      packageName: '@aikdna/kdna',
+      version: '0.14.0',
       githubSha: SHA,
       artifactInspection: inspection,
     }),
@@ -271,7 +271,7 @@ test('release evidence generator retains and binds the real npm pack artifact', 
       },
     ),
   );
-  assert.equal(packDryRun[0]?.id, '@aikdna/kdna-eval@0.3.2');
+  assert.equal(packDryRun[0]?.id, '@aikdna/kdna@0.14.0');
   assert.equal(packDryRun[0]?.filename, artifact.filename);
 });
 

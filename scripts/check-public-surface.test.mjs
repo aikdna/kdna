@@ -46,7 +46,7 @@ const REDACTED_LITERAL = ['RE', 'DACTED'].join('');
 const INTERNAL_PRODUCT_NAME = ['kdna', 'work'].join('');
 const FORMER_EXCEPTED_PATH = 'rfcs/RFC-0020-minimal-projection-profile.md';
 const PRODUCT_NAME_LABEL = 'internal product name';
-const INJECTION_VICTIM = 'docs/getting-started.md';
+const INJECTION_VICTIM = 'docs/start-here.md';
 const GATE_EXPORTS = [
   'ALLOWLIST_PATHS',
   'FORBIDDEN_EXCEPTIONS',

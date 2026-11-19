@@ -134,19 +134,19 @@ test('current repository passes the narrative boundary audit', () => {
   assert.deepEqual(auditRepository(), { violations: [], missingGuardrails: [] });
 });
 
-test('integration guidance keeps current scope, unverified Host delivery and historical contract boundaries', () => {
+test('agent-entry guidance keeps current CLI coordinate and selective-read boundaries', () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   for (const boundary of [
-    'Current source adapters',
-    'do not establish native Host installation',
-    'not the command contract of the',
+    '@aikdna/kdna-cli@0.44.0',
+    'zero judgment bodies inline',
+    'Minimal selection rule',
   ]) {
     const missing = findMissingGuardrails((relative) => {
       const content = fs.readFileSync(path.join(root, relative), 'utf8');
-      return relative === 'docs/integrations.md' ? content.replace(boundary, '') : content;
+      return relative === 'docs/agent-entry.md' ? content.replaceAll(boundary, '') : content;
     });
     assert.ok(
-      missing.some((item) => item.path === 'docs/integrations.md' && item.snippet === boundary),
+      missing.some((item) => item.path === 'docs/agent-entry.md' && item.snippet === boundary),
       boundary,
     );
   }

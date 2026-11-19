@@ -1,71 +1,27 @@
-# KDNA 公开状态
+# KDNA 当前状态
 
-首次使用按[当前支持矩阵](current-release-support.md)和[实际 Agent 合成任务](../examples/native-team-update/README.md)进入；具名 MCP Host 交付仍未验。
+[English](./status.md) | 简体中文
 
-> 当前公开状态的中文摘要。版本级命令事实见各包的 CHANGELOG 和
-> [工具状态矩阵](./tool-status-matrix.md)。
+## 现行稳定线（Container `0.6.0`）
 
-## 产品定位
+当前所有新作品与工具链均基于 **Container `0.6.0`** 与按需读取协议（`catalog` → `exact_selection`）。各核心包已发布在 npm `latest`，精确版本与 SHA-256 见 [`release-coordinates.json`](./release-coordinates.json)：
 
-KDNA 是开放的判断资产协议。任何人、Agent 或工具都可以创建 `.kdna` 文件。
-Core 入场建立捕获字节的技术有效性，不认证作者、不判断内容质量，不代表采用，
-也不授予读取或行动权限。
+| 组件 | 当前版本 | 作用 |
+| --- | --- | --- |
+| `@aikdna/kdna-core` | `0.37.11` | Container `0.6.0` 与 `0.5.0` 校验、规范摘要、作品打包与本地口令加密（`RFC-0018`） |
+| `@aikdna/kdna-read` | `0.13.5` | 按需读取协议（`catalog` 目录、`exact_selection` 精确选读与前提闭包、本地解锁） |
+| `@aikdna/kdna-cli` | `0.44.0` | 官方命令行（`init`、`validate-input`、`create`、`protect`、`unprotect`、`inspect`、`validate`、`read`、`diff`、`source-open`、`source-pack`、`convert`） |
+| `aikdna/kdna-skills` | `main`（MCP `0.8.0`） | Agent 技能包（`kdna-creator`、`kdna-loader`）与可选本地 stdio MCP 适配器 |
+| `aikdna/kdna-assets` | 《KDNA 白皮书》`v1.0.2`（中/英双语） | 官方公开 `.kdna` 作品（`CC BY 4.0`） |
+| **KDNA Reader** | macOS 桌面应用（Apple Silicon） | 永久免费、已获 Apple 公证的桌面阅读器，支持免登录离线阅读本地 `.kdna` 与同步官方判断资产库 |
 
-当前默认消费路径从一份明确选择的文件或一项精确、经用户批准的 Host 附加项开始：
+创建、校验、本地口令加密、按需读取、版本对比以及桌面离线阅读全链路**永久无需在线账号**，均可完全离线使用。
 
-```text
-明确字节 → Core 入场 → 私有 snapshot / Canonical IR
-→ 独立可信 control / Host provider 下的公开 Read
-→ read_envelope | admission_rejection | no_body_control | transport_failure
-```
+## 已归档历史线
 
-这是当前源码实现的边界，见 [Core/Read 指引](./core-read-current-status.md) 与
-各包 README。当前 R2 的 Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场及显式 Host 参考 API。普通 root/browser 入场拒绝加密、签名和 checksums 文档；[显式 Node 保护入口](../specs/protection-admission.md) 有独立输入和可信 provider 边界。已发布 CLI 0.36.1 保留自己的合同；旧资产、接口或测试结果不能直接视为当前兼容。
+- **Container `0.5.0`（旧版 Studio 会话线）**：`@aikdna/kdna-studio-cli@0.14.0` 与 `@aikdna/kdna-studio-core@4.1.0` 仅保留用于维护历史 `0.5.0` 项目，不再用于新建 `0.6.0` 作品（迁移见 [0.5 → 0.6 迁移核对清单](./migration-checklist.md)）。
+- **Container `0.1.0`（旧版 `CLI 0.36.1`）**：早期的 `plan-load`、`load` 与 `Runtime Capsule` 流程已退役，现行统一采用 `inspect` → `validate` → `read`。
 
-协议不要求全局资产库、安装步骤、自动发现或 Agent Skill。保存或发现文件不等于
-授权；授权不等于每个任务都适用；加载成功不等于 Agent 已遵循，也不保证结果更好。
+## 相关文档
 
-## 当前成熟度
-
-整个生态处于预发布阶段。本页不会把任何组件提升为 Beta、stable 或 GA。
-
-| 层级 | 状态 | 含义 |
-|---|---|---|
-| `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前源码提供入场、snapshot 与 Read；版本化格式/加载规范不等于全部能力已实现 |
-| Runtime CLI | Pre-release | 原生 CLI `0.44.0`（精确 Core `0.37.11` / Read `0.13.5`）提供 `init`、`validate-input`、`compile`、`create`、`protect`、`unprotect`、`inspect`、`validate`、`read`、`diff`、`source-open`、`source-pack`、`convert`，Plan/load 不可用；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
-| Studio 创作工具链 | Pre-release | 当前 typed session、保存 bundle 复验与明确 Read；project/card 属于已发布 Studio CLI 0.11.0 |
-| 加密、授权、签名与撤销 | 按精确版本判断 | 公开、本地及口令加密（`0.6.0`）作品创建与阅读永久免账号；普通 root/browser 入场保留保护拒绝，显式 Node 入口按单独合同处理 |
-| Remote / Activation 参考实现 | Experimental | Remote 为 HTTP Read handler；Activation 为同进程 store observer，无独立 server/CLI，不代表托管服务 |
-| 多资产、路由、评测表面 | Experimental | 待重新认证的高级实现，不属于默认路径 |
-| Swift、Web、React、编辑器和 Agent 适配 | 各自独立 | 必须检查精确版本、依赖坐标和证据 |
-| `kdna-loader` 与 `kdna-creator` Skill | Pre-release（具名宿主未独立认证） | 基于 `@aikdna/kdna-cli` 对用户显式选定的文件执行按需读取与共创；旧的广泛发现与静默加载模型已废弃 |
-
-## 从哪里开始
-
-当前源码使用 [Core/Read 指引](./core-read-current-status.md)、
-[CLI README](https://github.com/aikdna/kdna-cli#readme) 和
-[Studio CLI npm 包](https://www.npmjs.com/package/@aikdna/kdna-studio-cli) 的精确依赖与入口。
-源码可用不代表 npm 发布、真人采用或原生 Host 验收。
-
-需要重现旧发布线时，使用 [Start Here](./start-here.md#5-minute-quick-start) 中固定
-CLI 0.36.1 的示例；创作使用 [完整教程](./30-minute-authoring-guide.md) 中固定的
-Studio CLI 0.11.0。必须添加完整判断卡并确认判断后才能导出，空项目不能导出。
-不混用当前候选；完整坐标与能力范围见 [版本矩阵](./version-and-capability-matrix.md)。
-
-## 用户与 Host 边界
-
-兼容 Host 只能从用户明确选择的文件或已经批准并固定身份、版本、digest 的附加项
-开始。在资产生效时，它必须显示资产身份、作用域和采用原因，并提供停用、切换和
-回滚入口。Skill 和 MCP 只能是薄适配器，不能替用户决定权威。
-
-## 公开边界
-
-- 有效资产不要求行为实验、真人背书、官方批准或注册表登记。
-- 公开参考资产只展示技术工具链，不代表内容认可。
-- Prompt、Skill、Policy、Memory 和普通文档都可以携带判断；KDNA 增加的是独立
-  身份、版本、完整性、授权、加载和投影合同。
-- 托管注册表、市场、计费和 AIKDNA 托管加载服务不属于当前公开基线。
-- 已发布版本保持自己的历史合同；未发布纠正候选不能被叙述成已经上线。
-
-参见[成熟度](./maturity.md)、[公开路线图](./public-roadmap.md)和
-[核心叙事与边界](./core-narrative-and-boundaries.md)。
+- [从这里开始](./start-here.zh.md) · [成熟度说明](./maturity.md) · [发布支持与渠道历史](./current-release-support.md) · [公开路线图](./public-roadmap.md)
