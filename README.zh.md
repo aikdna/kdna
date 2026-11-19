@@ -1,6 +1,6 @@
 # KDNA
 
-[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [中文文档](./docs/start-here.zh.md) · [认知原石实验室](https://aikdna.cn)
+[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [社区讨论](https://github.com/aikdna/kdna/discussions) · [中文文档](./docs/start-here.zh.md) · [认知原石实验室](https://aikdna.cn)
 
 **面向判断与判断系统的开放文件格式及核心参考实现。**
 

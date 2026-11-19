@@ -1,6 +1,6 @@
 # KDNA
 
-English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Documentation](./docs/start-here.md) · [Maturity: Pre-release](./docs/maturity.md)
+English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Discussions](https://github.com/aikdna/kdna/discussions) · [Documentation](./docs/start-here.md) · [Maturity: Pre-release](./docs/maturity.md)
 
 **Open file format and core reference implementation for expressible judgment and judgment systems.**
 
