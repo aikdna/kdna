@@ -209,9 +209,10 @@ test('publish workflow is release-only, stable-only, immutable, and serializes e
   );
 
   for (const [job, next] of [
-    ['publish-core', 'publish-eval'],
-    ['publish-eval', 'publish-compat'],
-    ['publish-compat', null],
+    ['publish-core', 'publish-conformance'],
+    ['publish-conformance', 'publish-read'],
+    ['publish-read', 'publish-compat'],
+    ['publish-compat', 'python-source-artifacts'],
   ]) {
     const start = workflow.indexOf(`  ${job}:`);
     const end = next ? workflow.indexOf(`\n  ${next}:`, start) : workflow.length;
@@ -234,7 +235,7 @@ test('publish workflow is release-only, stable-only, immutable, and serializes e
   assert.match(workflow, new RegExp(`actions/upload-artifact@${UPLOAD_ACTION_SHA}`, 'u'));
   assert.doesNotMatch(
     workflow,
-    /publish-agent|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
+    /publish-eval|publish-agent|working-directory: packages\/kdna-eval|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
   );
 });
 

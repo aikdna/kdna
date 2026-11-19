@@ -1101,7 +1101,7 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
     'utf8',
   );
   const start = workflow.indexOf('  publish-core:');
-  const end = workflow.indexOf('\n  publish-eval:', start);
+  const end = workflow.indexOf('\n  publish-conformance:', start);
   const job = workflow.slice(start, end);
   assert.ok(start >= 0 && end > start);
   assert.match(job, /!startsWith\(github\.event\.release\.tag_name, 'v'\)/u);
