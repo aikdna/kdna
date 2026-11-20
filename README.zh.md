@@ -49,13 +49,13 @@ npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
-# 3. 本地口令加密（离线 AEAD 加密，不依赖任何在线账号）
-printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
+# 3. 本地口令加密（通过标准输入传入，离线 AEAD 加密，不依赖在线账号，不在磁盘留下明文口令文件）
+# 实际使用时建议从密码管理器管道传入，或先静默读入变量（`IFS= read -rs KDNA_PASS`）再通过 /dev/stdin 传入。
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file /dev/stdin
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
-  --allow-read --password-file password.txt --format human
+  --allow-read --password-file /dev/stdin --format human
 ```
 
 - **阅读中文文档：** [从这里开始](./docs/start-here.zh.md) · [为什么是 KDNA](./docs/why-kdna.zh.md) · [创作指南](./docs/authoring-guide.zh.md) · [什么是判断系统](./docs/judgment-systems.zh.md) · [为什么叫 KDNA](./docs/why-the-name.zh.md) · [当前状态](./docs/status.zh.md)
@@ -79,8 +79,8 @@ npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
 | --- | --- |
 | [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` 与 `0.5.0` 校验、规范摘要、作品打包与本地口令加密 |
 | [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | 按需读取协议（`catalog` 目录、`exact_selection` 精确选读与前提关联闭包、本地口令解锁） |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 历史 `0.1.0`/`0.36.1` 一致性测试包（现行 `0.6.0` 容器核验使用 `conformance/canonical-conformance.mjs`） |
-| [`conformance/`](./conformance) 与 [`fixtures/`](./fixtures) | 版本化正反测试样本与参考向量 |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 历史 `0.1.0`/`0.36.1` 一致性测试包（现行 `0.6.0` 容器核验使用 `npm run conformance:public-obligations` 与 `scripts/public-contract/run-vectors.mjs`） |
+| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | 现行 Container `0.6.0` 正反测试向量与运行时义务核验（`conformance/` 根目录其余套件与 `fixtures/` 仅保留作历史 `0.1.0` 回归样本） |
 | [`specs/`](./specs) 与 [`rfcs/`](./rfcs) | 规范索引（[`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)）与演进提案 |
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | 最小合成教学夹具对（`1.0.0` / `1.1.0`），用于演示 CLI 读取与 `kdna diff` 命令 |
 

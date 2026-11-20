@@ -49,13 +49,13 @@ npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
-# 3. Protect locally with a password (offline AEAD encryption; no online account)
-printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
+# 3. Protect locally with a password via stdin (offline AEAD encryption; writes no plaintext file to disk)
+# For real secrets, pipe from a password manager or prompt silently (`IFS= read -rs KDNA_PASS`) into /dev/stdin.
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file /dev/stdin
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
-  --allow-read --password-file password.txt --format human
+  --allow-read --password-file /dev/stdin --format human
 ```
 
 - **Start here:** [Start Here](./docs/start-here.md) · [Why KDNA](./docs/why-kdna.md) · [Authoring Guide](./docs/authoring-guide.md) · [Agent Entry](./docs/agent-entry.md)
@@ -79,8 +79,8 @@ This repository maintains the open KDNA specifications (Container `0.6.0`, R2 se
 | --- | --- |
 | [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` & `0.5.0` admission, canonical IR, integrity digests, packing, and local password encryption |
 | [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | Selective Read protocol (`catalog`, `exact_selection` with mandatory context closure, expansion handles, and protected unlock) |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Legacy `0.1.0`/`0.36.1` conformance package (current `0.6.0` conformance runs via `conformance/canonical-conformance.mjs`) |
-| [`conformance/`](./conformance) & [`fixtures/`](./fixtures) | Versioned positive and negative `.kdna` test vectors |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Legacy `0.1.0`/`0.36.1` conformance package (current `0.6.0` conformance runs via `npm run conformance:public-obligations` and `scripts/public-contract/run-vectors.mjs`) |
+| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | Current Container `0.6.0` positive and fail-closed negative runtime obligations and decision vectors (`conformance/` root and `fixtures/` retain historical `0.1.0` regression vectors) |
 | [`specs/`](./specs) & [`rfcs/`](./rfcs) | Normative schemas ([`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)) and design RFCs |
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | Minimal synthetic `1.0.0` / `1.1.0` fixture pair for testing CLI reading and `kdna diff` |
 
