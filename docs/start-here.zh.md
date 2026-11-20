@@ -2,7 +2,7 @@
 
 [English](./start-here.md) | 简体中文 · [返回中文首页](../README.zh.md) · [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [Agent 接入指南](./agent-entry.md)
 
-几分钟上手 KDNA：用 **KDNA Reader 桌面版**亲眼读一份真实 `.kdna` 作品，或者用官方命令行 **`@aikdna/kdna-cli@0.44.0`**（Container `0.6.0`，需 Node.js `>=22`，永久无需在线账号）自己创建、加密并读取。
+几分钟上手 KDNA：用 **KDNA Reader 桌面版**亲眼读一份真实 `.kdna` 作品，或者用官方命令行 **`@aikdna/kdna-cli@0.45.0`**（Container `0.6.0`，需 Node.js `>=22`，永久无需在线账号）自己创建、加密并读取。
 
 ---
 
@@ -17,28 +17,28 @@
 
 ---
 
-## 2. 30 秒命令行体验（`@aikdna/kdna-cli@0.44.0`）
+## 2. 30 秒命令行体验（`@aikdna/kdna-cli@0.45.0`）
 
 需要 **Node.js `>=22`**，全部在本地运行，**永久无需注册任何在线账号**：
 
 ```bash
 # 1. 创建：生成示例草稿，校验并打包为 Container 0.6.0 .kdna 作品
-npx -y @aikdna/kdna-cli@0.44.0 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.44.0 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.44.0 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.0 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.0 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.0 create --draft draft.json --output my-judgments.kdna --allow-create
 
 # 2. 校验与按需读取：先看目录，再按需选取目标判断及关联前提
-npx -y @aikdna/kdna-cli@0.44.0 validate my-judgments.kdna
-npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.44.0 read my-judgments.kdna \
+npx -y @aikdna/kdna-cli@0.45.0 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.45.0 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.45.0 read my-judgments.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
 # 3. 本地离线口令加密（RFC-0018 AEAD，无在线账号依赖）
 printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.44.0 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.44.0 read locked.kdna \
+npx -y @aikdna/kdna-cli@0.45.0 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.0 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --password-file password.txt --format human
@@ -69,7 +69,7 @@ npx -y @aikdna/kdna-cli@0.44.0 read locked.kdna \
 | 仓库 / 应用 | 职责 |
 | --- | --- |
 | [`aikdna/kdna`](https://github.com/aikdna/kdna) | 开放协议规范、Schema、一致性测试套件以及 `@aikdna/kdna-core` / `@aikdna/kdna-read` 参考实现 |
-| [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | 官方命令行工具（`@aikdna/kdna-cli@0.44.0`）：创建、口令加密、校验、按需读取、对比差异与修订 |
+| [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | 官方命令行工具（`@aikdna/kdna-cli@0.45.0`）：创建、口令加密、校验、按需读取、对比差异与修订 |
 | [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) | Agent 技能包（`kdna-creator`、`kdna-loader`）与可选本地 stdio MCP 适配器 |
 | [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) | 官方公开 `.kdna` 作品仓库（含中英双语《KDNA 白皮书》`v1.0.2`） |
 | [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) | 永久免费无限制的 macOS 桌面阅读器 |

@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-11-18",
+  "updated": "2026-11-20",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
@@ -35,15 +35,15 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.44.0",
+      "version": "0.45.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.44.0",
-      "source_commit": "5276c606e67636b83737917ee5efc1d4b9cb66f6",
-      "artifact_sha256": "382cb0fc07935333a2671e28d0ce2af6cd723896dd14ea6e3e2fec79d7608636",
-      "publish_run": 44255642656,
-      "release_id": 449628276,
-      "release_published_at": "2026-11-18T07:01:17Z"
+      "release_tag": "0.45.0",
+      "source_commit": "f4543de11952f7076af92f4fbe0873d96c164738",
+      "artifact_sha256": "e9896219baa02425f69aff71df327d0407b58b41751e4d87596ef3835ba1ed2e",
+      "publish_run": 44660216592,
+      "release_id": 452190152,
+      "release_published_at": "2026-11-20T02:21:35Z"
     },
     {
       "unit": "studio-core",
@@ -76,16 +76,16 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "de0c9e75661558aaefd8329ad93205a34e6d2ad3",
+      "main_commit": "f6cedbf00fdd817949ed3a4ac89795b559a3cc49",
       "mcp_package": "@aikdna/kdna-mcp-server",
-      "mcp_version": "0.8.0",
-      "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.0",
-      "release_tag": "kdna-mcp-server-0.8.0",
-      "artifact_sha256": "867b7f1d1ff7326aaa3f256e06ec33eeba5f7dea93d00932081ad90406c69713",
-      "publish_run": 44256772734,
-      "release_id": 449635084,
-      "release_published_at": "2026-11-18T07:10:09Z",
-      "delivery": "Agent Skills in Git source channel plus optional published local stdio MCP adapter @aikdna/kdna-mcp-server@0.8.0 on latest"
+      "mcp_version": "0.8.1",
+      "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.1",
+      "release_tag": "kdna-mcp-server-0.8.1",
+      "artifact_sha256": "44729e4357e2cc409a60702f1d412e39ebf94e5640fa5b3f8464040f4ba8e4fd",
+      "publish_run": 44663956873,
+      "release_id": 452210248,
+      "release_published_at": "2026-11-20T02:53:34Z",
+      "delivery": "Agent Skills in Git source channel plus optional published local stdio MCP adapter @aikdna/kdna-mcp-server@0.8.1 on latest"
     }
   ],
   "preserved_preview_tags": {
