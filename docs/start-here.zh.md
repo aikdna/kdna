@@ -35,13 +35,13 @@ npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
-# 3. 本地离线口令加密（RFC-0018 AEAD，无在线账号依赖）
-printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
+# 3. 本地离线口令加密（RFC-0018 AEAD，无在线账号依赖，不在磁盘留下明文口令文件）
+# 实际使用时建议从密码管理器管道传入，或先静默读入变量（`IFS= read -rs KDNA_PASS`）再通过 /dev/stdin 传入。
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file /dev/stdin
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
-  --allow-read --password-file password.txt --format human
+  --allow-read --password-file /dev/stdin --format human
 ```
 
 两条实用提示：

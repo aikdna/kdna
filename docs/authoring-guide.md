@@ -72,8 +72,8 @@ npx -y @aikdna/kdna-cli@0.45.2 create author-input.json --output my-work.kdna --
 ### Local Password Encryption (`RFC-0018`, Offline & Account-Free)
 
 ```bash
-printf '%s' 'your strong passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
+# Pipe from a password manager or silent prompt (`IFS= read -rs KDNA_PASS`) so no plaintext password file is written to disk
+printf '%s' 'your strong passphrase' | npx -y @aikdna/kdna-cli@0.45.2 protect my-work.kdna --output my-work.locked.kdna --password-file /dev/stdin
 ```
 
 ### Revising and Comparing Versions (`1.0.0` → `1.1.0`)

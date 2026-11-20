@@ -35,13 +35,13 @@ npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
-# 3. Protect locally with a password (offline RFC-0018 AEAD encryption)
-printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
+# 3. Protect locally with a password via stdin (offline RFC-0018 AEAD; writes no plaintext file to disk)
+# For real secrets, pipe from a password manager or prompt silently (`IFS= read -rs KDNA_PASS`) into /dev/stdin.
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file /dev/stdin
+printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
-  --allow-read --password-file password.txt --format human
+  --allow-read --password-file /dev/stdin --format human
 ```
 
 Key tips:

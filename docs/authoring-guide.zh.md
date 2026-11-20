@@ -71,8 +71,8 @@ npx -y @aikdna/kdna-cli@0.45.2 create author-input.json --output my-work.kdna --
 ### 本地离线口令加密（`RFC-0018`，无需在线账号）
 
 ```bash
-printf '%s' '你的高强度口令' > password.txt
-npx -y @aikdna/kdna-cli@0.45.2 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
+# 建议从密码管理器或静默读取的变量（`IFS= read -rs KDNA_PASS`）管道传入，避免在磁盘留下明文口令文件
+printf '%s' '你的高强度口令' | npx -y @aikdna/kdna-cli@0.45.2 protect my-work.kdna --output my-work.locked.kdna --password-file /dev/stdin
 ```
 
 ### 修订升级与版本对比（`1.0.0` → `1.1.0`）
