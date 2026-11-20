@@ -230,6 +230,20 @@ const trackedMdFiles = execFileSync('git', ['ls-files', '*.md'], {
   .filter((rel) => rel && !rel.startsWith('specs/history/pre-r2/'));
 
 const slugCache = new Map();
+function headingText(text) {
+  const visible = [];
+  let pending = null;
+  for (const character of text) {
+    if (character === '<') {
+      pending ??= [];
+    } else if (character === '>') {
+      pending = null;
+    } else {
+      (pending ?? visible).push(character);
+    }
+  }
+  return visible.join('') + (pending === null ? '' : pending.join(''));
+}
 function headingSlugsFor(filePath) {
   if (slugCache.has(filePath)) return slugCache.get(filePath);
   const text = fs.readFileSync(filePath, 'utf8');
@@ -244,11 +258,12 @@ function headingSlugsFor(filePath) {
     if (inFence) continue;
     const match = /^#{1,6}\s+(.*?)\s*$/u.exec(line);
     if (!match) continue;
-    const cleaned = match[1]
-      .replace(/\s+#+\s*$/u, '')
-      .replace(/!\[([^\]]*)\]\([^)]*\)/gu, '$1')
-      .replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1')
-      .replace(/<[^>]+>/gu, '')
+    const cleaned = headingText(
+      match[1]
+        .replace(/\s+#+\s*$/u, '')
+        .replace(/!\[([^\]]*)\]\([^)]*\)/gu, '$1')
+        .replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1'),
+    )
       .replace(/`/gu, '')
       .trim()
       .toLowerCase()
