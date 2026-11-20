@@ -274,12 +274,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-cli
-          ref: f4543de11952f7076af92f4fbe0873d96c164738
+          ref: e906525892a1edc9caec4dff8f20047b4e776776
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-skills
-          ref: f6cedbf00fdd817949ed3a4ac89795b559a3cc49
+          ref: dc1dc12bf7d722f64b77e89f876c3d9f93466f6d
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:

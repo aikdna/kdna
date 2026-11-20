@@ -23,11 +23,11 @@
 
 - **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)（`2,725,359` 字节 · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`，作者 `张零`）
 - **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna)（`2,843,386` 字节 · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`，作者 `Zhang Ling`）
-- **KDNA Reader 桌面版（macOS · Apple Silicon · 已获 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费无限制，支持免登录离线打开任意本地 `.kdna` 作品，登录免费 `KDNA ID` 可同步官方中英双语判断资产库）
+- **KDNA Reader 桌面版（macOS · Apple Silicon · 已获 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费；默认提供免费 `KDNA ID` 注册与登录以解锁内置中英双语《KDNA 白皮书》与多标签对照，同时支持免登录直接打开单个本地公开或口令保护 `.kdna` 文件）
 - **公开参考作品仓：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.2`、校验值与容器核验脚本）
 
 > **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
-> `请先下载首份公开 .kdna 作品《KDNA白皮书》（curl -fsSLo kdna-whitepaper-1.0.2.zh-CN.kdna https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna），用 npx -y @aikdna/kdna-cli@0.45.0 read kdna-whitepaper-1.0.2.zh-CN.kdna --mode catalog --format human --allow-read 查看全部 45 个议题目录；再根据我想讨论的问题，用 --mode exact_selection --judgment-id <id1,id2> --format human --allow-read 按需精读对应判断（请始终带 --format human 或 --compact，不要使用 whole_asset）。`
+> `请先下载首份公开 .kdna 作品《KDNA白皮书》（curl -fsSLo kdna-whitepaper-1.0.2.zh-CN.kdna https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna），用 npx -y @aikdna/kdna-cli@0.45.1 read kdna-whitepaper-1.0.2.zh-CN.kdna --mode catalog --format human --allow-read 查看全部 45 个议题目录；再根据我想讨论的问题，用 --mode exact_selection --judgment-id <id1,id2> --format human --allow-read 按需精读对应判断（请始终带 --format human 或 --compact，不要使用 whole_asset）。`
 
 ---
 
@@ -37,22 +37,22 @@
 
 ```sh
 # 1. 创建：生成示例草稿，校验并打包为 0.6.0 .kdna 作品
-npx -y @aikdna/kdna-cli@0.45.0 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.45.0 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.45.0 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.1 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.1 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.1 create --draft draft.json --output my-judgments.kdna --allow-create
 
 # 2. 校验与按需读取：先看目录，再按需读取目标判断及关联前提
-npx -y @aikdna/kdna-cli@0.45.0 validate my-judgments.kdna
-npx -y @aikdna/kdna-cli@0.45.0 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.45.0 read my-judgments.kdna \
+npx -y @aikdna/kdna-cli@0.45.1 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
 # 3. 本地口令加密（离线 AEAD 加密，不依赖任何在线账号）
 printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.0 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.0 read locked.kdna \
+npx -y @aikdna/kdna-cli@0.45.1 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.1 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --password-file password.txt --format human
@@ -79,18 +79,18 @@ npx -y @aikdna/kdna-cli@0.45.0 read locked.kdna \
 | --- | --- |
 | [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` 与 `0.5.0` 校验、规范摘要、作品打包与本地口令加密 |
 | [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | 按需读取协议（`catalog` 目录、`exact_selection` 精确选读与前提关联闭包、本地口令解锁） |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 一致性测试套件与跨实现核验规则 |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 历史 `0.1.0`/`0.36.1` 一致性测试包（现行 `0.6.0` 容器核验使用 `conformance/canonical-conformance.mjs`） |
 | [`conformance/`](./conformance) 与 [`fixtures/`](./fixtures) | 版本化正反测试样本与参考向量 |
 | [`specs/`](./specs) 与 [`rfcs/`](./rfcs) | 规范索引（[`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)）与演进提案 |
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | 最小合成教学夹具对（`1.0.0` / `1.1.0`），用于演示 CLI 读取与 `kdna diff` 命令 |
 
 配套开源仓库与应用：
-- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli@0.45.0`），负责创建、本地加密、校验、读取、对比与修订 `0.6.0` `.kdna` 作品
+- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli@0.45.1`），负责创建、本地加密、校验、读取、对比与修订 `0.6.0` `.kdna` 作品
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — 面向主流 AI Agent 的创作与读取技能包（`kdna-creator`、`kdna-loader`）及本地 stdio MCP 适配器
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 作品仓库（含《KDNA 白皮书》`v1.0.2` 中英双语正式版）
 - [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 macOS 桌面阅读器
 
-> **版本说明：** 所有当前 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.0`**。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
+> **版本说明：** 所有当前 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.1`**。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
 
 ---
 
