@@ -123,7 +123,11 @@
       ],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed", "remote"],
+      "supported_access_modes": [
+        "public",
+        "licensed",
+        "remote"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
@@ -135,7 +139,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "5276c606e67636b83737917ee5efc1d4b9cb66f6",
+      "source_commit": "f4543de11952f7076af92f4fbe0873d96c164738",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -144,19 +148,23 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.44.0",
+          "version": "0.45.0",
           "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.44.0"
+          "published_version": "0.45.0"
         }
       ],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed", "remote"],
+      "supported_access_modes": [
+        "public",
+        "licensed",
+        "remote"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline",
@@ -177,7 +185,9 @@
       "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": [
+        "public"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "the current repository main branch and release kdna-whitepaper-1.0.2 publish the bilingual KDNA Whitepaper v1.0.2 (kdna-whitepaper-1.0.2.zh-CN.kdna and kdna-whitepaper-1.0.2.en.kdna, CC BY 4.0, Container 0.6.0, 45 judgments)",
@@ -190,7 +200,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "de0c9e75661558aaefd8329ad93205a34e6d2ad3",
+      "source_commit": "f6cedbf00fdd817949ed3a4ac89795b559a3cc49",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -199,24 +209,26 @@
           "package_json": "mcp-server/package.json",
           "package_name": "@aikdna/kdna-mcp-server",
           "npm_package": "@aikdna/kdna-mcp-server",
-          "version": "0.8.0",
-          "published_version": "0.8.0",
+          "version": "0.8.1",
+          "published_version": "0.8.1",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
-          "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.0 --asset <selected.kdna> --allow-read",
+          "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.1 --asset <selected.kdna> --allow-read",
           "legacy_replacement": null
         }
       ],
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": [
+        "public"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "MCP is an experimental structured bridge; the loader Skill is Unassessed and neither discovery nor matching creates user authority"
       ],
-      "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.0 --asset <selected.kdna> --allow-read (operator-bound local stdio)",
+      "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.1 --asset <selected.kdna> --allow-read (operator-bound local stdio)",
       "legacy_replacement": null
     },
     {
@@ -245,7 +257,10 @@
       ],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
+      "supported_access_modes": [
+        "public",
+        "licensed"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Studio export is pre-release and treats review, Human Lock, signatures, and release evidence as optional provenance layers",
@@ -280,7 +295,10 @@
       ],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
+      "supported_access_modes": [
+        "public",
+        "licensed"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "remote authoring delivery is outside the local Studio CLI baseline",
@@ -301,7 +319,10 @@
       "packages": [],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
+      "supported_access_modes": [
+        "public",
+        "licensed"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "accepted main is recertified against exact public Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a; the 0.21.0 tag is the published incumbent"
@@ -321,7 +342,10 @@
       "packages": [],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
+      "supported_access_modes": [
+        "public",
+        "licensed"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
@@ -342,7 +366,10 @@
       "packages": [],
       "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public", "licensed"],
+      "supported_access_modes": [
+        "public",
+        "licensed"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
@@ -361,7 +388,9 @@
       "packages": [],
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": [
+        "public"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
@@ -379,7 +408,9 @@
       "packages": [],
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": [
+        "public"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
@@ -397,7 +428,9 @@
       "packages": [],
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": [
+        "public"
+      ],
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
@@ -417,7 +450,9 @@
       "supported_kdna_version": null,
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
-      "known_limitations": ["not part of the current stable public runtime baseline"],
+      "known_limitations": [
+        "not part of the current stable public runtime baseline"
+      ],
       "recommended_entrypoint": "local public .kdna assets through Core/CLI",
       "legacy_replacement": "local public asset workflow"
     }

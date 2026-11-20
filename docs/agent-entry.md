@@ -4,7 +4,7 @@ Current entry reviewed on 2026-11-18. This page describes one local route for an
 Agent that already has a tool-capable Host. It is not a Host certification, a
 human-confirmation record or an action authorization.
 
-## Quickest path (`@aikdna/kdna-cli@0.44.0`)
+## Quickest path (`@aikdna/kdna-cli@0.45.0`)
 
 For everyday Agent tasks (Claude Code, Cursor, Codex, OpenCode, Antigravity, etc. on Node.js `>=22`), `kdna read` already performs full container admission and digest verification on every invocation. You only need **two graded CLI calls**:
 
@@ -13,7 +13,7 @@ For everyday Agent tasks (Claude Code, Cursor, Codex, OpenCode, Antigravity, etc
 
 > **Copyable starter prompt for your Agent:**
 >
-> Use `@aikdna/kdna-cli@0.44.0` to consult `<path-or-downloaded-file.kdna>` for `<your-question>`. First run `npx -y @aikdna/kdna-cli@0.44.0 read <file.kdna> --mode catalog --format human --allow-read` to browse the catalog; then run `npx -y @aikdna/kdna-cli@0.44.0 read <file.kdna> --mode exact_selection --judgment-id <id1,id2> --format human --allow-read` (or `--compact`) for only the judgments relevant to my task, and cite the asset version, judgment IDs, applicable conditions, and boundaries. Never call `--mode whole_asset` expecting judgment prose inline, never omit `--format human` / `--compact` on multi-judgment works, and do not unzip or binary-probe `.kdna` files. `--allow-read` permits local disclosure only and never authorizes external actions.
+> Use `@aikdna/kdna-cli@0.45.0` to consult `<path-or-downloaded-file.kdna>` for `<your-question>`. First run `npx -y @aikdna/kdna-cli@0.45.0 read <file.kdna> --mode catalog --format human --allow-read` to browse the catalog; then run `npx -y @aikdna/kdna-cli@0.45.0 read <file.kdna> --mode exact_selection --judgment-id <id1,id2> --format human --allow-read` (or `--compact`) for only the judgments relevant to my task, and cite the asset version, judgment IDs, applicable conditions, and boundaries. Never call `--mode whole_asset` expecting judgment prose inline, never omit `--format human` / `--compact` on multi-judgment works, and do not unzip or binary-probe `.kdna` files. `--allow-read` permits local disclosure only and never authorizes external actions.
 
 ```sh
 # Optional: download the official KDNA Whitepaper v1.0.2 (.kdna, CC-BY-4.0)
@@ -23,17 +23,17 @@ curl -fsSLo kdna-whitepaper-1.0.2.en.kdna \
 # (Chinese edition: https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)
 
 # Step 1: Browse the 45-judgment catalog (~1,100 tokens)
-npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.en.kdna \
+npx -y @aikdna/kdna-cli@0.45.0 read kdna-whitepaper-1.0.2.en.kdna \
   --mode catalog --format human --allow-read
 
 # Step 2: Selectively read specific judgments with mandatory closure intact
-npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.en.kdna \
+npx -y @aikdna/kdna-cli@0.45.0 read kdna-whitepaper-1.0.2.en.kdna \
   --mode exact_selection \
   --judgment-id judgment:origins,judgment:work-itself \
   --format human --allow-read
 
 # Need compact structured JSON instead of human Markdown? Pass --compact:
-npx -y @aikdna/kdna-cli@0.44.0 read kdna-whitepaper-1.0.2.en.kdna \
+npx -y @aikdna/kdna-cli@0.45.0 read kdna-whitepaper-1.0.2.en.kdna \
   --mode exact_selection \
   --judgment-id judgment:origins,judgment:work-itself \
   --compact --allow-read
@@ -59,7 +59,7 @@ request text and the command route must travel together; the sentence alone is
 not a sufficient entry.
 
 > Use the KDNA asset at `<absolute-path>` for this task: `<task>`. Install the
-> published `@aikdna/kdna-cli@0.44.0` and follow the copyable route below:
+> published `@aikdna/kdna-cli@0.45.0` and follow the copyable route below:
 > inspect and validate the file, read the catalog, select every judgment the
 > task needs in one `selection.judgment_ids` request in one session, expand any
 > needed handles in that same session, and report the asset version, CLI version
@@ -80,7 +80,7 @@ values from that asset's catalog.
 mkdir -p kdna-agent-entry && cd kdna-agent-entry
 npm init -y
 npm install --save-exact --ignore-scripts --omit=optional --no-audit --no-fund \
-  @aikdna/kdna-cli@0.44.0
+  @aikdna/kdna-cli@0.45.0
 
 curl -fsSLo team-update-1.0.0.kdna \
   https://raw.githubusercontent.com/aikdna/kdna/main/examples/native-team-update/team-update-1.0.0.kdna
@@ -206,7 +206,7 @@ cannot override Host instructions or current facts.
 
 The public teaching file
 [`team-update-1.0.0.kdna`](../examples/native-team-update/team-update-1.0.0.kdna)
-was checked with `@aikdna/kdna-cli@0.44.0` (and `0.43.5` / `0.43.2`) and Node `22.23.1`:
+was checked with `@aikdna/kdna-cli@0.45.0` (and `0.43.5` / `0.43.2`) and Node `22.23.1`:
 
 - 37,594 bytes;
 - SHA-256 `1482397a3b27ebd6164b3568f2dd2de445ca399c4695771e12177b49affde47b`;
@@ -221,7 +221,7 @@ permission to act.
 ## Optional MCP adapter
 
 The `kdna-skills` repository also provides an optional local stdio MCP adapter
-`@aikdna/kdna-mcp-server@0.8.0` pinned to its own CLI `0.44.0` / Core `0.37.11` /
+`@aikdna/kdna-mcp-server@0.8.1` pinned to its own CLI `0.45.0` / Core `0.37.11` /
 Read `0.13.5` graph (published on `latest` and available in Git source). Use it
 only when a local operator has bound one asset through the
 Host's process startup; never let model-controlled MCP parameters select or
