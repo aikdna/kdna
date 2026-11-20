@@ -27,7 +27,7 @@ Our first official public judgment work—**KDNA Whitepaper `v1.0.2`** (*《KDNA
 - **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive, SHA-256 digests, and verification checks)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
-> `Download kdna-whitepaper-1.0.2.en.kdna from https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna, run npx -y @aikdna/kdna-cli@0.45.1 read kdna-whitepaper-1.0.2.en.kdna --mode catalog --format human --allow-read to browse the 45-question catalog, and then read the relevant judgments for my question via --mode exact_selection --judgment-id <id1,id2> --format human --allow-read (always pass --format human or --compact; do not use whole_asset).`
+> `Download kdna-whitepaper-1.0.2.en.kdna from https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna, run npx -y @aikdna/kdna-cli@0.45.2 read kdna-whitepaper-1.0.2.en.kdna --mode catalog --format human --allow-read to browse the 45-question catalog, and then read the relevant judgments for my question via --mode exact_selection --judgment-id <id1,id2> --format human --allow-read (always pass --format human or --compact; do not use whole_asset).`
 
 ---
 
@@ -37,22 +37,22 @@ Requires **Node.js `>=22`**. Creation, local password encryption (container `0.6
 
 ```sh
 # 1. Create a starter draft and pack a 0.6.0 .kdna work
-npx -y @aikdna/kdna-cli@0.45.1 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.45.1 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.45.1 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.2 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.2 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.2 create --draft draft.json --output my-judgments.kdna --allow-create
 
 # 2. Validate and read selectively (catalog first, then exact_selection with intact premises)
-npx -y @aikdna/kdna-cli@0.45.1 validate my-judgments.kdna
-npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna \
+npx -y @aikdna/kdna-cli@0.45.2 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
 # 3. Protect locally with a password (offline AEAD encryption; no online account)
 printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.1 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.1 read locked.kdna \
+npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --password-file password.txt --format human
@@ -105,7 +105,7 @@ artifact:
 | --- | --- | --- | --- |
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | `affd3db862a02daaacd9ada91ec365ff93d9f6c2592e62df9e01888d36bb2e4a` |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | `a7eb0064ad028a73394a4cc9d189dd22f52f046e30a31c6e50bea1490915fc89` |
-| `@aikdna/kdna-cli` | `0.45.1` | `latest` | `0c38209876bf6093a7a4f57b18e97304947832c813675815bc2466a1a5daa047` |
+| `@aikdna/kdna-cli` | `0.45.2` | `latest` | `b42c7f0ce3cfff719c4c50d7bb2eaa32449dd0c076b4f3ce7c9f9002b1c6a452` |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | `76a5e7dcca71b28259e5058d241304912713d72e9defba98ce8a03f7e4d1e22a` |
 | `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | `542270c699eec5cbc468b134b2d7235c312be7551e32f4ce66821b3fb814dfc7` |
 
@@ -117,7 +117,7 @@ earlier `latest` values stay in the
 This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.
 <!-- release-coordinates:end -->
 
-> **Note:** For all current Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.1`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
+> **Note:** For all current Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.2`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
 
 ---
 

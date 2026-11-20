@@ -2,7 +2,7 @@
 
 [English](./authoring-guide.md) | 简体中文
 
-这份指南讲两件事：**什么样的判断值得写进 `.kdna`**，以及**怎样用现行命令行 `@aikdna/kdna-cli@0.45.1`（Container `0.6.0`，Node.js `>=22`，永久无需在线账号）创建、校验、加密与修订作品**。
+这份指南讲两件事：**什么样的判断值得写进 `.kdna`**，以及**怎样用现行命令行 `@aikdna/kdna-cli@0.45.2`（Container `0.6.0`，Node.js `>=22`，永久无需在线账号）创建、校验、加密与修订作品**。
 
 ---
 
@@ -46,18 +46,18 @@
 
 ```bash
 # 1. 生成可运行的示例草稿（支持 minimal / interview / works / research 模式）
-npx -y @aikdna/kdna-cli@0.45.1 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.2 init --example --mode interview --output draft.json
 
 # 2. 按你的真实判断修改 draft.json（核心字段：focus / statement / applies_when / boundaries / method / reasons / example）后检查结构
 #    （注意：kdna.draft/1 草稿不包含 exceptions / misuse / relationships；如需添加，请先运行 `kdna compile draft.json --output author-input.json` 转为方式二的完整结构源）
-npx -y @aikdna/kdna-cli@0.45.1 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.2 validate-input draft.json --format human
 
 # 3. 打包成 Container 0.6.0 的 .kdna 文件
-npx -y @aikdna/kdna-cli@0.45.1 create --draft draft.json --output my-work.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.2 create --draft draft.json --output my-work.kdna --allow-create
 
 # 4. 校验文件并预览 Agent 会读到的目录
-npx -y @aikdna/kdna-cli@0.45.1 validate my-work.kdna
-npx -y @aikdna/kdna-cli@0.45.1 read my-work.kdna --mode catalog --format human --allow-read
+npx -y @aikdna/kdna-cli@0.45.2 validate my-work.kdna
+npx -y @aikdna/kdna-cli@0.45.2 read my-work.kdna --mode catalog --format human --allow-read
 ```
 
 ### 方式二：完整结构源 JSON（`{ manifest, payload, members }`）
@@ -65,14 +65,14 @@ npx -y @aikdna/kdna-cli@0.45.1 read my-work.kdna --mode catalog --format human -
 如果需要精细编排整份作品的共同前提（`shared_declarations`）、判断间关联（`support` 支撑、`qualify` 限定、`conflict` 冲突张力、`complement` 补充）、来源材料与修订历史，可直接参考仓库内可运行的最小模板 [`docs/examples/author-input-minimal.json`](./examples/author-input-minimal.json)，再用 `create` 编译：
 
 ```bash
-npx -y @aikdna/kdna-cli@0.45.1 create author-input.json --output my-work.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.2 create author-input.json --output my-work.kdna --allow-create
 ```
 
 ### 本地离线口令加密（`RFC-0018`，无需在线账号）
 
 ```bash
 printf '%s' '你的高强度口令' > password.txt
-npx -y @aikdna/kdna-cli@0.45.1 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.2 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
 ```
 
 ### 修订升级与版本对比（`1.0.0` → `1.1.0`）
@@ -80,7 +80,7 @@ npx -y @aikdna/kdna-cli@0.45.1 protect my-work.kdna --output my-work.locked.kdna
 实践中遇到新反例、完善了判断后，导出新版本并用 `diff` 逐项核对差异：
 
 ```bash
-npx -y @aikdna/kdna-cli@0.45.1 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --format human
+npx -y @aikdna/kdna-cli@0.45.2 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --format human
 ```
 
 ---
@@ -91,4 +91,4 @@ npx -y @aikdna/kdna-cli@0.45.1 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --form
 - [ ] 作品整体范围、停手边界、例外情况与常见误用都交代清楚。
 - [ ] 彼此有前提支撑、限定制约或张力冲突的判断已经连好关系，确保按需读取时不断章取义。
 - [ ] 作者署名、版本号、来源出处与许可协议如实标注。
-- [ ] `npx -y @aikdna/kdna-cli@0.45.1 validate <file.kdna>` 通过，且在 **KDNA Reader** 里用人眼通读自然顺畅。
+- [ ] `npx -y @aikdna/kdna-cli@0.45.2 validate <file.kdna>` 通过，且在 **KDNA Reader** 里用人眼通读自然顺畅。

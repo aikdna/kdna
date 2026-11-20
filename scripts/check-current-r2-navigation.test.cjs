@@ -137,13 +137,13 @@ const mutations = [
   [
     'Chinese README CLI coordinate',
     'README.zh.md',
-    '@aikdna/kdna-cli@0.45.1',
+    '@aikdna/kdna-cli@0.45.2',
     '@aikdna/kdna-cli@0.36.1',
   ],
   [
     'Start Here CLI coordinate',
     'docs/start-here.md',
-    '@aikdna/kdna-cli@0.45.1',
+    '@aikdna/kdna-cli@0.45.2',
     '@aikdna/kdna-cli@0.36.1',
   ],
   ['status Core coordinate', 'docs/status.md', '`0.37.11`', '`0.36.0`'],

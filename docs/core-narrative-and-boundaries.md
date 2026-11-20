@@ -8,7 +8,7 @@ This document states clearly what KDNA is, how `.kdna` files fit alongside the r
 
 > **KDNA (`.kdna`) is an open file format and selective reading protocol for expressible human thinking, judgment, trade-offs, boundaries, and taste.**
 
-Just as prose has `.md`/`.pdf`, data has spreadsheets, and logic has code, KDNA gives bounded judgment systems their own independent, portable, versioned file—readable directly by humans in **KDNA Reader** and selectively consumable by any compatible AI Agent (`@aikdna/kdna-cli@0.45.1`, `@aikdna/kdna-core@0.37.11`, `@aikdna/kdna-read@0.13.5`).
+Just as prose has `.md`/`.pdf`, data has spreadsheets, and logic has code, KDNA gives bounded judgment systems their own independent, portable, versioned file—readable directly by humans in **KDNA Reader** and selectively consumable by any compatible AI Agent (`@aikdna/kdna-cli@0.45.2`, `@aikdna/kdna-core@0.37.11`, `@aikdna/kdna-read@0.13.5`).
 
 An individual or team can keep a concise six-judgment craft file or a full forty-five-judgment domain system as a `.kdna` work. The format is permanently account-free, works offline, and supports optional local password encryption (`kdna protect`, `RFC-0018`).
 
@@ -40,7 +40,7 @@ Keeping these four boundaries crisp protects both authors and users:
 
 ## 4. Current Published Line
 
-The active Container `0.6.0` line uses **Core `0.37.11`**, **Read `0.13.5`**, and **CLI `0.45.1`**:
+The active Container `0.6.0` line uses **Core `0.37.11`**, **Read `0.13.5`**, and **CLI `0.45.2`**:
 
 ```text
 explicit .kdna file
