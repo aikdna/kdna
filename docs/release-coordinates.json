@@ -35,15 +35,15 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.45.1",
+      "version": "0.45.2",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.45.1",
-      "source_commit": "e906525892a1edc9caec4dff8f20047b4e776776",
-      "artifact_sha256": "0c38209876bf6093a7a4f57b18e97304947832c813675815bc2466a1a5daa047",
-      "publish_run": 44699543119,
-      "release_id": 452414212,
-      "release_published_at": "2026-11-20T08:03:33Z"
+      "release_tag": "0.45.2",
+      "source_commit": "91b643ae627ebc7255f1e5f147612b0616ab51e1",
+      "artifact_sha256": "b42c7f0ce3cfff719c4c50d7bb2eaa32449dd0c076b4f3ce7c9f9002b1c6a452",
+      "publish_run": 44726909777,
+      "release_id": 452603358,
+      "release_published_at": "2026-11-20T11:21:13Z"
     },
     {
       "unit": "studio-core",
@@ -76,16 +76,16 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "dc1dc12bf7d722f64b77e89f876c3d9f93466f6d",
+      "main_commit": "c61b3adb497fdc82127818e7964c50c4ac9c59c0",
       "mcp_package": "@aikdna/kdna-mcp-server",
-      "mcp_version": "0.8.2",
-      "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.2",
-      "release_tag": "kdna-mcp-server-0.8.2",
-      "artifact_sha256": "e3d7fd8106d409633097d24133111c1c0b71b26c649d37b3e6c4830318bd03e0",
-      "publish_run": 44701407448,
-      "release_id": 452426137,
-      "release_published_at": "2026-11-20T08:17:51Z",
-      "delivery": "Agent Skills in Git source channel plus optional published local stdio MCP adapter @aikdna/kdna-mcp-server@0.8.2 on latest"
+      "mcp_version": "0.8.3",
+      "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.3",
+      "release_tag": "kdna-mcp-server-0.8.3",
+      "artifact_sha256": "fb036cc2bb554e6fec2c93e756987a0d39e91e9ea3256b206ef6b4a0194eff87",
+      "publish_run": 44728438782,
+      "release_id": 452613919,
+      "release_published_at": "2026-11-20T11:32:26Z",
+      "delivery": "Agent Skills in Git source channel plus optional published local stdio MCP adapter @aikdna/kdna-mcp-server@0.8.3 on latest"
     }
   ],
   "preserved_preview_tags": {

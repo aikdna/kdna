@@ -12,7 +12,7 @@ and read it directly.
 ## Prerequisites
 
 - Node 22 or later;
-- `@aikdna/kdna-cli@0.45.1` with its exact Core `0.37.11` / Read `0.13.5`
+- `@aikdna/kdna-cli@0.45.2` with its exact Core `0.37.11` / Read `0.13.5`
   companion graph;
 - an explicit destination filename that does not already exist;
 - permission to write a new file and to disclose the result for this task.

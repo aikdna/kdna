@@ -2,7 +2,7 @@
 
 English | [简体中文](./start-here.zh.md) · [README](../README.md) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Agent Entry](./agent-entry.md)
 
-Get hands-on with KDNA in a few minutes using **KDNA Reader** and the official CLI **`@aikdna/kdna-cli@0.45.1`** (Container `0.6.0`, Node.js `>=22`, permanently account-free).
+Get hands-on with KDNA in a few minutes using **KDNA Reader** and the official CLI **`@aikdna/kdna-cli@0.45.2`** (Container `0.6.0`, Node.js `>=22`, permanently account-free).
 
 ---
 
@@ -17,28 +17,28 @@ Start by opening our first official bilingual work, **KDNA Whitepaper `v1.0.2`**
 
 ---
 
-## 2. Try the CLI in 30 Seconds (`@aikdna/kdna-cli@0.45.1`)
+## 2. Try the CLI in 30 Seconds (`@aikdna/kdna-cli@0.45.2`)
 
 Everything below runs locally on **Node.js `>=22`** with zero online accounts:
 
 ```bash
 # 1. Create a starter draft, validate it, and build a Container 0.6.0 .kdna work
-npx -y @aikdna/kdna-cli@0.45.1 init --example --mode interview --output draft.json
-npx -y @aikdna/kdna-cli@0.45.1 validate-input draft.json --format human
-npx -y @aikdna/kdna-cli@0.45.1 create --draft draft.json --output my-judgments.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.2 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.2 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.2 create --draft draft.json --output my-judgments.kdna --allow-create
 
 # 2. Validate and read selectively (catalog first, then exact_selection with intact premises)
-npx -y @aikdna/kdna-cli@0.45.1 validate my-judgments.kdna
-npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna --mode catalog --allow-read --format human
-npx -y @aikdna/kdna-cli@0.45.1 read my-judgments.kdna \
+npx -y @aikdna/kdna-cli@0.45.2 validate my-judgments.kdna
+npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna --mode catalog --allow-read --format human
+npx -y @aikdna/kdna-cli@0.45.2 read my-judgments.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --compact
 
 # 3. Protect locally with a password (offline RFC-0018 AEAD encryption)
 printf '%s' 'a long passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.1 protect my-judgments.kdna --output locked.kdna --password-file password.txt
-npx -y @aikdna/kdna-cli@0.45.1 read locked.kdna \
+npx -y @aikdna/kdna-cli@0.45.2 protect my-judgments.kdna --output locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.2 read locked.kdna \
   --mode exact_selection \
   --judgment-id decision:first-dilemma \
   --allow-read --password-file password.txt --format human
@@ -70,7 +70,7 @@ Key tips:
 | Repository / App | Purpose |
 | --- | --- |
 | [`aikdna/kdna`](https://github.com/aikdna/kdna) | Open protocol specification, schemas, conformance suites, `@aikdna/kdna-core`, and `@aikdna/kdna-read` |
-| [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | Official CLI (`@aikdna/kdna-cli@0.45.1`) for `init`, `validate-input`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, and `convert` |
+| [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | Official CLI (`@aikdna/kdna-cli@0.45.2`) for `init`, `validate-input`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, and `convert` |
 | [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter |
 | [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) | Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`) |
 | [KDNA Reader](https://aikdna.com/en/downloads) | Free macOS desktop app for reading and reviewing `.kdna` works |

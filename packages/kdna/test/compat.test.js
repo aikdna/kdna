@@ -97,7 +97,7 @@ function assertCurrentToolchainLock(
   );
   assert.deepEqual(
     [releasedCli.version, releasedCli.published_version, releasedCli.release_status],
-    ['0.45.1', '0.45.1', 'active'],
+    ['0.45.2', '0.45.2', 'active'],
     'the CLI record follows its own publication while the compatibility package keeps its independent 0.36.1 pin',
   );
   assert.deepEqual(lock.packages[ROOT_CORE_LOCK_PATH], {
