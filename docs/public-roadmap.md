@@ -6,14 +6,14 @@ KDNA (`.kdna`) is an open file format and selective reading protocol for express
 
 ## Permanently Account-Free Foundation
 
-Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free without usage limits, reading any local `.kdna` file offline with optional free `KDNA ID` sign-in for the synced Judgment Asset Library.
+Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free, defaulting to free `KDNA ID` sign-up/sign-in to unlock the built-in bilingual *KDNA Whitepaper* and multi-tab comparison while supporting login-free offline opening of a single local `.kdna` file.
 
 ## Public Ecosystem Responsibilities
 
 | Area | Public Repository / App | Mission |
 | --- | --- | --- |
 | Protocol & Core | `kdna` (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Container `0.6.0` schemas, digests, local password protection, selective Read closure, and conformance suites |
-| Official CLI | `kdna-cli` (`@aikdna/kdna-cli@0.45.0`) | Author (`init`, `validate-input`, `create`), protect (`protect`), validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works |
+| Official CLI | `kdna-cli` (`@aikdna/kdna-cli@0.45.1`) | Author (`init`, `validate-input`, `create`), protect (`protect`), validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works |
 | Agent Integration | `kdna-skills` | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter |
 | Public Works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.2`, `CC BY 4.0`) |
 | Human Reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Free macOS desktop app for reading, reviewing, and exploring `.kdna` works |

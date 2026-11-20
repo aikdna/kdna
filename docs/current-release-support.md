@@ -10,16 +10,16 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | --- | --- | --- | --- | --- |
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | Node `>=20` | Container `0.6.0` & `0.5.0` admission, Canonical IR, packing, local encryption |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | Node `>=20` | Selective Read protocol (`catalog`, `exact_selection`, `expand`, unlock) |
-| `@aikdna/kdna-cli` | `0.45.0` | `latest` | Node `>=22` | Official CLI (`init`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`) |
-| `@aikdna/kdna-mcp-server` | `0.8.1` | `latest` | Node `>=22` | Optional local stdio MCP adapter in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) |
+| `@aikdna/kdna-cli` | `0.45.1` | `latest` | Node `>=22` | Official CLI (`init`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`) |
+| `@aikdna/kdna-mcp-server` | `0.8.2` | `latest` | Node `>=22` | Optional local stdio MCP adapter in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) |
 
 ## Preserved Legacy Packages (Container `0.5.0` & Compatibility)
 
 | Package | Version | npm tag | Status |
 | --- | --- | --- | --- |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | Archived Container `0.5.0` Studio session SDK (not used for `0.6.0`) |
-| `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | Archived Container `0.5.0` Studio CLI (use `@aikdna/kdna-cli@0.45.0` instead) |
-| `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Conformance vector package |
+| `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | Archived Container `0.5.0` Studio CLI (use `@aikdna/kdna-cli@0.45.1` instead) |
+| `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Archived `0.1.0`/`0.36.1` conformance package (use `npm run conformance:canonical` for `0.6.0`) |
 | `@aikdna/kdna` | `0.14.0` | `latest` | Legacy compatibility alias (`0.36.1` line) |
 
 Retired private packages kept in source history only (not published to npm): `@aikdna/agent`, `@aikdna/kdna-artifact-engine`, and `@aikdna/kdna-fidelity-core`. Use `@aikdna/kdna-core@0.37.11` and `@aikdna/kdna-read@0.13.5` for all current integrations.

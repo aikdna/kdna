@@ -103,14 +103,14 @@ const REQUIRED_GUARDRAILS = new Map([
       'KDNA does not require a global asset library',
       // Keep these three coordinates in sync with the release matrix. A release
       // that moves the current line updates this page and this gate together.
-      'CLI `0.45.0`',
+      'CLI `0.45.1`',
       'Core `0.37.11`',
       'Read `0.13.5`',
     ],
   ],
   [
     'docs/agent-entry.md',
-    ['@aikdna/kdna-cli@0.45.0', 'zero judgment bodies inline', 'Minimal selection rule'],
+    ['@aikdna/kdna-cli@0.45.1', 'zero judgment bodies inline', 'Minimal selection rule'],
   ],
 ]);
 

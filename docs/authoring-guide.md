@@ -2,7 +2,7 @@
 
 English | [简体中文](./authoring-guide.zh.md)
 
-This guide covers both halves of creating a great `.kdna` file: **what makes a judgment worth preserving**, and **how to build, verify, protect, and evolve it with `@aikdna/kdna-cli@0.45.0`** (Container `0.6.0`, Node.js `>=22`, permanently account-free).
+This guide covers both halves of creating a great `.kdna` file: **what makes a judgment worth preserving**, and **how to build, verify, protect, and evolve it with `@aikdna/kdna-cli@0.45.1`** (Container `0.6.0`, Node.js `>=22`, permanently account-free).
 
 ---
 
@@ -36,7 +36,7 @@ Every judgment in a `.kdna` work works best when it answers four concrete questi
 
 ## 3. Co-Create with an AI Agent (Recommended)
 
-You do not need to hand-write JSON from scratch. The easiest path is to let your AI Agent (Claude Code, Cursor, Codex, OpenCode, or Antigravity) interview you, draft the judgments, show you a human-readable review list so you can approve or revise every entry, and compile the `.kdna` file using `@aikdna/kdna-cli@0.45.0` (or the `kdna-creator` skill in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)).
+You do not need to hand-write JSON from scratch. The easiest path is to let your AI Agent (Claude Code, Cursor, Codex, OpenCode, or Antigravity) interview you, draft the judgments, show you a human-readable review list so you can approve or revise every entry, and compile the `.kdna` file using `@aikdna/kdna-cli@0.45.1` (or the `kdna-creator` skill in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)).
 
 ---
 
@@ -46,19 +46,19 @@ You do not need to hand-write JSON from scratch. The easiest path is to let your
 
 ```bash
 # 1. Generate a starter draft (modes: minimal | interview | works | research)
-npx -y @aikdna/kdna-cli@0.45.0 init --example --mode interview --output draft.json
+npx -y @aikdna/kdna-cli@0.45.1 init --example --mode interview --output draft.json
 
 # 2. Edit draft.json with your judgments, reasons, boundaries, method, and example, then check it
 #    (Note: kdna.draft/1 accepts core judgment fields only; to add exceptions, misuse, or
 #    relationships, run `kdna compile draft.json --output author-input.json` first — see Option B.)
-npx -y @aikdna/kdna-cli@0.45.0 validate-input draft.json --format human
+npx -y @aikdna/kdna-cli@0.45.1 validate-input draft.json --format human
 
 # 3. Compile into a Container 0.6.0 .kdna file
-npx -y @aikdna/kdna-cli@0.45.0 create --draft draft.json --output my-work.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.1 create --draft draft.json --output my-work.kdna --allow-create
 
 # 4. Verify integrity and inspect what Agents will see
-npx -y @aikdna/kdna-cli@0.45.0 validate my-work.kdna
-npx -y @aikdna/kdna-cli@0.45.0 read my-work.kdna --mode catalog --format human --allow-read
+npx -y @aikdna/kdna-cli@0.45.1 validate my-work.kdna
+npx -y @aikdna/kdna-cli@0.45.1 read my-work.kdna --mode catalog --format human --allow-read
 ```
 
 ### Option B: Full Authored JSON (`{ manifest, payload, members }`)
@@ -66,14 +66,14 @@ npx -y @aikdna/kdna-cli@0.45.0 read my-work.kdna --mode catalog --format human -
 For full control over `shared_declarations`, typed `relationships` (`support`, `qualify`, `conflict`, `complement`), `sources`, `materials`, and `history`, see the minimal runnable template at [`docs/examples/author-input-minimal.json`](./examples/author-input-minimal.json) and pass it directly to `kdna create`:
 
 ```bash
-npx -y @aikdna/kdna-cli@0.45.0 create author-input.json --output my-work.kdna --allow-create
+npx -y @aikdna/kdna-cli@0.45.1 create author-input.json --output my-work.kdna --allow-create
 ```
 
 ### Local Password Encryption (`RFC-0018`, Offline & Account-Free)
 
 ```bash
 printf '%s' 'your strong passphrase' > password.txt
-npx -y @aikdna/kdna-cli@0.45.0 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
+npx -y @aikdna/kdna-cli@0.45.1 protect my-work.kdna --output my-work.locked.kdna --password-file password.txt
 ```
 
 ### Revising and Comparing Versions (`1.0.0` → `1.1.0`)
@@ -81,7 +81,7 @@ npx -y @aikdna/kdna-cli@0.45.0 protect my-work.kdna --output my-work.locked.kdna
 When real practice surfaces a counterexample, update your work into a new version and inspect every change in plain text before sharing or adopting it:
 
 ```bash
-npx -y @aikdna/kdna-cli@0.45.0 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --format human
+npx -y @aikdna/kdna-cli@0.45.1 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --format human
 ```
 
 ---
@@ -92,4 +92,4 @@ npx -y @aikdna/kdna-cli@0.45.0 diff my-work-1.0.0.kdna my-work-1.1.0.kdna --form
 - [ ] Asset-level `scope`, `boundaries`, and judgment-level `misuse` / `exceptions` clearly state where the work stops.
 - [ ] Related judgments are linked honestly (`support`, `qualify`, `conflict`, `complement`) so selective reading keeps essential premises together.
 - [ ] Authorship, version, and license metadata accurately reflect who created and approved the work.
-- [ ] `npx -y @aikdna/kdna-cli@0.45.0 validate <file.kdna>` reports `accepted`, and opening the file in **KDNA Reader** reads cleanly to a human eye.
+- [ ] `npx -y @aikdna/kdna-cli@0.45.1 validate <file.kdna>` reports `accepted`, and opening the file in **KDNA Reader** reads cleanly to a human eye.
