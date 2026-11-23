@@ -79,18 +79,27 @@ printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdn
 | --- | --- |
 | [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` 与 `0.5.0` 校验、规范摘要、作品打包与本地口令加密 |
 | [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | 按需读取协议（`catalog` 目录、`exact_selection` 精确选读与前提关联闭包、本地口令解锁） |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 历史 `0.1.0`/`0.36.1` 一致性测试包（现行 `0.6.0` 容器核验使用 `npm run conformance:public-obligations` 与 `scripts/public-contract/run-vectors.mjs`） |
-| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | 现行 Container `0.6.0` 正反测试向量与运行时义务核验（`conformance/` 根目录其余套件与 `fixtures/` 仅保留作历史 `0.1.0` 回归样本） |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | 历史 `0.1.0`/`0.36.1` `planLoad` 一致性测试包（Container `0.6.0` 核验使用 `npm run conformance:container-0.6`；公共语义契约核验使用 `npm run conformance:public-obligations` 与 `scripts/public-contract/run-vectors.mjs`） |
+| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | 公共语义契约（`kdna.core/0.8.2` · `kdna.payload.judgment/0.5.1` · 基础容器 `0.5.0` / `kdna.read/0.6.4`）运行时义务与 94 条正反决策向量；Container `0.6.0` 测试入口为 `npm run conformance:container-0.6`；`conformance/` 根目录其余套件与 `fixtures/` 仅保留作历史 `0.1.0` `planLoad` 回归样本 |
 | [`specs/`](./specs) 与 [`rfcs/`](./rfcs) | 规范索引（[`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)）与演进提案 |
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | 最小合成教学夹具对（`1.0.0` / `1.1.0`），用于演示 CLI 读取与 `kdna diff` 命令 |
 
 配套开源仓库与应用：
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli@0.45.2`），负责创建、本地加密、校验、读取、对比与修订 `0.6.0` `.kdna` 作品
-- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — 面向主流 AI Agent 的创作与读取技能包（`kdna-creator`、`kdna-loader`）及本地 stdio MCP 适配器
+- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — 面向主流 AI Agent 的创作与读取技能包（`kdna-creator`、`kdna-loader`）及本地 stdio MCP 适配器（`@aikdna/kdna-mcp-server@0.8.3`）
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 作品仓库（含《KDNA 白皮书》`v1.0.2` 中英双语正式版）
 - [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 macOS 桌面阅读器
 
-> **版本说明：** 所有当前 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.2`**。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
+### 活跃发布坐标（Container `0.6.0`）
+
+| npm 包 | 版本 | 标签 | 说明 |
+| --- | --- | --- | --- |
+| `@aikdna/kdna-core` | `0.37.11` | `latest` | Container `0.6.0` & `0.5.0` 准入、Canonical IR、摘要与离线口令加密 |
+| `@aikdna/kdna-read` | `0.13.5` | `latest` | 按需读取协议（`catalog`、`exact_selection` 必需闭包、`expand`） |
+| `@aikdna/kdna-cli` | `0.45.2` | `latest` | 官方 CLI（Node.js `>=22`，永久无需在线账号） |
+| `@aikdna/kdna-mcp-server` | `0.8.3` | `latest` | 可选本地 stdio MCP 适配器（来自 [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)） |
+
+> **版本说明：** 所有 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.2`**（如需 MCP 接入请使用 **`@aikdna/kdna-mcp-server@0.8.3`**）。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
 
 ---
 

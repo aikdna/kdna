@@ -79,15 +79,15 @@ This repository maintains the open KDNA specifications (Container `0.6.0`, R2 se
 | --- | --- |
 | [`packages/kdna-core`](./packages/kdna-core) (`@aikdna/kdna-core`) | Container `0.6.0` & `0.5.0` admission, canonical IR, integrity digests, packing, and local password encryption |
 | [`packages/kdna-read`](./packages/kdna-read) (`@aikdna/kdna-read`) | Selective Read protocol (`catalog`, `exact_selection` with mandatory context closure, expansion handles, and protected unlock) |
-| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Legacy `0.1.0`/`0.36.1` conformance package (current `0.6.0` conformance runs via `npm run conformance:public-obligations` and `scripts/public-contract/run-vectors.mjs`) |
-| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | Current Container `0.6.0` positive and fail-closed negative runtime obligations and decision vectors (`conformance/` root and `fixtures/` retain historical `0.1.0` regression vectors) |
+| [`packages/kdna-conformance`](./packages/kdna-conformance) (`@aikdna/kdna-conformance`) | Legacy `0.1.0`/`0.36.1` `planLoad` conformance package (Container `0.6.0` runs via `npm run conformance:container-0.6`; public semantic contract runs via `npm run conformance:public-obligations` and `scripts/public-contract/run-vectors.mjs`) |
+| [`conformance/public-contract/`](./conformance/README.md#dsp095-public-contract-candidate) | Public semantic contract (`kdna.core/0.8.2` · `kdna.payload.judgment/0.5.1` · base Container `0.5.0` / `kdna.read/0.6.4`) runtime obligations and 94 decision vectors; Container `0.6.0` suite runs via `npm run conformance:container-0.6`; `conformance/` root and `fixtures/` retain frozen historical `0.1.0` `planLoad` regression vectors |
 | [`specs/`](./specs) & [`rfcs/`](./rfcs) | Normative schemas ([`SPEC-INDEX.md`](./SPEC-INDEX.md#kdna-public-specification-index)) and design RFCs |
 | [`examples/native-team-update`](./examples/native-team-update/README.md) | Minimal synthetic `1.0.0` / `1.1.0` fixture pair for testing CLI reading and `kdna diff` |
 
 Companion public repositories and apps:
 
-- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — Official CLI (`@aikdna/kdna-cli`) for creating, password-protecting, validating, selectively reading, diffing, and revising Container `0.6.0` works
-- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter
+- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — Official CLI (`@aikdna/kdna-cli@0.45.2`) for creating, password-protecting, validating, selectively reading, diffing, and revising Container `0.6.0` works
+- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter (`@aikdna/kdna-mcp-server@0.8.3`)
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`)
 - [KDNA Reader](https://aikdna.com/en/downloads) — Free, Apple-notarized macOS desktop app for reading, reviewing, and exploring `.kdna` works
 
@@ -117,7 +117,13 @@ earlier `latest` values stay in the
 This wave keeps every already-published preview tag unchanged, and **R2** remains a live channel label rather than a relabeled generation.
 <!-- release-coordinates:end -->
 
-> **Note:** For all current Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.2`**. `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
+### Optional Local MCP Adapter (Container `0.6.0`)
+
+| Package | Version | npm tag | Published artifact SHA-256 |
+| --- | --- | --- | --- |
+| `@aikdna/kdna-mcp-server` | `0.8.3` | `latest` | `fb036cc2bb554e6fec2c93e756987a0d39e91e9ea3256b206ef6b4a0194eff87` |
+
+> **Note:** For all Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.2`** (with optional local stdio MCP adapter **`@aikdna/kdna-mcp-server@0.8.3`** from [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)). `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
 
 ---
 

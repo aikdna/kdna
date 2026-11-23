@@ -54,14 +54,15 @@
           "package_name": "@aikdna/kdna-conformance",
           "npm_package": "@aikdna/kdna-conformance",
           "version": "0.2.0",
-          "lifecycle": "Experimental",
-          "release_status": "active",
+          "lifecycle": "Legacy",
+          "release_status": "compatibility",
           "dependency_policy": "current",
           "known_limitations": [
+            "archived 0.1.0/0.36.1 planLoad conformance package; not used for Container 0.6.0",
             "conformance verdicts are mechanism checks against the pinned reference implementation, not ecosystem authority"
           ],
-          "recommended_entrypoint": "npm install @aikdna/kdna-conformance",
-          "legacy_replacement": null,
+          "recommended_entrypoint": "npm run conformance:container-0.6 and npm run conformance:public-obligations",
+          "legacy_replacement": "npm run conformance:container-0.6 (Container 0.6.0) and npm run conformance:public-obligations (public semantic contract)",
           "published_version": "0.2.0"
         },
         {
@@ -190,7 +191,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "c61b3adb497fdc82127818e7964c50c4ac9c59c0",
+      "source_commit": "1977158840d6e00cfb697750325c5b30aa7efb31",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],

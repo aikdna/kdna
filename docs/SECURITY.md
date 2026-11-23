@@ -28,7 +28,7 @@ validity does not imply content fitness for every use.
 |------|---------|:-------:|
 | `@aikdna/kdna-core` | `0.37.11` (Container `0.6.0` & `0.5.0`) | Active |
 | `@aikdna/kdna-read` | `0.13.5` (Selective Read) | Active |
-| `@aikdna/kdna-cli` | `0.44.x` (Container `0.6.0`) | Active |
+| `@aikdna/kdna-cli` | `0.45.x` (Container `0.6.0`) | Active |
 | `@aikdna/kdna-mcp-server` | `0.8.x` (Container `0.6.0`) | Active |
 | `@aikdna/kdna-studio-cli` / `@aikdna/kdna-studio-core` | `0.14.0` / `4.1.0` (Container `0.5.0` legacy line) | Archived / Maintenance only |
 

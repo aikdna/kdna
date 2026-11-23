@@ -19,7 +19,7 @@ We actively support the latest release for security updates.
 | Component | Supported Versions |
 |-----------|-------------------|
 | KDNA Protocol & Core (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Latest tagged release (`0.37.11` / `0.13.5`, Container `0.6.0` & `0.5.0`) |
-| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.44.x`, Container `0.6.0`) |
+| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.45.x`, Container `0.6.0`) |
 | Official MCP Server (`@aikdna/kdna-mcp-server`) | Latest minor release (`0.8.x`, Container `0.6.0`) |
 | Legacy Studio CLI / Core (`@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`) | Latest minor release (`0.14.0` / `4.1.0`, Container `0.5.0` session line) |
 | Public reference works (`aikdna/kdna-assets`) | *KDNA Whitepaper* `v1.0.2` (`kdna-whitepaper-1.0.2.{en,zh-CN}.kdna`, Container `0.6.0`) |
