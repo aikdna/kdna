@@ -77,6 +77,7 @@
     "build:asset-inspector": "node scripts/build-asset-inspector.mjs",
     "check:asset-inspector": "node scripts/check-asset-inspector.mjs",
     "test:asset-inspector": "node --test scripts/check-asset-inspector.test.mjs",
+    "conformance:container-0.6": "node --test packages/kdna-core/test/public-native-bindings.test.js packages/kdna-read/test/public-native-bindings.test.js packages/kdna-core/test/public-admission-regressions.test.js packages/kdna-core/test/public-protected-sections-browser.test.js packages/kdna-core/test/public-protected-browser-installation.test.js packages/kdna-core/test/public-protection-admission-browser.test.js packages/kdna-core/test/public-source-migration.test.js packages/kdna-read/test/model-view.test.js",
     "conformance:rfc-0020-minimal": "node --test conformance/rfc-0020-minimal.mjs",
     "conformance:public-contract": "node scripts/public-contract/run-vectors.mjs",
     "conformance:public-obligations": "node scripts/public-contract/run-obligations.mjs",

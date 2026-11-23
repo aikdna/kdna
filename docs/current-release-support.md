@@ -19,7 +19,7 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | --- | --- | --- | --- |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | Archived Container `0.5.0` Studio session SDK (not used for `0.6.0`) |
 | `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | Archived Container `0.5.0` Studio CLI (use `@aikdna/kdna-cli@0.45.2` instead) |
-| `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Archived `0.1.0`/`0.36.1` conformance package (use `npm run conformance:canonical` for `0.6.0`) |
+| `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Archived `0.1.0`/`0.36.1` `planLoad` conformance package (for Container `0.6.0` use `npm run conformance:container-0.6`; for the `kdna.core/0.8.2` / `0.5.1` / base `0.5.0` public semantic contract use `npm run conformance:public-obligations` and the 94-vector suite) |
 | `@aikdna/kdna` | `0.14.0` | `latest` | Legacy compatibility alias (`0.36.1` line) |
 
 Retired private packages kept in source history only (not published to npm): `@aikdna/agent`, `@aikdna/kdna-artifact-engine`, and `@aikdna/kdna-fidelity-core`. Use `@aikdna/kdna-core@0.37.11` and `@aikdna/kdna-read@0.13.5` for all current integrations.

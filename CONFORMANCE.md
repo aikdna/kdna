@@ -1,4 +1,13 @@
-# KDNA Conformance — Quick Reference
+# KDNA Conformance — Quick Reference (Historical `0.1.0` `planLoad` Runner)
+
+> **Historical notice — not for Container `0.6.0`.** The runner documented on this page (`conformance/run.mjs`, `npm run conformance`) and `@aikdna/kdna-conformance@0.2.0` target the **frozen historical `0.1.0` / CLI `0.36.1` `planLoad` & Runtime Capsule line** and are retained strictly for legacy regression checks.
+>
+> Use the layered entry points matching your target contract:
+> - **Current Container `0.6.0`:** Run `npm run conformance:container-0.6` (native sections, `ProtectedManifest06Candidate`, `0.5.0` → `0.6.0` migration, native bindings, and retained-section views) and `npm run conformance:envelope-aead` (RFC-0018 local AEAD encryption).
+> - **Public semantic contract (`kdna.core/0.8.2` · `kdna.payload.judgment/0.5.1` · base Container `0.5.0` / `kdna.read/0.6.4`):** Run `npm run conformance:public-obligations` and `node scripts/public-contract/run-vectors.mjs "$(pwd)" /tmp/kdna-public-contract-report.json` (94 decision vectors).
+> - **Historical `0.1.0` `planLoad` regression only:** `npm run conformance` (`conformance/run.mjs`), `npm run conformance:canonical`, and `npm run conformance:runtime-contract` (described below).
+>
+> See [`SPEC.md#7-conformance-suites`](./SPEC.md#7-conformance-suites) and [`IMPLEMENTER-KIT.md`](./IMPLEMENTER-KIT.md) for current Container `0.6.0` guidance.
 
 Conformance claims are bounded by the executable profile and evidence named in
 the report. Passing one profile does not create a global quality or trust

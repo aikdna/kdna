@@ -30,7 +30,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
   "creator": {
     "name": "Creator or Organization Name",
     "id": "creator-identity",
-    "profile_url": "https://aikdna.com/creators/creator-identity",
+    "profile_url": "https://example.com/creators/creator-identity",
     "verified": true,
     "bio": "One-sentence creator background.",
     "pubkey": "ed25519:<hex>"
@@ -59,7 +59,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 
   "license": {
     "type": "CC-BY-4.0 | KCL-1.0 | ...",
-    "url": "https://aikdna.com/licenses/KCL-1.0",
+    "url": "https://example.com/licenses/KCL-1.0",
     "commercial": false,
     "allow_agent_use": true,
     "allow_redistribution": false,
@@ -78,7 +78,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 
   "update_policy": {
     "versioning": "Semantic versioning. Judgment changes increment judgment_version.",
-    "changelog_url": "https://github.com/aikdna/kdna-domain/CHANGELOG.md",
+    "changelog_url": "https://example.com/kdna-domain/CHANGELOG.md",
     "deprecation_notice_days": 90,
     "breaking_change_policy": "Major judgment changes ship as new major version with migration guide."
   },
@@ -107,8 +107,8 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "risk_level": "R1",
     "signature": "ed25519:<hex>",
     "asset_digest": "sha256:<64-hex>",
-    "asset_url": "https://github.com/aikdna/kdna-domain/releases/download/0.7.5/domain.kdna",
-    "repo": "https://github.com/aikdna/kdna-domain",
+    "asset_url": "https://example.com/kdna-domain/releases/download/0.7.5/domain.kdna",
+    "repo": "https://example.com/kdna-domain",
     "runtime_endpoint": null,
     "access_mode": "public | licensed | remote"
   },

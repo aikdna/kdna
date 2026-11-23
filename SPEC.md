@@ -133,16 +133,29 @@ Unknown crypto profiles, algorithms, AAD fields, or failed authentication tags M
 
 ## 7. Conformance Suites
 
-A conforming implementation MUST pass the repository's executable test and conformance suites without modifying committed vectors:
+Conformance verification in this repository is stratified into three distinct layers; do not conflate legacy `0.1.0` `planLoad` checks with Container `0.6.0`:
+
+1. **Container `0.6.0` Conformance & Reference Suites (MUST pass for Container `0.6.0`):**
 
 ```bash
+npm run conformance:container-0.6
 npm test
-npm run conformance
-npm run conformance:canonical
 npm run conformance:envelope-aead
-npm run conformance:runtime-contract
 npm run audit:post-cutover
 ```
+
+2. **Public Semantic Contract Suite (`kdna.core/0.8.2` · `kdna.payload.judgment/0.5.1` · base Container `0.5.0` / `kdna.read/0.6.4`):**
+
+```bash
+npm run conformance:public-obligations
+node scripts/public-contract/run-vectors.mjs "$(pwd)" /tmp/kdna-public-contract-report.json
+```
+
+This layer exercises the 46 runtime obligations, 4 package-surface checks, and 94 positive and fail-closed negative decision vectors without modifying committed vectors.
+
+3. **Historical `0.1.0` (`planLoad` / Runtime Capsule) Regression Suites (Not part of Container `0.6.0` MUST):**
+
+`npm run conformance`, `npm run conformance:canonical`, `npm run conformance:runtime-contract`, and `@aikdna/kdna-conformance@0.2.0` target the frozen `0.1.0` / CLI `0.36.1` `planLoad` line and are retained strictly for historical regression checks (see [`CONFORMANCE.md`](./CONFORMANCE.md)).
 
 ---
 

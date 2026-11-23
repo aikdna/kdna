@@ -73,6 +73,6 @@ This license is governed by the laws of the jurisdiction specified in the purcha
 
 ---
 
-**Canonical URL**: https://aikdna.com/licenses/KCL-1.0
+**Canonical URL**: https://github.com/aikdna/kdna/blob/main/specs/LICENSE-KCL-1.0.md
 **Version**: 1.0
 **Status**: Canonical
