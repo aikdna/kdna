@@ -23,7 +23,7 @@ Our first official public judgment work—**KDNA Whitepaper `v1.0.2`** (*《KDNA
 
 - **Chinese `.kdna` (`zh-CN`):** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna) (`2,725,359` bytes · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`, creator `张零`)
 - **English `.kdna` (`en`):** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (`2,843,386` bytes · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`, creator `Zhang Ling`)
-- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free; defaults to free `KDNA ID` sign-up/sign-in to unlock the built-in bilingual *KDNA Whitepaper* and multi-tab comparison, and supports login-free offline opening of a single local public or password-protected `.kdna` file)
+- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free; opens the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works)
 - **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive, SHA-256 digests, and verification checks)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**

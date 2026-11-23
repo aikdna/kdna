@@ -23,7 +23,7 @@
 
 - **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)（`2,725,359` 字节 · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`，作者 `张零`）
 - **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna)（`2,843,386` 字节 · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`，作者 `Zhang Ling`）
-- **KDNA Reader 桌面版（macOS · Apple Silicon · 已获 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费；默认提供免费 `KDNA ID` 注册与登录以解锁内置中英双语《KDNA 白皮书》与多标签对照，同时支持免登录直接打开单个本地公开或口令保护 `.kdna` 文件）
+- **KDNA Reader 桌面版（macOS · Apple Silicon · 已获 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费；打开即可免登录离线阅读内置中英双语《KDNA 白皮书》与本地公开或口令保护 `.kdna` 文件，同时可选免费登录 `KDNA ID` 开启多标签对照与浏览更多官方判断资产）
 - **公开参考作品仓：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.2`、校验值与容器核验脚本）
 
 > **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
