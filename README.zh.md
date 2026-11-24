@@ -1,12 +1,35 @@
 # KDNA
 
-[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [社区讨论](https://github.com/aikdna/kdna/discussions) · [中文文档](./docs/start-here.zh.md) · [认知原石实验室](https://aikdna.cn)
+[English](./README.md) | 简体中文 · [官方网站](https://aikdna.com/zh) · [对比案例与实测](https://aikdna.com/zh/explore/systems) · [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [社区讨论](https://github.com/aikdna/kdna/discussions) · [中文文档](./docs/start-here.zh.md) · [KDNA 中文官网](https://aikdna.cn)
 
-**面向思考、判断与品味的开放文件格式。**
+**面向思考、判断与品味的开放、可迁移、永久免账号文件格式（`.kdna`）。**
 
-文字与排版有文档（`.md`、`.pdf`），数据与测算有表格，现场演讲有幻灯片，互联页面有网页（HTML），确定性逻辑有代码。唯独一个人在真实实践中打磨出的**思考、判断、取舍次序、适用边界与审美品味**，过去一直散落在聊天记录、零散笔记和一次性成品里，没有属于自己的独立文件形态。
+KDNA 将个人或团队在真实实践中沉淀的判断——包含它回应的具体问题、核心主张、推理与方法、真实取舍、停手边界和常见误用——保存为独立且有版本号的文件：人可以在 [KDNA Reader 桌面版](https://aikdna.com/zh/downloads)直接阅读审视，兼容的 AI Agent 则可以按需选读（`catalog` → `exact_selection`）并完整带上支撑前提与制约边界。同一份 `.kdna` 文件可跨 Claude Code、Cursor、Codex、OpenCode、Antigravity 或任意 CLI / MCP 宿主直接复用，无需把整本长规范硬塞进每次对话。
 
-当 AI 让文章、界面和代码的生成越来越容易，真正稀缺、真正决定作品高下的，恰恰是背后那套思考、判断与品味——**它们本身就是“作品”**。KDNA（`.kdna`）为这类作品提供开放、清晰、可演进的文件格式：无论是一份围绕某个具体问题提炼出的六七条精炼判断，还是覆盖完整领域的几十条关联判断，都可以独立保存为一份 `.kdna` 作品。人可以在 [KDNA Reader 桌面版](https://aikdna.com/zh/downloads)里直接阅读与审视，兼容的 AI Agent 也可以按需读取对应判断，并完整带上它的依据与停手边界。
+### 一条命令立刻运行（需 Node.js `>=22`，无需账号）
+
+```sh
+# 下载官方公开《KDNA 白皮书》v1.0.2（45 条关联判断，CC BY 4.0）并查看议题目录
+curl -fsSLo kdna-whitepaper-1.0.2.zh-CN.kdna \
+  https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna
+npx -y @aikdna/kdna-cli@0.45.2 read kdna-whitepaper-1.0.2.zh-CN.kdna \
+  --mode catalog --allow-read --format human
+```
+
+### 真实 Before / After 对照案例（`HW-04`：稀薄材料 1,500 字防编造陷阱）
+
+在公开实测用例 **`HW-04`**（[完整提示、评分规则与双模型原始输出](https://aikdna.com/zh/explore/human-writing)）中，用户只给了三条抽象想法（开会打断写代码、多人念进度、文档方便回查），却要求写一篇 **1,500 字“有活人带队真实画面感”的公众号长文**：
+
+- **Before（未加载 KDNA / 简短提示）：** 两个受测模型均直接替作者编造虚构故事凑够字数（如虚构“周一上午十点，阿哲盯着线上 bug……带七人团队的前两年……”或“会议室里没喝完的咖啡……”）。
+- **After（加载 KDNA 按需选读 — `catalog` → `exact_selection`）：** 仅加载与材料底线相关的少数判断（`verify-material-sufficiency-before-drafting`、`never-fabricate-facts-or-fake-anecdotes`、`ground-voice-in-provenance-not-pronouns`）及其关联约束，直接卡住停手边界、拒绝编造虚构经历，改交诚实短稿骨架并集中追问真实素材，同时将第 3 步上下文体积减少 `-85.2%`。
+
+### 192 次公开实测数据与坦诚代价说明
+
+基于两套公开中英双语示范作品（[体系总览与下载表](https://aikdna.com/zh/explore/systems) · [GitHub Releases 镜像](https://github.com/aikdna/kdna-assets/releases) — 每个领域 `2` 个模型 × `4` 组对照 × `12` 个无泄漏用例，共 `192` 次完整运行）：
+
+- **活人感写作（`v1.0.1`，96 次实测 · [对比案例与实测数据](https://aikdna.com/zh/explore/human-writing)）：** KDNA 按需选读达成 **`23/24`（`95.8%`）**，与等长全量 Markdown 对照组（`23/24`）持平（无系统对照组为 `11/24`，短提示为 `12/24`），同时第 3 步加载上下文减少 **`-85.2%`**，总输入 Token 降低 **`-39.7%` 至 `-45.2%`**。
+- **代码审查（`v1.0.2`，96 次实测 · [对比案例与实测数据](https://aikdna.com/zh/explore/code-review)）：** 缺陷与 P0 紧急止血严格通过率 **`17/18`（`94.4%`）**（全量字面严格通过率 **`20/24`**，等长全量 Markdown 为 **`22/24`**），同时第 3 步加载上下文减少 **`-84.0%`**，总输入 Token 降低 **`-52.6%` 至 `-54.5%`**。
+- **代价与已知反例：** 按需选读相比直接灌入全量 Markdown 会多出 **1 次选读往返延迟（`+8–38s`）**；此外在代码审查第 3 组“好 PR 防误杀”反例中，`GPT-6-Luna` 因作者图谱遗漏 `#19↔#01` 冲突边而出现误拦——说明按需选读只有在图谱关系维护完整时才能达到预期效果，并非自动免疫边界遗漏。
 
 ### 一份 `.kdna` 作品里装了什么
 

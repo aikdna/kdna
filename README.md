@@ -1,12 +1,35 @@
 # KDNA
 
-English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Discussions](https://github.com/aikdna/kdna/discussions) · [Documentation](./docs/start-here.md) · [Status](./docs/status.md)
+English | [简体中文](./README.zh.md) · [Website](https://aikdna.com) · [Case Studies & Benchmarks](https://aikdna.com/en/explore/systems) · [KDNA Reader (macOS)](https://aikdna.com/en/downloads) · [Discussions](https://github.com/aikdna/kdna/discussions) · [Documentation](./docs/start-here.md) · [Status](./docs/status.md)
 
-**An open file format for human thinking, judgment, and taste.**
+**An open, portable, account-free file format (`.kdna`) for human thinking, judgment, and taste.**
 
-Prose has documents (`.md`, `.pdf`). Numbers have spreadsheets. Talks have slide decks. Linked pages have HTML, and deterministic logic has code. Yet the way a person or team **thinks, weighs trade-offs, exercises taste, and knows where to stop** has never had an independent file format of its own—dissolving instead into chat logs, scattered notes, and one-off outputs.
+KDNA packages a person's or team's domain judgments—each with its question, claim, reasoning, trade-offs, stop boundaries, and common misuses—into a versioned file that humans can open directly in [KDNA Reader](https://aikdna.com/en/downloads) and AI Agents can load selectively (`catalog` → `exact_selection`) with supporting premises and constraints kept intact. Instead of pasting a whole style guide into every prompt or letting critical boundaries scatter across chat logs, one `.kdna` file travels cleanly across Claude Code, Cursor, Codex, OpenCode, Antigravity, or any CLI/MCP host.
 
-As AI makes finished text, interfaces, and code easy to generate, the upstream thinking, judgment, and taste behind them become a **“work” in their own right**. KDNA (`.kdna`) gives that work its own open, portable, versioned file—whether it holds six focused judgments on a single craft or forty-five connected judgments across a full domain. People can open and review it directly in [KDNA Reader](https://aikdna.com/en/downloads), and any compatible AI Agent can read the relevant judgments together with their premises and stop boundaries.
+### Try One Command Right Now (Node.js `>=22`, Account-Free)
+
+```sh
+# Download the official bilingual Code Review exemplar (22 judgments, Apache-2.0) and inspect its catalog
+curl -fsSLo kdna-code-review-system-1.0.2.en.kdna \
+  https://github.com/aikdna/kdna-assets/releases/download/kdna-code-review-system-1.0.2/kdna-code-review-system-1.0.2.en.kdna
+npx -y @aikdna/kdna-cli@0.45.2 read kdna-code-review-system-1.0.2.en.kdna \
+  --mode catalog --allow-read --format human
+```
+
+### Real Before/After Example (`CR-03`: Flash-Sale Points Redemption PR)
+
+In public benchmark case **`CR-03`** ([full diff, rubric & raw model outputs](https://aikdna.com/en/explore/code-review)), models reviewed a loyalty-points redemption PR containing an in-memory `AsyncMutex` held across a slow `1.5s` external `fetch().await`, a TOCTOU balance race, missing idempotency, and a tautological unit test (`computeRemaining(500, 180) === computeRemaining(500, 180)`):
+
+- **Before (no KDNA / short checklist on `GPT-6-Luna`):** Flagged the concurrency race, but downgraded the tautological mirror test to a non-blocking `Nit:` despite the PR note claiming unit-test coverage.
+- **After (KDNA Selective Read — `catalog` → `exact_selection`):** Pulled only the relevant judgments (`concurrency-toctou-and-locks-across-await`, `retry-and-queue-idempotency-guards`, `expose-fake-green-mock-and-tautological-tests`, `hard-triage-blocking-defects-vs-nit-polish`) plus required closure edges—classifying the TOCTOU race, lock-across-await, missing idempotency, **and** fake-green test all as `[blocking]` while cutting Step-3 context by `-84.0%`.
+
+### Observed 192-Run Benchmark Results & Honest Trade-Offs
+
+Across two public bilingual exemplars ([Overview & Artifact Table](https://aikdna.com/en/explore/systems) · [GitHub Releases](https://github.com/aikdna/kdna-assets/releases) — `2` models × `4` arms × `12` leak-free cases per domain, `192` total runs):
+
+- **Human-Sounding Writing (`v1.0.1`, 96 runs · [Case Study & Data](https://aikdna.com/en/explore/human-writing)):** Selective Read achieved **`23/24` (`95.8%`)**, matching equal-length full Markdown (`23/24`, vs `11/24` no-system / `12/24` short prompt), while reducing Step-3 loaded context by **`-85.2%`** and total input tokens by **`-39.7%` to `-45.2%`**.
+- **Code Review (`v1.0.2`, 96 runs · [Case Study & Data](https://aikdna.com/en/explore/code-review)):** Defect & P0 emergency strict accuracy reached **`17/18` (`94.4%`)** (overall literal-strict **`20/24`** vs equal-length full Markdown **`22/24`**), while reducing Step-3 loaded context by **`-84.0%`** and total input tokens by **`-52.6%` to `-54.5%`**.
+- **Trade-offs & Known Counterexample:** Selective Read adds **1 selection round-trip (`+8–38s` wall-clock latency)** compared with stuffing full Markdown directly. On Group 3 good-PR counterexamples, `GPT-6-Luna` produced false blocks when the authored graph was missing a `conflicts_with` edge between `#19` and `#01`—showing that selective reading matches full-context judgment quality only when graph relations are carefully authored, not automatically.
 
 ### What a `.kdna` Work Carries
 
