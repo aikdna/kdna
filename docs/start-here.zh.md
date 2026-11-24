@@ -10,8 +10,7 @@
 
 直接打开首部官方双语作品 **《KDNA 白皮书》`v1.0.2`**（作者：张零 / Zhang Ling · `CC BY 4.0` · `45` 条关联判断）：
 
-- **macOS 桌面阅读器（永久免费、已获 Apple 公证）：** [下载 KDNA Reader](https://aikdna.com/zh/downloads) — 打开即可免登录离线阅读内置中英双语《KDNA 白皮书》与本地公开或口令保护 `.kdna` 文件，同时可选免费登录 `KDNA ID` 开启多标签对照与浏览更多官方判断资产。
-- **浏览器 Web 阅读器（免登录、只读）：** [打开 KDNA Web Reader](https://aikdna.com/reader) — 面向 Windows、Linux、Intel Mac 与移动端，无需安装或登录即可在浏览器中阅读《KDNA 白皮书》`v1.0.2` 或本地打开 `.kdna` 文件。
+- **macOS 桌面阅读器（Apple Silicon · 永久免费、已获 Apple 公证）：** [下载 KDNA Reader](https://aikdna.com/zh/downloads)（GitHub Releases 镜像：[`aikdna/kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases)） — 打开即可免登录离线阅读内置中英双语《KDNA 白皮书》与本地公开或口令保护 `.kdna` 文件，同时可选免费登录 `KDNA ID` 开启多标签对照。其他中英双语示范 `.kdna` 作品可免登录直接从 [aikdna.com/zh/explore](https://aikdna.com/zh/explore) 与 [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets/releases) 获取。（不提供在线托管 Web 阅读器；非 Mac 用户可使用 `@aikdna/kdna-cli`、`@aikdna/kdna-mcp-server` 或访问 [aikdna.com/zh/explore](https://aikdna.com/zh/explore)。）
 - **`.kdna` 原件直链下载：**
   - 中文版（`zh-CN`）：[`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)（`2,725,359` 字节 · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`）
   - 英文版（`en`）：[`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna)（`2,843,386` 字节 · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`）
@@ -73,4 +72,4 @@ printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdn
 | [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | 官方命令行工具（`@aikdna/kdna-cli@0.45.2`）：创建、口令加密、校验、按需读取、对比差异与修订 |
 | [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) | Agent 技能包（`kdna-creator`、`kdna-loader`）与可选本地 stdio MCP 适配器 |
 | [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) | 官方公开 `.kdna` 作品仓库（含中英双语《KDNA 白皮书》`v1.0.2`） |
-| [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [Web 阅读器](https://aikdna.com/reader) | 永久免费 macOS 桌面阅读器（免登录离线阅读内置白皮书与本地 `.kdna` 文件，可选免费 `KDNA ID` 开启多标签与官方判断资产库）及免登录只读浏览器 Web Reader |
+| [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) · [`kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases) | 永久免费 macOS（Apple Silicon）桌面阅读器（免登录离线阅读内置白皮书与本地 `.kdna` 文件，可选免费 `KDNA ID` 开启多标签对照；不提供在线托管 Web 阅读器，非 Mac 用户可使用 CLI、MCP 或 `/explore` 网页） |

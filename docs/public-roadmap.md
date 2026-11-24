@@ -6,7 +6,7 @@ KDNA (`.kdna`) is an open file format and selective reading protocol for express
 
 ## Permanently Account-Free Foundation
 
-Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free—opening the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works—alongside a zero-login read-only browser Web Reader at [`aikdna.com/reader`](https://aikdna.com/reader).
+Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** (macOS Apple Silicon) remains permanently free—opening the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison; additional public bilingual exemplar `.kdna` works are distributed account-free via [`aikdna.com/en/explore`](https://aikdna.com/en/explore) and [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets/releases). KDNA does not operate a hosted Web Reader; non-Mac users can use the CLI, local stdio MCP adapter, or static `/explore` web pages.
 
 ## Public Ecosystem Responsibilities
 
@@ -16,7 +16,7 @@ Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encrypti
 | Official CLI | `kdna-cli` (`@aikdna/kdna-cli@0.45.2`) | Author (`init`, `validate-input`, `create`), protect (`protect`), validate, selectively read (`read`), compare (`diff`), and revise (`source-open` / `source-pack`) `.kdna` works |
 | Agent Integration | `kdna-skills` | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter |
 | Public Works | `kdna-assets` | Openly licensed `.kdna` judgment works (starting with bilingual *KDNA Whitepaper* `v1.0.2`, `CC BY 4.0`) |
-| Human Reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) | Free macOS desktop app for reading, reviewing, and exploring `.kdna` works |
+| Human Reading | [KDNA Reader for macOS](https://aikdna.com/en/downloads) ([`aikdna/kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases)) | Free macOS desktop app for reading, reviewing, and exploring `.kdna` works (binary releases & SHA-256 mirror) |
 | Archived Legacy Lines | `kdna-studio-*`, `kdna-core-swift`, etc. | Preserved historical `pre-0.6.0` packages; not used for new `0.6.0` works |
 
 Internal web application workspaces, cloud sync infrastructure, and unpublished experiments remain in private repositories outside the public API commitment.

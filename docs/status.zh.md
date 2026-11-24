@@ -13,7 +13,7 @@
 | `@aikdna/kdna-cli` | `0.45.2` | 官方命令行（`init`、`validate-input`、`create`、`protect`、`unprotect`、`inspect`、`validate`、`read`、`diff`、`source-open`、`source-pack`、`convert`） |
 | `aikdna/kdna-skills` | `main`（MCP `0.8.4`） | Agent 技能包（`kdna-creator`、`kdna-loader`）与可选本地 stdio MCP 适配器 |
 | `aikdna/kdna-assets` | 《KDNA 白皮书》`v1.0.2`（中/英双语） | 官方公开 `.kdna` 作品（`CC BY 4.0`） |
-| **KDNA Reader** | macOS 桌面应用（Apple Silicon）+ Web 阅读器（[`aikdna.com/reader`](https://aikdna.com/reader)） | 永久免费、已获 Apple 公证的 macOS 桌面阅读器（打开即可免登录离线阅读内置双语《KDNA 白皮书》与本地公开/口令保护 `.kdna` 文件；可选免费登录 `KDNA ID` 开启多标签对照与浏览更多官方判断资产），并面向 Windows / Linux / Intel Mac / 移动端提供免登录只读浏览器 Web Reader |
+| **KDNA Reader** | macOS 桌面应用（Apple Silicon · [`aikdna.com/zh/downloads`](https://aikdna.com/zh/downloads) / [`aikdna/kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases)） | 永久免费、已获 Apple 公证的 macOS 桌面阅读器（打开即可免登录离线阅读内置双语《KDNA 白皮书》与本地公开/口令保护 `.kdna` 文件；可选免费登录 `KDNA ID` 开启多标签对照；其他中英双语示范作品可免登录通过 `/explore` 与 [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets/releases) 下载；不提供在线托管 Web 阅读器，非 Mac 用户可使用 CLI、MCP 或 `/explore` 网页） |
 
 创建、校验、本地口令加密、按需读取、版本对比以及桌面离线阅读全链路**永久无需在线账号**，均可完全离线使用。
 
