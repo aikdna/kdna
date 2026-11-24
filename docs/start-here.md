@@ -10,7 +10,8 @@ Get hands-on with KDNA in a few minutes using **KDNA Reader** and the official C
 
 Start by opening our first official bilingual work, **KDNA Whitepaper `v1.0.2`** (*《KDNA白皮书》*, authored by Zhang Ling · `CC BY 4.0` · `45` connected judgments):
 
-- **macOS Desktop App (free, Apple-notarized):** [Download KDNA Reader](https://aikdna.com/en/downloads) — defaults to free `KDNA ID` sign-up/sign-in to unlock the built-in bilingual *KDNA Whitepaper* and multi-tab comparison, and supports login-free offline opening of a single local `.kdna` file.
+- **macOS Desktop App (free, Apple-notarized):** [Download KDNA Reader](https://aikdna.com/en/downloads) — opens the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works.
+- **Browser Web Reader (zero-login, read-only):** [Open KDNA Web Reader](https://aikdna.com/reader) — read *KDNA Whitepaper* `v1.0.2` or inspect local `.kdna` files directly in the browser on Windows, Linux, Intel Mac, or mobile without installing or signing in.
 - **Direct `.kdna` Downloads:**
   - English (`en`): [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (`2,843,386` bytes · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`)
   - Chinese (`zh-CN`): [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna) (`2,725,359` bytes · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`)
@@ -73,4 +74,4 @@ Key tips:
 | [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) | Official CLI (`@aikdna/kdna-cli@0.45.2`) for `init`, `validate-input`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, and `convert` |
 | [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) | Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter |
 | [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) | Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`) |
-| [KDNA Reader](https://aikdna.com/en/downloads) | Free macOS desktop app for reading and reviewing `.kdna` works |
+| [KDNA Reader](https://aikdna.com/en/downloads) · [Web Reader](https://aikdna.com/reader) | Free macOS desktop app (offline zero-login built-in Whitepaper & local `.kdna` files; optional free `KDNA ID` for multi-tab & official Judgment Asset Library works) and zero-login read-only browser Web Reader |

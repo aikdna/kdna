@@ -1,13 +1,16 @@
 # KDNA Conformance Test Suite
 
 This suite lets third-party implementations prove an asset-first KDNA contract.
-It spans three version states, and each entry below says which one it covers:
+It spans four distinct verification layers, and each entry below says which one it covers:
 
-| State | Consumer path | Where it is described |
+| State | Consumer path | Entry point / Reference |
 | --- | --- | --- |
-| Current source candidate | Core admission → Read | `docs/core-read-current-status.md` and the Core/Read package READMEs |
-| Published `kdna-cli` 0.36.1 line | LoadPlan → Runtime Capsule | the published package and its own contract version |
-| Historical contract (frozen) | the 0.1 Container/Capsule chain | `SPECINDEX` and the frozen specifications |
+| **Current Container `0.6.0` (active)** | Native section packs & `ProtectedManifest06Candidate` → `@aikdna/kdna-core` / `@aikdna/kdna-read` | `npm run conformance:container-0.6` and `npm run conformance:envelope-aead` (see [`SPEC.md#7-conformance-suites`](../SPEC.md#7-conformance-suites) and [`IMPLEMENTER-KIT.md`](../IMPLEMENTER-KIT.md)) |
+| Public semantic contract (`kdna.core/0.8.2` · `0.5.1` · base Container `0.5.0` / `kdna.read/0.6.4`) | Core admission → Read (46 runtime obligations, 4 package-surface checks, 94 decision vectors) | `npm run conformance:public-obligations` and `node scripts/public-contract/run-vectors.mjs` (section below) |
+| Published `kdna-cli` `0.36.1` line (historical) | LoadPlan → Runtime Capsule | `npm run conformance` (`conformance/run.mjs`) and `npm run conformance:runtime-contract` |
+| Historical `0.1.0` contract (frozen) | the `0.1.0` Container/Capsule chain | [`CONFORMANCE.md`](../CONFORMANCE.md), `SPEC-INDEX.md`, and frozen specifications |
+
+For **Container `0.6.0`** implementations, start with `npm run conformance:container-0.6` and `npm run conformance:envelope-aead` (not the legacy `0.1.0` `planLoad` runner below).
 
 The Container, Runtime Capsule, Consumption Plan, Agent Host and Judgment Trace
 path described below belongs to the published 0.36.1 line and the historical

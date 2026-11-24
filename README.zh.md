@@ -24,6 +24,7 @@
 - **中文 `.kdna` 正式版（`zh-CN`）：** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna)（`2,725,359` 字节 · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`，作者 `张零`）
 - **等义英文 `.kdna` 正式版（`en`）：** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna)（`2,843,386` 字节 · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`，作者 `Zhang Ling`）
 - **KDNA Reader 桌面版（macOS · Apple Silicon · 已获 Apple 公证）：** [aikdna.com/zh/downloads](https://aikdna.com/zh/downloads)（永久免费；打开即可免登录离线阅读内置中英双语《KDNA 白皮书》与本地公开或口令保护 `.kdna` 文件，同时可选免费登录 `KDNA ID` 开启多标签对照与浏览更多官方判断资产）
+- **浏览器 Web 阅读器（免登录、只读）：** [aikdna.com/reader](https://aikdna.com/reader)（面向 Windows、Linux、Intel Mac 与移动端，无需安装或登录即可在浏览器中直接阅读《KDNA 白皮书》`v1.0.2` 或本地打开 `.kdna` 文件）
 - **公开参考作品仓：** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets)（收录中英双语《KDNA 白皮书》`v1.0.2`、校验值与容器核验脚本）
 
 > **一键复制给你的 Agent（Claude Code / Cursor / Codex / Antigravity 等，需 Node.js `>=22`）：**
@@ -86,9 +87,9 @@ printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdn
 
 配套开源仓库与应用：
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — 官方命令行工具（`@aikdna/kdna-cli@0.45.2`），负责创建、本地加密、校验、读取、对比与修订 `0.6.0` `.kdna` 作品
-- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — 面向主流 AI Agent 的创作与读取技能包（`kdna-creator`、`kdna-loader`）及本地 stdio MCP 适配器（`@aikdna/kdna-mcp-server@0.8.3`）
+- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — 面向主流 AI Agent 的创作与读取技能包（`kdna-creator`、`kdna-loader`）及本地 stdio MCP 适配器（`@aikdna/kdna-mcp-server@0.8.4`）
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — 官方公开 `.kdna` 作品仓库（含《KDNA 白皮书》`v1.0.2` 中英双语正式版）
-- [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) — 永久免费无限制的 macOS 桌面阅读器
+- [KDNA Reader 桌面版](https://aikdna.com/zh/downloads) 与 [Web 阅读器](https://aikdna.com/reader) — 永久免费、已获 Apple 公证的 macOS 桌面阅读器（免登录离线阅读内置白皮书与本地 `.kdna` 文件，可选免费 `KDNA ID` 开启多标签对照与官方判断资产库）及免登录只读浏览器 Web Reader
 
 ### 活跃发布坐标（Container `0.6.0`）
 
@@ -97,9 +98,9 @@ printf '%s' 'a long passphrase' | npx -y @aikdna/kdna-cli@0.45.2 read locked.kdn
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | Container `0.6.0` & `0.5.0` 准入、Canonical IR、摘要与离线口令加密 |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | 按需读取协议（`catalog`、`exact_selection` 必需闭包、`expand`） |
 | `@aikdna/kdna-cli` | `0.45.2` | `latest` | 官方 CLI（Node.js `>=22`，永久无需在线账号） |
-| `@aikdna/kdna-mcp-server` | `0.8.3` | `latest` | 可选本地 stdio MCP 适配器（来自 [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)） |
+| `@aikdna/kdna-mcp-server` | `0.8.4` | `latest` | 可选本地 stdio MCP 适配器（来自 [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)） |
 
-> **版本说明：** 所有 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.2`**（如需 MCP 接入请使用 **`@aikdna/kdna-mcp-server@0.8.3`**）。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
+> **版本说明：** 所有 Container `0.6.0` 作品的创作、加密、读取与对比请统一使用 **`@aikdna/kdna-cli@0.45.2`**（如需 MCP 接入请使用 **`@aikdna/kdna-mcp-server@0.8.4`**）。早期的 Studio（`0.5.0`）与 `0.36.1` 历史线仅保留作旧版本归档，详见 [当前状态](./docs/status.zh.md) 与 [0.5 → 0.6 迁移清单](./docs/migration-checklist.md)。
 
 ---
 
