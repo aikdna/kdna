@@ -6,7 +6,7 @@ KDNA (`.kdna`) is an open file format and selective reading protocol for express
 
 ## Permanently Account-Free Foundation
 
-Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free, defaulting to free `KDNA ID` sign-up/sign-in to unlock the built-in bilingual *KDNA Whitepaper* and multi-tab comparison while supporting login-free offline opening of a single local `.kdna` file.
+Public, local, and password-protected (`0.6.0`) `.kdna` creation, local encryption (`kdna protect`), validation, CLI/SDK reading, and Agent consumption are **permanently account-free** and run offline. Desktop **KDNA Reader** remains permanently free—opening the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works—alongside a zero-login read-only browser Web Reader at [`aikdna.com/reader`](https://aikdna.com/reader).
 
 ## Public Ecosystem Responsibilities
 

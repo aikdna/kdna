@@ -16,7 +16,7 @@
       "repository": "aikdna/kdna-skills",
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
-      "version": "0.8.3",
+      "version": "0.8.4",
       "canonical_tag": {
         "type": "prefix",
         "value": "kdna-mcp-server-"

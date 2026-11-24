@@ -221,7 +221,7 @@ permission to act.
 ## Optional MCP adapter
 
 The `kdna-skills` repository also provides an optional local stdio MCP adapter
-`@aikdna/kdna-mcp-server@0.8.3` pinned to its own CLI `0.45.2` / Core `0.37.11` /
+`@aikdna/kdna-mcp-server@0.8.4` pinned to its own CLI `0.45.2` / Core `0.37.11` /
 Read `0.13.5` graph (published on `latest` and available in Git source). Use it
 only when a local operator has bound one asset through the
 Host's process startup; never let model-controlled MCP parameters select or

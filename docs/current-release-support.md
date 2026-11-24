@@ -1,6 +1,6 @@
 # Current Release Support & Distribution History
 
-Updated: `2026-11-18`. The machine-readable source of truth for all published npm versions, SHA-256 digests, and preserved preview tags is [`release-coordinates.json`](./release-coordinates.json).
+Updated: `2026-11-24`. The machine-readable source of truth for all published npm versions, SHA-256 digests, and preserved preview tags is [`release-coordinates.json`](./release-coordinates.json).
 
 ## Active Stable Line (Container `0.6.0`)
 
@@ -11,7 +11,7 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | Node `>=20` | Container `0.6.0` & `0.5.0` admission, Canonical IR, packing, local encryption |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | Node `>=20` | Selective Read protocol (`catalog`, `exact_selection`, `expand`, unlock) |
 | `@aikdna/kdna-cli` | `0.45.2` | `latest` | Node `>=22` | Official CLI (`init`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`) |
-| `@aikdna/kdna-mcp-server` | `0.8.3` | `latest` | Node `>=22` | Optional local stdio MCP adapter in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) |
+| `@aikdna/kdna-mcp-server` | `0.8.4` | `latest` | Node `>=22` | Optional local stdio MCP adapter in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) |
 
 ## Preserved Legacy Packages (Container `0.5.0` & Compatibility)
 

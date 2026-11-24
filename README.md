@@ -24,6 +24,7 @@ Our first official public judgment work—**KDNA Whitepaper `v1.0.2`** (*《KDNA
 - **Chinese `.kdna` (`zh-CN`):** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna) (`2,725,359` bytes · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`, creator `张零`)
 - **English `.kdna` (`en`):** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (`2,843,386` bytes · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`, creator `Zhang Ling`)
 - **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free; opens the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works)
+- **Browser Web Reader (Zero-Login, Read-Only):** [aikdna.com/reader](https://aikdna.com/reader) (read *KDNA Whitepaper* `v1.0.2` and open local `.kdna` files directly in the browser on Windows, Linux, Intel Mac, or mobile without installing or signing in)
 - **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive, SHA-256 digests, and verification checks)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
@@ -87,16 +88,16 @@ This repository maintains the open KDNA specifications (Container `0.6.0`, R2 se
 Companion public repositories and apps:
 
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — Official CLI (`@aikdna/kdna-cli@0.45.2`) for creating, password-protecting, validating, selectively reading, diffing, and revising Container `0.6.0` works
-- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter (`@aikdna/kdna-mcp-server@0.8.3`)
+- [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter (`@aikdna/kdna-mcp-server@0.8.4`)
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`)
-- [KDNA Reader](https://aikdna.com/en/downloads) — Free, Apple-notarized macOS desktop app for reading, reviewing, and exploring `.kdna` works
+- [KDNA Reader](https://aikdna.com/en/downloads) & [Web Reader](https://aikdna.com/reader) — Free, Apple-notarized macOS desktop app (zero-login built-in Whitepaper & local `.kdna` files; optional free `KDNA ID` for multi-tab comparison & official Judgment Asset Library works) and zero-login read-only browser Web Reader
 
 ---
 
 ## Published Package Coordinates
 
 <!-- release-coordinates:begin source=docs/release-coordinates.json -->
-**Current publication state (2026-11-20).** All five stable coordinates are
+**Current publication state (2026-11-24).** All five stable coordinates are
 published from their reviewed source commits, and each published tarball was
 re-downloaded from the registry and matched byte for byte against the retained
 artifact:
@@ -121,9 +122,9 @@ This wave keeps every already-published preview tag unchanged, and **R2** remain
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
-| `@aikdna/kdna-mcp-server` | `0.8.3` | `latest` | `fb036cc2bb554e6fec2c93e756987a0d39e91e9ea3256b206ef6b4a0194eff87` |
+| `@aikdna/kdna-mcp-server` | `0.8.4` | `latest` | `0027d71c04c13cc880639e140f7582ee5a3db5d1a25ff56b68f5aedd27ca57c4` |
 
-> **Note:** For all Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.2`** (with optional local stdio MCP adapter **`@aikdna/kdna-mcp-server@0.8.3`** from [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)). `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
+> **Note:** For all Container `0.6.0` authoring, local encryption, reading, and diffing, use **`@aikdna/kdna-cli@0.45.2`** (with optional local stdio MCP adapter **`@aikdna/kdna-mcp-server@0.8.4`** from [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills)). `@aikdna/kdna-studio-cli` and `@aikdna/kdna-studio-core` remain archived legacy Container `0.5.0` packages; see [Current Release Support](./docs/current-release-support.md) and [0.5 → 0.6 Migration Checklist](./docs/migration-checklist.md) for details.
 
 ---
 

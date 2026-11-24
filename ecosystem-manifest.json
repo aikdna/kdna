@@ -191,7 +191,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "1977158840d6e00cfb697750325c5b30aa7efb31",
+      "source_commit": "5a466df25da67767f74730b4568fab47beb2e60a",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -200,13 +200,13 @@
           "package_json": "mcp-server/package.json",
           "package_name": "@aikdna/kdna-mcp-server",
           "npm_package": "@aikdna/kdna-mcp-server",
-          "version": "0.8.3",
-          "published_version": "0.8.3",
+          "version": "0.8.4",
+          "published_version": "0.8.4",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
-          "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.3 --asset <selected.kdna> --allow-read",
+          "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.4 --asset <selected.kdna> --allow-read",
           "legacy_replacement": null
         }
       ],
@@ -217,7 +217,7 @@
       "known_limitations": [
         "MCP is an experimental structured bridge; the loader Skill is Unassessed and neither discovery nor matching creates user authority"
       ],
-      "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.3 --asset <selected.kdna> --allow-read (operator-bound local stdio)",
+      "recommended_entrypoint": "npx -y @aikdna/kdna-mcp-server@0.8.4 --asset <selected.kdna> --allow-read (operator-bound local stdio)",
       "legacy_replacement": null
     },
     {
