@@ -23,8 +23,7 @@ Our first official public judgment work—**KDNA Whitepaper `v1.0.2`** (*《KDNA
 
 - **Chinese `.kdna` (`zh-CN`):** [`kdna-whitepaper-1.0.2.zh-CN.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.zh-CN.kdna) (`2,725,359` bytes · SHA-256 `e344944a53f8d4bb2ca40a8d42bcd3c104e3067bfa92dce99e327cbc5aed40aa`, creator `张零`)
 - **English `.kdna` (`en`):** [`kdna-whitepaper-1.0.2.en.kdna`](https://aikdna.com/downloads/whitepaper/v1.0.2/kdna-whitepaper-1.0.2.en.kdna) (`2,843,386` bytes · SHA-256 `6da515820eed210508d72a4ddbf68f7052cb180afe592c64e85e9a3fbb60c49e`, creator `Zhang Ling`)
-- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (permanently free; opens the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison and additional official Judgment Asset Library works)
-- **Browser Web Reader (Zero-Login, Read-Only):** [aikdna.com/reader](https://aikdna.com/reader) (read *KDNA Whitepaper* `v1.0.2` and open local `.kdna` files directly in the browser on Windows, Linux, Intel Mac, or mobile without installing or signing in)
+- **macOS Desktop App (Apple Silicon, Developer ID Signed & Apple Notarized):** [aikdna.com/en/downloads](https://aikdna.com/en/downloads) (GitHub Releases mirror & SHA-256 checksums: [`aikdna/kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases); permanently free; opens the built-in bilingual *KDNA Whitepaper* and local public or password-protected `.kdna` files offline without signing in, with optional free `KDNA ID` sign-in for multi-tab comparison; additional bilingual exemplars are downloadable account-free from [aikdna.com/en/explore](https://aikdna.com/en/explore) and [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets/releases); non-Mac users can use `@aikdna/kdna-cli`, `@aikdna/kdna-mcp-server`, or [aikdna.com/en/explore](https://aikdna.com/en/explore))
 - **Public Reference Repository:** [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) (bilingual `v1.0.2` editions with `v1.0.1` archive, SHA-256 digests, and verification checks)
 
 > **Copy & paste to your Agent (Claude Code / Cursor / Codex / Antigravity; requires Node.js `>=22`):**
@@ -90,7 +89,7 @@ Companion public repositories and apps:
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — Official CLI (`@aikdna/kdna-cli@0.45.2`) for creating, password-protecting, validating, selectively reading, diffing, and revising Container `0.6.0` works
 - [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) — Agent Skills (`kdna-creator`, `kdna-loader`) and optional local stdio MCP adapter (`@aikdna/kdna-mcp-server@0.8.4`)
 - [`aikdna/kdna-assets`](https://github.com/aikdna/kdna-assets) — Official public `.kdna` works (including bilingual *KDNA Whitepaper* `v1.0.2`)
-- [KDNA Reader](https://aikdna.com/en/downloads) & [Web Reader](https://aikdna.com/reader) — Free, Apple-notarized macOS desktop app (zero-login built-in Whitepaper & local `.kdna` files; optional free `KDNA ID` for multi-tab comparison & official Judgment Asset Library works) and zero-login read-only browser Web Reader
+- [KDNA Reader](https://aikdna.com/en/downloads) ([`aikdna/kdna-reader-releases`](https://github.com/aikdna/kdna-reader-releases)) — Free, Apple-notarized macOS desktop app (Apple Silicon; zero-login built-in Whitepaper & local `.kdna` files; optional free `KDNA ID` for multi-tab comparison; no hosted Web Reader — non-Mac users use CLI, MCP, or `/explore` web pages)
 
 ---
 
