@@ -79,8 +79,8 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.37.11",
-      "source": "91b643ae627ebc7255f1e5f147612b0616ab51e1",
-      "manifest_sha256": "5d9292096f18fc96242f1d83f9f80b0d29fe411f716f37031ecc0957a46c2696"
+      "source": "7ffb821f583e81700b0f5753d11345ebd285103a",
+      "manifest_sha256": "5daafc8f8bdac84564f4c486a73604f96c1d81c63d8fe4a6c1606e5b32f5fcb4"
     },
     {
       "repository": "kdna-cli",
@@ -88,8 +88,8 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
       "declared": "0.13.5",
-      "source": "91b643ae627ebc7255f1e5f147612b0616ab51e1",
-      "manifest_sha256": "5d9292096f18fc96242f1d83f9f80b0d29fe411f716f37031ecc0957a46c2696"
+      "source": "7ffb821f583e81700b0f5753d11345ebd285103a",
+      "manifest_sha256": "5daafc8f8bdac84564f4c486a73604f96c1d81c63d8fe4a6c1606e5b32f5fcb4"
     },
     {
       "repository": "kdna-skills",
@@ -97,7 +97,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-cli",
       "declared": "0.45.2",
-      "source": "5a466df25da67767f74730b4568fab47beb2e60a",
+      "source": "8d2061481b313ba0db55d2259e9a9501dc6e913c",
       "manifest_sha256": "856684ef71bc8b767b34b11a45a4d3472888417ca1714ad2f2c3bbafb51c0c93"
     },
     {
@@ -106,7 +106,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.37.11",
-      "source": "5a466df25da67767f74730b4568fab47beb2e60a",
+      "source": "8d2061481b313ba0db55d2259e9a9501dc6e913c",
       "manifest_sha256": "856684ef71bc8b767b34b11a45a4d3472888417ca1714ad2f2c3bbafb51c0c93"
     },
     {
@@ -115,7 +115,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-read",
       "declared": "0.13.5",
-      "source": "5a466df25da67767f74730b4568fab47beb2e60a",
+      "source": "8d2061481b313ba0db55d2259e9a9501dc6e913c",
       "manifest_sha256": "856684ef71bc8b767b34b11a45a4d3472888417ca1714ad2f2c3bbafb51c0c93"
     },
     {

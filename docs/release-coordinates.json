@@ -3,7 +3,7 @@
   "channel": "stable",
   "npm_tag": "latest",
   "registry": "https://registry.npmjs.org/",
-  "updated": "2026-11-24",
+  "updated": "2026-11-26",
   "note": "Single source for the public coordinate statements in README.md, the website/llms.txt snippet and the publication checks. Values are observed publication facts, not intentions. A row may declare `candidate_version`: a version the source produces that the registry has not published.",
   "packages": [
     {
@@ -35,21 +35,21 @@
     {
       "unit": "cli",
       "name": "@aikdna/kdna-cli",
-      "version": "0.45.2",
+      "version": "0.46.0",
       "npm_tag": "latest",
       "repository": "aikdna/kdna-cli",
-      "release_tag": "0.45.2",
-      "source_commit": "91b643ae627ebc7255f1e5f147612b0616ab51e1",
-      "artifact_sha256": "b42c7f0ce3cfff719c4c50d7bb2eaa32449dd0c076b4f3ce7c9f9002b1c6a452",
-      "publish_run": 44726909777,
-      "release_id": 452603358,
-      "release_published_at": "2026-11-20T11:21:13Z"
+      "release_tag": "0.46.0",
+      "source_commit": "7ffb821f583e81700b0f5753d11345ebd285103a",
+      "artifact_sha256": "f7ad9cc6e384fe4b1903e2665432d80f772daf93b4d8fb92d5dd9a6612775554",
+      "publish_run": 45546220894,
+      "release_published_at": "2026-11-25T04:15:56Z"
     },
     {
       "unit": "studio-core",
       "name": "@aikdna/kdna-studio-core",
       "version": "4.1.0",
       "npm_tag": "latest",
+      "lifecycle": "archived-legacy-0.5",
       "repository": "aikdna/kdna-studio-core",
       "release_tag": "4.1.0",
       "source_commit": "ea2840ad4e7fb96c3225c7d1f6b1e9305debfa4c",
@@ -63,6 +63,7 @@
       "name": "@aikdna/kdna-studio-cli",
       "version": "0.14.0",
       "npm_tag": "latest",
+      "lifecycle": "archived-legacy-0.5",
       "repository": "aikdna/kdna-studio-cli",
       "release_tag": "0.14.0",
       "source_commit": "7df78cf49a45ad0e4df31bb81ae6e7bd941b14d9",
@@ -76,7 +77,7 @@
     {
       "unit": "skills",
       "name": "aikdna/kdna-skills",
-      "main_commit": "5a466df25da67767f74730b4568fab47beb2e60a",
+      "main_commit": "8d2061481b313ba0db55d2259e9a9501dc6e913c",
       "mcp_package": "@aikdna/kdna-mcp-server",
       "mcp_version": "0.8.4",
       "npm_coordinate": "@aikdna/kdna-mcp-server@0.8.4",

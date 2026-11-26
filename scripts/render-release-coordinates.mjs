@@ -23,15 +23,17 @@ if (matrix.schema !== 'kdna-release-coordinates/1') {
 }
 
 function renderBlock({ docsPrefix = './docs/' } = {}) {
-  const rows = matrix.packages.map(
+  const activePackages = matrix.packages.filter(
+    (entry) => entry.lifecycle !== 'archived-legacy-0.5',
+  );
+  const rows = activePackages.map(
     (entry) =>
       `| \`${entry.name}\` | \`${entry.version}\` | \`${entry.npm_tag}\` | \`${entry.artifact_sha256}\` |`,
   );
   return [
-    `**Current publication state (${matrix.updated}).** All five stable coordinates are`,
-    'published from their reviewed source commits, and each published tarball was',
-    're-downloaded from the registry and matched byte for byte against the retained',
-    'artifact:',
+    `**Current publication state (${matrix.updated}).** Active Container \`0.6.0\` stable npm coordinates are`,
+    'published from their reviewed source commits (archived Container `0.5.0` Studio packages remain recorded in',
+    `[release-coordinates.json](${docsPrefix}release-coordinates.json) and [current-release-support.md](${docsPrefix}current-release-support.md)):`,
     '',
     '| Package | Version | npm tag | Published artifact SHA-256 |',
     '| --- | --- | --- | --- |',

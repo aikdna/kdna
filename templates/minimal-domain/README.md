@@ -1,5 +1,7 @@
 # Minimal Domain Template
 
+> **Legacy pre-`0.6.0` template (archived fixture only).** This `KDNA_Core.json` / `KDNA_Patterns.json` project-view layout belongs to the retired `0.1.0` line and is retained only for historical validator tests. For new Container `0.6.0` `.kdna` works, run `npx -y @aikdna/kdna-cli@0.46.0 init --example --output draft.json` (see [`docs/authoring-guide.md`](../../docs/authoring-guide.md)).
+
 This is an expanded authoring project-view template. It is useful for learning,
 experimentation, and tooling tests. The public runtime asset is the packaged
 `.kdna` file exported from a compatible toolchain, not this folder.

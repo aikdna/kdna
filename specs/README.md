@@ -1,10 +1,29 @@
 # KDNA Specifications
 
-> Historical/spec-work area. The current KDNA Core launch path is documented
-> in `docs/start-here.md`, `docs/try-kdna.md`, `docs/core/file-format.md`, and
-> `docs/core/load-profiles.md`. Older distribution, evaluation, license,
-> entitlement, and crypto documents in this folder are not active KDNA Core
-> launch contracts unless a current release document explicitly promotes them.
+> **Specification & historical archive directory.** For the active Container `0.6.0`
+> protocol overview and onboarding path, start with [`SPEC.md`](../SPEC.md),
+> [`docs/start-here.md`](../docs/start-here.md),
+> [`docs/status.md`](../docs/status.md), and
+> [`docs/core-narrative-and-boundaries.md`](../docs/core-narrative-and-boundaries.md).
+> Note: [`SPEC-INDEX.md`](../SPEC-INDEX.md) is the byte-pinned R2 base (`0.5.0` / `kdna.read/0.6.4`)
+> machine-checked schema index bound to `specs/public-semantic-source.json` for published
+> `@aikdna/kdna-core@0.37.11` / `@aikdna/kdna-read@0.13.5` provenance; active Container `0.6.0`
+> contracts are indexed immediately below and in [`SPEC.md`](../SPEC.md).
+> Older distribution, evaluation, license, entitlement, subscription, and pre-R2
+> drafts in this folder are historical/withdrawn unless explicitly indexed as active.
+
+## Active Container `0.6.0` Contracts
+
+All new `.kdna` works use **Container `0.6.0`** (public `sections/pack-N.kdnab` CBOR frames or offline `RFC-0018` AEAD-encrypted `payload.kdnab`), **Judgment Payload `0.5.1`** (`kdna.r2-semantics/1`), **Canonical IR `0.6.1`**, and **Selective Read `kdna.read/0.7.0-candidate`**:
+
+| Responsibility | Container `0.6.0` Reference |
+| --- | --- |
+| Core protocol overview | [`SPEC.md`](../SPEC.md) |
+| Native `0.6.0` section container & retained-section read contracts | [`sections/contract.json`](../packages/kdna-core/src/public-contract/sections/contract.json), [`retained/contract.json`](../packages/kdna-core/src/public-contract/retained/contract.json) |
+| Native `0.6.0` creation & `0.5.0` → `0.6.0` migration contracts | [`creation06/contract.json`](../packages/kdna-core/src/public-contract/creation06/contract.json), [`migration06/contract.json`](../packages/kdna-core/src/public-contract/migration06/contract.json), [`RFC-0023`](../rfcs/RFC-0023-source-and-state-0.6.md) |
+| Local offline password protection (`RFC-0018`) | [`RFC-0018`](../rfcs/RFC-0018-envelope-aead.md), [`envelope-aead.schema.json`](./envelope-aead.schema.json) |
+| Optional offline Ed25519 signature track (`RFC-0021`) | [`RFC-0021`](../rfcs/RFC-0021-signature-track.md) |
+| Byte-pinned R2 base (`0.5.0` / `kdna.read/0.6.4`) schema map | [`SPEC-INDEX.md`](../SPEC-INDEX.md) |
 
 Supplementary specification documents for the KDNA protocol.
 
@@ -95,9 +114,9 @@ for the public boundary and selective reading contract.
 | 40  | `stage-definition.schema.json`     | Schema for stage definitions          |
 | 41  | `RFC-0012-artifact-contract.md`    | Withdrawn historical proposal (see above) |
 
-For app and runtime integration, read `docs/app-runtime-contract.md` after `docs/runtime-routing.md`.
+For current Container `0.6.0` runtime integration, read [`SPEC.md`](../SPEC.md), [`docs/agent-entry.md`](../docs/agent-entry.md), and [`docs/core-narrative-and-boundaries.md`](../docs/core-narrative-and-boundaries.md).
 
-Runtime contract examples live in `examples/app-runtime-contract/` and can be checked with:
+Historical runtime contract fixtures live in `examples/app-runtime-contract/` and can be checked with:
 
 ```bash
 npm run validate:runtime-contract

@@ -1,5 +1,7 @@
 # Build KDNA from LLM Wiki
 
+> **Legacy pre-`0.6.0` prompt (archived reference only).** This prompt targets the historical expanded project-view JSON format (`KDNA_Core.json` / `KDNA_Patterns.json`) and is not used for Container `0.6.0` `.kdna` works. For current AI-assisted authoring from writings, wikis, or reference corpora, use [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) (`kdna-creator`) with `@aikdna/kdna-cli@0.46.0` (`kdna init`, `validate-input`, `create --draft`, `review`).
+
 You are extracting domain cognition from a knowledge base. Do NOT summarize the Wiki. Do NOT copy its structure. You are distilling judgment.
 
 ## Input

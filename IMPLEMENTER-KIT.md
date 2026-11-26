@@ -5,14 +5,14 @@ verifier, reader, or consumer. Everything here is reachable in one hop from this
 
 ## 1. Read the contract
 
-- [SPEC.md](./SPEC.md) — overview of Container `0.6.0`, Canonical IR, integrity digests (`A`, `C`, `E`, `ir_digest`), selective `exact_selection` closure, and local AEAD protection (`RFC-0018`).
-- [SPEC-INDEX.md](./SPEC-INDEX.md) — every normative specification and JSON Schema.
+- [SPEC.md](./SPEC.md) & [specs/README.md](./specs/README.md) — active Container `0.6.0` contract overview and index (`sections`, `retained`, `creation06`, `migration06`, Canonical IR, integrity digests `A`/`C`/`E`/`ir_digest`, selective `exact_selection` closure, and local AEAD protection `RFC-0018`).
+- [SPEC-INDEX.md](./SPEC-INDEX.md) — byte-pinned R2 base (`0.5.0` / `kdna.read/0.6.4`) normative schema index bound to `specs/public-semantic-source.json`.
 - [RFC index](./rfcs/README.md) — accepted and proposed protocol changes, feature lifecycle, and deprecation policy.
 
 ## 2. Reference SDKs, CLI & Conformance Verification
 
 - **Reference SDKs (Container `0.6.0`):** Install `@aikdna/kdna-core@0.37.11` (container admission, canonical IR, integrity digests, packing, and offline AEAD protection) and `@aikdna/kdna-read@0.13.5` (selective `catalog` and `exact_selection` reading with mandatory context closure).
-- **Official CLI (`>=22` Node.js):** Use `npx -y @aikdna/kdna-cli@0.45.2 validate <asset.kdna> --system` and `npx -y @aikdna/kdna-cli@0.45.2 inspect <asset.kdna>` to cross-verify your container outputs offline.
+- **Official CLI (`>=22` Node.js):** Use `npx -y @aikdna/kdna-cli@0.46.0 validate <asset.kdna> --system` and `npx -y @aikdna/kdna-cli@0.46.0 inspect <asset.kdna>` to cross-verify your container outputs offline.
 - **Layered Conformance Suites (keep the three layers distinct):**
   1. **Container `0.6.0` suite (current distribution container):** Run `npm run conformance:container-0.6` (executes the Container `0.6.0` native-sections, `ProtectedManifest06Candidate` browser/Node parity, `0.5.0` → `0.6.0` source migration, native binding, and retained-section model-view test suites across `@aikdna/kdna-core` and `@aikdna/kdna-read`), plus `npm run conformance:envelope-aead` for RFC-0018 local AEAD protection.
   2. **Public semantic contract suite (`kdna.core/0.8.2` · `kdna.payload.judgment/0.5.1` · base Container `0.5.0` / `kdna.read/0.6.4`):** Run `npm run conformance:public-obligations` (`scripts/public-contract/run-obligations.mjs`, verifying 46 runtime obligations and 4 package-surface checks across from-zero containers, typed asset-declaration retention, static `exact_selection` closure, Host/budget bounds, and fail-closed error paths) and `node scripts/public-contract/run-vectors.mjs "$(pwd)" /tmp/kdna-public-contract-report.json` (running the 94 positive and fail-closed negative decision vectors in `conformance/public-contract/vectors.generated.json`).

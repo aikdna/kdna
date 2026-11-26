@@ -177,7 +177,10 @@ function findConsumers(
     const rootPackagePath = path.join(repositoryRoot, 'package.json');
 
     const lifecycle = lifecycleByRepository.get(repository) || null;
-    if (EXCLUDED_LIFECYCLES.has(lifecycle)) {
+    if (
+      EXCLUDED_LIFECYCLES.has(lifecycle) &&
+      !(manifestsByRepository.get(repository)?.length > 0)
+    ) {
       skipped.push({ repository, lifecycle });
       continue;
     }

@@ -9,7 +9,7 @@
     "Future",
     "Draft Normative"
   ],
-  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 9 public repositories (4 active Container 0.6.0 repositories and 5 preserved legacy pre-0.6.0 compatibility repositories) retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and external asset assessment is optional, scoped, and separate from Core validity.",
+  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. The 5 active public repositories on the public allowlist (aikdna/kdna, aikdna/kdna-cli, aikdna/kdna-skills, aikdna/kdna-assets, aikdna/kdna-reader-releases) carry the Container 0.6.0 protocol, CLI, Agent Skills/MCP, public works, and signed desktop Reader binary releases; 5 preserved legacy pre-0.6.0 compatibility repositories (kdna-studio-core, kdna-studio-cli, kdna-core-swift, kdna-app-shared, kdna-studio-swift) remain archived/legacy and are not active entrypoints. Exact published-version contracts remain authoritative, and external asset assessment is optional, scoped, and separate from Core validity.",
   "components": [
     {
       "repository": "aikdna/kdna",
@@ -136,7 +136,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "91b643ae627ebc7255f1e5f147612b0616ab51e1",
+      "source_commit": "7ffb821f583e81700b0f5753d11345ebd285103a",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -145,14 +145,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.45.2",
+          "version": "0.46.0",
           "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.45.2"
+          "published_version": "0.46.0"
         }
       ],
       "lifecycle": "Pre-release",
@@ -163,7 +163,7 @@
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline",
         "native previews keep their own exact graphs; the earlier 0.36.1 loading line keeps its own loading/packing contract"
       ],
-      "recommended_entrypoint": "npm install -g @aikdna/kdna-cli ; kdna create|protect|unprotect|inspect|validate|read|diff|source-open|source-pack with explicit permission flags",
+      "recommended_entrypoint": "npm install -g @aikdna/kdna-cli ; kdna create|protect|unprotect|inspect|validate|read|review|diff|source-open|source-pack with explicit permission flags",
       "legacy_replacement": null
     },
     {
@@ -191,7 +191,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "5a466df25da67767f74730b4568fab47beb2e60a",
+      "source_commit": "8d2061481b313ba0db55d2259e9a9501dc6e913c",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -221,6 +221,24 @@
       "legacy_replacement": null
     },
     {
+      "repository": "aikdna/kdna-reader-releases",
+      "local_path": "../kdna-reader-releases",
+      "source_commit": "c490300adba7a4867b6d236d19e7c34e820d18eb",
+      "conformance_commit": null,
+      "component_version": "0.3.4",
+      "packages": [],
+      "artifacts": [],
+      "lifecycle": "Pre-release",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "known_limitations": [
+        "public binary-only GitHub Releases mirror for signed and Apple-notarized macOS Apple Silicon KDNA Reader binaries (v0.3.4-build30) and SHA-256 checksums; desktop application source remains private"
+      ],
+      "recommended_entrypoint": "https://github.com/aikdna/kdna-reader-releases/releases (or https://aikdna.com/en/downloads)",
+      "legacy_replacement": null
+    },
+    {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
       "source_commit": "ea2840ad4e7fb96c3225c7d1f6b1e9305debfa4c",
@@ -234,26 +252,26 @@
           "npm_package": "@aikdna/kdna-studio-core",
           "version": "4.1.0",
           "published_version": "4.1.0",
-          "lifecycle": "Pre-release",
-          "release_status": "active",
+          "lifecycle": "Legacy",
+          "release_status": "compatibility",
           "dependency_policy": "current",
           "known_limitations": [
-            "Published and active on npm `latest`; live Host and consumer acceptance require separate evidence."
+            "Archived Container 0.5.0 Studio authoring SDK preserved for historical compatibility only; not an active Container 0.6.0 entrypoint."
           ],
-          "recommended_entrypoint": null,
-          "legacy_replacement": null
+          "recommended_entrypoint": "npx -y @aikdna/kdna-cli@0.46.0 init --example",
+          "legacy_replacement": "@aikdna/kdna-cli@0.46.0 (Container 0.6.0)"
         }
       ],
-      "lifecycle": "Pre-release",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "Studio export is pre-release and treats review, Human Lock, signatures, and release evidence as optional provenance layers",
-        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native CLI line"
+        "Archived pre-0.6.0 Studio repository; no longer maintained for new works",
+        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native Container 0.6.0 CLI line"
       ],
-      "recommended_entrypoint": "Studio project export followed by Core validate and plan-load",
-      "legacy_replacement": null
+      "recommended_entrypoint": "npx -y @aikdna/kdna-cli@0.46.0 init --example",
+      "legacy_replacement": "aikdna/kdna-cli (@aikdna/kdna-cli@0.46.0, Container 0.6.0)"
     },
     {
       "repository": "aikdna/kdna-studio-cli",
@@ -269,26 +287,26 @@
           "npm_package": "@aikdna/kdna-studio-cli",
           "version": "0.14.0",
           "published_version": "0.14.0",
-          "lifecycle": "Pre-release",
-          "release_status": "active",
+          "lifecycle": "Legacy",
+          "release_status": "compatibility",
           "dependency_policy": "current",
           "known_limitations": [
-            "Published and active on npm `latest`; live Host and consumer acceptance require separate evidence."
+            "Archived Container 0.5.0 Studio CLI preserved for historical compatibility only; not an active Container 0.6.0 entrypoint."
           ],
-          "recommended_entrypoint": "npm install -g @aikdna/kdna-studio-cli",
-          "legacy_replacement": null
+          "recommended_entrypoint": "npm install -g @aikdna/kdna-cli@0.46.0",
+          "legacy_replacement": "@aikdna/kdna-cli@0.46.0 (Container 0.6.0)"
         }
       ],
-      "lifecycle": "Pre-release",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "remote authoring delivery is outside the local Studio CLI baseline",
-        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native CLI line"
+        "Archived pre-0.6.0 Studio CLI repository; no longer maintained for new works",
+        "the Studio session binds container 0.5.0 / Read 0.6.4, separate from the native Container 0.6.0 CLI line"
       ],
-      "recommended_entrypoint": "kdna-studio create/add/approve/export",
-      "legacy_replacement": null
+      "recommended_entrypoint": "npm install -g @aikdna/kdna-cli@0.46.0",
+      "legacy_replacement": "aikdna/kdna-cli (@aikdna/kdna-cli@0.46.0, Container 0.6.0)"
     },
     {
       "repository": "aikdna/kdna-core-swift",
@@ -300,15 +318,15 @@
       "component_version": "0.21.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Pre-release",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "accepted main is recertified against exact public Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a; the 0.21.0 tag is the published incumbent"
+        "Archived pre-0.6.0 Swift repository; accepted main was recertified against historical Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a and is no longer actively maintained"
       ],
-      "recommended_entrypoint": "fixed conformance fixtures only",
-      "legacy_replacement": null
+      "recommended_entrypoint": "use @aikdna/kdna-core@0.37.11 and @aikdna/kdna-read@0.13.5",
+      "legacy_replacement": "aikdna/kdna (@aikdna/kdna-core@0.37.11 and @aikdna/kdna-read@0.13.5)"
     },
     {
       "repository": "aikdna/kdna-app-shared",
@@ -320,16 +338,15 @@
       "component_version": "0.5.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Pre-release",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "Swift package source only; it is not an npm publication",
-        "the 0.5.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 0.21.0 (tag commit 1e13ef5f1c9283ddf810268218ac406234d25eb7) but remains unpublished source"
+        "Archived pre-0.6.0 Swift shared-presentation package; source only and no longer actively maintained"
       ],
-      "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-app-shared.git\", exact: \"0.5.0\")",
-      "legacy_replacement": null
+      "recommended_entrypoint": "use aikdna/kdna-reader-releases or @aikdna/kdna-cli@0.46.0",
+      "legacy_replacement": "aikdna/kdna-reader-releases and aikdna/kdna-cli"
     },
     {
       "repository": "aikdna/kdna-studio-swift",
@@ -341,16 +358,15 @@
       "component_version": "0.4.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Pre-release",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "Swift package source only; it is not an npm publication",
-        "the 0.4.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 0.21.0 (tag commit 1e13ef5f1c9283ddf810268218ac406234d25eb7) and App Shared 017e759efb448bf99b3384ccafa7f25172169ebb but remains unpublished source"
+        "Archived pre-0.6.0 Swift Studio authoring package; source only and no longer actively maintained"
       ],
-      "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-studio-swift.git\", exact: \"0.4.0\")",
-      "legacy_replacement": null
+      "recommended_entrypoint": "use @aikdna/kdna-cli@0.46.0 for Container 0.6.0 authoring",
+      "legacy_replacement": "aikdna/kdna-cli (@aikdna/kdna-cli@0.46.0, Container 0.6.0)"
     },
     {
       "repository": "aikdna/kdna-writing",

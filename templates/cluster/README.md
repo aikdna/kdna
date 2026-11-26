@@ -1,5 +1,7 @@
 # Cluster: example_cluster
 
+> **Legacy pre-`0.6.0` template (archived fixture only).** This expanded `KDNA_Cluster.json` project-view layout belongs to the retired `0.1.0` line and is retained only for historical schema tests. For current Container `0.6.0` works, build single `.kdna` works via `npx -y @aikdna/kdna-cli@0.46.0 init --example` (see [`docs/authoring-guide.md`](../../docs/authoring-guide.md)).
+
 > **Status: Design / Experimental** — Cluster is an explicit advanced path; it does not change the single-asset KDNA format.
 > For the current default pre-release path, use single `.kdna` assets.
 

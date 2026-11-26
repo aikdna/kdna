@@ -68,7 +68,7 @@ check(
 );
 check(
   'agent-entry.md shows the published CLI install coordinate',
-  agentEntry.includes('@aikdna/kdna-cli@0.45.2'),
+  agentEntry.includes('@aikdna/kdna-cli@0.46.0'),
 );
 check(
   'agent-entry.md shows the same-session multi-select route',
@@ -129,7 +129,7 @@ check(
 
 const maturityDoc = fs.readFileSync(path.join(DOCS_DIR, 'maturity.md'), 'utf8');
 check(
-  'maturity.md documents 0.45.2 primary route inspect -> validate -> read and marks plan-load / Runtime Capsule as retired 0.36.1',
+  'maturity.md documents 0.46.0 primary route inspect -> validate -> read and marks plan-load / Runtime Capsule as retired 0.36.1',
   maturityDoc.includes('inspect → validate → read') &&
     maturityDoc.includes('Retired `0.36.1` loading workflow'),
 );
