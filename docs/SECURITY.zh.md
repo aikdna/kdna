@@ -16,7 +16,7 @@
 | --- | --- | :---: |
 | `@aikdna/kdna-core` | `0.37.11`（Container `0.6.0` & `0.5.0`） | 活跃 |
 | `@aikdna/kdna-read` | `0.13.5`（按需读取协议） | 活跃 |
-| `@aikdna/kdna-cli` | `0.45.x`（Container `0.6.0`） | 活跃 |
+| `@aikdna/kdna-cli` | `0.46.x`（Container `0.6.0`） | 活跃 |
 | `@aikdna/kdna-mcp-server` | `0.8.x`（Container `0.6.0`） | 活跃 |
 | `@aikdna/kdna-studio-cli` / `@aikdna/kdna-studio-core` | `0.14.0` / `4.1.0`（旧版 `0.5.0` 归档线） | 历史归档 |
 

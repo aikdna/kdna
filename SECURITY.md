@@ -19,9 +19,9 @@ We actively support the latest release for security updates.
 | Component | Supported Versions |
 |-----------|-------------------|
 | KDNA Protocol & Core (`@aikdna/kdna-core`, `@aikdna/kdna-read`) | Latest tagged release (`0.37.11` / `0.13.5`, Container `0.6.0` & `0.5.0`) |
-| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.45.x`, Container `0.6.0`) |
+| Official CLI (`@aikdna/kdna-cli`) | Latest minor release (`0.46.x`, Container `0.6.0`) |
 | Official MCP Server (`@aikdna/kdna-mcp-server`) | Latest minor release (`0.8.x`, Container `0.6.0`) |
-| Legacy Studio CLI / Core (`@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`) | Latest minor release (`0.14.0` / `4.1.0`, Container `0.5.0` session line) |
+| Legacy Studio CLI / Core (`@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`) | Archived Container `0.5.0` compatibility line (`0.14.0` / `4.1.0`; no new features) |
 | Public reference works (`aikdna/kdna-assets`) | *KDNA Whitepaper* `v1.0.2` (`kdna-whitepaper-1.0.2.{en,zh-CN}.kdna`, Container `0.6.0`) |
 
 Older versions may receive critical security patches on a case-by-case basis.
@@ -60,7 +60,7 @@ an author, establish content quality or grant action permission.
   AEAD protection (`kdna.encryption.password` / `kdna.envelope.aead`,
   `scrypt-sha256` / `argon2id` KDF + `AES-256-KW` key wrapping + `AES-256-GCM`
   payload encryption per `RFC-0018`) is supported in `@aikdna/kdna-cli`
-  (`kdna protect`, `kdna unprotect`, and `kdna read --password-file`), Desktop `KDNA Reader`, and
+  (`kdna protect`, `kdna unprotect`, and `kdna read --password-env` / `--password-prompt` / `--password-file` / `--password-fd`), Desktop `KDNA Reader`, and
   the explicit Node protection entrypoints (`@aikdna/kdna-core/protection-node`
   and `@aikdna/kdna-read/protection-node`)—permanently without any online
   account.

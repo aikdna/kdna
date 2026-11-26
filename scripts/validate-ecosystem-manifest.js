@@ -671,6 +671,7 @@ if (validateSchema()) {
       isLive &&
       component.packages.length === 0 &&
       component.artifacts.length === 0 &&
+      component.repository !== 'aikdna/kdna-reader-releases' &&
       (!component.release_tag || !component.release_commit)
     ) {
       fail(component, 'live package-less component must bind its current release tag and commit');

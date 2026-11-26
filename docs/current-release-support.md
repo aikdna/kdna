@@ -1,6 +1,6 @@
 # Current Release Support & Distribution History
 
-Updated: `2026-11-24`. The machine-readable source of truth for all published npm versions, SHA-256 digests, and preserved preview tags is [`release-coordinates.json`](./release-coordinates.json).
+Updated: `2026-11-26`. The machine-readable source of truth for all published npm versions, SHA-256 digests, and preserved preview tags is [`release-coordinates.json`](./release-coordinates.json).
 
 ## Active Stable Line (Container `0.6.0`)
 
@@ -10,7 +10,7 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | --- | --- | --- | --- | --- |
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | Node `>=20` | Container `0.6.0` & `0.5.0` admission, Canonical IR, packing, local encryption |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | Node `>=20` | Selective Read protocol (`catalog`, `exact_selection`, `expand`, unlock) |
-| `@aikdna/kdna-cli` | `0.45.2` | `latest` | Node `>=22` | Official CLI (`init`, `create`, `protect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`) |
+| `@aikdna/kdna-cli` | `0.46.0` | `latest` | Node `>=22` | Official CLI (`init`, `create`, `review`, `protect`, `unprotect`, `validate`, `read`, `diff`, `source-open`, `source-pack`, `convert`) |
 | `@aikdna/kdna-mcp-server` | `0.8.4` | `latest` | Node `>=22` | Optional local stdio MCP adapter in [`aikdna/kdna-skills`](https://github.com/aikdna/kdna-skills) |
 
 ## Preserved Legacy Packages (Container `0.5.0` & Compatibility)
@@ -18,7 +18,7 @@ Use these exact coordinates for all new `.kdna` works, CLI workflows, and SDK in
 | Package | Version | npm tag | Status |
 | --- | --- | --- | --- |
 | `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | Archived Container `0.5.0` Studio session SDK (not used for `0.6.0`) |
-| `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | Archived Container `0.5.0` Studio CLI (use `@aikdna/kdna-cli@0.45.2` instead) |
+| `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | Archived Container `0.5.0` Studio CLI (use `@aikdna/kdna-cli@0.46.0` instead) |
 | `@aikdna/kdna-conformance` | `0.2.0` | `latest` | Archived `0.1.0`/`0.36.1` `planLoad` conformance package (for Container `0.6.0` use `npm run conformance:container-0.6`; for the `kdna.core/0.8.2` / `0.5.1` / base `0.5.0` public semantic contract use `npm run conformance:public-obligations` and the 94-vector suite) |
 | `@aikdna/kdna` | `0.14.0` | `latest` | Legacy compatibility alias (`0.36.1` line) |
 

@@ -1,17 +1,14 @@
 <!-- Generated from docs/release-coordinates.json by scripts/render-release-coordinates.mjs; do not edit by hand. -->
 
-**Current publication state (2026-11-24).** All five stable coordinates are
-published from their reviewed source commits, and each published tarball was
-re-downloaded from the registry and matched byte for byte against the retained
-artifact:
+**Current publication state (2026-11-26).** Active Container `0.6.0` stable npm coordinates are
+published from their reviewed source commits (archived Container `0.5.0` Studio packages remain recorded in
+[release-coordinates.json](./release-coordinates.json) and [current-release-support.md](./current-release-support.md)):
 
 | Package | Version | npm tag | Published artifact SHA-256 |
 | --- | --- | --- | --- |
 | `@aikdna/kdna-core` | `0.37.11` | `latest` | `affd3db862a02daaacd9ada91ec365ff93d9f6c2592e62df9e01888d36bb2e4a` |
 | `@aikdna/kdna-read` | `0.13.5` | `latest` | `a7eb0064ad028a73394a4cc9d189dd22f52f046e30a31c6e50bea1490915fc89` |
-| `@aikdna/kdna-cli` | `0.45.2` | `latest` | `b42c7f0ce3cfff719c4c50d7bb2eaa32449dd0c076b4f3ce7c9f9002b1c6a452` |
-| `@aikdna/kdna-studio-core` | `4.1.0` | `latest` | `76a5e7dcca71b28259e5058d241304912713d72e9defba98ce8a03f7e4d1e22a` |
-| `@aikdna/kdna-studio-cli` | `0.14.0` | `latest` | `542270c699eec5cbc468b134b2d7235c312be7551e32f4ce66821b3fb814dfc7` |
+| `@aikdna/kdna-cli` | `0.46.0` | `latest` | `f7ad9cc6e384fe4b1903e2665432d80f772daf93b4d8fb92d5dd9a6612775554` |
 
 Agent Skills (`aikdna/kdna-skills`) are delivered from Git, alongside the optional local stdio MCP adapter coordinate recorded in the matrix.
 Exact source commits, release runs, preserved preview

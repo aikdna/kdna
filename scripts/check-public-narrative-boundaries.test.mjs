@@ -137,7 +137,7 @@ test('current repository passes the narrative boundary audit', () => {
 test('agent-entry guidance keeps current CLI coordinate and selective-read boundaries', () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   for (const boundary of [
-    '@aikdna/kdna-cli@0.45.2',
+    '@aikdna/kdna-cli@0.46.0',
     'zero judgment bodies inline',
     'Minimal selection rule',
   ]) {

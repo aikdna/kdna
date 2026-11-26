@@ -289,7 +289,10 @@ test('core smoke verifies current source after preparing exact historical compat
   );
   const inventory = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'scripts/ecosystem-source-inventory.json'), 'utf8'));
   const sourcePins = inventory.repositories.filter((row) => row.repository !== 'aikdna/kdna').map((row) => [row.repository, row.commit]);
-  assert.equal(sourcePins.length, EXPECTED_COMPAT_CHECKOUTS.length);
+  const sourceCompatCheckouts = EXPECTED_COMPAT_CHECKOUTS.filter(
+    ([repository]) => repository !== 'aikdna/kdna-reader-releases',
+  );
+  assert.equal(sourcePins.length, sourceCompatCheckouts.length);
   for (const [repository, smokeCommit] of sourcePins) {
     assert.match(
       workflow,
@@ -328,7 +331,7 @@ test('core smoke verifies current source after preparing exact historical compat
     /finally \{\s+fs\.rmSync\(swiftModuleCache, \{ recursive: true, force: true \}\);\s+\}/u,
   );
   const immutableCheckouts = [...workflow.matchAll(/uses: actions\/checkout@([^\s]+)/gu)];
-  assert.equal(immutableCheckouts.length, EXPECTED_COMPAT_CHECKOUTS.length + 1);
+  assert.equal(immutableCheckouts.length, sourceCompatCheckouts.length + 1);
   for (const match of immutableCheckouts) assert.equal(match[1], CHECKOUT_ACTION_SHA);
 });
 

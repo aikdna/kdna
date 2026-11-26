@@ -756,9 +756,9 @@ function checkCurrentNavigation(root, options = {}) {
   }
   contains('README.md', '<!-- release-coordinates:begin', '<!-- release-coordinates:end -->', [
     `| \`${released.core.name}\` | \`${released.core.version}\` | \`${released.core.tag}\` |`,
+    `| \`${released.read.name}\` | \`${released.read.version}\` | \`${released.read.tag}\` |`,
     `| \`${released.cli.name}\` | \`${released.cli.version}\` | \`${released.cli.tag}\` |`,
-    `| \`${released['studio-cli'].name}\` | \`${released['studio-cli'].version}\` | \`${released['studio-cli'].tag}\` |`,
-    'All five stable coordinates are',
+    'Active Container `0.6.0` stable npm coordinates are',
     'Agent Skills (`aikdna/kdna-skills`) are delivered from Git',
   ]);
   contains('README.md', null, null, [
