@@ -331,8 +331,16 @@ test('core smoke verifies current source after preparing exact historical compat
     /finally \{\s+fs\.rmSync\(swiftModuleCache, \{ recursive: true, force: true \}\);\s+\}/u,
   );
   const immutableCheckouts = [...workflow.matchAll(/uses: actions\/checkout@([^\s]+)/gu)];
-  assert.equal(immutableCheckouts.length, sourceCompatCheckouts.length + 1);
+  assert.equal(immutableCheckouts.length, EXPECTED_COMPAT_CHECKOUTS.length + 1);
   for (const match of immutableCheckouts) assert.equal(match[1], CHECKOUT_ACTION_SHA);
+  const readerPin = EXPECTED_COMPAT_CHECKOUTS.find(
+    ([repository]) => repository === 'aikdna/kdna-reader-releases',
+  );
+  assert.ok(readerPin);
+  assert.match(
+    workflow,
+    new RegExp(`repository: aikdna\\/kdna-reader-releases\\n\\s+ref: ${readerPin[1]}`, 'u'),
+  );
 });
 
 test('release context binds event, stable tag, package, changelog, HEAD, and workflow commit', () => {

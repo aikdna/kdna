@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-cli
-          ref: 7f609d5a30e00ddcf2cd418699fb6390d80ed78e
+          ref: 7ffb821f583e81700b0f5753d11345ebd285103a
           path: .ecosystem-repos/kdna-cli
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -75,8 +75,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-skills
-          ref: 9c3fa00128d87a7146e353c9cfde202a5f391f99
+          ref: 8d2061481b313ba0db55d2259e9a9501dc6e913c
           path: .ecosystem-repos/kdna-skills
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-reader-releases
+          ref: c490300adba7a4867b6d236d19e7c34e820d18eb
+          path: .ecosystem-repos/kdna-reader-releases
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:

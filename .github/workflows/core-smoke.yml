@@ -55,6 +55,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          repository: aikdna/kdna-reader-releases
+          ref: c490300adba7a4867b6d236d19e7c34e820d18eb
+          path: .ecosystem-repos/kdna-reader-releases
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
           repository: aikdna/kdna-skills
           ref: 40e50578178b72c400bb5b90a3ed76eef8176693
           path: .ecosystem-repos/kdna-skills

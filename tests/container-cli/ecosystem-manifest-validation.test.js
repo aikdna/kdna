@@ -333,8 +333,12 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
     }
     assert.deepEqual([...seen].sort(), [...expectedPins.keys()].sort());
   }
+  const coreSmokePins = new Map([
+    ...sourcePins,
+    ['aikdna/kdna-reader-releases', acceptedPins.get('aikdna/kdna-reader-releases')],
+  ]);
   for (const [workflowName, expectedPins, expectedSize] of [
-    ['core-smoke.yml', sourcePins, 8],
+    ['core-smoke.yml', coreSmokePins, 9],
     ['publish.yml', acceptedPins, 9],
   ]) {
     const workflow = fs.readFileSync(
