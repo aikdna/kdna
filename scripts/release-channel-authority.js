@@ -970,18 +970,27 @@ function createAuthority(configuration) {
       assert(rebound.bytes.equals(candidate.bytes), 'preview artifact changed before publish');
       const artifact = path.join(work, candidate.evidence.artifact.filename);
       fs.writeFileSync(artifact, candidate.bytes, { flag: 'wx', mode: 0o600 });
+      const tarFiles = trusted.parseTarFiles(candidate.bytes, { includeBytes: true });
       const manifest = trusted.strictJson(
-        trusted
-          .parseTarFiles(candidate.bytes, { includeBytes: true })
-          .find((x) => x.path === 'package.json').bytes,
+        tarFiles.find((x) => x.path === 'package.json').bytes,
         'preview publisher manifest',
       );
+      const readmeEntry = tarFiles.find((x) => /^readme(?:\.(?:md|markdown|txt))?$/iu.test(x.path));
+      const publishManifest = {
+        ...manifest,
+        gitHead: candidate.context.commit,
+        ...(readmeEntry
+          ? {
+              readme: readmeEntry.bytes.toString('utf8'),
+              readmeFilename: readmeEntry.path,
+            }
+          : {}),
+      };
       const manifestPath = path.join(work, 'manifest.json');
-      fs.writeFileSync(
-        manifestPath,
-        JSON.stringify({ ...manifest, gitHead: candidate.context.commit }) + '\n',
-        { flag: 'wx', mode: 0o600 },
-      );
+      fs.writeFileSync(manifestPath, JSON.stringify(publishManifest) + '\n', {
+        flag: 'wx',
+        mode: 0o600,
+      });
       const tree = candidate.context.treeState;
       const publisher = path.join(work, 'publisher.js');
       fs.writeFileSync(publisher, readSource(tree, PUBLISHER_PATH, options.root || ROOT), {
