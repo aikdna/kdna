@@ -4,10 +4,14 @@ import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { UniqueOutputMap } from './generation-writer.mjs';
+import { emitSelfContainedValidators, emitLinkedValidators } from './validator-emitter.mjs';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
+export const NATIVE_TYPES_PATH =
+  'packages/kdna-core/src/public-contract/native-types.generated.json';
 export const sha = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
 export const jsonBytes = (value) => Buffer.from(JSON.stringify(value, null, 2) + '\n');
+export const compactJsonBytes = (value) => Buffer.from(JSON.stringify(value) + '\n');
 export const byteIdentity = (relative, bytes) => ({
   path: relative,
   bytes: bytes.length,
@@ -350,6 +354,7 @@ export function nativeOutputPaths(recipe) {
   }
   result.push(
     ...recipe.sections_mirrors,
+    NATIVE_TYPES_PATH,
     recipe.whole_dispatch.directory + '/native-whole-validators.cjs',
     recipe.whole_dispatch.directory + '/native-whole-schemas.json',
   );
@@ -381,7 +386,8 @@ export function buildNativeOutputs(
   const types = compileTypes(source),
     outputs = new UniqueOutputMap(),
     sourceIdentity = byteIdentity(recipe.source, sourceBytes),
-    ownerRows = [];
+    ownerRows = [],
+    allNativeTypes = {};
   for (const owner of recipe.owners) {
     const selected = pointer(source, owner.roots_pointer),
       names = Array.isArray(selected) ? selected : Object.keys(selected);
@@ -420,16 +426,28 @@ export function buildNativeOutputs(
       ajv.addSchema(schema);
       roots[row.name] = schema.$id;
     }
+    Object.assign(allNativeTypes, all);
     const validator = owner.members.find((relative) => relative.endsWith('/validators.cjs'));
-    // The original sections header is a literal LF escape in its generator recipe.
-    let validatorText =
-      owner.validator_header.replaceAll('\\n', '\n') + standalone(ajv, roots) + '\n';
-    if (owner.validator_final_newline !== undefined) {
-      if (owner.validator_final_newline !== 'single')
-        fail('RECIPE_VALIDATOR_NEWLINE', 'Unsupported validator newline policy');
-      validatorText = validatorText.replace(/\n+$/u, '') + '\n';
-    }
-    outputs.set(validator, Buffer.from(validatorText));
+    const header = owner.validator_header.replaceAll('\\n', '\n');
+    const rootNames = owner.schemas.map((row) => row.name);
+    const validatorBytes =
+      owner.id === 'sections'
+        ? emitSelfContainedValidators({
+            header,
+            defsExpression: "require('./contract.json').types",
+            rootMap: rootNames,
+            allErrors: owner.ajv_options.allErrors !== false,
+          })
+        : emitLinkedValidators({
+            header,
+            engineImport: '../schema-validator.js',
+            defsExpression: "require('../native-types.generated.json')",
+            rootMap: rootNames,
+            allErrors: owner.ajv_options.allErrors !== false,
+          });
+    if (owner.validator_final_newline !== undefined && owner.validator_final_newline !== 'single')
+      fail('RECIPE_VALIDATOR_NEWLINE', 'Unsupported validator newline policy');
+    outputs.set(validator, validatorBytes);
     if (owner.typescript.generated)
       outputs.set(
         owner.members.find((relative) => relative.endsWith('/types.d.ts')),
@@ -437,13 +455,22 @@ export function buildNativeOutputs(
       );
     outputs.set(
       moduleRecipe.output,
-      jsonBytes({
-        candidate_only: true,
-        source: sourceIdentity,
-        historical_original_source: moduleRecipe.historical_original_source,
-        module,
-        types: all,
-      }),
+      compactJsonBytes(
+        owner.id === 'sections'
+          ? {
+              candidate_only: true,
+              source: sourceIdentity,
+              historical_original_source: moduleRecipe.historical_original_source,
+              module,
+              types: all,
+            }
+          : {
+              candidate_only: true,
+              source: sourceIdentity,
+              historical_original_source: moduleRecipe.historical_original_source,
+              module,
+            },
+      ),
     );
     for (const api of owner.apis) {
       let text = pointer(source, api.source_pointer);
@@ -532,6 +559,16 @@ export function buildNativeOutputs(
       module_digest: digest(module),
     });
   }
+  outputs.set(
+    NATIVE_TYPES_PATH,
+    compactJsonBytes(
+      Object.fromEntries(
+        Object.keys(allNativeTypes)
+          .sort()
+          .map((name) => [name, allNativeTypes[name]]),
+      ),
+    ),
+  );
   const sections = recipe.module_projections.find(
     (row) => row.pointer === '/representation_candidate',
   ).output;
@@ -561,7 +598,12 @@ export function buildNativeOutputs(
   }
   outputs.set(
     dispatch.directory + '/native-whole-validators.cjs',
-    Buffer.from(standalone(dispatchAjv, roots) + '\n'),
+    emitLinkedValidators({
+      engineImport: '../schema-validator.js',
+      defsExpression: "require('../sections/contract.json').types",
+      rootMap: dispatch.roots,
+      allErrors: dispatch.options.allErrors !== false,
+    }),
   );
   outputs.set(dispatch.directory + '/native-whole-schemas.json', jsonBytes(schemas));
   return { outputs, ownerRows, sourceIdentity };

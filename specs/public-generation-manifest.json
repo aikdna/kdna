@@ -688,9 +688,9 @@
       "sha256": "840e1442c0b54fbd99cd89a1b47f2db289a6fb001f8a1f431d1ce3ba128bd68e"
     },
     {
-      "bytes": 1851808,
+      "bytes": 441,
       "path": "packages/kdna-core/src/public-contract/execution-validators.generated.js",
-      "sha256": "2bdbd00a0f1f4e46e567a4c919c382c1a7e0a918b95fe6b880c91396a65cb1bf"
+      "sha256": "03a9f472f8bf60aaa010b31e10a453db5e3ac5ea7589878124009fa7c9ebc7c6"
     },
     {
       "bytes": 5878,
@@ -698,24 +698,24 @@
       "sha256": "bcaf3a2b91dcba7fb618d987f41fc3530d65fb1f21d5d00c24408895ac14e653"
     },
     {
-      "bytes": 360546,
+      "bytes": 207417,
       "path": "packages/kdna-core/src/public-contract/generated-contract.json",
-      "sha256": "5e88f2862e11231555edc16a5e0268f548845b2a7b8fe707ec9a26c1ac23399b"
+      "sha256": "e69633938ed185977c58905ea041f10d24692c8f35890bd36c4ec5fc6622ca6b"
     },
     {
-      "bytes": 193745,
+      "bytes": 358,
       "path": "packages/kdna-core/src/public-contract/handoff-validator.generated.js",
-      "sha256": "9c34b99ce60e21971959a4a2d33791e7ca858f071d62b049a1aa7ceb3ef0866a"
+      "sha256": "26bdc553e3a49b66e10985051512ca72fef8e7fe015d93d8711b9cc50abab807"
     },
     {
-      "bytes": 28492,
+      "bytes": 18779,
       "path": "packages/kdna-core/src/public-contract/issuer-contract.generated.json",
-      "sha256": "0d6b0df2fe7b91c9b20cf4ad1b255d5a239b24feaea33d775c6ecf8a610ef12d"
+      "sha256": "607b0ec3861b96782f125817b40992275c99f18f9ff52a22ef354f5a48bbd59e"
     },
     {
-      "bytes": 129287,
+      "bytes": 469,
       "path": "packages/kdna-core/src/public-contract/issuer-validators.generated.js",
-      "sha256": "183ddc052975921a26894d2e0d8313db8fbb4c92b7f732abbe46bb0a4debbde4"
+      "sha256": "48b8e2be505cd783d46536d4f28f7ea7a0d83b3b88f0ae0153430d1ff54c749b"
     },
     {
       "bytes": 4051,
@@ -728,9 +728,9 @@
       "sha256": "e43a1dca3f401ccb8a24457add8012f0e5289ffb75905646c39da36dce8d2136"
     },
     {
-      "bytes": 19788,
+      "bytes": 11655,
       "path": "packages/kdna-core/src/public-contract/package-set-contract.generated.json",
-      "sha256": "7db360e4f754edc5ebf82ea17f2aeaf96c8a7851233586f18caf346227911ffa"
+      "sha256": "5fd44fd9d7b647b68a260c98e06227acf06415b6c2638e042b274cbb443653ad"
     },
     {
       "bytes": 5624,
@@ -738,9 +738,9 @@
       "sha256": "b0b7e6de4d5dfd24537c502aa7fd78fe6694d869b9df5c29d9e36598dc25124a"
     },
     {
-      "bytes": 174796,
+      "bytes": 591,
       "path": "packages/kdna-core/src/public-contract/package-set-validators.generated.js",
-      "sha256": "ae741a578f393cb6714f1c8988603da4541ebbd886109f71d3faaa92c5317300"
+      "sha256": "6c9635218c4ece08c7a019b525cb8b2542b78867a5f6723313dd39531c7dc86e"
     },
     {
       "bytes": 2670,
@@ -748,9 +748,9 @@
       "sha256": "e5398bd03ad0cf4f81b381ee9036e6778d6a137428b87ded1b6f10d44073c938"
     },
     {
-      "bytes": 351782,
+      "bytes": 13969,
       "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
-      "sha256": "a44a43011b84109ee258373bccb27b3b22c7b14ccd6294c10be3004f4cb45314"
+      "sha256": "ec31ea3e2a01215aee472d7ca19f545249be4bdb949719ca4c1562a8e5e931ff"
     },
     {
       "bytes": 10226,
@@ -758,9 +758,9 @@
       "sha256": "c23e629668458f04a95e5cbe7f1963d1433a440f259cf67424d0521941537f9a"
     },
     {
-      "bytes": 89252,
+      "bytes": 65591,
       "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
-      "sha256": "09a860c2d888ad1b1b624fb3703d341546dc037ffbb1e3eefb90d7a96a953e4a"
+      "sha256": "fc6ca553233052e214ae3d7a460973f9e0e66061bd6cd2954b52d315d710c3e5"
     },
     {
       "bytes": 15822,
@@ -768,9 +768,9 @@
       "sha256": "00b8d74985cd1413430cd9648bd3cb7a5fdd9de272fa3478712d019b795a6b3f"
     },
     {
-      "bytes": 4263500,
+      "bytes": 1211,
       "path": "packages/kdna-core/src/public-contract/protection-validators.generated.js",
-      "sha256": "2b00a5ccff7d56ae260c7c16bd4c434eb248ff7e8ea86ef6178b91e10d14f31d"
+      "sha256": "53c0102fb20be97a61739557517ed1f0d2ad832f2c8f4f45c81cb7171d42205a"
     },
     {
       "bytes": 294,
@@ -783,9 +783,9 @@
       "sha256": "5ea0d9f7205cf721555682229a7f6148cd9f91638f5686884d739885be604473"
     },
     {
-      "bytes": 318982,
+      "bytes": 543,
       "path": "packages/kdna-core/src/public-contract/source-validators.generated.js",
-      "sha256": "6235cc3470bc770e24ba3ca24b81ef8e7aed4fac45c645dd4b6ac8df8eaf1d5b"
+      "sha256": "75efaa14ce2d43aa16bcddddf38050c800b015d049e057206a02033c587b149e"
     },
     {
       "bytes": 515,
@@ -798,9 +798,9 @@
       "sha256": "54efa71c6faa52063d2a4ef711e710fa50aeecc992a6535bec34288142774106"
     },
     {
-      "bytes": 3904175,
+      "bytes": 12975,
       "path": "packages/kdna-core/src/public-contract/validators.generated.js",
-      "sha256": "c8418d3b7891a0ddbe7466464df2f3d609160356956a21806c9d16bbf9ee600e"
+      "sha256": "4d59a0bf1d40d122ad46928a40483ca959a95a3f9444e01ec1df35da80aaff7f"
     },
     {
       "bytes": 243829,
@@ -838,9 +838,9 @@
       "sha256": "5733ca8c8be900ff68c48f5b8f58f9c9b577f2368382430be23c4af4be9ac30b"
     },
     {
-      "bytes": 7535,
+      "bytes": 4643,
       "path": "packages/kdna-read/src/package-set-contract.generated.json",
-      "sha256": "e0de0f99daeec3273a2eeca2dae56e51fbda9756f69109f3ebdad0c72b145580"
+      "sha256": "bbc373a3afb1888f521107532e285bc074ff9306868d52afe8fae1aa48a9df03"
     },
     {
       "bytes": 2267,
@@ -868,9 +868,9 @@
       "sha256": "765e53d46b0c7df1ca0cd187be9c2e0cb228a90a45dbf2d6ef1887316e1f41d2"
     },
     {
-      "bytes": 1632896,
+      "bytes": 12973,
       "path": "packages/kdna-read/src/transport-validators.generated.js",
-      "sha256": "698db920b585f36ca47d217a3c5ad9b2714c676c981820dc0dfc34d3319d6e15"
+      "sha256": "8dafe6eb039ade38b74affd8a2de7ec95b9f84ca5d510f4a5762774e8865061b"
     },
     {
       "bytes": 4950,
@@ -932,9 +932,9 @@
   ],
   "scripts": [
     {
-      "bytes": 73563,
+      "bytes": 74766,
       "path": "scripts/public-contract/generate.mjs",
-      "sha256": "73f19333a9fbff08480884d8b35ade372fe8b682ea25a77d9b370dc88c740f86"
+      "sha256": "99db45f9a55ef01466af3cb47dba8960429de1341c5400231da9d285f39a3668"
     },
     {
       "bytes": 6377,
@@ -960,6 +960,11 @@
       "bytes": 5909,
       "path": "scripts/public-contract/generation-writer.mjs",
       "sha256": "5f2b95585cfb99084af9ad03a2e95926d7a445c12f25ed29ede05aa6d17bac98"
+    },
+    {
+      "bytes": 4297,
+      "path": "scripts/public-contract/validator-emitter.mjs",
+      "sha256": "6a1cd7611c8e1306fd06e1e2c160cf4617b967e852c4733baab14d177739f2a7"
     }
   ],
   "source": {

@@ -6,7 +6,7 @@ const { digestCanonical, runtimeEntryNames, evidence } = require('./digests.js')
 const { validate } = require('./validate.js');
 const { buildIR } = require('./canonical-ir.js');
 const { issueSnapshot } = require('./brand.js');
-const { versionTuple, core_terms } = require('./generated-contract.json');
+const { versionTuple, core_terms } = require('../generated-contract.json');
 const { assertPayload } = require('./cross-entry.js');
 
 // The decoded-value half of the semantic path is needed because a revision

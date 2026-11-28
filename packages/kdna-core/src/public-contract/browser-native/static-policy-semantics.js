@@ -3,7 +3,7 @@
 const {canonicalJson,utf8,compareUtf8,copyJson,scalarString,reject}=require('./strict-input.js');
 const {digest}=require('./digests.js');
 const {validate}=require('./validate.js');
-const {static_policy:registry}=require('./generated-contract.json');
+const {static_policy:registry}=require('../generated-contract.json');
 const definition=registry.definition,D=registry.definition_digest,limits=definition.limits;
 const H=value=>digest(utf8(canonicalJson(value)));
 if(H(definition)!==D)throw new Error('STATIC_POLICY_DEFINITION_INTEGRITY');

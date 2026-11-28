@@ -56,14 +56,22 @@ private snapshot and disclose content only through public Read with independent
 trusted control and Host providers. Technical admission does not authenticate
 an author, establish content quality or grant action permission.
 
-- **Local password encryption (`Container 0.6.0`):** Offline password-based
-  AEAD protection (`kdna.encryption.password` / `kdna.envelope.aead`,
-  `scrypt-sha256` / `argon2id` KDF + `AES-256-KW` key wrapping + `AES-256-GCM`
-  payload encryption per `RFC-0018`) is supported in `@aikdna/kdna-cli`
-  (`kdna protect`, `kdna unprotect`, and `kdna read --password-env` / `--password-prompt` / `--password-file` / `--password-fd`), Desktop `KDNA Reader`, and
-  the explicit Node protection entrypoints (`@aikdna/kdna-core/protection-node`
-  and `@aikdna/kdna-read/protection-node`)—permanently without any online
-  account.
+- **Local password encryption (`Container 0.6.0` — `RFC-0018` Draft / Pre-Audit):**
+  Offline password-based AEAD protection (`kdna.encryption.password` /
+  `kdna.envelope.aead`, `scrypt-sha256` / `argon2id` KDF + OpenSSL native
+  `id-aes256-wrap` `AES-256-KW` key wrapping + `AES-256-GCM` payload encryption
+  per [`rfcs/RFC-0018-envelope-aead.md`](./rfcs/RFC-0018-envelope-aead.md)) is
+  supported in `@aikdna/kdna-cli` (`kdna protect`, `kdna unprotect`, and
+  `kdna read --password-env` / `--password-prompt` / `--password-file` /
+  `--password-fd`), Desktop `KDNA Reader`, and the explicit Node protection
+  entrypoints (`@aikdna/kdna-core/protection-node` and
+  `@aikdna/kdna-read/protection-node`)—permanently without any online account.
+  **Audit status notice:** `RFC-0018` (`kdna.envelope.aead` `0.1.0`) is
+  currently a **draft — pre-release candidate** that has **not yet undergone an
+  independent third-party cryptographic audit**. It is suitable for personal and
+  team offline privacy hygiene, and should not yet be relied upon for
+  regulated, high-value, or nation-state-grade secrets until an independent
+  security audit is completed and a stable profile version is published.
 - **Default root/browser admission boundary:** The unprivileged root/browser
   exports of `@aikdna/kdna-core` and `@aikdna/kdna-read` do not accept secrets
   or perform implicit I/O; encrypted containers, signatures, and

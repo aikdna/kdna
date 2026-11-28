@@ -1,5 +1,5 @@
 'use strict';
-const strict=require('../browser-native/strict-input.js'),contract=require('../retained/contract.json'),Cbor=require('../cbor.js');
+const strict=require('../browser-native/strict-input.js'),contract={...require('../retained/contract.json'),types:require('../native-types.generated.json')},Cbor=require('../cbor.js');
 const validators=require('../retained-browser06/validators.cjs'),{digest}=require('../digests.js');
 const failures=new WeakMap();
 function need(ok,code='SECTION_INDEX_INCONSISTENT'){if(!ok){const error=new Error(code);failures.set(error,code);throw error;}}

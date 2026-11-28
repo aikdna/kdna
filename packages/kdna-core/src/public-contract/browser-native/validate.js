@@ -1,8 +1,8 @@
 'use strict';
 
 const { identifier, entryName, scalarString, validTimestamp, reject } = require('./strict-input.js');
-const contract = require('./generated-contract.json');
-const validators = require('./validators.generated.js');
+const contract = require('../generated-contract.json');
+const validators = require('../validators.generated.js');
 function validateScalars(value, shape, depth = 0) {
   if (depth > 64) reject('READ_CORE_INVALID');
   if (shape.$ref) {

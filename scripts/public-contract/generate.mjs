@@ -9,6 +9,7 @@ import {IMPLEMENTED_RULE_IDS} from './cross-entry-check.mjs';
 import {selectedContext} from './selected-context.mjs';
 import navigation from '../check-current-r2-navigation.cjs';
 import {compareOutputs,writeOutputs,UniqueOutputMap} from './generation-writer.mjs';
+import {emitSelfContainedValidators,emitLinkedValidators,emitProtectionValidators} from './validator-emitter.mjs';
 const SELF=fileURLToPath(import.meta.url), SCRIPT_DIR=path.dirname(SELF);
 const BASE_OUTPUTS=['schema/manifest-container-0.5.0-judgment-0.5.1.schema.json','schema/payload-profile-0.5.1.schema.json','specs/canonical-ir-0.6.1.schema.json','specs/read-contract-0.6.4.schema.json','specs/public-diagnostics.json','specs/public-vocabulary.json'];
 BASE_OUTPUTS.push('schema/runtime-capsule-0.3.1.schema.json','schema/consumption-plan-0.3.1.schema.json','schema/agent-host-request-0.3.1.schema.json','schema/agent-host-receipt-0.3.1.schema.json','schema/judgment-trace-0.3.1.schema.json');
@@ -41,6 +42,7 @@ const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const utf8sort=(a,b)=>Buffer.compare(Buffer.from(a),Buffer.from(b));
 const ordered=v=>Array.isArray(v)?v.map(ordered):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,ordered(v[k])])):v;
 const bytes=v=>Buffer.from(JSON.stringify(ordered(v),null,2)+'\n','utf8');
+const compactBytes=v=>Buffer.from(JSON.stringify(ordered(v))+'\n','utf8');
 function fail(code,message){throw Object.assign(new Error(message),{code});}
 VALIDATOR_OUTPUTS.push(EXECUTION_VALIDATOR);
 VALIDATOR_OUTPUTS.push(PROTECTION_VALIDATOR);
@@ -230,7 +232,7 @@ protectionDefinitions(source,outputs,o,protectionRuntimeEnforcement);
 browserDefinitions(source,outputs);
 protectedSourceDefinitions(source,outputs,o);
 issuerDefinitions(source,outputs,deriveEnforcement(ruleScopes[2]));
-const artifactRows=[...outputs].filter(([p])=>OUTPUTS.includes(p)).map(([p,b])=>({path:p,bytes:b.length,sha256:sha(b)})).sort((a,b)=>utf8sort(a.path,b.path));const scriptRows=['generate.mjs','verify.mjs','proof-inventory.mjs','cross-entry-check.mjs','selected-context.mjs','generation-writer.mjs'].map(n=>{const b=regular(path.join(SCRIPT_DIR,n));return {path:'scripts/public-contract/'+n,bytes:b.length,sha256:sha(b)};});
+const artifactRows=[...outputs].filter(([p])=>OUTPUTS.includes(p)).map(([p,b])=>({path:p,bytes:b.length,sha256:sha(b)})).sort((a,b)=>utf8sort(a.path,b.path));const scriptRows=['generate.mjs','verify.mjs','proof-inventory.mjs','cross-entry-check.mjs','selected-context.mjs','generation-writer.mjs','validator-emitter.mjs'].map(n=>{const b=regular(path.join(SCRIPT_DIR,n));return {path:'scripts/public-contract/'+n,bytes:b.length,sha256:sha(b)};});
 const integrationRows=integration(source,compiled,o,outputs);
 for(const [file,content]of standaloneValidators(source,compiled,outputs,o)){outputs.set(file,content);integrationRows.push({path:file,bytes:content.length,sha256:sha(content)});}
 integrationRows.sort((a,b)=>utf8sort(a.path,b.path));
@@ -283,7 +285,7 @@ function protectionDefinitions(source,outputs,o,runtimeEnforcement){
  outputs.set(readFile,Buffer.from(readCode
   .replace(/const EXPECTED_PROTECTION = .*; \/\/ @protection-expectation/,'const EXPECTED_PROTECTION = '+JSON.stringify(ordered(expected))+'; // @protection-expectation')
   .replace(/const EXPECTED_READ_VERSION = .*; \/\/ @protection-read-version/,'const EXPECTED_READ_VERSION = '+JSON.stringify(source.engineering.package_versions.read)+'; // @protection-read-version')));
- outputs.set('packages/kdna-core/src/public-contract/protection-contract.generated.json',bytes({...p,types:compileNode(p.types,source),derived_runtime_enforcement:runtimeEnforcement,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
+ outputs.set('packages/kdna-core/src/public-contract/protection-contract.generated.json',compactBytes({...p,types:compileNode(p.types,source),derived_runtime_enforcement:runtimeEnforcement,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
 }
 // The browser protected entry (case A) is an independent admission-only surface: the host
 // supplies the container bytes, the payload plaintext and the unlock observation, and the
@@ -325,7 +327,7 @@ function protectedSourceDefinitions(source,outputs){
  lines.push(p.api_typescript);
  outputs.set('packages/kdna-core/src/public-contract/protected-source-node.d.ts',Buffer.from(lines.join('\n')+'\n'));
  outputs.set('specs/protected-source.d.ts',Buffer.from(lines.join('\n').replaceAll("'./types.js'","'../packages/kdna-core/src/public-contract/types.js'").replaceAll("'./protection-node.js'","'../packages/kdna-core/src/public-contract/protection-node.js'")+'\n'));
- outputs.set('packages/kdna-core/src/public-contract/protected-source-contract.generated.json',bytes({...p,types:compiled,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
+ outputs.set('packages/kdna-core/src/public-contract/protected-source-contract.generated.json',compactBytes({...p,types:compileNode(p.types,source),definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
 }
 function issuerDefinitions(source,outputs,runtimeEnforcement){
  const p=source.external_grant_issuer;
@@ -345,7 +347,7 @@ function issuerDefinitions(source,outputs,runtimeEnforcement){
  lines.push(p.api_typescript);outputs.set('specs/external-grant-issuer.d.ts',Buffer.from(lines.join('\n')+'\n'));
  lines[1]="import type { "+baseRefs.join(', ')+" } from './types.js';";
  outputs.set('packages/kdna-core/src/public-contract/key-grant-issuer-node.d.ts',Buffer.from(lines.join('\n')+'\n'));
- outputs.set('packages/kdna-core/src/public-contract/issuer-contract.generated.json',bytes({...p,types:compileNode(p.types,source),derived_runtime_enforcement:runtimeEnforcement,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
+ outputs.set('packages/kdna-core/src/public-contract/issuer-contract.generated.json',compactBytes({...p,types:compileNode(p.types,source),derived_runtime_enforcement:runtimeEnforcement,definition_digest:'sha256:'+sha(JSON.stringify(ordered(p)))}));
 }
 function eVersion(source){return source.engineering.package_versions.read;}
 function typeExpression(node,source,parentProperties={}){
@@ -398,9 +400,9 @@ if(psn){
  const limits={maxMembers:psn.types.PackageSetLimits.properties.maxMembers.const,maxTotalSourceBytes:psn.types.PackageSetLimits.properties.maxTotalSourceBytes.const};
  const descriptor={contract:psn.contract,module_version:psn.module_version,core_version:source.engineering.package_versions.core,read_version:source.engineering.package_versions.read,limits,local_failures:[...psn.local_failures],core_callables:[...psn.core_callables],read_callables:[...psn.read_callables],claims:psn.claims};
  descriptor.definition_digest='sha256:'+sha(JSON.stringify(ordered(descriptor)));
- const coreContract=bytes({descriptor,types:psClosure,key_sets:keySets,schema_id:psn.schema_id,schema_path:psn.schema_path,proof_limits:psn.proof_limits});
+ const coreContract=compactBytes({descriptor,types:psClosure,key_sets:keySets,schema_id:psn.schema_id,schema_path:psn.schema_path,proof_limits:psn.proof_limits});
  outputs.set(psn.core_contract_path,coreContract);
- outputs.set(psn.read_contract_path,bytes({descriptor,key_sets:keySets,core_contract_digest:'sha256:'+sha(coreContract),schema_id:psn.schema_id,schema_path:psn.schema_path,proof_limits:psn.proof_limits}));
+ outputs.set(psn.read_contract_path,compactBytes({descriptor,key_sets:keySets,core_contract_digest:'sha256:'+sha(coreContract),schema_id:psn.schema_id,schema_path:psn.schema_path,proof_limits:psn.proof_limits}));
  outputs.set(psn.schema_path,bytes({$schema:source.schema_dialect,$id:psn.schema_id,title:psn.root,description:'Generated from the single public semantic source. Structural validity is not member admission, disclosure authority, execution permission or protected PackageSet support.',$ref:'#/$defs/'+psn.root,$defs:psClosure}));
  outputs.set(psn.typescript_path,Buffer.from(['// Generated from specs/public-semantic-source.json; do not edit.',"import type { "+[...references(psn.types)].filter(n=>Object.hasOwn(source.types,n)).sort().join(', ')+" } from '../packages/kdna-core/src/public-contract/types.js';",...Object.entries(psn.types).map(([name,node])=>'export type '+name+' = '+typeExpression(node,source)+';'),''].join('\n')));
  const psBase=[...new Set([...references(psn.types),'VersionTuple','CanonicalReadSnapshot'])].filter(n=>Object.hasOwn(source.types,n)).sort();
@@ -459,7 +461,7 @@ const contextCode=Buffer.from('// Generated from specs/public-semantic-source.js
 if(source.engineering.read_installation_guard?.decision!=='S12-D011 revision2 plus S12-D012, S12-D013 and S12-D016'||source.engineering.read_installation_guard?.failure!=='READ_CORE_CAPABILITY_UNAVAILABLE')fail('SOURCE','Read installation guard rule missing');
 outputs.set('packages/kdna-read/src/installation.generated.json',bytes({core_version:source.engineering.package_versions.core,read_version:source.engineering.package_versions.read}));
 for(const file of ['packages/kdna-core/src/public-contract/selected-context.generated.js','packages/kdna-read/src/selected-context.generated.js'])outputs.set(file,contextCode);
-outputs.set('packages/kdna-core/src/public-contract/generated-contract.json',bytes({versionTuple:source.versionTuple,digest_profiles:source.digest_profiles,resource_limits:e.resource_limits,component_semantics:source.component_semantics,static_policy:source.static_policy,authoring_workflow:source.authoring_workflow,r2_semantics:source.r2_semantics,...(e.core_terms!==undefined?{core_terms:e.core_terms}:{}),types:compiled}));
+outputs.set('packages/kdna-core/src/public-contract/generated-contract.json',compactBytes({versionTuple:source.versionTuple,digest_profiles:source.digest_profiles,resource_limits:e.resource_limits,component_semantics:source.component_semantics,static_policy:source.static_policy,authoring_workflow:source.authoring_workflow,r2_semantics:source.r2_semantics,...(e.core_terms!==undefined?{core_terms:e.core_terms}:{}),types:compiled}));
 for(const [file,text]of Object.entries(e.typescript_surfaces))outputs.set(file,Buffer.from('// Generated from specs/public-semantic-source.json; do not edit.\n'+text));
 outputs.set('conformance/public-contract/ir-retention-vectors.generated.json',bytes({format:'kdna.ir-retention-vectors/1',authority:e.ir_retention.authority,cases:e.ir_retention_cases}));
 const seed='conformance/public-contract-decision-vectors.json';if(!source.accepted_designs.some(x=>x.path===seed))fail('SOURCE','seed input not accepted');const seeds=JSON.parse(regular(path.join(o.root,seed)));
@@ -501,7 +503,16 @@ const header='// Generated by scripts/public-contract/generate.mjs from the sing
 // VALIDATOR_OUTPUTS and read it back by hard-coded index, which silently dropped a validator and
 // could write one validator's bytes to another validator's path. The declared set and the emitted
 // set are compared literally before anything is returned.
-const VALIDATOR_EMISSION=[[CORE_VALIDATOR,Buffer.from(header+standalone(ajv,roots)+'\n')],[HANDOFF_VALIDATOR,Buffer.from(header+standalone(handoffAjv,handoff)+'\n')],[TRANSPORT_VALIDATOR,Buffer.from(header+standalone(transportAjv,{contextSchema:transport.$id+'#/$defs/ReadTransportContext',remoteSchema:transport.$id+'#/$defs/ReadTransportRemoteResponse'})+'\n')],[EXECUTION_VALIDATOR,Buffer.from(header+standalone(executionAjv,executionRoots)+'\n')],[PROTECTION_VALIDATOR,Buffer.from(header+standalone(protectionAjv,protectionRoots)+'\n')],[ISSUER_VALIDATOR,Buffer.from(header+standalone(issuerAjv,issuerRoots)+'\n')],[SOURCE_VALIDATOR,Buffer.from(header+standalone(srcAjv,srcRoots)+'\n')],[PACKAGE_SET_NODE_OUTPUTS.validator,Buffer.from(header+standalone(psnAjv,psnRoots)+'\n')]];
+const VALIDATOR_EMISSION=[
+ [CORE_VALIDATOR,emitSelfContainedValidators({header,defsExpression:"require('./generated-contract.json').types",rootMap:Object.keys(roots),allErrors:true})],
+ [HANDOFF_VALIDATOR,emitLinkedValidators({header,engineImport:'./schema-validator.js',defsExpression:"require('./generated-contract.json').types",singleRoot:'PackageSetHandoff',allErrors:false})],
+ [TRANSPORT_VALIDATOR,emitSelfContainedValidators({header,defsExpression:"require('../schema/read-transport-admission-0.2.1.schema.json').$defs",rootMap:{contextSchema:'ReadTransportContext',remoteSchema:'ReadTransportRemoteResponse'},allErrors:false})],
+ [EXECUTION_VALIDATOR,emitLinkedValidators({header,engineImport:'./schema-validator.js',defsExpression:"require('./generated-contract.json').types",rootMap:Object.keys(executionRoots),allErrors:true})],
+ [PROTECTION_VALIDATOR,emitProtectionValidators({header})],
+ [ISSUER_VALIDATOR,emitLinkedValidators({header,engineImport:'./schema-validator.js',defsExpression:"{ ...require('./generated-contract.json').types, ...require('./issuer-contract.generated.json').types }",rootMap:Object.keys(issuerRoots),allErrors:false})],
+ [SOURCE_VALIDATOR,emitLinkedValidators({header,engineImport:'./schema-validator.js',defsExpression:"{ ...require('./generated-contract.json').types, ...require('./protection-contract.generated.json').types, ...require('./protected-source-contract.generated.json').types }",rootMap:Object.keys(srcRoots),allErrors:true})],
+ [PACKAGE_SET_NODE_OUTPUTS.validator,emitLinkedValidators({header,engineImport:'./schema-validator.js',defsExpression:"require('./package-set-contract.generated.json').types",rootMap:Object.keys(psnRoots),allErrors:false})],
+];
 if(new Set(VALIDATOR_OUTPUTS).size!==VALIDATOR_OUTPUTS.length)fail('PATH','duplicate validator output declaration');
 if(JSON.stringify([...VALIDATOR_OUTPUTS].sort())!==JSON.stringify(VALIDATOR_EMISSION.map(([p])=>p).sort()))fail('PATH','validator declaration and emission disagree');
 return new UniqueOutputMap(VALIDATOR_EMISSION);}

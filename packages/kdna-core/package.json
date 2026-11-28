@@ -156,6 +156,13 @@
   },
   "files": [
     "src/public-contract/",
+    "!src/public-contract/*/schemas/**",
+    "!src/public-contract/*/*.schema.json",
+    "!src/public-contract/*/generation-manifest.json",
+    "!src/public-contract/browser-native/native-whole-schemas.json",
+    "!src/public-contract/browser-native/generated-contract.json",
+    "!src/public-contract/browser-native/sections/**",
+    "!src/public-contract/browser-native/validators.generated.js",
     "schema/manifest-0.2.schema.json",
     "schema/payload-profile-0.2.schema.json",
     "schema/canonical-ir-0.3.schema.json",

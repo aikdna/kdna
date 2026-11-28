@@ -22,7 +22,7 @@ const { encodeStored } = require('./container-writer.js');
 const { isDeepStrictEqual } = require('node:util');
 const { inflateRawSync } = require('node:zlib');
 
-const M6 = require('./migration06/contract.json');
+const M6 = { ...require('./migration06/contract.json'), types: require('./native-types.generated.json') };
 const tuple = C.contract.module.versionTuple;
 const routeContract = C.strict.freeze({
   id: 'kdna.source-migration/0.1.0-candidate',

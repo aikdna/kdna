@@ -13,6 +13,7 @@ import {
   loadRecipe,
   sha,
   jsonBytes,
+  compactJsonBytes,
   byteIdentity,
   project,
   closure,
@@ -102,6 +103,7 @@ export function buildAllOutputs(options) {
       'native-renderer.mjs',
       'generation-writer.mjs',
       'generate.mjs',
+      'validator-emitter.mjs',
     ].map((name) =>
       byteIdentity('scripts/public-contract/' + name, regular(path.join(directory, name))),
     ),
@@ -111,7 +113,12 @@ export function buildAllOutputs(options) {
     if (row.operations.length) {
       const value = project(JSON.parse(outputs.get(row.output)), row.operations);
       outputs.delete(row.output);
-      outputs.set(row.output, jsonBytes(value));
+      outputs.set(
+        row.output,
+        row.output.startsWith('packages/kdna-core/src/public-contract/')
+          ? compactJsonBytes(value)
+          : jsonBytes(value),
+      );
     }
   }
   // Refresh current integration identities after the explicit public projection.

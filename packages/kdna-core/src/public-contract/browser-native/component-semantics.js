@@ -3,7 +3,7 @@
 const {canonicalJson,utf8,compareUtf8,copyJson,freeze,reject,scalarString}=require('./canonical-json-shim.js');
 const {digest}=require('./digests.js');
 const {validate}=require('./validate.js');
-const {types,component_semantics:registry,static_policy}=require('./generated-contract.json');
+const {types,component_semantics:registry,static_policy}=require('../generated-contract.json');
 const definition=registry.definition, D=registry.definition_digest;
 const H=value=>digest(utf8(canonicalJson(value)));
 if(H(definition)!==D)throw new Error('COMPONENT_DEFINITION_INTEGRITY');
