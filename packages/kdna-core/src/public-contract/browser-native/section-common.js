@@ -1,5 +1,5 @@
 "use strict";
-const strict=require('./strict-input.js'),contract=require('./sections/contract.json'),Cbor=require('./cbor.js');
+const strict=require('./strict-input.js'),contract=require('../sections/contract.json'),Cbor=require('./cbor.js');
 const validators=require('./native-whole-validators.cjs'),F=require('./failure-state.js');
 const {digest}=require('./digests.js');
 function need(ok,code='SECTION_INDEX_INCONSISTENT'){if(!ok)F.fail(code);}

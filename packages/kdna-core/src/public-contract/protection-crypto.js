@@ -1,7 +1,7 @@
 'use strict';
 const crypto = require('node:crypto');
 const { fail } = require('./protection-declaration.js');
-const { aesWrap, aesUnwrap } = require('../crypto-profile.js');
+const { aesWrap, aesUnwrap, timingSafeEqualString } = require('../crypto-profile.js');
 const { externalEnvelopeAad, deriveExternalAssetCek } = require('../external-key-grant.js');
 const { digest } = require('./digests.js');
 const { decode64Bytes, validateEnvelopeShape, passwordAadBytes } = require('./protection-envelope-codec.js');
@@ -74,7 +74,7 @@ function issuerRootPlaintext(envelope,manifest,issuerRootKey) {
   const cek=deriveExternalAssetCek({...parameters,issuerRootKey});let plaintext;
   try {
     plaintext=decryptGcm(envelope,cek,externalEnvelopeAad(parameters),true);
-    if(digest(plaintext)!==envelope.plaintext_digest){plaintext.fill(0);fail('AUTHENTICATION_FAILED','authentication');}
+    if(!timingSafeEqualString(digest(plaintext),envelope.plaintext_digest)){plaintext.fill(0);fail('AUTHENTICATION_FAILED','authentication');}
     return plaintext;
   } finally {cek.fill(0);}
 }

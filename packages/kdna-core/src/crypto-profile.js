@@ -80,7 +80,7 @@ function encryptedEntryAad(
 // ── HKDF-SHA256 (RFC 5869) ────────────────────────────────────────
 
 /**
- * HKDF-SHA256 extract-then-expand.
+ * HKDF-SHA256 extract-then-expand via Node.js native OpenSSL implementation.
  * @param {Buffer|string} ikm — input keying material (license key)
  * @param {Buffer} [salt] — optional salt (defaults to 32 zero bytes)
  * @param {Buffer|string} [info] — context info
@@ -88,21 +88,21 @@ function encryptedEntryAad(
  */
 function hkdfSha256(ikm, salt = null, info = '', length = 32) {
   const ikmBuf = toBuffer(ikm, 'ikm');
-  // Extract
   const saltBuf = salt || Buffer.alloc(32, 0);
-  const prk = crypto.createHmac('sha256', saltBuf).update(ikmBuf).digest();
-  // Expand (single-block expansion for length ≤ 32)
-  const t = crypto.createHmac('sha256', prk)
-    .update(Buffer.concat([
-      toBuffer(info, 'info'),
-      // Counter byte 0x01
-      Buffer.from([1]),
-    ]))
-    .digest();
-  return t.subarray(0, length);
+  const infoBuf = toBuffer(info, 'info');
+  return Buffer.from(crypto.hkdfSync('sha256', ikmBuf, saltBuf, infoBuf, length));
 }
 
-// ── AES-256-KW (RFC 3394) ─────────────────────────────────────────
+// ── Constant-time comparison helpers ──────────────────────────────
+
+function timingSafeEqualString(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const aBuf = Buffer.from(a, 'utf8');
+  const bBuf = Buffer.from(b, 'utf8');
+  return aBuf.length === bBuf.length && crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+// ── AES-256-KW (RFC 3394) via OpenSSL native id-aes256-wrap ───────
 
 const KW_IV = Buffer.from('a6a6a6a6a6a6a6a6', 'hex'); // RFC 3394 default IV
 
@@ -110,61 +110,19 @@ function aesWrap(key, plaintext) {
   // key = 32 bytes, plaintext = 32 bytes (single CEK)
   if (key.length !== 32) throw new Error('AES-256-KW requires 32-byte key');
   if (plaintext.length !== 32) throw new Error('AES-256-KW requires 32-byte plaintext');
-
-  const n = plaintext.length / 8; // = 4 for 256-bit CEK
-  const r = new Array(n + 1);
-  r[0] = KW_IV;
-  for (let i = 0; i < n; i++) r[i + 1] = plaintext.subarray(i * 8, (i + 1) * 8);
-
-  for (let j = 0; j <= 5; j++) {
-    for (let i = 1; i <= n; i++) {
-      const input = Buffer.concat([r[0], r[i]]); // 16 bytes
-      const cipher = crypto.createCipheriv('aes-256-ecb', key, null);
-      cipher.setAutoPadding(false);
-      const b = Buffer.concat([cipher.update(input), cipher.final()]);
-      r[0] = b.subarray(0, 8);
-      // XOR t = (n * j) + i as big-endian 64-bit
-      const t = BigInt(n) * BigInt(j) + BigInt(i);
-      const tBuf = Buffer.alloc(8);
-      tBuf.writeBigUInt64BE(t);
-      for (let k = 0; k < 8; k++) r[0][k] ^= tBuf[k];
-      r[i] = b.subarray(8, 16);
-    }
-  }
-
-  const result = Buffer.alloc((n + 1) * 8);
-  for (let i = 0; i <= n; i++) r[i].copy(result, i * 8);
-  return result; // 40 bytes
+  const cipher = crypto.createCipheriv('id-aes256-wrap', key, KW_IV);
+  return Buffer.concat([cipher.update(plaintext), cipher.final()]);
 }
 
 function aesUnwrap(key, ciphertext) {
   if (key.length !== 32) throw new Error('AES-256-KW requires 32-byte key');
   if (ciphertext.length !== 40) throw new Error('AES-256-KW ciphertext must be 40 bytes');
-
-  const n = (ciphertext.length / 8) - 1; // = 4
-  const r = new Array(n + 1);
-  for (let i = 0; i <= n; i++) r[i] = ciphertext.subarray(i * 8, (i + 1) * 8);
-
-  for (let j = 5; j >= 0; j--) {
-    for (let i = n; i >= 1; i--) {
-      const t = BigInt(n) * BigInt(j) + BigInt(i);
-      const tBuf = Buffer.alloc(8);
-      tBuf.writeBigUInt64BE(t);
-      for (let k = 0; k < 8; k++) r[0][k] ^= tBuf[k];
-
-      const input = Buffer.concat([r[0], r[i]]);
-      const decipher = crypto.createDecipheriv('aes-256-ecb', key, null);
-      decipher.setAutoPadding(false);
-      const b = Buffer.concat([decipher.update(input), decipher.final()]);
-      r[0] = b.subarray(0, 8);
-      r[i] = b.subarray(8, 16);
-    }
+  try {
+    const decipher = crypto.createDecipheriv('id-aes256-wrap', key, KW_IV);
+    return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+  } catch {
+    throw new Error('AES-256-KW unwrap: integrity check failed');
   }
-
-  if (!r[0].equals(KW_IV)) throw new Error('AES-256-KW unwrap: integrity check failed');
-  const result = Buffer.alloc(n * 8);
-  for (let i = 1; i <= n; i++) r[i].copy(result, (i - 1) * 8);
-  return result; // 32 bytes
 }
 
 // ── RFC-0008 compliant encryption ─────────────────────────────────
@@ -611,4 +569,5 @@ module.exports = {
   hkdfSha256,
   aesWrap,
   aesUnwrap,
+  timingSafeEqualString,
 };

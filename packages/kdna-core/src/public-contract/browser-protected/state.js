@@ -2,7 +2,7 @@
 const strict = require('../browser-native/strict-input.js');
 const { digestCanonical } = require('../digests.js');
 const { inspectSnapshot, markProtectedSnapshot } = require('../brand.js');
-const contract = require('../protected-browser-contract/contract.json');
+const contract = { ...require('../protected-browser-contract/contract.json'), types: require('../native-types.generated.json') };
 const validators = require('../protected-browser-contract/validators.cjs');
 const origins = new WeakMap(), requests = new WeakMap(), authorities = new WeakMap();
 const operations = new WeakMap(), snapshots = new WeakMap(), checkpoints = new WeakMap(), failures = new WeakMap();

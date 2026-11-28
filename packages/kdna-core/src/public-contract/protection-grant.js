@@ -3,7 +3,7 @@ const crypto = require('node:crypto');
 const { parseJson, validTimestamp, uint, copyJson } = require('./strict-input.js');
 const { fail, closed } = require('./protection-declaration.js');
 const { validateExternalKeyGrant, grantSigningPayload, externalEnvelopeAad } = require('../external-key-grant.js');
-const { aesUnwrap } = require('../crypto-profile.js');
+const { aesUnwrap, timingSafeEqualString } = require('../crypto-profile.js');
 const { decode64, decryptGcm } = require('./protection-crypto.js');
 const { digest } = require('./digests.js');
 function rawKey(value,type,length=32) {
@@ -47,7 +47,7 @@ function grantPlaintext(verified,manifest,envelope) {
     kek=Buffer.from(crypto.hkdfSync('sha256',shared,salt,Buffer.from('kdna.key-context.device-grant\n0.1.0\n'+grant.grant_id),32));
     cek=aesUnwrap(kek,decode64(grant.wrap.wrapped_cek,40,true));
     const plaintext=decryptGcm(envelope,cek,externalEnvelopeAad({manifest,entryName:'payload.kdnab',plaintextDigest:envelope.plaintext_digest,keyRef:envelope.key_ref,issuerKeyId:envelope.issuer_key_id}),true);
-    if (digest(plaintext)!==envelope.plaintext_digest) { plaintext.fill(0); fail('AUTHENTICATION_FAILED','authentication'); }
+    if (!timingSafeEqualString(digest(plaintext), envelope.plaintext_digest)) { plaintext.fill(0); fail('AUTHENTICATION_FAILED','authentication'); }
     return plaintext;
   } catch { fail('AUTHENTICATION_FAILED','authentication'); }
   finally { shared?.fill(0);kek?.fill(0);cek?.fill(0); }

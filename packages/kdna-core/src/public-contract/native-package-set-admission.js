@@ -8,13 +8,14 @@ const byteAuthorities = require('./section-byte-authority-state.js');
 const { ownBytes } = require('./section-owned-bytes.js');
 const { admitSectionBytesNode } = require('./sections-bytes-node.js');
 const definition = require('./packageset06/contract.json');
+const nativeTypes = require('./native-types.generated.json');
 const { digestCanonical } = require('./digests.js');
 const legacy = require('./package-set-contract.generated.json');
 const originTuple = C.contract.module.versionTuple;
 const keySets = { ...legacy.key_sets,
   PackageSetMemberSource: { keys: ['member_id','bytes','request','authority'], required: ['member_id','bytes','request','authority'] } };
 const LIMITS = Object.freeze({ maxMembers: 10000, maxTotalSourceBytes: 104857600 });
-const LOCAL_FAILURES = Object.freeze(definition.types.NativePackageSetLocalFailure06.enum.slice());
+const LOCAL_FAILURES = Object.freeze(nativeTypes.NativePackageSetLocalFailure06.enum.slice());
 const OPERATIONS = Object.freeze(['isolated_read','semantic_merge','cross_asset_reference']);
 const DIGEST = /^sha256:[0-9a-f]{64}$/;
 const BYTE_LENGTH = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(Uint8Array.prototype), 'byteLength').get;
@@ -27,7 +28,7 @@ function failureCode(error) { return error && typeof error === 'object' ? localE
 function shapeFailure() { const error = new Error('READ_INPUT_INVALID'); shapeErrors.add(error); return error; }
 const descriptor = freeze({ contract: { id: definition.module.module.id, version: definition.module.module.version,
   definition_digest: digestCanonical(definition.module) }, origin_tuple: copyJson(originTuple),
-  execution_tuple: Object.fromEntries(Object.entries(require('./execution06/contract.json').types.NativeExecutionVersionTuple06.properties).map(([k,v])=>[k,v.const])),
+  execution_tuple: Object.fromEntries(Object.entries(nativeTypes.NativeExecutionVersionTuple06.properties).map(([k,v])=>[k,v.const])),
   max_members: 10000, max_total_source_bytes: 104857600,
   core_callables: definition.module.api.core_callables.slice(), read_callables: definition.module.api.read_callables.slice(),
   claims: 'claims_not_authenticated' });

@@ -45,3 +45,26 @@ test('frozen ciphertext base64 recognizer agrees with original pattern without m
  const alphabet=['A','B','Q','w','/','+','=','_',' ','\n'];for(let i=0;i<10000;i++){let n=i,s='';for(let j=0;j<4;j++){s+=alphabet[n%alphabet.length];n=Math.floor(n/alphabet.length);}assert.equal(safe.test(s),native.test(s),JSON.stringify(s));}
  const v=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../../conformance/envelope-aead/envelope-aead-vector-01-scrypt-basic.json'))).expected.envelope;assert.doesNotThrow(()=>crypt.validateEnvelope({...v,ciphertext:'A'.repeat(6000000)},{id:'kdna.envelope.aead',version:'0.1.0'}));
 });
+test('native OpenSSL id-aes256-wrap matches official RFC 3394 section 4.6 256-bit KEK / 256-bit key data test vector',()=>{
+ const kek=Buffer.from('000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F','hex');
+ const keyData=Buffer.from('00112233445566778899AABBCCDDEEFF000102030405060708090A0B0C0D0E0F','hex');
+ const expected=Buffer.from('28C9F404C4B810F4CBCCB35CFB87F8263F5786E2D80ED326CBC7F0E71A99F43BFB988B9B7A02DD21','hex');
+ const wrapped=legacy.aesWrap(kek,keyData);
+ assert.equal(wrapped.toString('hex'),expected.toString('hex'));
+ assert.equal(legacy.aesUnwrap(kek,wrapped).toString('hex'),keyData.toString('hex'));
+ const tampered=Buffer.from(wrapped);tampered[0]^=1;
+ assert.throws(()=>legacy.aesUnwrap(kek,tampered),/AES-256-KW unwrap: integrity check failed/);
+ const wrongKek=Buffer.from(kek);wrongKek[31]^=1;
+ assert.throws(()=>legacy.aesUnwrap(wrongKek,wrapped),/AES-256-KW unwrap: integrity check failed/);
+});
+test('native hkdfSha256 matches official RFC 5869 Appendix A.1 test vector and timingSafeEqualString checks length before equality',()=>{
+ const ikm=Buffer.from('0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b','hex');
+ const salt=Buffer.from('000102030405060708090a0b0c','hex');
+ const info=Buffer.from('f0f1f2f3f4f5f6f7f8f9','hex');
+ const expectedOkm='3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865';
+ assert.equal(legacy.hkdfSha256(ikm,salt,info,42).toString('hex'),expectedOkm);
+ assert.equal(legacy.timingSafeEqualString('sha256:'+'a'.repeat(64),'sha256:'+'a'.repeat(64)),true);
+ assert.equal(legacy.timingSafeEqualString('sha256:'+'a'.repeat(64),'sha256:'+'a'.repeat(63)+'b'),false);
+ assert.equal(legacy.timingSafeEqualString('short','longer-string'),false);
+ assert.equal(legacy.timingSafeEqualString(null,'sha256:abc'),false);
+});

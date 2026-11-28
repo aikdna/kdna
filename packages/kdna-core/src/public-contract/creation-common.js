@@ -1,6 +1,6 @@
 'use strict';
 const C = require('./section-common.js');
-const contract = require('./creation06/contract.json');
+const contract = { ...require('./creation06/contract.json'), types: require('./native-types.generated.json') };
 let _validators = null;
 const getValidators = () => _validators ?? (_validators = require('./creation06/validators.cjs'));
 const failures = new WeakSet();

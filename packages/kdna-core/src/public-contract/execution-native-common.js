@@ -4,7 +4,7 @@ const strict = require('./strict-input.js');
 const {digestCanonical} = require('./digests.js');
 const definition = require('./execution06/contract.json');
 const validators = require('./execution06/validators.cjs');
-const contract = strict.freeze({versionTuple: definition.module.version.wire_tuple, types: definition.types});
+const contract = strict.freeze({versionTuple: definition.module.version.wire_tuple, types: require('./native-types.generated.json')});
 // Branch identity only. Full source/types/install identities are tracked separately.
 const definitionDigest = digestCanonical(definition.module);
 const known = new WeakSet();

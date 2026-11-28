@@ -10,7 +10,7 @@ const crypto = require('node:crypto');
 const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const cbor = require('cbor-x');
-const { hkdfSha256, aesWrap, aesUnwrap } = require('./crypto-profile');
+const { hkdfSha256, aesWrap, aesUnwrap, timingSafeEqualString } = require('./crypto-profile');
 const externalEnvelopeSchema = require('../schema/external-grant-envelope.schema.json');
 const externalKeyGrantSchema = require('../schema/external-key-grant.schema.json');
 
@@ -513,7 +513,7 @@ function authorizeExternalKeyGrant(options = {}) {
   const decryptEntry = ({ entryName, ciphertext, manifest: runtimeManifest }) => {
     const runtimeEnvelope = decodeExternalEnvelope(ciphertext);
     if (entryName !== envelope.entry_path) fail('KDNA_GRANT_ASSET_MISMATCH', 'encrypted entry path mismatch');
-    if (digest(Buffer.from(runtimeEnvelope.ciphertext, 'base64url')) !== grant.asset.ciphertext_digest) {
+    if (!timingSafeEqualString(digest(Buffer.from(runtimeEnvelope.ciphertext, 'base64url')), grant.asset.ciphertext_digest)) {
       fail('KDNA_GRANT_DIGEST_MISMATCH', 'encrypted entry digest mismatch');
     }
     const aad = externalEnvelopeAad({
@@ -535,7 +535,7 @@ function authorizeExternalKeyGrant(options = {}) {
         decipher.update(decodeB64url(runtimeEnvelope.ciphertext, 'envelope ciphertext')),
         decipher.final(),
       ]);
-      if (digest(plaintext) !== runtimeEnvelope.plaintext_digest) {
+      if (!timingSafeEqualString(digest(plaintext), runtimeEnvelope.plaintext_digest)) {
         fail('KDNA_GRANT_DIGEST_MISMATCH', 'decrypted entry digest mismatch');
       }
       return plaintext;

@@ -213,29 +213,19 @@ function aesKwUnwrap(key, ciphertext) {
   if (!Buffer.isBuffer(key) || key.length !== 32) {
     fail('KDNA_ENVELOPE_FIELD_LENGTH', 'KEK must be 32 bytes', 'kek');
   }
-  const n = ciphertext.length / 8 - 1;
-  const blocks = Array.from({ length: n + 1 }, (_, i) =>
-    Buffer.from(ciphertext.subarray(i * 8, (i + 1) * 8)),
-  );
-  for (let j = 5; j >= 0; j--) {
-    for (let i = n; i >= 1; i--) {
-      const tBuf = Buffer.alloc(8);
-      tBuf.writeBigUInt64BE(BigInt(n * j + i));
-      for (let k = 0; k < 8; k++) blocks[0][k] ^= tBuf[k];
-      const decipher = crypto.createDecipheriv('aes-256-ecb', key, null);
-      decipher.setAutoPadding(false);
-      const b = Buffer.concat([
-        decipher.update(Buffer.concat([blocks[0], blocks[i]])),
-        decipher.final(),
-      ]);
-      blocks[0] = b.subarray(0, 8);
-      blocks[i] = b.subarray(8, 16);
-    }
+  if (!Buffer.isBuffer(ciphertext) || ciphertext.length < 24 || ciphertext.length % 8 !== 0) {
+    fail(
+      'KDNA_ENVELOPE_FIELD_LENGTH',
+      'Wrapped key must be a valid RFC 3394 block length',
+      'wrapped_key',
+    );
   }
-  if (!crypto.timingSafeEqual(blocks[0], KW_IV)) {
+  try {
+    const decipher = crypto.createDecipheriv('id-aes256-wrap', key, KW_IV);
+    return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+  } catch {
     fail('KDNA_KW_INTEGRITY', 'AES-256-KW integrity check failed');
   }
-  return Buffer.concat(blocks.slice(1));
 }
 
 export function unwrapAndDecrypt(envelope, kek, aad, { slotIndex = 0 } = {}) {

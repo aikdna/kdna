@@ -15,13 +15,13 @@
     "scripts": [
       {
         "path": "scripts/public-contract/generate-native.mjs",
-        "bytes": 8115,
-        "sha256": "6bcfd78465b589e0098631583ff946ae2f049608c0ffb537392a1015d1474fe0"
+        "bytes": 8304,
+        "sha256": "cdefe4c2c36c62eb548983dc096efd3b3a50732631e3c5570acbb7b6f1bffd25"
       },
       {
         "path": "scripts/public-contract/native-renderer.mjs",
-        "bytes": 22518,
-        "sha256": "672e3afe5e519f3103345157af721e083a40790769e3878d415534880719b11d"
+        "bytes": 24001,
+        "sha256": "3779c1c79c00578198137ec4ef583eb7fde339fb0008ec2d3e0119e6dbf5ba82"
       },
       {
         "path": "scripts/public-contract/generation-writer.mjs",
@@ -30,8 +30,13 @@
       },
       {
         "path": "scripts/public-contract/generate.mjs",
-        "bytes": 73563,
-        "sha256": "73f19333a9fbff08480884d8b35ade372fe8b682ea25a77d9b370dc88c740f86"
+        "bytes": 74766,
+        "sha256": "99db45f9a55ef01466af3cb47dba8960429de1341c5400231da9d285f39a3668"
+      },
+      {
+        "path": "scripts/public-contract/validator-emitter.mjs",
+        "bytes": 4297,
+        "sha256": "6a1cd7611c8e1306fd06e1e2c160cf4617b967e852c4733baab14d177739f2a7"
       }
     ]
   },
@@ -507,8 +512,8 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/validators.cjs",
-      "bytes": 2817701,
-      "sha256": "2ef043226260d2de360f3e0d7da17618062274ba519f98c8016bdab176bcfe28"
+      "bytes": 1062,
+      "sha256": "c4ea20c30e9f2e8ed4354b91a4e4c669d0438958999e70c1c6131b9cc96c4432"
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/types.d.ts",
@@ -517,8 +522,8 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/contract.json",
-      "bytes": 227521,
-      "sha256": "e5ba80634614634cfd9bcaf4e0e3467260c9760cdab3e716c52238eef032e2ea"
+      "bytes": 26820,
+      "sha256": "62fd74673d3cd5f63b16f3dfc3d0732f528cca6b699408a46b869620e2cfc3b6"
     },
     {
       "path": "packages/kdna-core/src/public-contract/execution06/api.d.ts",

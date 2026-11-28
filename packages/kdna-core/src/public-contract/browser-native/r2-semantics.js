@@ -6,7 +6,7 @@ const { equal, unique, validateContract, validateResult, valueFor, compatible, p
 const { checkPlans } = require('./r2-plan.js');
 
 function validateR2(manifest, payload, entries, scope = null) {
-  const r = scope?.registry ?? createRegistry(manifest, payload), { r2_semantics: definition, core_terms: termsRegistry } = require('./generated-contract.json');
+  const r = scope?.registry ?? createRegistry(manifest, payload), { r2_semantics: definition, core_terms: termsRegistry } = require('../generated-contract.json');
   if (!definition) fail('/payload/profile_version');
   const roles = definition.method_roles;
   const legacyRoleAliases = definition.legacy_method_role_aliases ?? {};

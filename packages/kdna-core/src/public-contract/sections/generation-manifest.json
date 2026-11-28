@@ -15,13 +15,13 @@
     "scripts": [
       {
         "path": "scripts/public-contract/generate-native.mjs",
-        "bytes": 8115,
-        "sha256": "6bcfd78465b589e0098631583ff946ae2f049608c0ffb537392a1015d1474fe0"
+        "bytes": 8304,
+        "sha256": "cdefe4c2c36c62eb548983dc096efd3b3a50732631e3c5570acbb7b6f1bffd25"
       },
       {
         "path": "scripts/public-contract/native-renderer.mjs",
-        "bytes": 22518,
-        "sha256": "672e3afe5e519f3103345157af721e083a40790769e3878d415534880719b11d"
+        "bytes": 24001,
+        "sha256": "3779c1c79c00578198137ec4ef583eb7fde339fb0008ec2d3e0119e6dbf5ba82"
       },
       {
         "path": "scripts/public-contract/generation-writer.mjs",
@@ -30,8 +30,13 @@
       },
       {
         "path": "scripts/public-contract/generate.mjs",
-        "bytes": 73563,
-        "sha256": "73f19333a9fbff08480884d8b35ade372fe8b682ea25a77d9b370dc88c740f86"
+        "bytes": 74766,
+        "sha256": "99db45f9a55ef01466af3cb47dba8960429de1341c5400231da9d285f39a3668"
+      },
+      {
+        "path": "scripts/public-contract/validator-emitter.mjs",
+        "bytes": 4297,
+        "sha256": "6a1cd7611c8e1306fd06e1e2c160cf4617b967e852c4733baab14d177739f2a7"
       }
     ]
   },
@@ -648,8 +653,8 @@
   "artifacts": [
     {
       "path": "packages/kdna-core/src/public-contract/sections/validators.cjs",
-      "bytes": 40457545,
-      "sha256": "ef353857dc52910cca1c72549bd5cf7c557ec540fcb51c9bf24398cd599bba0a"
+      "bytes": 16543,
+      "sha256": "e60f6c28ff052d5e456187f61f8365f6398f2950329cba5f92ee3e774dca3bfc"
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/types.d.ts",
@@ -658,8 +663,8 @@
     },
     {
       "path": "packages/kdna-core/src/public-contract/sections/contract.json",
-      "bytes": 573246,
-      "sha256": "3e407c8f2efbbbaff72a03322f57a302ac85b5100a99aea979a17a61b3fa4dd7"
+      "bytes": 373631,
+      "sha256": "bc385f2f6c212d38fceeff4ab8b2606efadc16cbd67a71d16496ce298cc9a3a8"
     },
     {
       "path": "packages/kdna-core/src/public-contract/protected-sections-node.d.ts",

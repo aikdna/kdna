@@ -2,7 +2,7 @@
 
 const { canonicalJson, utf8, copyJson, compareUtf8 } = require('./canonical-json-shim.js');
 const { digest } = require('./digests.js');
-const { versionTuple } = require('./generated-contract.json');
+const { versionTuple } = require('../generated-contract.json');
 const { validate } = require('./validate.js');
 const { resolveComponents, visitExtensions, checkInterpretationComplete } = require('./component-semantics.js');
 const { resolveStaticPolicies } = require('./static-policy-semantics.js');
